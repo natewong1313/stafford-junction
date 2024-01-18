@@ -1,0 +1,183 @@
+@media only screen and (min-width: 1024px) {
+    main.event-info {
+        margin: 0rem 8rem 4rem 8rem;
+    }
+
+    div.pair > input[type=submit] {
+        flex: initial;
+        width: fit-content;
+        font-size: 0.75rem;
+        padding: 0 4rem;
+        line-height: -1;
+    }
+}
+
+div.pair {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
+@media only screen and (max-width: 719px) {
+    div.pair {
+        flex-direction: column;
+    }
+}
+
+div.pair > select {
+    flex: 1 1 0;
+}
+
+div.pair > * {
+    height: 3rem;
+}
+
+main.event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input.stripped {
+    background-color: inherit;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    width: auto;
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+input.stripped:hover {
+    background-color: inherit;
+}
+
+main ul {
+    margin-bottom: 1rem;
+}
+
+main li {
+    padding: .25rem;
+}
+
+li.remove-person {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+}
+
+table {
+    border-bottom: 3px solid var(--shadow-and-border-color);
+    padding: 1rem;
+    background-color: var(--standout-background);
+}
+
+td {
+    padding: 0.25rem;
+    white-space: nowrap;
+}
+
+th {
+    padding-top: 0.75rem;
+    padding-left: 0.25rem;
+    font-size: 1.5rem;
+    color: var(--main-color)
+}
+
+td:first-of-type {
+    width: 1%;
+}
+
+td.label {
+    font-weight: 500;
+}
+
+.empty-slot, .inactive {
+    color: var(--inactive-font-color);
+}
+
+#assign-volunteer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#delete-confirmation-wrapper {
+    z-index: 99;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+#complete-confirmation-wrapper {
+    z-index: 99;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+#delete-confirmation {
+    z-index: 99;
+    background-color: var(--page-background-color);
+    /* border: 1px solid var(--secondary-accent-color); */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: .5rem;
+    box-shadow: 0px 1rem 1rem rgba(0, 0, 0, 0.5);
+    margin: 0.5rem;
+}
+
+#delete-confirmation p {
+    padding: 0.25rem;
+}
+
+#complete-confirmation {
+    z-index: 99;
+    background-color: var(--page-background-color);
+    /* border: 1px solid var(--secondary-accent-color); */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: .5rem;
+    box-shadow: 0px 1rem 1rem rgba(0, 0, 0, 0.5);
+    margin: 0.5rem;
+}
+
+#complete-confirmation p {
+    padding: 0.25rem;
+}
+
+#delete-cancel {
+    background-color: var(--cancel-button-background-color);
+}
+
+#delete-cancel:hover {
+    background-color: var(--accent-color);
+}
+
+#complete-cancel {
+    background-color: var(--cancel-button-background-color);
+}
+
+#complete-cancel:hover {
+    background-color: var(--accent-color);
+}
+
+#description-cell {
+    white-space: normal;
+}
