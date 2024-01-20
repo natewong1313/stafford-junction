@@ -138,7 +138,6 @@
                 $person = retrieve_person($volunteerID);
                 $name = $person->get_first_name() . ' ' . $person->get_last_name();
                 $name = htmlspecialchars_decode($name);
-                update_event_volunteer_list($eventID, $volunteerID);
                 require_once('database/dbMessages.php');
                 require_once('include/output.php');
                 $event = fetch_event_by_id($eventID);
@@ -156,7 +155,6 @@
                     echo 'invalid user id';
                     die();
                 }
-                update_event_volunteer_list($eventID, $volunteerID);
                 require_once('database/dbMessages.php');
                 require_once('include/output.php');
                 $event = fetch_event_by_id($eventID);
@@ -165,9 +163,6 @@
                 $eventStart = time24hto12h($event['startTime']);
                 $eventEnd = time24hto12h($event['endTime']);
                 send_system_message($volunteerID, 'You were assigned to an event!', "Hello,\r\n\r\nYou were assigned to the [$eventName](event: $eventID) event from $eventStart to $eventEnd on $eventDate.");
-            } else if ($request_type == 'remove' && $access_level > 1) {
-                $volunteerID = $args['selected_removal_id'];
-                remove_volunteer_from_event($eventID, $volunteerID);
             } else {
                 header('Location: event.php?id='.$eventID);
                 die();

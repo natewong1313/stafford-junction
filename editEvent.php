@@ -28,8 +28,8 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $args = sanitize($_POST, null);
         $required = array(
-            "id", "name", "abbrev-name", "date", "start-time", "description", "location", "capacity"
-        );
+            "id", "name", "abbrev-name", "date", "start-time", "description", "location");
+
         if (!wereRequiredFieldsSubmitted($args, $required)) {
             echo 'bad form data';
             die();
@@ -43,14 +43,14 @@
             $startTime = $args['start-time'] = $validated[0];
             $endTime = $validated[1];
             $date = $args['date'] = validateDate($args["date"]);
-            $capacity = intval($args["capacity"]);
-            $assignedVolunteerCount = count(getvolunteers_byevent($id));
-            $difference = $assignedVolunteerCount - $capacity;
-            if ($capacity < $assignedVolunteerCount) {
-                $errors .= "<p>There are currently $assignedVolunteerCount volunteers assigned to this event. The new capacity must not exceed this number. You must remove $difference volunteer(s) from the event to reduce the capacity to $capacity.</p>";
-            }
+           // $capacity = intval($args["capacity"]);
+           // $assignedVolunteerCount = count(getvolunteers_byevent($id));
+           // $difference = $assignedVolunteerCount - $capacity;
+           // if ($capacity < $assignedVolunteerCount) {
+            //    $errors .= "<p>There are currently $assignedVolunteerCount volunteers assigned to this event. The new capacity must not exceed this number. You must remove $difference volunteer(s) from the event to reduce the capacity to $capacity.</p>";
+           // }
             $abbrevLength = strlen($args['abbrev-name']);
-            if (!$startTime || !$date || $capacity < 1 || $capacity > 20 || $abbrevLength > 11){
+            if (!$startTime || !$date || $abbrevLength > 11){
                 $errors .= '<p>Your request was missing arguments.</p>';
             }
             if (!$errors) {
@@ -156,8 +156,6 @@
                         // terminate while loop
                     ?>
                 </select><p></p>
-                <label for="name">Volunteer Slots</label>
-                <input type="text" id="capacity" name="capacity"  value="<?php echo $event['capacity'] ?>"pattern="([1-9])|([01][0-9])|(20)" required placeholder="Enter a number up to 20">   
                 <input type="submit" value="Update Appointment">
                 <a class="button cancel" href="event.php?id=<?php echo htmlspecialchars($_GET['id']) ?>" style="margin-top: .5rem">Cancel</a>
             </form>

@@ -40,7 +40,7 @@
             }
             $startTime = $args['start-time'] = $validated[0];
             $date = $args['date'] = validateDate($args["date"]);
-            $capacity = intval($args["capacity"]);
+            //$capacity = intval($args["capacity"]);
             $abbrevLength = strlen($args['abbrev-name']);
             if (!$startTime || !$date || $abbrevLength > 11){
                 echo 'bad args';
@@ -138,8 +138,7 @@
                         // terminate while loop
                     ?>
                 </select><p></p>
-                <label for="name">* Volunteer Slots</label>
-                <input type="text" id="capacity" name="capacity" pattern="([1-9])|([01][0-9])|(20)" required placeholder="Enter a number up to 20">   
+  
                 <label for="name">* Animal</label>
                 <select for="name" id="animal" name="animal" required>
                     <?php 

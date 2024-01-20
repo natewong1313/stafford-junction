@@ -133,7 +133,6 @@
                 $person = retrieve_person($volunteerID);
                 $name = $person->get_first_name() . ' ' . $person->get_last_name();
                 $name = htmlspecialchars_decode($name);
-                update_event_volunteer_list($eventID, $volunteerID);
                 require_once('database/dbMessages.php');
                 require_once('include/output.php');
                 $event = fetch_event_by_id($eventID);
@@ -151,7 +150,6 @@
                     echo 'invalid user id';
                     die();
                 }
-                update_event_volunteer_list($eventID, $volunteerID);
                 require_once('database/dbMessages.php');
                 require_once('include/output.php');
                 $event = fetch_event_by_id($eventID);
@@ -160,9 +158,6 @@
                 $eventStart = time24hto12h($event['startTime']);
                 $eventEnd = time24hto12h($event['endTime']);
                 send_system_message($volunteerID, 'You were assigned to an event!', "Hello,\r\n\r\nYou were assigned to the [$eventName](event: $eventID) event from $eventStart to $eventEnd on $eventDate.");
-            } else if ($request_type == 'remove' && $access_level > 1) {
-                $volunteerID = $args['selected_removal_id'];
-                remove_volunteer_from_event($eventID, $volunteerID);
             } else {
                 header('Location: event.php?id='.$eventID);
                 die();
@@ -307,237 +302,20 @@
                     </tr>
                     
                     <tr>
-                        <td class="label">Appointment Materials </td><td></td>
-                    </tr>
-                        <!-- <td colspan="2" class="inactive">None at this time</td> -->
-						<?php
-                        $medias = get_event_training_media($id);
-                        foreach ($medias as $media) {
-                            echo '<tr class="media"><td colspan="2">';
-                            if ($media['format'] == 'link') {
-                                echo '<a href="' . $media['url'] . '">' . $media['description'] . '</a>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                            } else if ($media['format'] == 'picture') {
-                                echo '<span>' . $media['description'] . '</span>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                                echo '<br><a href="' . $media['url'] . '"><img style="max-width: 30vw" src="' . $media['url'] . '" alt="' . $media['description'] . '"></a>';
-                            } else {
-                                echo '<span>' . $media['description'] . '</span>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                                echo '<br><iframe width="560" height="315" src="' . $media['url'] .'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
-                            }
-                            echo '</td></tr>';
-                        }
-                        if (count($medias) == 0) {
-                            echo '<td colspan="2" class="inactive">None at this time</td>';
-                        }
-                    ?>
-					<?php if ($access_level >= 2): ?>
-						<tr><td colspan="2">
-                            <form class="media-form hidden" method="post" id="attach-training-media-form">
-                                <label>Attach Appointment Media</label>
-                                <label for="url">URL</label>
-                                <input type="text" id="url" name="url" placeholder="Paste link to media" required>
-                                <p class="error hidden" id="url-error">Please enter a valid URL.</p>
-                                <label for="description">Description</label>
-                                <input type="text" id="description" name="description" placeholder="Enter a description" required>
-                                <label for="format">Format</label>
-                                <select id="format" name="format">
-                                    <option value="link">Link</option>
-                                    <option value="video">YouTube video (embeds video)</option>
-                                    <option value="picture">Picture (embeds picture)</option>
-                                </select>
-                                <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <input type="submit" name="attach-training-media-submit" value="Attach">
-                            </form>
-                            <a id="attach-training-media">Attach Appointment Media</a>
-                        </td></tr>
-					<?php endif ?>
-                    <tr>
-                        <td class="label">Post-Appointment Media </td><td></td>
-                    </tr>
-                    <?php
-                        $medias = get_post_event_media($id);
-                        foreach ($medias as $media) {
-                            echo '<tr class="media"><td colspan="2">';
-                            if ($media['format'] == 'link') {
-                                echo '<a href="' . $media['url'] . '">' . $media['description'] . '</a>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                            } else if ($media['format'] == 'picture') {
-                                echo '<span>' . $media['description'] . '</span>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                                echo '<br><a href="' . $media['url'] . '"><img style="max-width: 30vw" src="' . $media['url'] . '" alt="' . $media['description'] . '"></a>';
-                            } else {
-                                echo '<span>' . $media['description'] . '</span>';
-                                if ($access_level >= 2) {
-                                    echo ' <a href="detachMedia.php?eid=' . $id . '&mid=' . $media['id'] . '">Remove</a>';
-                                }
-                                echo '<br><iframe width="560" height="315" src="' . $media['url'] .'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
-                            }
-                            echo '</td></tr>';
-                        }
-                        if (count($medias) == 0) {
-                            echo '<td colspan="2" class="inactive">None at this time</td>';
-                        }
-					?>
-                    <?php if ($access_level >= 2): ?>
-                        <tr><td colspan="2">
-                            <form class="media-form hidden" method="post" id="attach-post-media-form">
-                                <label>Attach Post-Appointment Media</label>
-                                <label for="post-url">URL</label>
-                                <input type="text" id="post-url" name="url" placeholder="Paste link to media" required>
-                                <p class="error hidden" id="post-url-error">Please enter a valid URL.</p>
-                                <label for="post-description">Description</label>
-                                <input type="text" id="post-description" name="description" placeholder="Enter a description" required>
-                                <label for="post-format">Format</label>
-                                <select id="post-format" name="format">
-                                    <option value="link">Link</option>
-                                    <option value="video">YouTube video (embeds video)</option>
-                                    <option value="picture">Picture (embeds picture)</option>
-                                </select>
-                                <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <input type="submit" name="attach-post-media-submit" value="Attach">
-                            </form>
-                            <a id="attach-post-media">Attach Post-Appointment Media</a>
-                        </td></tr>
-                    <?php endif ?>
-                    <?php
-                        if ($access_level >= 2) {
-                            echo '
-                                <tr>
-                                    <td colspan="2">
-                                        <a href="editEvent.php?id=' . $id . '" class="button">Edit Appointment Details</a>
-                                    </td>
-                                </tr>
-                            ';
-                        }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-        <h2 class="centered">Appointment Volunteers</h2>
-
+                        
         <!-- TODO: will figure out another way to center
                  later -->
-        <div class="standout">
-            <ul class="centered">
-                <?php
-                    $event_persons = getvolunteers_byevent($id);
-                    $capacity = intval($event_info['capacity']);
-                    $num_persons = count($event_persons);
-                    $user_id = $_SESSION['_id'];
-                    $remaining_slots = $capacity - count($event_persons);
-                    $already_assigned = false;
-                    if ($remaining_slots) {
-                        echo '<li class="centered">' . $remaining_slots . ' / ' . $capacity . ' Slots Remaining</li>';
-                    } else {
-                        echo '<li class="centered">This event is fully booked!</li>';
-                    }
-
-                    for ($x = 0; $x < $num_persons; $x += 1) {
-                        $person = $event_persons[$x];
-                        if ($person->get_id() == $user_id) {
-                            $already_assigned = true;
-                        }
-                        // allow admins/super admins to remove assigned volunteers
-                        if ($access_level > 1) {
-                            echo '<li class="centered remove-person">'.
-                            '<span>'.
-                            $person->get_first_name().
-                            ' '.
-                            $person->get_last_name().
-                            '</span>'.
-                            '<form class="remove-person" method="GET">'.
-                            '<input type="hidden" name="request_type" value="remove" />'.
-                            '<input type="hidden" name="id" value="'.$id.'">'.
-                            '<input type="hidden" name="selected_removal_id" value='.
-                            $person->get_id().' />'.
-                            '<input class="stripped" type="submit" value="Remove" />'.
-                            '</form></li>';
-                        } else {
-                            echo '
-                                <li class="centered">' .
-                                $person->get_first_name()
-                                . ' ' .
-                                $person->get_last_name().
-                                '</li>
-                            ';
-                        }
-                    }
-                    for ($x = 0; $x < $remaining_slots; $x++) {
-                        echo '<li class="centered empty-slot">-Empty Slot-</li>';      
-                    }
-                ?>
-            </ul>
-        <?php 
-            if ($remaining_slots > 0 && $user_id != 'vmsroot' && !$event_in_past) {
-                if (!$already_assigned) {
-                    if ($active) {
-                        echo '
-                        <form method="GET">
-                            <input type="hidden" name="request_type" value="add self">
-                            <input type="hidden" name="id" value="'.$id.'">
-                            <input type="hidden" name="selected_id" value="' . $_SESSION['_id'] . '">
-                            <input type="submit" value="Sign Up">
-                        </form>
-                        ';
-                    } else {
-                        echo '<div class="centered">As an inactive volunteer, you are ineligible to sign up for events.</div>';
-                    }
-                } else {
-                    // show "unassigned self" button
-                    echo '<div class="centered">You are signed up for this event!</div>';
-                }
-            } else if ($already_assigned) {
-                if ($event_in_past) {
-                    echo '<div class="centered">You attended this event!</div>';
-                } else {
-                    echo '<div class="centered">You are signed up for this event!</div>';
-                }
-            }
-            if ($access_level >= 2 && $num_persons > 0) {
-              echo '<br/><a href="roster.php?id='.$id.'" class="button">View Event Roster</a>';
-            }
-        ?>
-        </div>
         <?php
-            if ($remaining_slots > 0) {
-                if ($access_level >= 2) {
-                    if ($event_in_past) {
-                        echo '<div id="assign-volunteer" class="standout"><label>Assign Volunteer</label><p>This event is archived. Volunteers cannot be assigned.</p></div>';
-                    } else {
-                        $all_volunteers = get_unassigned_available_volunteers($id);
-                        if ($all_volunteers) {
-                            echo '<form method="GET" id="assign-volunteer" class="standout">';
-                            echo '<input type=hidden name="request_type" value="add another">';
-                            echo '<input type="hidden" name="id" value="'.$id.'">';
-                            echo '<label for="volunteer-select">Assign Volunteer:</label>';
-                            echo '<div class="pair"><select name="selected_id" id="volunter-select" required>';
-                            if ($all_volunteers) {
-                                for ($x = 0; $x < count($all_volunteers); $x++) {
-                                    echo '<option value="'.$all_volunteers[$x]->get_id().'">'.$all_volunteers[$x]->get_last_name().', '.$all_volunteers[$x]->get_first_name().'</option>';
-                                }
-                            }
-                            echo '</select>';
-                            echo '<input type="submit" value="Assign" /></div>';
-                            echo '</form>';
-                        } else {
-                            echo '<div id="assign-volunteer" class="standout"><label>Assign Volunteer</label><p>There are currently no volunteers available to assign to this event.</p></div>';
-                        }
-                    }
-                }
-            }
-        ?>
+		if ($access_level >= 2) {
+                	echo '
+                        <tr>
+                        	<td colspan="2">
+                                	<a href="editEvent.php?id=' . $id . '" class="button">Edit Appointment Details</a>
+                                </td>
+                        </tr>
+                        ';
+                 }
+	?> 
 
         <?php if ($access_level >= 2) : ?>
             <!-- <form method="post" action="deleteEvent.php">

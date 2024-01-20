@@ -12,12 +12,11 @@ class Event {
     private $description;
     private $location;
     private $capacity;
-    private $volunteers;
     private $trainingMedia;
     private $postMedia;
     private $animalId;
 
-    function __construct($id, $name, $abbrevName, $date, $startTime, $endTime, $description, $location, $capacity, $volunteers, $trainingMedia, $postMedia, $animalId) {
+    function __construct($id, $name, $abbrevName, $date, $startTime, $endTime, $description, $location, $capacity, $trainingMedia, $postMedia, $animalId) {
         $this->id = $id;
         $this->name = $name;
         $this->abbrevName = $abbrevName;
@@ -27,7 +26,6 @@ class Event {
         $this->description = $description;
         $this->location = $location;
         $this->capacity = $capacity;
-        $this->volunteers = $volunteers;
         $this->trainingMedia = $trainingMedia;
         $this->postMedia = $postMedia;
         $this->animalId = $animalId;
@@ -69,9 +67,6 @@ class Event {
         return $this->capacity;
     }
 
-    function getVolunteers() {
-        return $volunteers;
-    }
 
     function getTrainingMedia() {
         return $trainingMedia;
