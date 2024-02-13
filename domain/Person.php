@@ -36,6 +36,7 @@ class Person {
 	private $phone2;   // secondary phone -- home, cell, or work
 	private $phone2type; // home, cell, or work
 	private $birthday;     // format: 64-03-12
+	private $email;
 	private $contact_name;   // emergency contact name
 	private $contact_num;   // emergency cont. phone number
 	private $relation;   // relation to emergency contact
