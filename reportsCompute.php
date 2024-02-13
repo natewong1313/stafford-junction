@@ -405,7 +405,8 @@ function display_volunteers ($report, $export, $venue) {
 //function to display all important volunteer info
 function display_volunteers_full ($report, $export, $venue) { 
 	$col_labels = array("Name","Address","City","State","Zip","Phone Number", "Email", "Start Date", "Phone Type", "Birthday",
-	"Shirt Size", "Computer", "Camera", "Transportation", "Contact Name","Contact Number", "Contact Relation", "Notes");
+	//"Computer", "Camera", "Transportation", 
+"Contact Name","Contact Number", "Contact Relation", "Notes");
 	$res = "
 		<table id = 'report'> 
 			<thead>
@@ -427,8 +428,8 @@ function display_volunteers_full ($report, $export, $venue) {
 		$p = array($person->get_last_name() . ", ". $person->get_first_name(), 
 				$person->get_address(), $person->get_city(), $person->get_state(), $person->get_zip(),
 			    $person->get_phone1(), $person->get_email(),
-			    $person->get_start_date(), $person->get_phone1type(), $person->get_birthday(),$person->get_shirt_size(),
-				$person->get_computer(), $person->get_camera(), $person->get_transportation(), 
+			    $person->get_start_date(), $person->get_phone1type(), $person->get_birthday(),
+				//$person->get_computer(), $person->get_camera(), $person->get_transportation(), 
 				$person->get_contact_name(),$person->get_contact_num(),$person->get_relation(), $person->get_notes());
 		$export_data[] = $p;
 		$res .= "<tr>";

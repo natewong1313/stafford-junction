@@ -145,7 +145,7 @@
             } else {
               $type = 'Admin';
             }
-            $shirt_size = $person->get_shirt_size();
+
             echo '<div id="table-wrapper">'."\n";
             echo '<table class="centered">';
             echo '<tbody>'.
@@ -168,10 +168,6 @@
                     '<tr>'.
                         '<td class="label">Phone</td>'.
                         '<td>'.$phone1.' ('.$phone1_type.')'.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td class="label">Shirt Size</td>'.
-                        '<td>'.$shirt_size.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td class="label"><b>Emergency Contact<b></td>'.

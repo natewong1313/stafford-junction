@@ -319,34 +319,7 @@
                 </div>
             </div>
 
-            <label for="skills">Skills</label>
-            <textarea id="skills" name="skills" placeholder="Please let us know about any special skills you may have, including proficiencies in non-English languages."><?php echo $person->get_specialties(); ?></textarea>
 
-            <label>Additional Information</label>
-            <div class="checkbox-grouping">
-                <div class="checkbox-pair">
-                    <input id="has-computer" name="has-computer" type="checkbox" <?php if ($person->get_computer()) echo 'checked'; ?>>
-                    <label for="has-computer">I own a computer</label>
-                </div>
-                <div class="checkbox-pair">
-                    <input id="has-camera" name="has-camera" type="checkbox" <?php if ($person->get_camera()) echo 'checked'; ?>>
-                    <label for="has-camera">I own a camera</label>
-                </div>
-                <div class="checkbox-pair">
-                    <input id="has-transportation" name="has-transportation" type="checkbox" <?php if ($person->get_transportation()) echo 'checked'; ?>>
-                    <label for="has-transportation">I have access to reliable transportation</label>
-                </div>
-            </div>
-
-            <label for="shirt-size">T-shirt Size</label>
-            <select id="shirt-size" name="shirt-size" required>
-                <?php $size = $person->get_shirt_size(); ?>
-                <option value="S" <?php if ($size == 'S') echo 'selected'; ?>>Small</option>
-                <option value="M" <?php if ($size == 'M') echo 'selected'; ?>>Medium</option>
-                <option value="L" <?php if ($size == 'L') echo 'selected'; ?>>Large</option>
-                <option value="XL" <?php if ($size == 'XL') echo 'selected'; ?>>Extra Large</option>
-                <option value="XXL" <?php if ($size == 'XXL') echo 'selected'; ?>>2X Large</option>
-            </select>
         </fieldset>
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="submit" name="profile-edit-form" value="Update Profile">

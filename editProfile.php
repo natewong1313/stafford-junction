@@ -41,7 +41,6 @@
             'first-name', 'last-name', 'birthdate',
             'address', 'city', 'state', 'zip', 
             'email', 'phone', 'phone-type', 'contact-when', 'contact-method',
-            'shirt-size'
         );
         $errors = false;
         if (!wereRequiredFieldsSubmitted($args, $required)) {
@@ -108,18 +107,6 @@
             echo 'bad gender';
         }
 
-        $skills = '';
-        if (isset($args['skills'])) {
-            $skills = $args['skills'];
-        }
-        $hasComputer = isset($args['has-computer']);
-        $hasCamera = isset($args['has-camera']);
-        $hasTransportation = isset($args['has-transportation']);
-        $shirtSize = $args['shirt-size'];
-        if (!valueConstrainedTo($shirtSize, array('S', 'M', 'L', 'XL', 'XXL'))) {
-            $errors = true;
-            // echo 'bad shirt size';
-        }
 
         $days = array('sundays', 'mondays', 'tuesdays', 'wednesdays', 'thursdays', 'fridays', 'saturdays');
         $availability = array();
@@ -153,6 +140,7 @@
             $errors = true;
             // echo 'bad availability - none chosen';
         }
+
         $sundaysStart = '';
         $sundaysEnd = '';
         if ($availability['sundays']) {
@@ -204,7 +192,6 @@
             $first, $last, $dateOfBirth, $address, $city, $state, $zipcode,
             $email, $phone, $phoneType, $contactWhen, $contactMethod, 
             $econtactName, $econtactPhone, $econtactRelation,
-            $skills, $hasComputer, $hasCamera, $hasTransportation, $shirtSize,
             $sundaysStart, $sundaysEnd, $mondaysStart, $mondaysEnd,
             $tuesdaysStart, $tuesdaysEnd, $wednesdaysStart, $wednesdaysEnd,
             $thursdaysStart, $thursdaysEnd, $fridaysStart, $fridaysEnd,

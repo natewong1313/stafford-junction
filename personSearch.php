@@ -118,18 +118,22 @@
             <input type="text" id="name" name="name" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']) ?>" placeholder="Enter the user's first and/or last name">
             <label for="id">E-mail</label>
             <input type="text" id="id" name="id" value="<?php if (isset($id)) echo htmlspecialchars($_GET['id']) ?>" placeholder="Enter the user's email address (login ID)">
-            <label for="phone">Phone Number</label>
+           
+		<label for="phone">Phone Number</label>
             <input type="tel" id="phone" name="phone" value="<?php if (isset($phone)) echo htmlspecialchars($_GET['phone']) ?>" placeholder="Enter the user's phone number">
-            <label for="zip">Zip Code</label>
+            
+		<label for="zip">Zip Code</label>
 			<input type="text" id="zip" name="zip" value="<?php if (isset($zip)) echo htmlspecialchars($_GET['zip']) ?>" placeholder="Enter the user's zip code">
 			<label for="role">Role</label>
-            <select id="role" name="role">
+ 
+           <select id="role" name="role">
                 <option value="">Any</option>
                 <option value="volunteer" <?php if (isset($role) && $role == 'volunteer') echo 'selected' ?>>Volunteer</option>
                 <option value="admin" <?php if (isset($role) && $role == 'admin') echo 'selected' ?>>Admin</option>
                 <option value="superadmin" <?php if (isset($role) && $role == 'superadmin') echo 'selected' ?>>Super Admin</option>
             </select>
-            <label for="status">Status</label>
+  
+          <label for="status">Status</label>
             <select id="status" name="status">
                 <option value="">Any</option>
                 <option value="Active" <?php if (isset($status) && $status == 'Active') echo 'selected' ?>>Active</option>

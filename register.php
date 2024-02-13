@@ -61,7 +61,7 @@
                 'first-name', 'last-name', 'birthdate',
                 'address', 'city', 'state', 'zip', 
                 'email', 'phone', 'phone-type', 'contact-when', 'contact-method',
-                'start-date', 'shirt-size', 'password', 'gender'
+                'start-date', 'password', 'gender'
             );
             $errors = false;
             if (!wereRequiredFieldsSubmitted($args, $required)) {
@@ -130,18 +130,6 @@
             if (!valueConstrainedTo($gender, ['Male', 'Female', 'Other'])) {
                 $errors = true;
                 echo 'bad gender';
-            }
-            $skills = '';
-            if (isset($args['skills'])) {
-                $skills = $args['skills'];
-            }
-            $hasComputer = isset($args['has-computer']);
-            $hasCamera = isset($args['has-camera']);
-            $hasTransportation = isset($args['has-transportation']);
-            $shirtSize = $args['shirt-size'];
-            if (!valueConstrainedTo($shirtSize, array('S', 'M', 'L', 'XL', 'XXL'))) {
-                $errors = true;
-                echo 'bad shirt size';
             }
 
             // May want to enforce password requirements at this step
@@ -226,13 +214,21 @@
                 die();
             }
             // need to incorporate availability here
-            $newperson = new Person($first, $last, 'portland', 
+            $newperson = new Person(
+//first, last venue
+		$first, $last, 'portland', 
+//address, city state, zip code, profile picture
                 $address, $city, $state, $zipcode, "",
-                $phone, $phoneType, null, null,
-                $email, $shirtSize, $hasComputer, $hasCamera, $hasTransportation, $econtactName, $econtactPhone, $econtactRelation, 
-                $contactWhen, 'admin', 'Active', $contactMethod, null, null,
-                null, null, $skills, null, '', '', '', 
-                $dateOfBirth, $startDate, null, null, $password,
+//phone1, phone type, phone 2, phonetype 2, email
+                $phone, $phoneType, null, null, $email, 
+//contact name, contact number, contact relation
+		$econtactName, $econtactPhone, $econtactRelation, 
+//ct=contact when, type=t, status = st, ct=contact method 
+                $contactWhen, 'admin', 'Active', $contactMethod, 
+//availability array, schedule array, hours array
+		'', '', '', 
+//bd=date of birth, sd=start date, notes password
+                $dateOfBirth, $startDate, null, $password,
                 $sundaysStart, $sundaysEnd, $mondaysStart, $mondaysEnd,
                 $tuesdaysStart, $tuesdaysEnd, $wednesdaysStart, $wednesdaysEnd,
                 $thursdaysStart, $thursdaysEnd, $fridaysStart, $fridaysEnd,

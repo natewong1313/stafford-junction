@@ -37,22 +37,22 @@ class Person {
 	private $phone2type; // home, cell, or work
 	private $birthday;     // format: 64-03-12
 	private $email;   // email address as a string
-	private $shirt_size;   // t-shirt size
-	private $computer;   // computer - yes or no
-	private $camera;   // camera - yes or no
-	private $transportation;   // transportation - yes or no
+	//private $shirt_size;   // t-shirt size
+	//private $computer;   // computer - yes or no
+	//private $camera;   // camera - yes or no
+	//private $transportation;   // transportation - yes or no
 	private $contact_name;   // emergency contact name
 	private $contact_num;   // emergency cont. phone number
 	private $relation;   // relation to emergency contact
 	private $contact_time; //best time to contact volunteer
 	private $cMethod;    // best contact method for volunteer (email, phone, text)
-	private $position;    // job title or "student"
-	private $credithours; // hours required if volunteering for academic credit; otherwise blank
-	private $howdidyouhear;  // about RMH; internet, family, friend, volunteer, other (explain)
-	private $commitment;  // App: "year" or "semester" (if student) or N/A (guest chef, events, or projects)
-	private $motivation;   // App: why interested in RMH?
-	private $specialties;  // special training or skills
-	private $convictions;  // App: ever convicted of a felony?  "yes" or blank
+	//private $position;    // job title or "student"
+	//private $credithours; // hours required if volunteering for academic credit; otherwise blank
+	//private $howdidyouhear;  // about RMH; internet, family, friend, volunteer, other (explain)
+	//private $commitment;  // App: "year" or "semester" (if student) or N/A (guest chef, events, or projects)
+	//private $motivation;   // App: why interested in RMH?
+	//private $specialties;  // special training or skills
+	//private $convictions;  // App: ever convicted of a felony?  "yes" or blank
 	private $type;       // array of "volunteer", "weekendmgr", "sub", "guestchef", "events", "projects", "manager"
 	private $access_level;
 	private $status;     // a person may be "active" or "inactive"
@@ -79,9 +79,14 @@ class Person {
 	private $mustChangePassword;
 	private $gender;
 
-	function __construct($f, $l, $v, $a, $c, $s, $z, $pp, $p1, $p1t, $p2, $p2t, $e, $ts, $comp, $cam, $tran, $cn, $cpn, $rel,
-			$ct, $t, $st, $cntm, $pos, $credithours, $comm, $mot, $spe,
-			$convictions, $av, $sch, $hrs, $bd, $sd, $hdyh, $notes, $pass,
+	function __construct($f, $l, $v, $a, $c, $s, $z, $pp, $p1, $p1t, $p2, $p2t, $e, 
+			//$ts, $comp, $cam, $tran, 
+			$cn, $cpn, $rel,
+			$ct, $t, $st, $cntm, 
+			//$pos, $credithours, $comm, $mot, $spe,$convictions, 
+			$av, $sch, $hrs, $bd, $sd, 
+			//$hdyh, 
+			$notes, $pass,
 			$suns, $sune, $mons, $mone, $tues, $tuee, $weds, $wede,
 			$thus, $thue, $fris, $frie, $sats, $sate, $mcp, $gender) {
 		$this->id = $e;
@@ -93,29 +98,29 @@ class Person {
 		$this->city = $c;
 		$this->state = $s;
 		$this->zip = $z;
-    	$this->profile_pic = $pp;
+    		$this->profile_pic = $pp;
 		$this->phone1 = $p1;
 		$this->phone1type = $p1t;
 		$this->phone2 = $p2;
 		$this->phone2type = $p2t;
 		$this->birthday = $bd;
 		$this->email = $e;
-		$this->shirt_size = $ts;
-		$this->computer = $comp;
-		$this->camera = $cam;
-		$this->transportation = $tran;
+		//$this->shirt_size = $ts;
+		//$this->computer = $comp;
+		//$this->camera = $cam;
+		//$this->transportation = $tran;
 		$this->contact_name = $cn;
 		$this->contact_num = $cpn;
 		$this->relation = $rel;
 		$this->contact_time = $ct;
 		$this->cMethod = $cntm;
-		$this->position = $pos;
-		$this->credithours = $credithours;
-		$this->howdidyouhear = $hdyh;
-		$this->commitment = $comm;
-		$this->motivation = $mot;
-		$this->specialties = $spe;
-		$this->convictions = $convictions;
+		//$this->position = $pos;
+		//$this->credithours = $credithours;
+		//$this->howdidyouhear = $hdyh;
+		//$this->commitment = $comm;
+		//$this->motivation = $mot;
+		//$this->specialties = $spe;
+		//$this->convictions = $convictions;
 		$this->mustChangePassword = $mcp;
 		$this->type = $t !== "" ? explode(',', $t) : array();
 		$this->access_level = 2;

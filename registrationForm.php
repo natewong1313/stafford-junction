@@ -275,33 +275,6 @@ function buildSelect($name, $disabled=false, $selected=null) {
                 </div>
             </div>
 
-            <label for="skills">Skills</label>
-            <textarea id="skills" name="skills" placeholder="Please let us know about any special skills you may have, including proficiencies in non-English languages."></textarea>
-
-            <label>Additional Information</label>
-            <div class="checkbox-grouping">
-                <div class="checkbox-pair">
-                    <input id="has-computer" name="has-computer" type="checkbox">
-                    <label for="has-computer">I own a computer</label>
-                </div>
-                <div class="checkbox-pair">
-                    <input id="has-camera" name="has-camera" type="checkbox">
-                    <label for="has-camera">I own a camera</label>
-                </div>
-                <div class="checkbox-pair">
-                    <input id="has-transportation" name="has-transportation" type="checkbox">
-                    <label for="has-transportation">I have access to reliable transportation</label>
-                </div>
-            </div>
-
-            <label for="shirt-size"><em>* </em>T-shirt Size</label>
-            <select id="shirt-size" name="shirt-size" required>
-                <option value="S">Small</option>
-                <option value="M">Medium</option>
-                <option value="L">Large</option>
-                <option value="XL">Extra Large</option>
-                <option value="XXL">2X Large</option>
-            </select>
         </fieldset>
         <fieldset>
             <legend>Login Credentials</legend>

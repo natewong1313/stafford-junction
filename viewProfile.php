@@ -193,28 +193,6 @@
                     <label>Saturdays</label>
                     <p><?php echo time24hTo12h($user->get_saturday_availability_start()) . ' - ' . time24hTo12h($user->get_saturday_availability_end()) ?></p>
                 <?php endif ?>
-                <label>Skills</label>
-                <p><?php echo str_replace("\r\n", '<br>', $user->get_specialties()) ?></p>
-                <label>Additional Information</label>
-                <p><?php if ($user->get_computer()) echo 'Owns a computer'; else echo 'Does NOT own a computer'; ?></p>
-                <p><?php if ($user->get_camera()) echo 'Owns a camera'; else echo 'Does NOT own a camera'; ?></p>
-                <p><?php if ($user->get_transportation()) echo 'Has access to transportation'; else echo 'Does NOT have access to transportation'; ?></p>
-                <label>T-Shirt Size</label>
-                <p>
-                    <?php 
-                        $sizes = [
-                            null => '',
-                            '' => '',
-                            'S' => 'Small',
-                            'M' => 'Medium',
-                            'L' => 'Large',
-                            'XL' => 'Extra Large',
-                            'XXL' => '2X Large',
-                        ];
-                        $size = $sizes[$user->get_shirt_size()];
-                        echo $size;
-                    ?>
-                </p>
             </fieldset>
             <a class="button" href="editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>">Edit Profile</a>
             <?php if ($id != $userID): ?>
