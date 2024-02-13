@@ -45,22 +45,11 @@ function add_person($person) {
             $person->get_phone2type() . '","' .
             $person->get_birthday() . '","' .
             $person->get_email() . '","' .
-            //$person->get_shirt_size() . '","' .
-            //$person->get_computer() . '","' .
-            //$person->get_camera() . '","' .
-            //$person->get_transportation() . '","' .
             $person->get_contact_name() . '","' .
             $person->get_contact_num() . '","' .
             $person->get_relation() . '","' .
             $person->get_contact_time() . '","' .
             $person->get_cMethod() . '","' . 
-            //$person->get_position() . '","' . 
-            //$person->get_credithours() . '","' . 
-            //$person->get_howdidyouhear() . '","' . 
-            //$person->get_commitment() . '","' . 
-            //$person->get_motivation() . '","' . 
-            //$person->get_specialties() . '","' . 
-            //$person->get_convictions() . '","' . 
             implode(',', $person->get_type()) . '","' .
             $person->get_status() . '","' .
             implode(',', $person->get_availability()) . '","' .
@@ -304,10 +293,6 @@ function make_a_person($result_row) {
                     $result_row['phone2'],
                     $result_row['phone2type'],
                     $result_row['email'],
-                    //$result_row['shirt_size'],
-                    //$result_row['computer'],
-                    //$result_row['camera'],
-                    //$result_row['transportation'],
                     $result_row['contact_name'],
                     $result_row['contact_num'],
                     $result_row['relation'],
@@ -315,18 +300,11 @@ function make_a_person($result_row) {
                     $result_row['type'],
                     $result_row['status'],
                     $result_row['cMethod'],  
-                    //$result_row['position'],
-                    //$result_row['hours'],
-                    //$result_row['commitment'],
-                    //$result_row['motivation'],
-                    //$result_row['specialties'],
-                    //$result_row['convictions'],
                     $result_row['availability'],
                     $result_row['schedule'],
                     $result_row['hours'],
                     $result_row['birthday'],
                     $result_row['start_date'],
-                    //$result_row['howdidyouhear'],
                     $result_row['notes'],
                     $result_row['password'],
                     $result_row['sundays_start'],
