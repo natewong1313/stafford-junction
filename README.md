@@ -1,3 +1,4 @@
+# Anna was here
 # Old Dominion Humane Society (ODHS) Medicine Tracker
 ## Purpose
 This project is the result of a semesters' worth of collaboration among UMW students. The goal of the project was to create a web application that the Old Dominion Humane Society organization could utilize to make it easier to manage animals and the medicines/medical treatments/vaccines that these animals recieve at the ODHS. At-a-glance features include a web-based calendar of events, event sign up, volunteer registration & login system, reporting system, basic notification system, animal registration/archiving/report generation, and location and service creation.
