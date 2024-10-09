@@ -60,11 +60,21 @@ table, td, tr, th, form, fieldset, em, button, a {
 
     --shadow-and-border-color: #e8e8e8;
 
-    --main-color: #FF289A;
-    --accent-color: #BFF079;
-    --secondary-accent-color: #f6a4b5;
+   /******************************************************                                                                      
+    *   Sprint 1: Update Color Palette    
+    *   ------------------------------------------                       
+    *   Changes include:                                  
+    *       - Primary color: #hexcode (Stafford Junction)     
+    *       - Accent color: #hexcode (Stafford Junction)      
+    *       - Secondary color: #hexcode (Stafford Junction)
+    *       - Also changed the image for the website.
+    *       - Changed the image for the file as well.
+    ******************************************************/
+     --main-color: #7e0d07;
+     --accent-color: #fcdd2b;
+     --secondary-accent-color: #FFFFFF;
 
-    --calendar-event-color: #808080;
+    --calendar-event-color: #fcdd2b;
     --calendar-event-color-hover: var(--main-color);
     --calendar-today-border: 2px solid var(--secondary-accent-color);
 
