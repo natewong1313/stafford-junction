@@ -1,3 +1,65 @@
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Primary Parent/Guardian
+    $firstName = $_POST['first-name'];
+    $lastName = $_POST['last-name'];
+    $birthdate = $_POST['birthdate'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $state = $_POST['state'];
+    $zip = $_POST['zip'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $phoneType = $_POST['phone-type'];
+    $secondaryPhone = $_POST['secondary-phone'];
+    $secondaryPhoneType = $_POST['secondary-phone-type'];
+
+    // Secondary Parent/Guardian
+    $firstName2 = $_POST['first-name2'] ?? null;
+    $lastName2 = $_POST['last-name2'] ?? null;
+    $birthdate2 = $_POST['birthdate2'] ?? null;
+    $address2 = $_POST['address2'] ?? null;
+    $city2 = $_POST['city2'] ?? null;
+    $state2 = $_POST['state2'] ?? null;
+    $zip2 = $_POST['zip2'] ?? null;
+    $email2 = $_POST['email2'] ?? null;
+    $phone2 = $_POST['phone2'] ?? null;
+    $phoneType2 = $_POST['phone-type2'] ?? null;
+    $secondaryPhone2 = $_POST['secondary-phone2'] ?? null;
+    $secondaryPhoneType2 = $_POST['secondary-phone-type2'] ?? null;
+
+    // Children
+    $children = $_POST['children'] ?? [];
+
+    // Emergency Contact Fields
+    $econtactFirstName = $_POST['econtact-first-name'];
+    $econtactLastName = $_POST['econtact-last-name'];
+    $econtactPhone = $_POST['econtact-phone'];
+    $econtactRelation = $_POST['econtact-relation'];
+
+    // Login Credentials
+    $password = $_POST['password'];
+    $passwordReenter = $_POST['password-reenter'];
+
+    // Handle children forms
+    if (isset($_POST['children']) && is_array($_POST['children'])) {
+        foreach ($_POST['children'] as $index => $child) {
+            $childFirstName = $child['first-name'] ?? null;
+            $childLastName = $child['last-name'] ?? null;
+            $childBirthdate = $child['birthdate'] ?? null;
+            $childGender = $child['gender'] ?? null;
+            $childMedicalNotes = $child['child-medical-notes'] ?? null;
+            $childAdditionalNotes = $child['child-additional-notes'] ?? null;
+    
+            echo "Child $index: $childFirstName $childLastName, DOB: $childBirthdate, Gender: $childGender, Medical Notes: $childMedicalNotes, Additional Notes: $childAdditionalNotes <br>";
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,23 +79,23 @@
                 <fieldset>
                     <legend>Personal Information</legend>
                     <p>The following information will help us identify you within our system.</p>
-                    <label for="first-name"><em>* </em>First Name</label>
+                    <label for="first-name" required><em>* </em>First Name</label>
                     <input type="text" id="first-name" name="first-name" required placeholder="Enter your first name">
 
-                    <label for="last-name"><em>* </em>Last Name</label>
+                    <label for="last-name" required><em>* </em>Last Name</label>
                     <input type="text" id="last-name" name="last-name" required placeholder="Enter your last name">
 
-                    <label for="birthdate"><em>* </em>Date of Birth</label>
+                    <label for="birthdate" required><em>* </em>Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
 
-                    <label for="address"><em>* </em>Street Address</label>
+                    <label for="address" required><em>* </em>Street Address</label>
                     <input type="text" id="address" name="address" required placeholder="Enter your street address">
 
-                    <label for="city"><em>* </em>City</label>
+                    <label for="city" required><em>* </em>City</label>
                     <input type="text" id="city" name="city" required placeholder="Enter your city">
 
-                    <label for="state"><em>* </em>State</label>
+                    <label for="state" required><em>* </em>State</label>
                     <select id="state" name="state" required>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -88,59 +150,59 @@
                         <option value="WY">Wyoming</option>
                     </select>
 
-                    <label for="zip"><em>* </em>Zip Code</label>
+                    <label for="zip" required><em>* </em>Zip Code</label>
                     <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
                 </fieldset>
 
                 <fieldset>
                     <legend>Contact Information</legend>
                     <p>The following information will help us determine the best way to contact you.</p>
-                    <label for="email"><em>* </em>E-mail</label>
+                    <label for="email" required><em>* </em>E-mail</label>
                     <p>This will also serve as your username when logging in.</p>
                     <input type="email" id="email" name="email" required placeholder="Enter your e-mail address">
 
-                    <label for="phone"><em>* </em>Primary Phone Number</label>
+                    <label for="phone" required><em>* </em>Primary Phone Number</label>
                     <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
-                    <label><em>* </em>Primary Phone Type</label>
+                    <label required><em>* </em>Primary Phone Type</label>
                     <div class="radio-group">
                         <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
                         <input type="radio" id="phone-type-home" name="phone-type" value="home" required><label for="phone-type-home">Home</label>
                         <input type="radio" id="phone-type-work" name="phone-type" value="work" required><label for="phone-type-work">Work</label>
                     </div>
 
-                    <label for="phone">Secondary Phone Number</label>
-                    <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+                    <label for="secondary-phone">Secondary Phone Number</label>
+                    <input type="tel" id="secondary-phone" name="secondary-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
                     <label>Secondary Phone Type</label>
                     <div class="radio-group">
-                        <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
-                        <input type="radio" id="phone-type-home" name="phone-type" value="home" required><label for="phone-type-home">Home</label>
-                        <input type="radio" id="phone-type-work" name="phone-type" value="work" required><label for="phone-type-work">Work</label>
+                        <input type="radio" id="secondary-phone-type-cellphone" name="secondary-phone-type" value="cellphone" required><label for="secondary-phone-type-cellphone">Cell</label>
+                        <input type="radio" id="secondary-phone-type-home" name="secondary-phone-type" value="home" required><label for="secondary-phone-type-home">Home</label>
+                        <input type="radio" id="secondary-phone-type-work" name="secondary-phone-type" value="work" required><label for="secondary-phone-type-work">Work</label>
                     </div>
                 </fieldset>
 
                 <h3>Secondary Parent / Guardian</h3>
                 <fieldset>
                     <legend>Personal Information</legend>
-                    <label for="first-name">First Name</label>
-                    <input type="text" id="first-name" name="first-name" required placeholder="Enter your first name">
+                    <label for="first-name2">First Name</label>
+                    <input type="text" id="first-name2" name="first-name2" required placeholder="Enter your first name">
 
-                    <label for="last-name">Last Name</label>
-                    <input type="text" id="last-name" name="last-name" required placeholder="Enter your last name">
+                    <label for="last-name2">Last Name</label>
+                    <input type="text" id="last-name2" name="last-name2" required placeholder="Enter your last name">
 
-                    <label for="birthdate">Date of Birth</label>
-                    <input type="date" id="birthdate" name="birthdate" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
+                    <label for="birthdate2">Date of Birth</label>
+                    <input type="date" id="birthdate2" name="birthdate2" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
 
-                    <label for="address">Street Address</label>
-                    <input type="text" id="address" name="address" required placeholder="Enter your street address">
+                    <label for="address2">Street Address</label>
+                    <input type="text" id="address2" name="address2" required placeholder="Enter your street address">
 
-                    <label for="city">City</label>
-                    <input type="text" id="city" name="city" required placeholder="Enter your city">
+                    <label for="city2">City</label>
+                    <input type="text" id="city2" name="city2" required placeholder="Enter your city">
 
-                    <label for="state">State</label>
-                    <select id="state" name="state" required>
+                    <label for="state2">State</label>
+                    <select id="state2" name="state2" required>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
                         <option value="AZ">Arizona</option>
@@ -194,32 +256,32 @@
                         <option value="WY">Wyoming</option>
                     </select>
 
-                    <label for="zip">Zip Code</label>
-                    <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
+                    <label for="zip2">Zip Code</label>
+                    <input type="text" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
                 </fieldset>
                 <fieldset>
                     <legend>Contact Information</legend>
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your e-mail address">
+                    <label for="emai2l">E-mail</label>
+                    <input type="email" id="email2" name="email2" required placeholder="Enter your e-mail address">
 
-                    <label for="phone">Primary Phone Number</label>
-                    <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+                    <label for="phone2">Primary Phone Number</label>
+                    <input type="tel" id="phone2" name="phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
                     <label>Primary Phone Type</label>
                     <div class="radio-group">
-                        <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
-                        <input type="radio" id="phone-type-home" name="phone-type" value="home" required><label for="phone-type-home">Home</label>
-                        <input type="radio" id="phone-type-work" name="phone-type" value="work" required><label for="phone-type-work">Work</label>
+                        <input type="radio" id="phone-type-cellphone2" name="phone-type2" value="cellphone" required><label for="phone-type-cellphone2">Cell</label>
+                        <input type="radio" id="phone-type-home2" name="phone-type2" value="home" required><label for="phone-type-home2">Home</label>
+                        <input type="radio" id="phone-type-work2" name="phone-type2" value="work" required><label for="phone-type-work2">Work</label>
                     </div>
 
-                    <label for="phone">Secondary Phone Number</label>
-                    <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+                    <label for="secondary-phone2">Secondary Phone Number</label>
+                    <input type="tel" id="secondary-phone2" name="secondary-phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
                     <label>Secondary Phone Type</label>
                     <div class="radio-group">
-                        <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
-                        <input type="radio" id="phone-type-home" name="phone-type" value="home" required><label for="phone-type-home">Home</label>
-                        <input type="radio" id="phone-type-work" name="phone-type" value="work" required><label for="phone-type-work">Work</label>
+                        <input type="radio" id="secondary-phone-type-cellphone2" name="secondary-phone-type2" value="cellphone"><label for="secondary-phone-type-cellphone2">Cell</label>
+                        <input type="radio" id="secondary-phone-type-home2" name="secondary-phone-type2" value="home"><label for="secondary-phone-type-home2">Home</label>
+                        <input type="radio" id="secondary-phone-type-work2" name="secondary-phone-type2" value="work"><label for="secondary-phone-type-work2">Work</label>
                     </div>
                 </fieldset>
 
@@ -256,10 +318,16 @@
 
                             <label for="child_gender_${childCount}">Child's Gender</label>
                             <select id="child_gender_${childCount}" name="children[${childCount}][gender]" required>
+                                <option value="" disabled selected>Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
-                                <option value="other">Other</option>
                             </select>
+
+                            <label for="child_medical_notes_${childCount}">Medical Notes</label>
+                            <input type="text" id="child_medical_notes_${childCount}" name="children[${childCount}][last-child_medical_notes_]" required placeholder="Allergies, medications, etc.">
+
+                            <label for="child_additional_notes_${childCount}">Additional Notes</label>
+                            <input type="text" id="child_additional_notes_${childCount}" name="children[${childCount}][child_additional_notes_-name]" required placeholder="Anything else we should know?">
 
                             <button type="button" onclick="removeChildForm(${childCount})">Remove Child</button>
 
@@ -306,10 +374,10 @@
                     <label for="econtact-last-name" required><em>* </em>Contact Last Name</label>
                     <input type="text" id="econtact-last-name" name="econtact-last-name" required placeholder="Enter emergency contact last name">
 
-                    <label for="econtact-phone"><em>* </em>Contact Phone Number</label>
+                    <label for="econtact-phone" required><em>* </em>Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Enter emergency contact phone number. Ex. (555) 555-5555">
 
-                    <label for="econtact-name"><em>* </em>Contact Relation to You</label>
+                    <label for="econtact-name" required><em>* </em>Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
                 </fieldset>
 
@@ -317,21 +385,19 @@
                 <fieldset>
                     <p>You will use the following information to log in to the system.</p>
 
-                    <p><b>Your username is the primary email address entered above</b></p>
+                    <p><b>Your username is the primary email address entered above.</b></p>
 
-                    <label for="password"><em>* </em>Password</label>
+                    <label for="password" required><em>* </em>Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
 
-                    <label for="password-reenter"><em>* </em>Re-enter Password</label>
+                    <label for="password-reenter" required><em>* </em>Re-enter Password</label>
                     <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
                     <p id="password-match-error" class="error hidden">Passwords do not match!</p>
                 </fieldset>
 
                 <input type="submit" name="registration-form" value="Create Account">
             </form>
-            <?php if ($loggedIn): ?>
-                <a class="button cancel" href="index.php" style="margin-top: .5rem">Cancel</a>
-            <?php endif ?>
+            <a class="button cancel" href="index.php" style="margin-top: .5rem">Cancel</a>
         </main>
     </body>
 </html>
