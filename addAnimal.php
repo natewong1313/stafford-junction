@@ -1,9 +1,11 @@
+<!-- hello world -->
 <?php
 $ages = [
     "0", "1", "2", "3", "4", "5", "6", "7",
     "8", "9", "10", "11", "12", "13", "14", "15", 
     "16", "17", "18", "19", "20"
 ];
+    // A comment for the github assignment
 
     // Make session information accessible, allowing us to associate
     // data with the logged-in user.
