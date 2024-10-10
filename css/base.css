@@ -44,35 +44,50 @@ table, td, tr, th, form, fieldset, em, button, a {
 :root {
     /* CSS variables that will be used across the page */
     --page-background-color: #ffffff;
-    --page-font-color: #333333;
+    --page-font-color: #7e0d07;
     --inactive-font-color: #d0d0d0;
     --inactive-background-color: #f0f0f0;
     --standout-background: #fafafa;
 
-    --happy-toast-background-color: #1a7024;
+
+    /* changed the happy toast background*/
+    --happy-toast-background-color: #7e0d07;
     --happy-toast-font-color: white;
 
-    --info-toast-background-color: #2f2f2f;
+    --info-toast-background-color: #7e0d07;
     --info-toast-font-color: white;
 
+     /* changed the happy toast background color*/
     --error-toast-background-color: #701a1a;
     --error-toast-font-color: white;
 
     --shadow-and-border-color: #e8e8e8;
 
-    --main-color: #FF289A;
-    --accent-color: #BFF079;
-    --secondary-accent-color: #f6a4b5;
+   /******************************************************                                                                      
+    *   Sprint 1: Update Color Palette    
+    *   ------------------------------------------                       
+    *   Changes include:                                  
+    *       - Primary color: #hexcode (Stafford Junction)     
+    *       - Accent color: #hexcode (Stafford Junction)      
+    *       - Secondary color: #hexcode (Stafford Junction)
+    *       - Also changed the image for the website.
+    *       - Changed the image for the file as well.
+    ******************************************************/
+     --main-color: #7e0d07;
+     --accent-color: #fcdd2b;
+     --secondary-accent-color: #FFFFFF;
 
-    --calendar-event-color: #808080;
+      /* changed the event color */
+    --calendar-event-color: #fcdd2b;
     --calendar-event-color-hover: var(--main-color);
     --calendar-today-border: 2px solid var(--secondary-accent-color);
 
+     /* changed the font color*/
     --button-font-color: white;
     --button-padding: 0.5rem 1.5rem;
     --button-border-radius: 0.25rem;
 
-    --standard-border: 1px solid #333333;
+    --standard-border: 1px solid #000000;
     --light-border: 1px solid var(--shadow-and-border-color);
     --text-field-border: 2px solid #e8e8e8;
 

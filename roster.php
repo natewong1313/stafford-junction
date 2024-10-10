@@ -63,7 +63,7 @@
     <body>
         <?php require_once('header.php') ?>
         <span class="logo_print">
-          <img src="images/gwynethsgift.png">
+          <img src="images/staffordjunction.png">
         </span>
           <?php
             $event_name = $event_info['name'];
