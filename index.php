@@ -131,6 +131,11 @@
                         <span>View My Hours</span>
                     </div>
                 <?php endif ?>
+                <!--Dashboard button that directs the user to the forms page-->
+                <div class="dashboard-item" data-link="fillForm.php">
+                    <img src="images/form-dropdown-svgrepo-com.svg">
+                    <span>Fill Out Form</span>
+                </div>
                 <div class="dashboard-item" data-link="changePassword.php">
                     <img src="images/change-password.svg">
                     <span>Change Password</span>
