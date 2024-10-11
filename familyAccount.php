@@ -73,29 +73,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form class="signup-form" method="post">
                 <h2>Family Account Registration Form</h2>
                 <p>Please fill out each section of the following form if you would like to become a member of Stafford Junction</p>
-                <p>An asterisk (<em>*</em>) indicates a required field.</p>
+                <p>An asterisk (*) indicates a required field.</p>
 
                 <h3>Primary Parent / Guardian</h3>
                 <fieldset>
                     <legend>Personal Information</legend>
                     <p>The following information will help us identify you within our system.</p>
-                    <label for="first-name" required><em>* </em>First Name</label>
+                    <label for="first-name" required>* First Name</label>
                     <input type="text" id="first-name" name="first-name" required placeholder="Enter your first name">
 
-                    <label for="last-name" required><em>* </em>Last Name</label>
+                    <label for="last-name" required>* Last Name</label>
                     <input type="text" id="last-name" name="last-name" required placeholder="Enter your last name">
 
-                    <label for="birthdate" required><em>* </em>Date of Birth</label>
+                    <label for="birthdate" required>* Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
 
-                    <label for="address" required><em>* </em>Street Address</label>
+                    <label for="address" required>* Street Address</label>
                     <input type="text" id="address" name="address" required placeholder="Enter your street address">
 
-                    <label for="city" required><em>* </em>City</label>
+                    <label for="city" required>* City</label>
                     <input type="text" id="city" name="city" required placeholder="Enter your city">
 
-                    <label for="state" required><em>* </em>State</label>
+                    <label for="state" required>* State</label>
                     <select id="state" name="state" required>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -150,21 +150,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="WY">Wyoming</option>
                     </select>
 
-                    <label for="zip" required><em>* </em>Zip Code</label>
+                    <label for="zip" required>* Zip Code</label>
                     <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
                 </fieldset>
 
                 <fieldset>
                     <legend>Contact Information</legend>
                     <p>The following information will help us determine the best way to contact you.</p>
-                    <label for="email" required><em>* </em>E-mail</label>
+                    <label for="email" required>* E-mail</label>
                     <p>This will also serve as your username when logging in.</p>
                     <input type="email" id="email" name="email" required placeholder="Enter your e-mail address">
 
-                    <label for="phone" required><em>* </em>Primary Phone Number</label>
+                    <label for="phone" required>* Primary Phone Number</label>
                     <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
-                    <label required><em>* </em>Primary Phone Type</label>
+                    <label required>* Primary Phone Type</label>
                     <div class="radio-group">
                         <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
                         <input type="radio" id="phone-type-home" name="phone-type" value="home" required><label for="phone-type-home">Home</label>
@@ -368,16 +368,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3>Emergency Contact</h3>
                 <fieldset>
                     <p>Please provide us with someone to contact on your behalf in case of an emergency.</p>
-                    <label for="econtact-first-name" required><em>* </em>Contact First Name</label>
+                    <label for="econtact-first-name" required>* Contact First Name</label>
                     <input type="text" id="econtact-first-name" name="econtact-first-name" required placeholder="Enter emergency contact first name">
 
-                    <label for="econtact-last-name" required><em>* </em>Contact Last Name</label>
+                    <label for="econtact-last-name" required>* Contact Last Name</label>
                     <input type="text" id="econtact-last-name" name="econtact-last-name" required placeholder="Enter emergency contact last name">
 
-                    <label for="econtact-phone" required><em>* </em>Contact Phone Number</label>
+                    <label for="econtact-phone" required>* Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Enter emergency contact phone number. Ex. (555) 555-5555">
 
-                    <label for="econtact-name" required><em>* </em>Contact Relation to You</label>
+                    <label for="econtact-name" required> Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
                 </fieldset>
 
@@ -387,10 +387,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <p><b>Your username is the primary email address entered above.</b></p>
 
-                    <label for="password" required><em>* </em>Password</label>
+                    <label for="password" required>* Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
 
-                    <label for="password-reenter" required><em>* </em>Re-enter Password</label>
+                    <label for="password-reenter" required>* Re-enter Password</label>
                     <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
                     <p id="password-match-error" class="error hidden">Passwords do not match!</p>
                 </fieldset>
