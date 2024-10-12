@@ -19,7 +19,7 @@ error_reporting(E_ALL);
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>Form Page</h1>
+        <!--<h1>Form Page</h1>-->
     </body>
 </html>
 
