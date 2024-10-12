@@ -12,16 +12,16 @@ error_reporting(E_ALL);
 <html>
     <head>
         <?php require('universal.inc'); ?>
-        <title>Stafford Junction Homepage</title>
+        <title>Stafford Junction | Forms</title>
     </head>
     <body>
         <?php require('header.php'); ?>
-        <h1>Stafford Junction Dashboard</h1>
+        <h1>Forms</h1>
         <main class='dashboard'>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="holidayMealBagForm.php">
-                    <img src="images/logout.svg">
-                    <span>Log out</span>
+                    <img src="images/holdiayMealBagIcon.svg">
+                    <span>Holiday Meal Bag Form</span>
                 </div>
             </div>
         </main>
