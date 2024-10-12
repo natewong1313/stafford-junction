@@ -2,7 +2,7 @@
 <html>
     <head>
         <?php require_once('universal.inc') ?>
-        <title>ODHS Medicine Tracker | Change Password</title>
+        <title>Stafford Junction | Change Password</title>
     </head>
     <body>
         <?php require_once('header.php') ?>
@@ -11,7 +11,7 @@
         <form id="get-email" method="post">
             <label for="email">Email</label>
             <input type="text" id="email" name="email" placeholder="Enter your email" required>
-            <input type="submit" id="submit" name="submit" value="Email">
+            <input type="submit" id="submit" name="submit" value="Submit">
         </form>
         </main>
     </body>
