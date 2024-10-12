@@ -19,7 +19,7 @@ error_reporting(E_ALL);
         <h1>Stafford Junction Dashboard</h1>
         <main class='dashboard'>
             <div id="dashboard">
-                <div class="dashboard-item" data-link="logout.php">
+                <div class="dashboard-item" data-link="holidayMealBagForm.php">
                     <img src="images/logout.svg">
                     <span>Log out</span>
                 </div>
