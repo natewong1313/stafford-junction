@@ -11,15 +11,20 @@ error_reporting(E_ALL);
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Fill Form</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <?php require('universal.inc'); ?>
+        <title>Stafford Junction | Forms</title>
     </head>
     <body>
-        <h1>Form Page</h1>
+        <?php require('header.php'); ?>
+        <h1>Forms</h1>
+        <main class='dashboard'>
+            <div id="dashboard">
+                <div class="dashboard-item" data-link="holidayMealBagForm.php">
+                    <img src="images/holdiayMealBagIcon.svg">
+                    <span>Holiday Meal Bag Form</span>
+                </div>
+            </div>
+        </main>
     </body>
 </html>
 
