@@ -104,6 +104,7 @@
 
             </form>
             <p></p>
+            <p><a href="verifyEmail.php">Forgot Password?</a></p>
             <p>Looking for <a href="https://www.olddominionhumanesociety.org">Old Dominion Humane Society</a>?</p>
         </main>
     </body>
