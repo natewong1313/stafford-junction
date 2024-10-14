@@ -98,11 +98,14 @@
 
                 <label>6. Will you need a backpack? / ¿Necesitarás una mochila?* </label><br><br>
                 <p>Mark only one oval</p><br>
-                <input type="radio" id="choice_a" name="dont_need_backpack" value="backpack">
+                <input type="radio" id="choice_a" name="need_backpack" value="backpack">
                 <label for="choice_a">I already have a backpack, I just need school supplies. / Ya tengo mochila, solo necesito útiles
                 escolares.</label><br><br>
                 <input type="radio" id="choice_b" name="need_backpack" value="no_backpack">
                 <label for="choice_b">I need a backpack. / Necesito una mochila.</label><br><br>
+                <br><br>
+
+                <button type="submit" id="submit">Submit</button>
             </form>
         </div>
         
