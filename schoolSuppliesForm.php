@@ -16,7 +16,18 @@ if(isset($_SESSION['_id'])){
 }
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    //continue here
+    require_once('include/input-validation.php');
+    //require_once('database/dbSchoolSupplies.php');
+    $args = sanitize($_POST, null);
+    $required = array("email", "name", "grade", "school", "community", "need_backpack");
+    if(!wereRequiredFieldsSubmitted($args, $required)){
+        echo "Not all fields complete";
+        die();
+    }else {
+        foreach($args as $key => $val){
+            echo "{$key}:" . " " . "{$val}" . "<br>";
+        }
+    }
 }
 
 
@@ -117,10 +128,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <label>6. Will you need a backpack? / ¿Necesitarás una mochila?* </label><br><br>
                 <p>Mark only one oval</p><br>
-                <input type="radio" id="choice_a" name="need_backpack" value="backpack">
+                <input type="radio" id="choice_a" name="need_backpack" value="have_backpack_already">
                 <label for="choice_a">I already have a backpack, I just need school supplies. / Ya tengo mochila, solo necesito útiles
                 escolares.</label><br><br>
-                <input type="radio" id="choice_b" name="need_backpack" value="no_backpack">
+                <input type="radio" id="choice_b" name="need_backpack" value="need_backpack">
                 <label for="choice_b">I need a backpack. / Necesito una mochila.</label><br><br>
                 <br><br>
 
