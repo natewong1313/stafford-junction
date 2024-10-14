@@ -54,7 +54,45 @@
 
             <input type="radio" id="choice_3" name="community" value="other" required>
             <label for="choice_3">Other</label>
-            <input type="text" name="other" id="other">
+            <input type="text" name="other" id="other" disabled>
+
+            <!--ChatGPT code below, repurposed for this form-->
+
+            <!--Javascript code that makes sure that the user can only fill in the text field if they select the 'other' radio button-->
+            <script>
+            //Grabs each radio button by id
+            const choice1 = document.getElementById('choice_1');
+            const choice2 = document.getElementById('choice_2');
+            const choice3 = document.getElementById('choice_3');
+            
+            //gets the text field by id
+            const myInput = document.getElementById('other'); 
+
+            //checks to see if the radio button for 'other' is clicked
+            choice3.addEventListener('change', () => {
+                if (choice3.checked) {
+                    //if it is clicked, then the disable property of the input field is turned off
+                    myInput.disabled = false;
+                }
+            });
+
+            //checks to see if choice 1 or 2 were clicked, if they were, disable the text input associated with choice 3
+            choice1.addEventListener('change', () => {
+                if (choice1.checked) {
+                    myInput.disabled = true;
+                }
+            });
+
+            choice2.addEventListener('change', () => {
+                if (choice2.checked) {
+                    myInput.disabled = true;
+                }
+            });
+
+
+
+
+            </script>
 
             <!--Backpack-->
             <br><br>
