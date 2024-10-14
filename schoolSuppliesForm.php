@@ -1,5 +1,24 @@
 <?php
 
+session_cache_expire(30);
+session_start();
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+
+$loggedIn = false;
+$accessLevel = 0;
+$userID = null;
+
+if(isset($_SESSION['_id'])){
+    $loggedIn = true;
+    $accessLevel = $_SESSION['access_level'];
+    $userID = $_SESSION['_id'];
+}
+
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    //continue here
+}
+
 
 ?>
 
