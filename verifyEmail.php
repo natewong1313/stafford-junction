@@ -8,7 +8,10 @@
         <?php
             // Get email
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $answer = $_POST['email'];
+                $email = $_POST['email'];
+                // Next two lines is used for testing, add a way to check if user submits a valid email before going to next page
+                header('Location: securityQuestions.php');
+                die();
             }
         ?>
 
