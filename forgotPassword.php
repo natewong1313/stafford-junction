@@ -16,7 +16,7 @@
         require_once('include/input-validation.php');
         require_once('domain/Person.php');
         require_once('database/dbPersons.php');
-        if (!wereRequiredFieldsSubmitted($_POST, array('password', 'new-password'))) {
+        if (!wereRequiredFieldsSubmitted($_POST, array('new-password'))) {
             echo "Args missing";
             die();
         }
