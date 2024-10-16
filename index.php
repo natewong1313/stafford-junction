@@ -25,7 +25,7 @@
 <html>
     <head>
         <?php require('universal.inc'); ?>
-        <title>Stafford Junction Homepage</title>
+        <title>Stafford Junction | Dashboard</title>
     </head>
     <body>
         <?php require('header.php'); ?>
