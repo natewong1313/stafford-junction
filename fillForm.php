@@ -26,7 +26,14 @@ error_reporting(E_ALL);
 
                 <div class="dashboard-item" data-link="schoolSuppliesForm.php">
                     <img src="images/school-supplies-svgrepo-com.svg">
-                    <span>School Supplies Form</span>
+                    <span>School Supplies Form</span> </div>
+
+
+                    <div class="dashboard-item" data-link="springBreakForm.php">
+                    <img src="images/tent-svgrepo-com.svg">
+                    <span>Spring Break Form</span> </div>
+
+
                 </div>
             </div>
         </main>
