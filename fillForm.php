@@ -23,6 +23,11 @@ error_reporting(E_ALL);
                     <img src="images/holdiayMealBagIcon.svg">
                     <span>Holiday Meal Bag Form</span>
                 </div>
+
+                <div class="dashboard-item" data-link="schoolSuppliesForm.php">
+                    <img src="">
+                    <span>School Supplies Form</span>
+                </div>
             </div>
         </main>
     </body>
