@@ -25,7 +25,7 @@ error_reporting(E_ALL);
                 </div>
 
                 <div class="dashboard-item" data-link="schoolSuppliesForm.php">
-                    <img src="">
+                    <img src="images/school-supplies-svgrepo-com.svg">
                     <span>School Supplies Form</span>
                 </div>
             </div>
