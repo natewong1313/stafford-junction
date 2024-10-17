@@ -64,7 +64,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 1. Email-->
                 <label for="email">1. Email*</label><br><br>
-                <input type="email" name="email" id="email" placeholder="Email" required>
+                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required>
                 <br><br><hr>
 
                 <h2>Information / Información</h2>
@@ -92,7 +92,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--6. Child Age -->
                 <label for="age">6. Age / Cuántos años*</label><br><br>
-                <input type="text" name="age" id="age" placeholder="Name/Nombre" required>
+                <input type="text" name="age" id="age" placeholder="Age/Cuántos años" required>
                 <br><br><hr>
 
                 <h2>Clothing sizes / Tallas de ropa</h2>
