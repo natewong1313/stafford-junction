@@ -105,6 +105,7 @@
             </form>
             <p></p>
             <p><a href="verifyEmail.php">Forgot Password?</a></p>
+            <p>Don't have an account? Sign up <a href="familyAccount.php">here</a></p>
             <p>Looking for <a href="https://staffordjunction.org/">Stafford Junction's website</a>?</p>
         </main>
     </body>
