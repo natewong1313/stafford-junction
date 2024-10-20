@@ -5,6 +5,7 @@
 CREATE TABLE `dbAngelGiftForm` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `child_id` int(11) NOT NULL,
+  `email` varchar(256) NOT NULL,
   `parent_name` varchar(256) NOT NULL,
   `phone` int(12) NOT NULL,
   `child_name` varchar(256) NOT NULL,
