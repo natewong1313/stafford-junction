@@ -42,6 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Login Credentials
     $password = $_POST['password'];
     $passwordReenter = $_POST['password-reenter'];
+    $question = $_POST['question'];
+    $answer = $_POST['answer'];
 
     // Handle children forms
     if (isset($_POST['children']) && is_array($_POST['children'])) {
@@ -393,6 +395,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="password-reenter" required>* Re-enter Password</label>
                     <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
                     <p id="password-match-error" class="error hidden">Passwords do not match!</p>
+
+                    <label for="question" required>Enter Security Question</label>
+                    <input type="text" id="question" name="question" placeholder="Security Question" required>
+
+                    <label for="answer" required>Enter Security Answer</label>
+                    <input type="text" id="answer" name="answer" placeholder="Security Answer" required>
                 </fieldset>
 
                 <input type="submit" name="registration-form" value="Create Account">
