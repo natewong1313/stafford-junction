@@ -17,4 +17,4 @@ CREATE TABLE `dbSchoolSuppliesForm` (
 -- Constraints for table `dbSchoolSuppliesForm`, change dbAnimals to dbChildren
 --
 ALTER TABLE `dbSchoolSuppliesForm`
-  ADD CONSTRAINT `FKschoolsupplies` FOREIGN KEY (`child_id`) REFERENCES `dbAnimals` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FKschoolsupplies` FOREIGN KEY (`child_id`) REFERENCES `dbChildren` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
