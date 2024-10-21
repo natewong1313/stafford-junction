@@ -40,6 +40,7 @@ error_reporting(E_ALL);
 
                 </div>
             </div>
+            <a class="button cancel" href="index.php" style="margin-top: 3rem;">Return to Dashboard</a>
         </main>
     </body>
 </html>
