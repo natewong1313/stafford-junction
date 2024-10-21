@@ -42,6 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Login Credentials
     $password = $_POST['password'];
     $passwordReenter = $_POST['password-reenter'];
+    $question = $_POST['question'];
+    $answer = $_POST['answer'];
 
     // Handle children forms
     if (isset($_POST['children']) && is_array($_POST['children'])) {
