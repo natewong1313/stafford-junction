@@ -60,6 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <h1>Holiday Meal Bag 2023</h1>
+    <div id="formatted_form">
+
 <p>*Subject to availability / Sujeto a disponibilidad</p>
 <p>*Based on donations, requests will be processed on a first-come, first-served basis / Basado en donaciones, solicitudes seran procesadas en orden que sean recibidas</p>
 
@@ -101,9 +103,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="release_no">No / No</label><br><br>
 
     <button type="submit">Submit</button>
-    <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
 </form>
-
+    </div>
 </body>
 </html>
 
