@@ -103,6 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="release_no">No / No</label><br><br>
 
     <button type="submit">Submit</button>
+    <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
 </form>
     </div>
 </body>
