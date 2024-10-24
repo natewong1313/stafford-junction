@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $answer = $_POST['answer'];
 
     // Handle children forms
+    /**
     if (isset($_POST['children']) && is_array($_POST['children'])) {
         foreach ($_POST['children'] as $index => $child) {
             $childFirstName = $child['first-name'] ?? null;
@@ -58,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Child $index: $childFirstName $childLastName, DOB: $childBirthdate, Gender: $childGender, Medical Notes: $childMedicalNotes, Additional Notes: $childAdditionalNotes <br>";
         }
     }
+    */
+    var_dump($_POST);
 }
 ?>
 
