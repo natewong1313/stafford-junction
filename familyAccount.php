@@ -1,68 +1,29 @@
 <?php
 
+
+/** 
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    require_once('include/input-validation.php');
+    require_once('database/dbFamily.php');
+    $args = sanitize($_POST, null);
+
+    $family = make_a_family($args);
+    var_dump($family);
+
+}
+*/
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require_once('include/input-validation.php');
+    require_once('database/dbFamily.php');
+    $args = sanitize($_POST, null);
 
-    // Primary Parent/Guardian
-    $firstName = $_POST['first-name'];
-    $lastName = $_POST['last-name'];
-    $birthdate = $_POST['birthdate'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $state = $_POST['state'];
-    $zip = $_POST['zip'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $phoneType = $_POST['phone-type'];
-    $secondaryPhone = $_POST['secondary-phone'];
-    $secondaryPhoneType = $_POST['secondary-phone-type'];
-
-    // Secondary Parent/Guardian
-    $firstName2 = $_POST['first-name2'] ?? null;
-    $lastName2 = $_POST['last-name2'] ?? null;
-    $birthdate2 = $_POST['birthdate2'] ?? null;
-    $address2 = $_POST['address2'] ?? null;
-    $city2 = $_POST['city2'] ?? null;
-    $state2 = $_POST['state2'] ?? null;
-    $zip2 = $_POST['zip2'] ?? null;
-    $email2 = $_POST['email2'] ?? null;
-    $phone2 = $_POST['phone2'] ?? null;
-    $phoneType2 = $_POST['phone-type2'] ?? null;
-    $secondaryPhone2 = $_POST['secondary-phone2'] ?? null;
-    $secondaryPhoneType2 = $_POST['secondary-phone-type2'] ?? null;
-
-    // Children
-    $children = $_POST['children'] ?? [];
-
-    // Emergency Contact Fields
-    $econtactFirstName = $_POST['econtact-first-name'];
-    $econtactLastName = $_POST['econtact-last-name'];
-    $econtactPhone = $_POST['econtact-phone'];
-    $econtactRelation = $_POST['econtact-relation'];
-
-    // Login Credentials
-    $password = $_POST['password'];
-    $passwordReenter = $_POST['password-reenter'];
-    $question = $_POST['question'];
-    $answer = $_POST['answer'];
-
-    // Handle children forms
-    /**
-    if (isset($_POST['children']) && is_array($_POST['children'])) {
-        foreach ($_POST['children'] as $index => $child) {
-            $childFirstName = $child['first-name'] ?? null;
-            $childLastName = $child['last-name'] ?? null;
-            $childBirthdate = $child['birthdate'] ?? null;
-            $childGender = $child['gender'] ?? null;
-            $childMedicalNotes = $child['child-medical-notes'] ?? null;
-            $childAdditionalNotes = $child['child-additional-notes'] ?? null;
-    
-            echo "Child $index: $childFirstName $childLastName, DOB: $childBirthdate, Gender: $childGender, Medical Notes: $childMedicalNotes, Additional Notes: $childAdditionalNotes <br>";
-        }
-    }
-    */
-    var_dump($_POST);
+    $family = make_a_family($args);
+    var_dump($family);
 }
 ?>
+
 
 
 <!DOCTYPE html>

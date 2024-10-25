@@ -41,7 +41,7 @@ class Family {
         $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $accountType, $isArchived
     
     ){
-        $this->firstName = $first_name;
+        $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthdate = $birthdate;
         $this->address = $address;
@@ -65,7 +65,7 @@ class Family {
         $this->phoneType2 = $phoneType2;
         $this->secondaryPhone2 = $secondaryPhone2;
         $this->secondaryPhoneType2 = $secondaryPhoneType2;
-        $this->econtanctFirstName = $econtactFirstName;
+        $this->econtactFirstName = $econtactFirstName;
         $this->econtactLastName = $econtactLastName;
         $this->econtactPhone = $econtactPhone;
         $this->econtactRelation = $econtactRelation;
