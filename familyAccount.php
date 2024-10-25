@@ -13,6 +13,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 }
 */
 
+/**
+ * function that just prints the content of var_dump in a more readable way
+ */
+function dd($val){
+    echo "<pre>";
+    var_dump($val);
+    echo "</pre>";
+
+    die();
+}
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('include/input-validation.php');
@@ -20,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $args = sanitize($_POST, null);
 
     $family = make_a_family($args);
-    var_dump($family);
+    dd($family);
 }
 ?>
 
