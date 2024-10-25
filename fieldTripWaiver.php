@@ -15,7 +15,6 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
-
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
@@ -48,7 +47,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             'signature_date'
     );
     
-    
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
         die();
@@ -62,7 +60,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 ?>
 
 <html>
-
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
@@ -70,7 +67,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stafford Junction | Field Trip Waiver Form</title>
 </head>
-
 <body>
 
     <!-- Main heading of the page -->
@@ -177,56 +173,62 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         placeholder="Phone Number / Número de Teléfono" required><br><br>
     </div>
 
-
-
-    
-
     <!-- Separator Line -->
     <hr>
 
     <!-- Waiver Section -->
     <div class="info-box-rect">
-        <p><strong>Emergency Medical Authorization and Waiver of Liability / 
-            Autorización Médica de Emergencia y Exención de Responsabilidad</strong></p>
+        <p><strong>Emergency Medical Authorization and Waiver of Liability /
+                Autorización Médica de Emergencia y Exención de Responsabilidad</strong></p>
     </div>
     <div id="spring_break_form">
         <div class="pickup-times">
             <!-- General Information Title in a Black Box -->
             <p>
-                    I hereby give my consent for my child to attend programs and activities organized by Stafford Junction.
-                    I understand there are inherent risks involved in any activity and I hereby release Stafford Junction,
-                    its employees, agents, and volunteers from all liability for any injury, loss, and/or damage to
-                    person/property that may occur while my child is in attendance. I authorize Stafford Junction to
-                    obtain immediate care and consent to the hospitalization of, the performance of necessary diagnostic
-                    tests upon, the use of surgery on, and/or the administration of drugs to my child if an emergency
-                    occurs when I cannot be located immediately. It is also understood this agreement covers only those
-                    situations which are true emergencies and only when I cannot be reached. I understand Stafford
-                    Junction will make every effort to contact me and/or the designated Emergency Contacts. I acknowledge
-                    I am ultimately responsible for all costs incurred not reimbursable by my health insurance provider.
+                I hereby give my consent for my child to attend programs and activities organized by Stafford Junction.
+                I understand there are inherent risks involved in any activity and I hereby release Stafford Junction,
+                its employees, agents, and volunteers from all liability for any injury, loss, and/or damage to
+                person/property that may occur while my child is in attendance. I authorize Stafford Junction to
+                obtain immediate care and consent to the hospitalization of, the performance of necessary diagnostic
+                tests upon, the use of surgery on, and/or the administration of drugs to my child if an emergency
+                occurs when I cannot be located immediately. It is also understood this agreement covers only those
+                situations which are true emergencies and only when I cannot be reached. I understand Stafford
+                Junction will make every effort to contact me and/or the designated Emergency Contacts. I acknowledge
+                I am ultimately responsible for all costs incurred not reimbursable by my health insurance provider.
             </p>
-                    <!-- Separator Line -->
-                     <br>
+            <!-- Separator Line -->
+            <br>
             <p>
-                    Por la presente doy mi consentimiento para que mi hijo/a participe en los programas y actividades organizados 
-                    por Stafford Junction. Entiendo que existen riesgos inherentes en cualquier actividad y, por la presente, libero a 
-                    Stafford Junction, sus empleados, agentes y voluntarios de toda responsabilidad por cualquier lesión, pérdida y/o 
-                    daño a la persona o propiedad que pueda ocurrir mientras mi hijo/a esté presente. Autorizo a Stafford Junction a 
-                    obtener atención médica inmediata y doy mi consentimiento para la hospitalización, la realización de pruebas diagnósticas 
-                    necesarias, el uso de cirugía y/o la administración de medicamentos a mi hijo/a si ocurre una emergencia y no puedo ser 
-                    localizado/a de inmediato. También se entiende que este acuerdo cubre únicamente aquellas situaciones que sean verdaderas 
-                    emergencias y solo cuando no se pueda contactarme. Entiendo que Stafford Junction hará todo lo posible por contactarme a mí 
-                    y/o a los Contactos de Emergencia designados. Reconozco que soy el/la responsable final de todos los costos incurridos que no 
-                    sean reembolsables por mi proveedor de seguro médico.
+                Por la presente doy mi consentimiento para que mi hijo/a participe en los programas y actividades
+                organizados
+                por Stafford Junction. Entiendo que existen riesgos inherentes en cualquier actividad y, por la
+                presente, libero a
+                Stafford Junction, sus empleados, agentes y voluntarios de toda responsabilidad por cualquier lesión,
+                pérdida y/o
+                daño a la persona o propiedad que pueda ocurrir mientras mi hijo/a esté presente. Autorizo a Stafford
+                Junction a
+                obtener atención médica inmediata y doy mi consentimiento para la hospitalización, la realización de
+                pruebas diagnósticas
+                necesarias, el uso de cirugía y/o la administración de medicamentos a mi hijo/a si ocurre una emergencia
+                y no puedo ser
+                localizado/a de inmediato. También se entiende que este acuerdo cubre únicamente aquellas situaciones
+                que sean verdaderas
+                emergencias y solo cuando no se pueda contactarme. Entiendo que Stafford Junction hará todo lo posible
+                por contactarme a mí
+                y/o a los Contactos de Emergencia designados. Reconozco que soy el/la responsable final de todos los
+                costos incurridos que no
+                sean reembolsables por mi proveedor de seguro médico.
             </p>
-
 
             <!-- Medical Insurance Company -->
             <label for="insurance_company">Medical Insurance Company / Compañía de Seguro Médico</label><br>
-            <input type="text" name="insurance_company" id="insurance_company" placeholder="Insurance Company / Compañía de Seguros"><br><br>
+            <input type="text" name="insurance_company" id="insurance_company"
+                placeholder="Insurance Company / Compañía de Seguros"><br><br>
 
             <!-- Policy Number -->
             <label for="policy_number">Policy Number / Número de Póliza</label><br>
-            <input type="text" name="policy_number" id="policy_number" placeholder="Policy Number / Policy Number"><br><br>
+            <input type="text" name="policy_number" id="policy_number"
+                placeholder="Policy Number / Policy Number"><br><br>
         </div>
 
         <!-- Separator Line -->
@@ -239,10 +241,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <div id="spring_break_form">
             <div class="info">
                 <p>
-                        Stafford Junction practices four core values: Caring, Honesty, Respect, and Responsibility.
-                        We are not a day care service. The program is staffed by volunteers whose sole responsibility
-                        is to provide stimulating activities to youth, preventing summer learning loss. Misbehavior
-                        by students will not be tolerated.
+                    Stafford Junction practices four core values: Caring, Honesty, Respect, and Responsibility.
+                    We are not a day care service. The program is staffed by volunteers whose sole responsibility
+                    is to provide stimulating activities to youth, preventing summer learning loss. Misbehavior
+                    by students will not be tolerated.
                 </p>
                 <p>
                     The standard disciplinary process is as follows: verbal warning, second verbal warning
@@ -256,22 +258,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <br>
                 <p>
-                       Stafford Junction practica cuatro valores fundamentales: Cuidado, Honestidad, Respeto y Responsabilidad.
-                       No somos un servicio de guardería. El programa está a cargo de voluntarios cuya única responsabilidad es
-                       ofrecer actividades estimulantes para los jóvenes, previniendo la pérdida de aprendizaje durante el verano.
-                       No se tolerará el mal comportamiento de los estudiantes.
+                    Stafford Junction practica cuatro valores fundamentales: Cuidado, Honestidad, Respeto y
+                    Responsabilidad.
+                    No somos un servicio de guardería. El programa está a cargo de voluntarios cuya única
+                    responsabilidad es
+                    ofrecer actividades estimulantes para los jóvenes, previniendo la pérdida de aprendizaje durante el
+                    verano.
+                    No se tolerará el mal comportamiento de los estudiantes.
                 </p>
                 <p>
-                       El proceso disciplinario estándar es el siguiente: advertencia verbal, segunda advertencia verbal y contacto
-                       con los padres, suspensión de dos días del programa y contacto con los padres, expulsión del programa.
+                    El proceso disciplinario estándar es el siguiente: advertencia verbal, segunda advertencia verbal y
+                    contacto
+                    con los padres, suspensión de dos días del programa y contacto con los padres, expulsión del
+                    programa.
                 </p>
                 <p>
-                        Excepciones: Si un estudiante comete una infracción grave, el Gerente del Programa Juvenil tiene la opción de
-                        expulsar inmediatamente al niño del programa.
+                    Excepciones: Si un estudiante comete una infracción grave, el Gerente del Programa Juvenil tiene la
+                    opción de
+                    expulsar inmediatamente al niño del programa.
                 </p>
-
-                
-
             </div>
 
             <!-- Separator Line -->
@@ -292,24 +297,22 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         above-mentioned, it is my responsibility to inform them to exclude themselves
                         from photographs or videos taken during such activities.
                     </p>
-
                     <br>
-
                     <p>
-                            Reconozco que Stafford Junction puede utilizar fotografías o videos de los participantes 
-                            que se tomen durante su participación en actividades de Stafford Junction. Esto incluye 
-                            el uso interno y externo, como el sitio web de Stafford Junction, Facebook y publicaciones. 
-                            Doy mi consentimiento para dichos usos y, por la presente, renuncio a todos los derechos 
-                            de compensación. Si no deseo que la imagen de mi hijo/a sea incluida en los elementos 
-                            mencionados, es mi responsabilidad informarle que se excluya de las fotografías o videos
-                             tomados durante dichas actividades.
+                        Reconozco que Stafford Junction puede utilizar fotografías o videos de los participantes
+                        que se tomen durante su participación en actividades de Stafford Junction. Esto incluye
+                        el uso interno y externo, como el sitio web de Stafford Junction, Facebook y publicaciones.
+                        Doy mi consentimiento para dichos usos y, por la presente, renuncio a todos los derechos
+                        de compensación. Si no deseo que la imagen de mi hijo/a sea incluida en los elementos
+                        mencionados, es mi responsabilidad informarle que se excluya de las fotografías o videos
+                        tomados durante dichas actividades.
                     </p>
 
-
                     <!-- Parent/Guardian Print Name -->
-                    <label for="parent_name">Parent/Guardian Print Name* / Nombre en Letra de Imprenta del Padre/Madre/Tutor*</label><br>
-                    <input type="text" name="parent_name" id="parent_name" placeholder="Parent/Guardian Name / Nombre del Padre/Madre/Tutor"
-                        required><br><br>
+                    <label for="parent_name">Parent/Guardian Print Name* / Nombre en Letra de Imprenta del
+                        Padre/Madre/Tutor*</label><br>
+                    <input type="text" name="parent_name" id="parent_name"
+                        placeholder="Parent/Guardian Name / Nombre del Padre/Madre/Tutor" required><br><br>
 
                     <!-- Parent/Guardian Signature -->
                     <label for="parent_signature">Parent/Guardian Signature* / Firma del Padre/Madre/Tutor*</label><br>
@@ -325,9 +328,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <br>
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-
-                </form>
-
-</body>
-
+            </form>
+    </body>
 </html>
