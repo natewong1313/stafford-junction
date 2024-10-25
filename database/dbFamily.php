@@ -33,7 +33,7 @@ function make_a_family($result_row){
         $result_row['econtact-last-name'],
         $result_row['econtact-phone'],
         $result_row['econtact-relation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT);
+        password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['question'],
         $result_row['answer'],
         'family',
