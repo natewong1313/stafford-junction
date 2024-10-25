@@ -37,7 +37,7 @@ function make_a_family($result_row){
         $result_row['question'],
         $result_row['answer'],
         'family',
-        0
+        'false'
     );
 
     return $family;
