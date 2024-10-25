@@ -174,11 +174,11 @@ class Family {
     }
 
     public function getEContactFirstName(){
-        return $this-econtanctFirstName;
+        return $this->econtactFirstName;
     }
 
     public function getEContactLastName(){
-        return $this-econtanctLastName;
+        return $this->econtactLastName;
     }
 
     public function getEContactPhone(){
@@ -202,7 +202,7 @@ class Family {
     }
 
     public function getAccountType(){
-        return $this->$accountType;
+        return $this->accountType;
     }
 
     public function isArchived(){

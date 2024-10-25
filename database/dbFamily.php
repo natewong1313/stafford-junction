@@ -42,3 +42,60 @@ function make_a_family($result_row){
 
     return $family;
 }
+
+function add_family($family){
+    if(!$family instanceof Family)
+        die("add_family type mistach");
+
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $family->getEmail() . "'";
+    $result = mysqli_query($conn,$query);
+    //var_dump($result);
+    if($result == null || mysqli_num_rows($result) == 0){
+        mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, city,
+        state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
+        birthdate2, address2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2, 
+        econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, securityQuestion, 
+        securityAnswer, accountType, isArchived) VALUES(" ' .
+        $family->getFirstName() . '","' .
+        $family->getLastName() . '","' .
+        $family->getBirthDate() . '","' .
+        $family->getAddress() . '","' .
+        $family->getCity() . '","' . 
+        $family->getState() . '","' .
+        $family->getZip() . '","' .
+        $family->getEmail() . '","' . 
+        $family->getPhone() . '","' .
+        $family->getPhoneType() . '","' . 
+        $family->getSecondaryPhone() . '","' .
+        $family->getSecondaryPhoneType() . '","' .
+        $family->getFirstName2() . '","' .
+        $family->getLastName2() . '","' .
+        $family->getBirthDate2() . '","' .
+        $family->getAddress2() . '","' .
+        $family->getCity2() . '","' .
+        $family->getState2() . '","' .
+        $family->getZip2() . '","' .
+        $family->getEmail2() . '","' .
+        $family->getPhone2() . '","' .
+        $family->getPhoneType2() . '","' .
+        $family->getSecondaryPhone2() . '","' .
+        $family->getSecondaryPhoneType2() . '","' .
+        $family->getEContactFirstName() . '","' .
+        $family->getEContactLastName() . '","' .
+        $family->getEContactPhone() . '","' .
+        $family->getEContactRelation() . '","' .
+        $family->getPassword() . '","' .
+        $family->getSecurityQuestion() . '","' .
+        $family->getSecurityAnswer() . '","' .
+        $family->getAccountType() . '","' .
+        "false" . 
+        '");'
+    );						
+    mysqli_close($conn);
+    return true;
+        
+    }
+    mysqli_close($conn);
+    return false;
+}

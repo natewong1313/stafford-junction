@@ -31,7 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $args = sanitize($_POST, null);
 
     $family = make_a_family($args);
-    dd($family);
+    //dd($family);
+    $success = add_family($family);
+    //echo $success;
 }
 ?>
 
