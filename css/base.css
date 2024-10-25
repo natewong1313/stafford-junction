@@ -1032,7 +1032,7 @@ img.profile-pic {
   background-color: black; /* Black background color */
   color: white; /* White text color */
   padding: 10px 15px; /* Padding inside the box */
-  border-radius: 5px; /* Optional: Rounds the corners of the box */
+  border-radius: 5px; /* Rounds the corners of the box */
   font-weight: bold; /* Makes the text bold */
   margin-bottom: 15px; /* Adds space below the box */
 }
