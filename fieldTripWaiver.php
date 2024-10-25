@@ -33,6 +33,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             'child_city',
             'child_state',
             'child_zip',
+            'religious_foods',
+            "medical_issues",
             'parent_email',
             'emergency_contact_name_1',
             'emergency_contact_relationship_1',
