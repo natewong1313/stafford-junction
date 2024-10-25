@@ -21,7 +21,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     //require_once('database/dbSpringBreakForm.php');
     $args = sanitize($_POST, null);
 
-
     $required = array(
         'child_first_name',
         'child_last_name',
@@ -57,7 +56,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'guardian_signature',
         'signature_date'
     );
-    
     
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
