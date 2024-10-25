@@ -165,23 +165,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <fieldset>
                     <legend>Personal Information</legend>
                     <label for="first-name2">First Name</label>
-                    <input type="text" id="first-name2" name="first-name2" required placeholder="Enter your first name">
+                    <input type="text" id="first-name2" name="first-name2" placeholder="Enter your first name">
 
                     <label for="last-name2">Last Name</label>
-                    <input type="text" id="last-name2" name="last-name2" required placeholder="Enter your last name">
+                    <input type="text" id="last-name2" name="last-name2" placeholder="Enter your last name">
 
                     <label for="birthdate2">Date of Birth</label>
-                    <input type="date" id="birthdate2" name="birthdate2" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
+                    <input type="date" id="birthdate2" name="birthdate2" placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
 
                     <label for="address2">Street Address</label>
-                    <input type="text" id="address2" name="address2" required placeholder="Enter your street address">
+                    <input type="text" id="address2" name="address2" placeholder="Enter your street address">
 
                     <label for="city2">City</label>
-                    <input type="text" id="city2" name="city2" required placeholder="Enter your city">
+                    <input type="text" id="city2" name="city2" placeholder="Enter your city">
 
                     <label for="state2">State</label>
-                    <select id="state2" name="state2" required>
+                    <select id="state2" name="state2">
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
                         <option value="AZ">Arizona</option>
@@ -236,25 +236,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
 
                     <label for="zip2">Zip Code</label>
-                    <input type="text" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
+                    <input type="text" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code">
                 </fieldset>
                 <fieldset>
                     <legend>Contact Information</legend>
                     <label for="emai2l">E-mail</label>
-                    <input type="email" id="email2" name="email2" required placeholder="Enter your e-mail address">
+                    <input type="email" id="email2" name="email2" placeholder="Enter your e-mail address">
 
                     <label for="phone2">Primary Phone Number</label>
-                    <input type="tel" id="phone2" name="phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+                    <input type="tel" id="phone2" name="phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555">
 
                     <label>Primary Phone Type</label>
                     <div class="radio-group">
-                        <input type="radio" id="phone-type-cellphone2" name="phone-type2" value="cellphone" required><label for="phone-type-cellphone2">Cell</label>
-                        <input type="radio" id="phone-type-home2" name="phone-type2" value="home" required><label for="phone-type-home2">Home</label>
-                        <input type="radio" id="phone-type-work2" name="phone-type2" value="work" required><label for="phone-type-work2">Work</label>
+                        <input type="radio" id="phone-type-cellphone2" name="phone-type2" value="cellphone"><label for="phone-type-cellphone2">Cell</label>
+                        <input type="radio" id="phone-type-home2" name="phone-type2" value="home"><label for="phone-type-home2">Home</label>
+                        <input type="radio" id="phone-type-work2" name="phone-type2" value="work"><label for="phone-type-work2">Work</label>
                     </div>
 
                     <label for="secondary-phone2">Secondary Phone Number</label>
-                    <input type="tel" id="secondary-phone2" name="secondary-phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+                    <input type="tel" id="secondary-phone2" name="secondary-phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555">
 
                     <label>Secondary Phone Type</label>
                     <div class="radio-group">
@@ -373,10 +373,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
                     <p id="password-match-error" class="error hidden">Passwords do not match!</p>
 
-                    <label for="question" required>Enter Security Question</label>
+                    <label for="question" required>* Enter Security Question</label>
                     <input type="text" id="question" name="question" placeholder="Security Question" required>
 
-                    <label for="answer" required>Enter Security Answer</label>
+                    <label for="answer" required>* Enter Security Answer</label>
                     <input type="text" id="answer" name="answer" placeholder="Security Answer" required>
                 </fieldset>
 
