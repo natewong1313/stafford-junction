@@ -1028,3 +1028,11 @@ img.profile-pic {
   text-align: center; /* Centers the text within its container */
 }
 
+.info-box-rect {
+  background-color: black; /* Black background color */
+  color: white; /* White text color */
+  padding: 10px 15px; /* Padding inside the box */
+  border-radius: 5px; /* Optional: Rounds the corners of the box */
+  font-weight: bold; /* Makes the text bold */
+  margin-bottom: 15px; /* Adds space below the box */
+}
