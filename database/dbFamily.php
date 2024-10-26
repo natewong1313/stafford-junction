@@ -3,6 +3,10 @@
 include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Family.php');
 
+/**
+ * function that takes the $_POST arguments from the sign up page as an assoc array
+ * and instantiates a new Family object with that data
+ */
 function make_a_family($result_row){
     $family = new Family(
         $result_row['first-name'],
@@ -43,11 +47,15 @@ function make_a_family($result_row){
     return $family;
 }
 
+/**
+ * function that takes a family object and inserts it into the database
+ */
 function add_family($family){
     if(!$family instanceof Family)
         die("add_family type mistach");
 
     $conn = connect();
+    //first checks to see if the family already exists by looking at email
     $query = "SELECT * FROM dbFamily WHERE email = '" . $family->getEmail() . "'";
     $result = mysqli_query($conn,$query);
     //var_dump($result);

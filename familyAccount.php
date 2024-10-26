@@ -30,10 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('database/dbFamily.php');
     $args = sanitize($_POST, null);
 
+    //creates family object
     $family = make_a_family($args);
-    //dd($family);
+
+    //inserts family into database
     $success = add_family($family);
-    //echo $success;
+
 }
 ?>
 
