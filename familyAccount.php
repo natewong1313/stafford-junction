@@ -36,6 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //inserts family into database
     $success = add_family($family);
 
+    if($success){
+        //redirect user back to login
+        header("Location: login.php");
+    }
+
 }
 ?>
 

@@ -100,8 +100,8 @@ function add_family($family){
         "false" . 
         '");'
     );						
-    mysqli_close($conn);
-    return true;
+        mysqli_close($conn);
+        return true;
         
     }
     mysqli_close($conn);
