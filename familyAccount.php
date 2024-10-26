@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if($success){
         //redirect user back to login
+        echo "Account created successfully!";
         header("Location: login.php");
     }
 
@@ -189,6 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <label for="state2">State</label>
                     <select id="state2" name="state2">
+                        <option value="--">--</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
                         <option value="AZ">Arizona</option>
@@ -235,7 +237,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="TX">Texas</option>
                         <option value="UT">Utah</option>
                         <option value="VT">Vermont</option>
-                        <option value="VA" selected>Virginia</option>
+                        <option value="VA">Virginia</option>
                         <option value="WA">Washington</option>
                         <option value="WV">West Virginia</option>
                         <option value="WI">Wisconsin</option>
