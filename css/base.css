@@ -1028,3 +1028,18 @@ img.profile-pic {
   text-align: center; /* Centers the text within its container */
 }
 
+/*
+ * This is used to change the attributes of the availability days in the availability secion in the programInterestForm
+ */
+.availability-day-form {
+  display: flex; 
+  gap: 1.5rem; 
+  align-items: center;
+}
+
+/*
+ * This is used to change the attributes of the day label in the availability secion in the programInterestForm
+ */
+.day-label {
+  width: 6rem;
+}
