@@ -167,6 +167,7 @@ function retrieve_family($args){
 
     if(mysqli_num_rows($result) < 1 || $result == null){
         echo "User not found";
+        return null;
     }else {
         $row = mysqli_fetch_assoc($result);
         $acct = make_a_family2($row);

@@ -47,12 +47,40 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <form id="formatted_form" method="POST">
             <label for="email">Account Email</label>
             <input type="text" name="email" required placeholder="Email">
-            <button type="submit">Search</button>
+            <button type="submit" style="margin-bottom: 20px">Search</button>
 
             <?php
             if(isset($family)){
-                echo "<h3>Search Results</h3>";
-                echo "<h4>First Name: " . $family->getFirstName();
+                echo '
+                <div class="table-wrapper">
+                    <table class="general">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Birthdate</th>
+                                <th>Address</th>
+                                <th>city</th>
+                                <th>state</th>
+                                <th>zip</th>
+                                <th>email</th>
+                                <th>phone</th>
+                                <th>phoneType</th>
+                                <th>Emergency Contact</th>
+                                <th>Emergency Contact Phone</th>
+                                <th>accountType</th>';
+                            echo '</tr>
+                        </thead>
+                        <tbody class="standout">';
+                        echo '<tr>';
+                        echo '<td>' . $family->getFirstName() . '</td>';
+                        
+                        
+
+                echo '
+                        </tbody>
+                    </table>
+                </div>';
             }
 
             ?>
