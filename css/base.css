@@ -1027,11 +1027,3 @@ img.profile-pic {
   margin-top: 20px; /* Adds space above the required info to separate it from the content */
   text-align: center; /* Centers the text within its container */
 }
-
-.info-box-rect {
-  background-color: black; /* Black background color */
-  color: white; /* White text color */
-  padding: 10px 15px; /* Padding inside the box */
-  font-weight: bold; /* Makes the text bold */
-  margin-bottom: 15px; /* Adds space below the box */
-}
