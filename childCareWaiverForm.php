@@ -76,7 +76,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <?php include_once("universal.inc") ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stafford Junction | Field Trip Waiver Form</title>
+    <title>Stafford Junction | Child Care Waiver Form</title>
 </head>
 
 <body>
