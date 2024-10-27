@@ -3,6 +3,15 @@
 include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Family.php');
 
+
+function prettyPrint($val){
+    echo "<pre>";
+    var_dump($val);
+    echo "</pre>";
+    die();
+}
+
+
 /**
  * function that takes the $_POST arguments from the sign up page as an assoc array
  * and instantiates a new Family object with that data
@@ -46,6 +55,49 @@ function make_a_family($result_row){
 
     return $family;
 }
+
+/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two function that do the same thing */
+function make_a_family2($result_row){
+    $family = new Family(
+        $result_row['firstName'],
+        $result_row['lastName'],
+        $result_row['birthdate'],
+        $result_row['address'],
+        $result_row['city'],
+        $result_row['state'],
+        $result_row['zip'],
+        $result_row['email'],
+        $result_row['phone'],
+        $result_row['phoneType'],
+        $result_row['secondaryPhone'],
+        $result_row['secondaryPhoneType'],
+        $result_row['firstName2'] ?? null,
+        $result_row['lastName2'] ?? null,
+        $result_row['birthdate2'] ?? null,
+        $result_row['address2'] ?? null,
+        $result_row['city2'] ?? null,
+        $result_row['state2'] ?? null,
+        $result_row['zip2'] ?? null,
+        $result_row['email2'] ?? null,
+        $result_row['phone2'] ?? null,
+        $result_row['phoneType2'] ?? null,
+        $result_row['secondaryPhone2'] ?? null,
+        $result_row['secondaryPhoneType2'] ?? null,
+        $result_row['econtactFirstName'],
+        $result_row['econtactLastName'],
+        $result_row['econtactPhone'],
+        $result_row['econtactRelation'],
+        password_hash($result_row['password'], PASSWORD_BCRYPT),
+        $result_row['securityQuestion'],
+        $result_row['securityAnswer'],
+        'family',
+        'false'
+    );
+
+    return $family;
+}
+
+
 
 /**
  * function that takes a family object and inserts it into the database
@@ -106,4 +158,24 @@ function add_family($family){
     }
     mysqli_close($conn);
     return false;
+}
+
+function retrieve_family($args){
+    $conn = connect();
+    //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $args['email'] . "';";
+    $result = mysqli_query($conn,$query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        echo "User not found";
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
+
+    return null;
+    
 }
