@@ -51,13 +51,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <?php
             if(isset($family)){
+                echo '<h3>Account Summary</h3>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Name</th>
                                 <th>Birthdate</th>
                                 <th>Address</th>
                                 <th>city</th>
@@ -65,18 +65,23 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                                 <th>zip</th>
                                 <th>email</th>
                                 <th>phone</th>
-                                <th>phoneType</th>
                                 <th>Emergency Contact</th>
-                                <th>Emergency Contact Phone</th>
-                                <th>accountType</th>';
+                                <th>Emergency Contact Phone</th>';
+                        
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
                         echo '<tr>';
-                        echo '<td>' . $family->getFirstName() . '</td>';
-                        
-                        
-
+                        echo '<td>' . $family->getFirstName() . " " . $family->getLastName() . '</td>';
+                        echo '<td>' . $family->getBirthDate() . '</td>';
+                        echo '<td>' . $family->getAddress() . '</td>';
+                        echo '<td>' . $family->getCity() . '</td>';
+                        echo '<td>' . $family->getState() . '</td>';
+                        echo '<td>' . $family->getZip() . '</td>';
+                        echo '<td>' . $family->getEmail() . '</td>';
+                        echo '<td>' . $family->getPhone() . '</td>';
+                        echo '<td>' . $family->getEContactFirstName() . " " . $family->getEContactLastName() . '</td>';
+                        echo '<td>' . $family->getEContactPhone() . '</td>';
                 echo '
                         </tbody>
                     </table>
@@ -85,6 +90,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             ?>
         </form>
+        <a class="button cancel" href="index.php">Return to Dashboard</a>
 
         
         
