@@ -134,7 +134,7 @@
 
                 <!--New Dashboard items-->
                 <?php if($_SESSION['access_level'] >= 2): ?>
-                <div class="dashboard-item" data-link="findAnimal.php">
+                <div class="dashboard-item" data-link="findFamily.php">
                         <img src="images/person-search.svg">
                         <span>Find Family Account</span>
                 </div>
