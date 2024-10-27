@@ -131,6 +131,15 @@
                         <span>View My Hours</span>
                     </div>
                 <?php endif ?>
+
+                <!--New Dashboard items-->
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="findAnimal.php">
+                        <img src="images/person-search.svg">
+                        <span>Find Family Account</span>
+                </div>
+                <?php endif ?>
+
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
