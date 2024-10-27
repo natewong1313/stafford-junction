@@ -56,6 +56,7 @@ function make_a_family($result_row){
     return $family;
 }
 
+/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two function that do the same thing */
 function make_a_family2($result_row){
     $family = new Family(
         $result_row['firstName'],
