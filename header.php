@@ -67,7 +67,7 @@
         $permission_array['viewnotification.php'] = 1;
         $permission_array['volunteerreport.php'] = 1;
         $permission_array['fillform.php'] = 1;
-        //pages only managers can view
+        //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply
         $permission_array['viewschedule.php'] = 2;
@@ -91,6 +91,8 @@
         $permission_array['viewarchived.php'] = 2;
         $permission_array['animal.php'] = 2;
         $permission_array['editanimal.php'] = 2;
+        $permission_array['findfamily.php'] = 2;
+
 
         //Check if they're at a valid page for their access level.
         $current_page = strtolower(substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '/') + 1));

@@ -46,7 +46,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 <body>
 
     <!-- Main heading of the page, informing about the Spring Break Camp -->
-    <h1>Stafford Junction Spring Break Camp 2024</h1>
+    <h1>Stafford Junction Spring Break Camp 2024 / Campamento de Vacaciones de Primavera de Stafford Junction</h1>
 
     <!-- Main content container for form instructions and information -->
     <div id="spring_break_form">

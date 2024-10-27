@@ -41,6 +41,17 @@ error_reporting(E_ALL);
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> </div>
 
+                    <div class="dashboard-item" data-link="childCareWaiverForm.php">
+                    <img src="images/signature.svg">
+                    <span>Child Care Waiver Form</span> </div>
+
+                    <div class="dashboard-item" data-link="fieldTripWaiver.php">
+                    <img src="images/location.svg">
+                    <span>Field Trip Waiver Form</span> </div>
+
+                    <div class="dashboard-item" data-link="programInterestForm.php">
+                    <img src="images/interest.svg">
+                    <span>Program Interest Form</span> </div>
                 </div>
             </div>
             <a class="button cancel" href="index.php" style="margin-top: 3rem;">Return to Dashboard</a>
