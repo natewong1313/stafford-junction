@@ -14,10 +14,9 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
-// program interests and topic interests both are stored in arrays
+// program interests and topic interests both are stored in arrays called "programs" and "topics" within the POST array
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSchoolSupplies.php');
     $args = sanitize($_POST, null);
     $required = array("first_name", "second_name", "address", "city", "neighborhood", "state", "zip", "cell_phone",
         "home_phone", "email", "child_num", "child_ages", "adult_num");
