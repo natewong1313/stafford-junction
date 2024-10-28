@@ -83,6 +83,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Main heading of the page -->
     <h1>Childcare Waiver / Exención de Cuidado Infantil</h1>
+    <div id="formatted_form">
 
     <!-- Subtitle -->
     <p>If your child is receiving childcare during classes, please complete the form and return to <br>
@@ -252,7 +253,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Submit and Cancel Buttons -->
     <button type="submit">Submit</button>
     <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-
+    </div>
 </body>
 
 </html>
