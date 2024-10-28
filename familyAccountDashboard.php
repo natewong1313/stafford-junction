@@ -19,6 +19,7 @@ session_start();
         <?php require('header.php'); ?>
         <h1>Family Dashboard</h1>
         <main class='dashboard'>
+            <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="">
