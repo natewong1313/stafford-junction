@@ -70,7 +70,7 @@ class Family {
         $this->econtactPhone = $econtactPhone;
         $this->econtactRelation = $econtactRelation;
         //$this->password = password_hash($password, PASSWORD_BCRYPT);
-        $this->password = $password;
+        $this->password = $password; //not secure!!!!
         $this->question = $question;
         $this->answer = $answer;
         $this->accountType = $accountType;
