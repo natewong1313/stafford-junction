@@ -90,7 +90,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             ?>
         </form>
-        <a class="button cancel" href="index.php">Return to Dashboard</a>
+    
+        <a class="button cancel" href="index.php"">Return to Dashboard</a>
+        
 
         
         
