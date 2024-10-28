@@ -67,6 +67,7 @@
         $permission_array['viewnotification.php'] = 1;
         $permission_array['volunteerreport.php'] = 1;
         $permission_array['fillform.php'] = 1;
+        $permission_array['familyaccountdashboard.php'] = 1;
         //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply
@@ -112,7 +113,7 @@
         
         //they're logged in and session variables are set.
         if ($_SESSION['venue'] =="") { 
-        	echo(' <a href="' . $path . 'personEdit.php?id=' . 'new' . '">Apply</a>');
+        	//echo(' <a href="' . $path . 'personEdit.php?id=' . 'new' . '">Apply</a>');
         	echo(' | <a href="' . $path . 'logout.php">Logout</a><br>');
         }
         else {

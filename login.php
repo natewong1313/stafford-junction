@@ -77,16 +77,16 @@
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
-                }else if($password == $user->getPassword()) {
-                    /** 
+                }else if($password == $user->getPassword()) { //change this!!!!
+               
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1;
                     $_SESSION['id'] = $user->getEmail();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
-                    $_SESSION['venue'] = "";
-                    header('Location: index.php');
-                    */
+                    $_SESSION['venue'] = "-"; //this session variable needs to be set to anything other than "", or else the header.php file won't run
+                    //header('Location: index.php');
+                
                     header("Location: familyAccountDashboard.php");
 
                 }else {
