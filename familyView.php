@@ -17,7 +17,7 @@ require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_email($userID); //retrieves family by email for now (may change late)
+$family = retrieve_family_by_email($userID); //retrieves family by email for now (may change later)
 
 
 ?>

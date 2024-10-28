@@ -4,6 +4,9 @@ include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Family.php');
 
 
+/**
+ * Simply prints var_dump results in a more readable fashion
+ */
 function prettyPrint($val){
     echo "<pre>";
     var_dump($val);
@@ -56,7 +59,7 @@ function make_a_family($result_row){
     return $family;
 }
 
-/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two function that do the same thing */
+/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two functions that do the same thing */
 function make_a_family2($result_row){
     $family = new Family(
         $result_row['firstName'],
@@ -164,7 +167,7 @@ function add_family($family){
 }
 
 /**
- * 
+ * Retrieves family data, constructs a family object, and returns the family object based on passed in array
  */
 function retrieve_family($args){
     $conn = connect();
@@ -186,6 +189,9 @@ function retrieve_family($args){
     
 }
 
+/**
+ * Retrieves family data, constructs a family object, and returns the family object based on passed in email
+ */
 function retrieve_family_by_email($email){
     $conn = connect();
     //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';

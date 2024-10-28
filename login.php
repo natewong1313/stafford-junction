@@ -76,14 +76,14 @@
                 }
             //If the user is a family
             }else if($args['account'] == 'family'){ 
-                //retrieve user by their email
+                //retrieve user by their email (aka the username they filled in at the login page)
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
-                }else if($password == $user->getPassword()) { //change this!!!!
+                }else if($password == $user->getPassword()) { //change this!!!! Not secure
                     //set session variables
                     $_SESSION['logged_in'] = true;
-                    $_SESSION['access_level'] = 1;
+                    $_SESSION['access_level'] = 1; //access level for family = 1
                     $_SESSION['id'] = $user->getEmail();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
