@@ -1,5 +1,6 @@
 <?php
 
+session_cache_expire(30);
 session_start();
 
 ?>
@@ -18,22 +19,6 @@ session_start();
         <?php require('header.php'); ?>
         <h1>Family Dashboard</h1>
         <main class='dashboard'>
-            <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
-            <?php if (isset($_GET['pcSuccess'])): ?>
-                <div class="happy-toast">Password changed successfully!</div>
-            <?php elseif (isset($_GET['deleteService'])): ?>
-                <div class="happy-toast">Service successfully removed!</div>
-            <?php elseif (isset($_GET['serviceAdded'])): ?>
-                <div class="happy-toast">Service successfully added!</div>
-            <?php elseif (isset($_GET['animalRemoved'])): ?>
-                <div class="happy-toast">Animal successfully removed!</div>
-            <?php elseif (isset($_GET['locationAdded'])): ?>
-                <div class="happy-toast">Location successfully added!</div>
-            <?php elseif (isset($_GET['deleteLocation'])): ?>
-                <div class="happy-toast">Location successfully removed!</div>
-            <?php elseif (isset($_GET['registerSuccess'])): ?>
-                <div class="happy-toast">Volunteer registered successfully!</div>
-            <?php endif ?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="">

@@ -31,6 +31,7 @@
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
+            //If the user is staff
             if($args['account'] == 'staff'){
                 $user = retrieve_person($username);
                 if (!$user) {
@@ -73,23 +74,26 @@
                 } else {
                     $badLogin = true;
                 }
-            }else if($args['account'] == 'family'){ //start family block
+            //If the user is a family
+            }else if($args['account'] == 'family'){ 
+                //retrieve user by their email
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
                 }else if($password == $user->getPassword()) { //change this!!!!
-               
+                    //set session variables
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1;
                     $_SESSION['id'] = $user->getEmail();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
                     $_SESSION['venue'] = "-"; //this session variable needs to be set to anything other than "", or else the header.php file won't run
-                    //header('Location: index.php');
-                
+                   
+                    //redirect user to familyAccountDashboard page; this is a seperate home page just for family accounts, so it will include everything a family user could do
                     header("Location: familyAccountDashboard.php");
 
                 }else {
+                    //debugging; if you're here, the password wasn't able to be verified
                     echo $password . " " . $user->getPassword();
                     
                 }
