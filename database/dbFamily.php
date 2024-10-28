@@ -90,8 +90,10 @@ function make_a_family2($result_row){
         password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['securityQuestion'],
         $result_row['securityAnswer'],
-        'family',
-        'false'
+        $result_row['accountType'],
+        $result_row['isArchived']
+        //'family',
+        //'false'
     );
 
     return $family;
@@ -164,6 +166,26 @@ function retrieve_family($args){
     $conn = connect();
     //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
     $query = "SELECT * FROM dbFamily WHERE email = '" . $args['email'] . "';";
+    $result = mysqli_query($conn,$query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        echo "User not found";
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
+
+    return null;
+    
+}
+
+function retrieve_family_by_email($email){
+    $conn = connect();
+    //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
     $result = mysqli_query($conn,$query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){

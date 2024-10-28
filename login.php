@@ -24,50 +24,75 @@
             require_once('domain/Person.php');
             require_once('database/dbPersons.php');
             require_once('database/dbMessages.php');
+            
+            //import family files
+            require_once("domain/Family.php");
+            require_once("database/dbFamily.php");
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
-            $user = retrieve_person($username);
-            if (!$user) {
-                $badLogin = true;
-            } else if (password_verify($password, $user->get_password())) {
-                $changePassword = false;
-                if ($user->is_password_change_required()) {
-                    $changePassword = true;
-                    $_SESSION['logged_in'] = false;
+            if($args['account'] == 'staff'){
+                $user = retrieve_person($username);
+                if (!$user) {
+                    $badLogin = true;
+                } else if (password_verify($password, $user->get_password())) {
+                    $changePassword = false;
+                    if ($user->is_password_change_required()) {
+                        $changePassword = true;
+                        $_SESSION['logged_in'] = false;
+                    } else {
+                        $_SESSION['logged_in'] = true;
+                    }
+                    $types = $user->get_type();
+                    if (in_array('superadmin', $types)) {
+                        $_SESSION['access_level'] = 3;
+                    } else if (in_array('admin', $types)) {
+                        $_SESSION['access_level'] = 2;
+                    } else {
+                        $_SESSION['access_level'] = 1;
+                    }
+                    $_SESSION['f_name'] = $user->get_first_name();
+                    $_SESSION['l_name'] = $user->get_last_name();
+                    $_SESSION['venue'] = $user->get_venue();
+                    $_SESSION['type'] = $user->get_type();
+                    $_SESSION['_id'] = $user->get_id();
+                    // hard code root privileges
+                    if ($user->get_id() == 'vmsroot') {
+                        $_SESSION['access_level'] = 3;
+                    }
+                    if ($changePassword) {
+                        $_SESSION['access_level'] = 0;
+                        $_SESSION['change-password'] = true;
+                        header('Location: changePassword.php');
+                        die();
+                    } else {
+                        header('Location: index.php');
+                        die();
+                    }
+                    die();
                 } else {
+                    $badLogin = true;
+                }
+            }else if($args['account'] == 'family'){ //start family block
+                $user = retrieve_family_by_email($args['username']);
+                if(!$user){
+                    echo "afsdf";
+                    $badLogin = true;
+                }else if($password == 'password1') {
                     $_SESSION['logged_in'] = true;
-                }
-                $types = $user->get_type();
-                if (in_array('superadmin', $types)) {
-                    $_SESSION['access_level'] = 3;
-                } else if (in_array('admin', $types)) {
-                    $_SESSION['access_level'] = 2;
-                } else {
                     $_SESSION['access_level'] = 1;
-                }
-                $_SESSION['f_name'] = $user->get_first_name();
-                $_SESSION['l_name'] = $user->get_last_name();
-                $_SESSION['venue'] = $user->get_venue();
-                $_SESSION['type'] = $user->get_type();
-                $_SESSION['_id'] = $user->get_id();
-                // hard code root privileges
-                if ($user->get_id() == 'vmsroot') {
-                    $_SESSION['access_level'] = 3;
-                }
-                if ($changePassword) {
-                    $_SESSION['access_level'] = 0;
-                    $_SESSION['change-password'] = true;
-                    header('Location: changePassword.php');
-                    die();
-                } else {
+                    $_SESSION['id'] = $user->getEmail();
+                    $_SESSION['f_name'] = $user->getFirstName();
+                    $_SESSION['l_name'] = $user->getLastName();
+                    $_SESSION['venue'] = "";
                     header('Location: index.php');
-                    die();
+
+                }else {
+                    echo $password . " " . $user->getPassword();
+                    
                 }
-                die();
-            } else {
-                $badLogin = true;
-            }
+            } 
+            
         }
     }
     //<p>Or <a href="register.php">register as a new volunteer</a>!</p>
@@ -96,6 +121,12 @@
                         echo '<span class="error">No login with that e-mail and password combination currently exists.</span>';
                     }
                 ?>
+                <label for="account">Select Account Type</label>
+                <select name="account" id="account">
+                    <option value="family">Family</option>
+                    <option value="staff">Staff</option>
+                </select>
+
                 <label for="username">Username</label>
         		<input type="text" name="username" placeholder="Enter your e-mail address" required>
         		<label for="password">Password</label>

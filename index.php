@@ -19,7 +19,8 @@
     if (isset($_SESSION['_id'])) {
         $person = retrieve_person($_SESSION['_id']);
     }
-    $notRoot = $person->get_id() != 'vmsroot';
+    //$notRoot = $person->get_id() != 'vmsroot';
+    $notRoot = true;
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,7 +47,7 @@
             <?php elseif (isset($_GET['registerSuccess'])): ?>
                 <div class="happy-toast">Volunteer registered successfully!</div>
             <?php endif ?>
-            <p>Welcome back, <?php echo $person->get_first_name() ?>!</p>
+            <!--<p>Welcome back, <?php echo $person->get_first_name() ?>!</p>-->
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <?php

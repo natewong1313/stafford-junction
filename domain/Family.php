@@ -73,7 +73,7 @@ class Family {
         $this->question = $question;
         $this->answer = $answer;
         $this->accountType = $accountType;
-        $this->$isArchived = $isArchived;
+        $this->isArchived = $isArchived;
     }
 
     public function getFirstName(){
