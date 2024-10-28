@@ -11,7 +11,7 @@ session_start();
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php require ('universal.inc'); ?>
-        <title></title>
+        <title>Account Page</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -22,7 +22,7 @@ session_start();
             <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
-                <div class="dashboard-item" data-link="">
+                <div class="dashboard-item" data-link="familyView.php">
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>

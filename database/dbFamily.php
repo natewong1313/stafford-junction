@@ -163,6 +163,9 @@ function add_family($family){
     return false;
 }
 
+/**
+ * 
+ */
 function retrieve_family($args){
     $conn = connect();
     //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
@@ -190,7 +193,6 @@ function retrieve_family_by_email($email){
     $result = mysqli_query($conn,$query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){
-        echo "User not found";
         return null;
     }else {
         $row = mysqli_fetch_assoc($result);

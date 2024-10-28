@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 }
 ?>
 
-!<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -90,8 +90,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             ?>
         </form>
-    
+     
         <a class="button cancel" href="index.php"">Return to Dashboard</a>
+     
         
 
         

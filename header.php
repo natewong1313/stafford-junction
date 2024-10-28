@@ -53,7 +53,7 @@
         $permission_array['logout.php'] = 0;
         $permission_array['register.php'] = 0;
         $permission_array['findanimal.php'] = 0;
-        //pages volunteers can view
+        //pages family can view
         $permission_array['help.php'] = 1;
         $permission_array['dashboard.php'] = 1;
         $permission_array['calendar.php'] = 1;
@@ -68,6 +68,7 @@
         $permission_array['volunteerreport.php'] = 1;
         $permission_array['fillform.php'] = 1;
         $permission_array['familyaccountdashboard.php'] = 1;
+        $permission_array['familyview.php'] = 1;
         //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply
