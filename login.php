@@ -76,9 +76,9 @@
             }else if($args['account'] == 'family'){ //start family block
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
-                    echo "afsdf";
                     $badLogin = true;
-                }else if($password == 'password1') {
+                }else if($password == "password1") {
+                    /** 
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1;
                     $_SESSION['id'] = $user->getEmail();
@@ -86,6 +86,8 @@
                     $_SESSION['l_name'] = $user->getLastName();
                     $_SESSION['venue'] = "";
                     header('Location: index.php');
+                    */
+                    header("Location: familyAccountDashboard.php");
 
                 }else {
                     echo $password . " " . $user->getPassword();
