@@ -77,7 +77,7 @@
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
-                }else if($password == "password1") {
+                }else if($password == $user->getPassword()) {
                     /** 
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1;
