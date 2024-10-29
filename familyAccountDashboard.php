@@ -22,6 +22,7 @@ session_start();
             <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
+                <!--dashboard item to view the account information of user -->
                 <div class="dashboard-item" data-link="familyView.php">
                     <img src="images/person-search.svg">
                     <span>View Account</span>

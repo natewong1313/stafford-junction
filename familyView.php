@@ -1,3 +1,4 @@
+<!--This file shows the complete account information of a family account -->
 <?php
 
 session_cache_expire(30);
@@ -8,17 +9,17 @@ $accessLevel = 0;
 $userID = null;
 if (isset($_SESSION['id'])) {
     $loggedIn = true;
-    // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
+    //0 - Volunteer, 1 - Family, >=2 Staff/Admin
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['id'];
 }
 
+//these files will give us all the family functionality and access to the family account database
 require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_email($userID ?? $_GET['id']);
-$id = retrieve_id_by_email($userID); //retrieves family by email for now (may change later)
+$family = retrieve_family_by_email($userID ?? $_GET['id']); //either retrieve the family by the email set in $userID, or inside the GET array if being accessed from staff account
 
 
 ?>

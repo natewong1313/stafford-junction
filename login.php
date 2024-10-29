@@ -31,7 +31,7 @@
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
-            //If the user is staff
+            //If the user is staff; original login code contained in this block
             if($args['account'] == 'staff'){
                 $user = retrieve_person($username);
                 if (!$user) {
@@ -74,13 +74,13 @@
                 } else {
                     $badLogin = true;
                 }
-            //If the user is a family
+            //If the user is a family account
             }else if($args['account'] == 'family'){ 
                 //retrieve user by their email (aka the username they filled in at the login page)
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
-                }else if(password_verify($password, $user->getPassword())) { //change this!!!! Not secure
+                }else if(password_verify($password, $user->getPassword())) { 
                     //set session variables
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1; //access level for family = 1
