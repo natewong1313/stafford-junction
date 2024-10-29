@@ -48,6 +48,10 @@ error_reporting(E_ALL);
                     <div class="dashboard-item" data-link="programInterestForm.php">
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> </div>
+
+                    <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
+                    <img src="images/brainBuilders.svg">
+                    <span>Brain Builders Student Registration Form</span> </div>
                 </div>
             </div>
             <a class="button cancel" href="index.php" style="margin-top: 3rem;">Return to Dashboard</a>
