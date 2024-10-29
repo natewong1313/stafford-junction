@@ -48,7 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <form id="formatted_form" method="POST">
             <label for="email">Account Email</label>
             <input type="text" name="email" required placeholder="Email">
-            <button type="submit" style="margin-bottom: 20px">Search</button>
+            <button type="submit" style="margin-bottom: 20px;">Search</button>
 
             <?php
             if(isset($family)){
