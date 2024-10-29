@@ -74,6 +74,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Main heading of the page -->
     <h1>Stafford Junction Field Trip Release Waiver 2024 / Exención de Responsabilidad para Excursiones de Stafford
         Junction</h1>
+        <div id="formatted_form">
+
 
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
@@ -184,6 +186,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 Autorización Médica de Emergencia y Exención de Responsabilidad</strong></p>
     </div>
     <div id="spring_break_form">
+    <div id="formatted_form">
         <div class="pickup-times">
             <!-- General Information Title in a Black Box -->
             <p>
@@ -331,5 +334,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
             </form>
+        </div>
+    </div>
     </body>
 </html>
