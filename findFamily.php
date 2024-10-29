@@ -25,12 +25,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $args = sanitize($_POST, null);
 
-    $family = retrieve_family($args); //retrieves family by email for now (may change late)
+    $family = retrieve_family($args); //retrieves family by email for now (may change later)
+    $id = $family->getEmail();
 
 }
 ?>
 
-!<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -47,7 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <form id="formatted_form" method="POST">
             <label for="email">Account Email</label>
             <input type="text" name="email" required placeholder="Email">
-            <button type="submit" style="margin-bottom: 20px">Search</button>
+            <button type="submit" style="margin-bottom: 20px;">Search</button>
 
             <?php
             if(isset($family)){
@@ -72,7 +73,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         </thead>
                         <tbody class="standout">';
                         echo '<tr>';
-                        echo '<td>' . $family->getFirstName() . " " . $family->getLastName() . '</td>';
+                        echo '<td><a href=familyView.php?id=' . $id . '>' . $family->getFirstName() . " " . $family->getLastName() . '</a></td>';
                         echo '<td>' . $family->getBirthDate() . '</td>';
                         echo '<td>' . $family->getAddress() . '</td>';
                         echo '<td>' . $family->getCity() . '</td>';
@@ -90,7 +91,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             ?>
         </form>
-        <a class="button cancel" href="index.php">Return to Dashboard</a>
+     
+        <a class="button cancel" href="index.php"">Return to Dashboard</a>
+     
+        
 
         
         

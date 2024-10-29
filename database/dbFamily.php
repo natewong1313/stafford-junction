@@ -4,6 +4,9 @@ include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Family.php');
 
 
+/**
+ * Simply prints var_dump results in a more readable fashion
+ */
 function prettyPrint($val){
     echo "<pre>";
     var_dump($val);
@@ -46,7 +49,7 @@ function make_a_family($result_row){
         $result_row['econtact-last-name'],
         $result_row['econtact-phone'],
         $result_row['econtact-relation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT),
+        password_hash($result_row['password'], PASSWORD_BCRYPT), //$result_row['password'],
         $result_row['question'],
         $result_row['answer'],
         'family',
@@ -56,7 +59,7 @@ function make_a_family($result_row){
     return $family;
 }
 
-/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two function that do the same thing */
+/**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two functions that do the same thing */
 function make_a_family2($result_row){
     $family = new Family(
         $result_row['firstName'],
@@ -87,11 +90,14 @@ function make_a_family2($result_row){
         $result_row['econtactLastName'],
         $result_row['econtactPhone'],
         $result_row['econtactRelation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT),
+        //password_hash($result_row['password'], PASSWORD_BCRYPT),
+        $result_row['password'],
         $result_row['securityQuestion'],
         $result_row['securityAnswer'],
-        'family',
-        'false'
+        $result_row['accountType'],
+        $result_row['isArchived']
+        //'family',
+        //'false'
     );
 
     return $family;
@@ -160,6 +166,9 @@ function add_family($family){
     return false;
 }
 
+/**
+ * Retrieves family data, constructs a family object, and returns the family object based on passed in array
+ */
 function retrieve_family($args){
     $conn = connect();
     //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
@@ -174,6 +183,45 @@ function retrieve_family($args){
         $acct = make_a_family2($row);
         mysqli_close($conn);
         return $acct;
+    }
+
+    return null;
+    
+}
+
+/**
+ * Retrieves family data, constructs a family object, and returns the family object based on passed in email
+ */
+function retrieve_family_by_email($email){
+    $conn = connect();
+    //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
+    $result = mysqli_query($conn,$query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
+
+    return null;
+    
+}
+
+function retrieve_id_by_email($email){
+    $con = connect();
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
+    $result = mysqli_query($con, $query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row['id'];
+        return $id;
     }
 
     return null;
