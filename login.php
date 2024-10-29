@@ -80,7 +80,7 @@
                 $user = retrieve_family_by_email($args['username']);
                 if(!$user){
                     $badLogin = true;
-                }else if($password == $user->getPassword()) { //change this!!!! Not secure
+                }else if(password_verify($password, $user->getPassword())) { //change this!!!! Not secure
                     //set session variables
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1; //access level for family = 1
