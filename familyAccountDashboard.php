@@ -20,7 +20,6 @@ session_start();
         <h1>Family Dashboard</h1>
         <main class='dashboard'>
             <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
-            <?php echo "<p>Account type " . $_SESSION["account_type"];?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="familyView.php">

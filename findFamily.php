@@ -26,6 +26,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $args = sanitize($_POST, null);
 
     $family = retrieve_family($args); //retrieves family by email for now (may change late)
+    $id = $family->getEmail();
 
 }
 ?>
@@ -72,7 +73,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         </thead>
                         <tbody class="standout">';
                         echo '<tr>';
-                        echo '<td>' . $family->getFirstName() . " " . $family->getLastName() . '</td>';
+                        echo '<td><a href=familyView.php?id=' . $id . '>' . $family->getFirstName() . " " . $family->getLastName() . '</a></td>';
                         echo '<td>' . $family->getBirthDate() . '</td>';
                         echo '<td>' . $family->getAddress() . '</td>';
                         echo '<td>' . $family->getCity() . '</td>';
