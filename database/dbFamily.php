@@ -210,3 +210,20 @@ function retrieve_family_by_email($email){
     return null;
     
 }
+
+function retrieve_id_by_email($email){
+    $con = connect();
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
+    $result = mysqli_query($con, $query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row['id'];
+        return $id;
+    }
+
+    return null;
+    
+}

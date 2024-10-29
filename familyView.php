@@ -17,7 +17,8 @@ require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_email($userID); //retrieves family by email for now (may change later)
+$family = retrieve_family_by_email($userID);
+$id = retrieve_id_by_email($userID); //retrieves family by email for now (may change later)
 
 
 ?>
@@ -40,6 +41,7 @@ $family = retrieve_family_by_email($userID); //retrieves family by email for now
         <?php 
             if(isset($family)){
                 echo "<h2>Primary Information</h2>";
+                echo "<h3>ID: </h3>" . $id;
                 echo "<h3>Name:</h3>" . $family->getFirstName() . " " . $family->getLastName();
                 echo "<br>";
                 echo "<h3>Birthdate:</h3>" . $family->getBirthDate();
