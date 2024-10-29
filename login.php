@@ -87,6 +87,7 @@
                     $_SESSION['id'] = $user->getEmail();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
+                    $_SESSION['account_type'] = "Family";
                     $_SESSION['venue'] = "-"; //this session variable needs to be set to anything other than "", or else the header.php file won't run
                    
                     //redirect user to familyAccountDashboard page; this is a seperate home page just for family accounts, so it will include everything a family user could do
