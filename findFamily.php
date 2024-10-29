@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $args = sanitize($_POST, null);
 
-    $family = retrieve_family($args); //retrieves family by email for now (may change late)
+    $family = retrieve_family($args); //retrieves family by email for now (may change later)
     $id = $family->getEmail();
 
 }
