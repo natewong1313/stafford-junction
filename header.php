@@ -53,7 +53,7 @@
         $permission_array['logout.php'] = 0;
         $permission_array['register.php'] = 0;
         $permission_array['findanimal.php'] = 0;
-        //pages volunteers can view
+        //pages family can view
         $permission_array['help.php'] = 1;
         $permission_array['dashboard.php'] = 1;
         $permission_array['calendar.php'] = 1;
@@ -67,7 +67,9 @@
         $permission_array['viewnotification.php'] = 1;
         $permission_array['volunteerreport.php'] = 1;
         $permission_array['fillform.php'] = 1;
-        //pages only managers can view
+        $permission_array['familyaccountdashboard.php'] = 1;
+        $permission_array['familyview.php'] = 1;
+        //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply
         $permission_array['viewschedule.php'] = 2;
@@ -91,6 +93,8 @@
         $permission_array['viewarchived.php'] = 2;
         $permission_array['animal.php'] = 2;
         $permission_array['editanimal.php'] = 2;
+        $permission_array['findfamily.php'] = 2;
+
 
         //Check if they're at a valid page for their access level.
         $current_page = strtolower(substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '/') + 1));
@@ -110,7 +114,7 @@
         
         //they're logged in and session variables are set.
         if ($_SESSION['venue'] =="") { 
-        	echo(' <a href="' . $path . 'personEdit.php?id=' . 'new' . '">Apply</a>');
+        	//echo(' <a href="' . $path . 'personEdit.php?id=' . 'new' . '">Apply</a>');
         	echo(' | <a href="' . $path . 'logout.php">Logout</a><br>');
         }
         else {

@@ -46,10 +46,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 <body>
 
     <!-- Main heading of the page, informing about the Spring Break Camp -->
-    <h1>Stafford Junction Spring Break Camp 2024</h1>
+    <h1>Stafford Junction Spring Break Camp 2024 / Campamento de Vacaciones de Primavera de Stafford Junction</h1>
 
     <!-- Main content container for form instructions and information -->
     <div id="spring_break_form">
+    <div id="formatted_form">
 
         <!-- Informational block (in English) for students/parents about camp details -->
         <div class="info">
@@ -93,6 +94,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         </div>
 
         <!-- Notification that required fields in the form are marked with a red asterisk -->
+        <div id="formatted_form">
         <p class="required-info">*Indicates required</p>
     </div>
 
@@ -171,5 +173,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <button type="submit" id="submit">Submit</button>
         <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
     </form>
+</div>
+</div>
+
 </body>
 </html>

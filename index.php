@@ -20,6 +20,7 @@
         $person = retrieve_person($_SESSION['_id']);
     }
     $notRoot = $person->get_id() != 'vmsroot';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,7 +47,7 @@
             <?php elseif (isset($_GET['registerSuccess'])): ?>
                 <div class="happy-toast">Volunteer registered successfully!</div>
             <?php endif ?>
-            <p>Welcome back, <?php echo $person->get_first_name() ?>!</p>
+            <!--<p>Welcome back, <?php echo $person->get_first_name() ?>!</p>-->
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <?php
@@ -131,6 +132,15 @@
                         <span>View My Hours</span>
                     </div>
                 <?php endif ?>
+
+                <!--New Dashboard items-->
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="findFamily.php">
+                        <img src="images/person-search.svg">
+                        <span>Find Family Account</span>
+                </div>
+                <?php endif ?>
+
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">

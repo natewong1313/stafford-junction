@@ -1028,3 +1028,70 @@ img.profile-pic {
   text-align: center; /* Centers the text within its container */
 }
 
+.info-box-rect {
+  background-color: black; /* Black background color */
+  color: white; /* White text color */
+  padding: 10px 15px; /* Padding inside the box */
+  font-weight: bold; /* Makes the text bold */
+  margin-bottom: 15px; /* Adds space below the box */
+}
+
+
+/* 
+ * This is used for sections that contain important information for users (like the camp details).
+ */
+ #style_form .info {
+  background-color: #f9f9f9; /* Light grey background for readability */
+  padding: 10px; /* Adds internal padding to give the content some space */
+  border-left: 5px solid #7e0d07; /* Adds a solid red border to the left for emphasis */
+}
+
+/* 
+ * Styling for the 'pickup-times' section within the Spring Break form 
+ * This section contains the pickup times for students, so it's visually highlighted.
+ */
+#style_form .pickup-times {
+  background-color: #fcdd2b; /* Bright yellow background to differentiate it from other sections */
+  padding: 10px; /* Adds space inside the container to make the content readable */
+  border-left: 5px solid #7e0d07; /* Red left border to match the rest of the theme */
+}
+
+/* 
+ * Styling for paragraph text inside the 'pickup-times' section 
+ * Reduces the margin between paragraphs to keep the content closer together for readability.
+ */
+#style_form .pickup-times p {
+  margin-bottom: 5px; /* Tightens up the spacing between paragraphs to avoid too much vertical space */
+}
+
+/* 
+ * Styling for <strong> elements inside the 'pickup-times' section 
+ * Strong tags are typically used for emphasis (like dates or school names).
+*/
+#style_form .pickup-times strong {
+  color: #7e0d07; 
+}
+
+/* 
+ *This is used to indicate that certain form fields are required, centering the text.
+ */
+#style_form .required-info {
+  margin-top: 20px; /* Adds space above the required info to separate it from the content */
+  text-align: center; /* Centers the text within its container */
+}
+
+/*
+ * This is used to change the attributes of the availability days in the availability secion in the programInterestForm
+ */
+.availability-day-form {
+  display: flex; 
+  gap: 1.5rem; 
+  align-items: center;
+}
+
+/*
+ * This is used to change the attributes of the day label in the availability secion in the programInterestForm
+ */
+.day-label {
+  width: 6rem;
+}
