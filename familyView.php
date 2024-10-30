@@ -19,7 +19,7 @@ require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_email($userID ?? $_GET['id']); //either retrieve the family by the email set in $userID, or inside the GET array if being accessed from staff account
+$family = retrieve_family_by_id($userID ?? $_GET['id']); //either retrieve the family by the email set in $userID, or inside the GET array if being accessed from staff account
 
 
 ?>

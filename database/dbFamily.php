@@ -21,6 +21,7 @@ function prettyPrint($val){
  */
 function make_a_family($result_row){
     $family = new Family(
+        null, 
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
@@ -62,6 +63,7 @@ function make_a_family($result_row){
 /**Same constructor as above, but this one constructs a family object using the fields from the database (i.e firstName instead of first-name). will change later so there not two functions that do the same thing */
 function make_a_family2($result_row){
     $family = new Family(
+        $result_row['id'],
         $result_row['firstName'],
         $result_row['lastName'],
         $result_row['birthdate'],
@@ -211,19 +213,42 @@ function retrieve_family_by_email($email){
     
 }
 
-function retrieve_id_by_email($email){
-    $con = connect();
-    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
-    $result = mysqli_query($con, $query);
+function retrieve_family_by_lastName($lastName){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE lastName = '" . $lastName . "';";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else if(mysqli_num_rows($result) > 1){
+        $families = [];
+     
+        foreach($result as $fam){
+            $families[] = make_a_family2($fam);
+        }
+     
 
+        prettyPrint($families);
+
+        return $families;
+        
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
+}
+
+function retrieve_family_by_id($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE id = '" . $id . "';";
+    $result = mysqli_query($conn, $query);
     if(mysqli_num_rows($result) < 1 || $result == null){
         return null;
     }else {
         $row = mysqli_fetch_assoc($result);
-        $id = $row['id'];
-        return $id;
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
     }
-
-    return null;
-    
 }
