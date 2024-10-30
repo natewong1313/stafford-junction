@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $args = sanitize($_POST, null);
 
-    //$family = retrieve_family($args); //retrieves family by email for now (may change later)
+    //will either hold one or mutliple family objects depending on the last name
     $family = retrieve_family_by_lastName($args['name']);
 
 }
