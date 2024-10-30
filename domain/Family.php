@@ -66,8 +66,12 @@ class Family {
         $this->econtactLastName = $econtactLastName;
         $this->econtactPhone = $econtactPhone;
         $this->econtactRelation = $econtactRelation;
+        //$this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = $password; //not secure!!!!
+        $this->question = $question;
+        $this->answer = $answer;
+        $this->accountType = $accountType;
         $this->isArchived = $isArchived;
-        $this->personId = $personId;
     }
 
     public function getFirstName(){

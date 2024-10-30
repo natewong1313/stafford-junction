@@ -158,10 +158,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="radio" id="phone-type-work" name="phone-type" value="work" required><label for="phone-type-work">Work</label>
                     </div>
 
-                    <label for="secondary-phone">Secondary Phone Number</label>
+                    <label for="secondary-phone">* Secondary Phone Number</label>
                     <input type="tel" id="secondary-phone" name="secondary-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
-                    <label>Secondary Phone Type</label>
+                    <label>* Secondary Phone Type</label>
                     <div class="radio-group">
                         <input type="radio" id="secondary-phone-type-cellphone" name="secondary-phone-type" value="cellphone" required><label for="secondary-phone-type-cellphone">Cell</label>
                         <input type="radio" id="secondary-phone-type-home" name="secondary-phone-type" value="home" required><label for="secondary-phone-type-home">Home</label>
