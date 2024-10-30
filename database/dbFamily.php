@@ -217,25 +217,22 @@ function retrieve_family_by_lastName($lastName){
     $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE lastName = '" . $lastName . "';";
     $result = mysqli_query($conn, $query);
+    $families = [];
     if(mysqli_num_rows($result) < 1 || $result == null){
         return null;
     }else if(mysqli_num_rows($result) > 1){
-        $families = [];
-     
         foreach($result as $fam){
             $families[] = make_a_family2($fam);
         }
-     
-
-        prettyPrint($families);
 
         return $families;
         
     }else {
         $row = mysqli_fetch_assoc($result);
-        $acct = make_a_family2($row);
+        //$acct = make_a_family2($row);
+        $families[] = make_a_family2($row);
         mysqli_close($conn);
-        return $acct;
+        return $families;
     }
 }
 

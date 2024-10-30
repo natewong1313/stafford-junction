@@ -75,18 +75,22 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        echo '<tr>';
-                        echo '<td><a href=familyView.php?id=' . $family->getID() . '>' . $family->getID() . '</a></td>';
-                        echo '<td>' . $family->getFirstName() . " " . $family->getLastName() . '</td>';
-                        echo '<td>' . $family->getBirthDate() . '</td>';
-                        echo '<td>' . $family->getAddress() . '</td>';
-                        echo '<td>' . $family->getCity() . '</td>';
-                        echo '<td>' . $family->getState() . '</td>';
-                        echo '<td>' . $family->getZip() . '</td>';
-                        echo '<td>' . $family->getEmail() . '</td>';
-                        echo '<td>' . $family->getPhone() . '</td>';
-                        echo '<td>' . $family->getEContactFirstName() . " " . $family->getEContactLastName() . '</td>';
-                        echo '<td>' . $family->getEContactPhone() . '</td>';
+                        foreach($family as $acct){
+                            echo '<tr>';
+                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
+                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
+                            echo '<td>' . $acct->getBirthDate() . '</td>';
+                            echo '<td>' . $acct->getAddress() . '</td>';
+                            echo '<td>' . $acct->getCity() . '</td>';
+                            echo '<td>' . $acct->getState() . '</td>';
+                            echo '<td>' . $acct->getZip() . '</td>';
+                            echo '<td>' . $acct->getEmail() . '</td>';
+                            echo '<td>' . $acct->getPhone() . '</td>';
+                            echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
+                            echo '<td>' . $acct->getEContactPhone() . '</td>';
+                            echo '<tr>';
+                        }
+                        
                 echo '
                         </tbody>
                     </table>
