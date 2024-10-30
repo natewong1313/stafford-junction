@@ -60,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Account ID</th>
+                                <th>Acct ID</th>
                                 <th>Name</th>
                                 <th>Birthdate</th>
                                 <th>Address</th>
@@ -70,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                                 <th>email</th>
                                 <th>phone</th>
                                 <th>Emergency Contact</th>
-                                <th>Emergency Contact Phone</th>';
+                                <th>Emergency Phone</th>';
                                 //a href=familyView.php?id=' . $id . 
                             echo '</tr>
                         </thead>
