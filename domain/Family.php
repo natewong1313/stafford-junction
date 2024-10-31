@@ -69,9 +69,9 @@ class Family {
         $this->econtactLastName = $econtactLastName;
         $this->econtactPhone = $econtactPhone;
         $this->econtactRelation = $econtactRelation;
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = $password;
         $this->question = $question;
-        $this->answer = password_hash($answer, PASSWORD_BCRYPT);;
+        $this->answer = $answer;
         $this->isArchived = $isArchived;
     }
 

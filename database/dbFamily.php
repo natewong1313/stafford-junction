@@ -51,8 +51,9 @@ function make_a_family($result_row){
         $result_row['econtact-relation'],
         password_hash($result_row['password'], PASSWORD_BCRYPT), //$result_row['password'],
         $result_row['question'],
-        password_hash($result_row['securityAnswer'], PASSWORD_BCRYPT),
-        $result_row['isArchived']
+        $result_row['answer'],
+        'family',
+        'false'
     );
 
     return $family;
@@ -89,12 +90,10 @@ function make_a_family2($result_row){
         $result_row['econtactLastName'],
         $result_row['econtactPhone'],
         $result_row['econtactRelation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT),
+        $result_row['password'], // we dont need to hash the password because its coming from the db and already hashed
         $result_row['securityQuestion'],
-        password_hash($result_row['securityAnswer'], PASSWORD_BCRYPT),
+        $result_row['securityAnswer'],
         $result_row['isArchived']
-        //'family',
-        //'false'
     );
 
     return $family;
