@@ -38,7 +38,7 @@ class Family {
     public function __construct($firstName, $lastName, $birthdate, $address, $city, $state,
         $zip, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2,
         $address2, $city2, $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, $econtactFirstName,
-        $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $accountType, $isArchived
+        $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $isArchived
     
     ){
         $this->firstName = $firstName;
@@ -71,9 +71,8 @@ class Family {
         $this->econtactRelation = $econtactRelation;
         $this->password = password_hash($password, PASSWORD_BCRYPT);
         $this->question = $question;
-        $this->answer = $answer;
-        $this->accountType = $accountType;
-        $this->$isArchived = $isArchived;
+        $this->answer = password_hash($answer, PASSWORD_BCRYPT);;
+        $this->isArchived = $isArchived;
     }
 
     public function getFirstName(){
@@ -199,10 +198,6 @@ class Family {
 
     public function getSecurityAnswer(){
         return $this->answer;
-    }
-
-    public function getAccountType(){
-        return $this->accountType;
     }
 
     public function isArchived(){

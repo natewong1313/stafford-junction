@@ -51,9 +51,8 @@ function make_a_family($result_row){
         $result_row['econtact-relation'],
         password_hash($result_row['password'], PASSWORD_BCRYPT), //$result_row['password'],
         $result_row['question'],
-        $result_row['answer'],
-        'family',
-        'false'
+        password_hash($result_row['securityAnswer'], PASSWORD_BCRYPT),
+        $result_row['isArchived']
     );
 
     return $family;
@@ -90,11 +89,9 @@ function make_a_family2($result_row){
         $result_row['econtactLastName'],
         $result_row['econtactPhone'],
         $result_row['econtactRelation'],
-        //password_hash($result_row['password'], PASSWORD_BCRYPT),
-        $result_row['password'],
+        password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['securityQuestion'],
-        $result_row['securityAnswer'],
-        $result_row['accountType'],
+        password_hash($result_row['securityAnswer'], PASSWORD_BCRYPT),
         $result_row['isArchived']
         //'family',
         //'false'
@@ -121,7 +118,8 @@ function add_family($family){
         mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, city,
         state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
         birthdate2, address2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2, 
-        econtactFirstName, econtactLastName, econtactPhone, econtactRelation, isArchived, person_id) VALUES(" ' .
+        econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, securityQuestion, 
+        securityAnswer, isArchived) VALUES(" ' .
         $family->getFirstName() . '","' .
         $family->getLastName() . '","' .
         $family->getBirthDate() . '","' .
@@ -150,8 +148,10 @@ function add_family($family){
         $family->getEContactLastName() . '","' .
         $family->getEContactPhone() . '","' .
         $family->getEContactRelation() . '","' .
-        "false" . '","' .
-        $family->getPersonId() .
+        $family->getPassword() . '","' .
+        $family->getSecurityQuestion() . '","' .
+        $family->getSecurityAnswer() . '","' .
+        $family->isArchived() . 
         '");'
     );						
         mysqli_close($conn);
@@ -173,45 +173,6 @@ function retrieve_family($args){
 
     if(mysqli_num_rows($result) < 1 || $result == null){
         echo "User not found";
-        return null;
-    }else {
-        $row = mysqli_fetch_assoc($result);
-        $acct = make_a_family2($row);
-        mysqli_close($conn);
-        return $acct;
-    }
-
-    return null;
-}
-
-function get_family_by_person_id($id){
-    $conn = connect();
-    $query = "SELECT * FROM dbFamily WHERE person_id = '" . $id . "';";
-    $result = mysqli_query($conn,$query);
-
-    if(mysqli_num_rows($result) < 1 || $result == null){
-        echo "User not found";
-        return null;
-    }else {
-        $row = mysqli_fetch_assoc($result);
-        $acct = make_a_family2($row);
-        mysqli_close($conn);
-        return $acct;
-    }
-
-    return null;
-}
-
-/**
- * Retrieves family data, constructs a family object, and returns the family object based on passed in email
- */
-function retrieve_family_by_email($email){
-    $conn = connect();
-    //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
-    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
-    $result = mysqli_query($conn,$query);
-
-    if(mysqli_num_rows($result) < 1 || $result == null){
         return null;
     }else {
         $row = mysqli_fetch_assoc($result);
