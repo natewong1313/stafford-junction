@@ -29,13 +29,16 @@ class Family {
     private $econtactLastName;
     private $econtactPhone;
     private $econtactRelation;
+    private $password;
+    private $question;
+    private $answer;
+    private $accountType;
     private $isArchived;
-    private $personId;
 
     public function __construct($firstName, $lastName, $birthdate, $address, $city, $state,
         $zip, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2,
         $address2, $city2, $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, $econtactFirstName,
-        $econtactLastName, $econtactPhone, $econtactRelation, $isArchived, $personId
+        $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $accountType, $isArchived
     
     ){
         $this->firstName = $firstName;
@@ -66,12 +69,11 @@ class Family {
         $this->econtactLastName = $econtactLastName;
         $this->econtactPhone = $econtactPhone;
         $this->econtactRelation = $econtactRelation;
-        //$this->password = password_hash($password, PASSWORD_BCRYPT);
-        $this->password = $password; //not secure!!!!
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
         $this->question = $question;
         $this->answer = $answer;
         $this->accountType = $accountType;
-        $this->isArchived = $isArchived;
+        $this->$isArchived = $isArchived;
     }
 
     public function getFirstName(){
@@ -187,12 +189,24 @@ class Family {
         return $this->econtactRelation;
     }
 
-    public function isArchived(){
-        return $this->isArchived;
+    public function getPassword(){
+        return $this->password;
     }
 
-    public function getPersonId(){
-        return $this->getPersonId;
+    public function getSecurityQuestion(){
+        return $this->question;
+    }
+
+    public function getSecurityAnswer(){
+        return $this->answer;
+    }
+
+    public function getAccountType(){
+        return $this->accountType;
+    }
+
+    public function isArchived(){
+        return $this->isArchived;
     }
 
     
