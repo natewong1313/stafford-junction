@@ -18,7 +18,7 @@ if (!isset($_SESSION["_id"])) {
     die();
 }
 include_once("database/dbFamily.php");
-$family = get_family_by_person_id($_SESSION["_id"]);
+$family = retrieve_family_by_id($_SESSION["_id"]);
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();

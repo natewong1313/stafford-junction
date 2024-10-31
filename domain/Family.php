@@ -1,6 +1,7 @@
 <?php
 
 class Family {
+    private $id;
     private $firstName;
     private $lastName;
     private $birthdate;
@@ -35,12 +36,13 @@ class Family {
     private $accountType;
     private $isArchived;
 
-    public function __construct($firstName, $lastName, $birthdate, $address, $city, $state,
+    public function __construct($id, $firstName, $lastName, $birthdate, $address, $city, $state,
         $zip, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2,
         $address2, $city2, $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, $econtactFirstName,
         $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $isArchived
     
     ){
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthdate = $birthdate;
@@ -73,6 +75,10 @@ class Family {
         $this->question = $question;
         $this->answer = $answer;
         $this->isArchived = $isArchived;
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
     public function getFirstName(){
