@@ -54,14 +54,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         <form id="formatted_form" method="POST">
             <label for="search-method" style="text-align: center;">Search By</label>
-            <select name="search-method" style="width: 30%; margin-left: 35%; margin-bottom:10px;">
+            <select name="search-method">
                 <option value="last-name">Last Name</option>
                 <option value="email">Email</option>
             </select>
 
-            <input type="text" name="search" style="width: 30%; margin-left: 35%;" placeholder="Enter data to search for">
+            <input type="text" name="search" style="margin-top: 30px;" placeholder="Enter data to search for">
             
-            <button type="submit" style="margin-bottom: 20px; width: 30%; margin-left: 35%;">Search</button>
+            <button type="submit" class="button_style">Search</button>
 
             <?php
             if(isset($family)){
@@ -111,7 +111,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             ?>
         </form>
      
-        <a class="button cancel" href="index.php"">Return to Dashboard</a>
+        <a class="button cancel button_style"  href="index.php"">Return to Dashboard</a>
      
         
 

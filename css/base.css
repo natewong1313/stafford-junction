@@ -1017,7 +1017,7 @@ img.profile-pic {
  * Strong tags are typically used for emphasis (like dates or school names).
 */
 #spring_break_form .pickup-times strong {
-  color: #7e0d07; 
+  color: #7e0d07;
 }
 
 /* 
@@ -1036,11 +1036,10 @@ img.profile-pic {
   margin-bottom: 15px; /* Adds space below the box */
 }
 
-
 /* 
  * This is used for sections that contain important information for users (like the camp details).
  */
- #style_form .info {
+#style_form .info {
   background-color: #f9f9f9; /* Light grey background for readability */
   padding: 10px; /* Adds internal padding to give the content some space */
   border-left: 5px solid #7e0d07; /* Adds a solid red border to the left for emphasis */
@@ -1069,7 +1068,7 @@ img.profile-pic {
  * Strong tags are typically used for emphasis (like dates or school names).
 */
 #style_form .pickup-times strong {
-  color: #7e0d07; 
+  color: #7e0d07;
 }
 
 /* 
@@ -1084,8 +1083,8 @@ img.profile-pic {
  * This is used to change the attributes of the availability days in the availability secion in the programInterestForm
  */
 .availability-day-form {
-  display: flex; 
-  gap: 1.5rem; 
+  display: flex;
+  gap: 1.5rem;
   align-items: center;
 }
 
@@ -1094,4 +1093,11 @@ img.profile-pic {
  */
 .day-label {
   width: 6rem;
+}
+
+.button_style {
+  width: 30%;
+  margin-left: 35%;
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
