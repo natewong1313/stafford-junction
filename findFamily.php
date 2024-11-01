@@ -53,7 +53,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <h1>Search Family Account</h1>
 
         <form id="formatted_form" method="POST">
-            <label for="search-method">Search By</label>
+            <label for="search-method" style="text-align: center;">Search By</label>
             <select name="search-method" style="width: 30%; margin-left: 35%; margin-bottom:10px;">
                 <option value="last-name">Last Name</option>
                 <option value="email">Email</option>
