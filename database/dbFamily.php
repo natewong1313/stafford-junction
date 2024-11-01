@@ -196,8 +196,10 @@ function retrieve_family($args){
 
 /**
  * Retrieves family data, constructs a family object, and returns the family object based on passed in email
+ * 
+ * This function returns an array because an array of family object(s) is needed for findFamily to loop through and display
  */
-function retrieve_family_by_email($email){
+function retrieve_family_by_email_to_display($email){
     $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
     $result = mysqli_query($conn,$query);
@@ -215,6 +217,10 @@ function retrieve_family_by_email($email){
     
 }
 
+/**
+ * Used specifically for logging in. This method retrieves a row from dbFamily database that
+ * matches the passed in email and returns a family object
+ */
 function retrieve_family_by_email_for_login($email){
     $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";

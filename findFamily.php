@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $family = retrieve_family_by_lastName($args['search']);
     }else if($args['search-method'] == "email"){
         //retrieve family by email
-        $family = retrieve_family_by_email($args['search']);
+        $family = retrieve_family_by_email_to_display($args['search']);
     }
 
     
