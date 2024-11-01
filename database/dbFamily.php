@@ -208,7 +208,7 @@ function retrieve_family_by_email($email){
         $row = mysqli_fetch_assoc($result);
         $acct = make_a_family2($row); //here we call make_a_family2 instead of make_a_family because we now have the id from the database that can be included in the instantiation of the family object
         mysqli_close($conn);
-        return $acct;
+        return [$acct]; //need to return an array with the family object because familyView.php needs to cycle through an array to display data
     }
 
     return null;

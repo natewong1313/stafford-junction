@@ -25,8 +25,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $args = sanitize($_POST, null);
 
-    //will either hold one or mutliple family objects depending on the last name
-    $family = retrieve_family_by_lastName($args['name']);
+    if($args["search-method"] == "last-name"){
+        //will either hold one or mutliple family objects depending on the last name
+        $family = retrieve_family_by_lastName($args['search']);
+    }else if($args['search-method'] == "email"){
+        //retrieve family by email
+        $family = retrieve_family_by_email($args['search']);
+    }
+
+    
 
 }
 ?>
@@ -46,11 +53,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <h1>Search Family Account</h1>
 
         <form id="formatted_form" method="POST">
-            <label for="email">Account Name</label>
-            <!--<input type="text" name="email" required placeholder="Email">-->
-            <input type="text" name="name" required placeholder = "Enter last name">
+            <label for="search-method">Search By</label>
+            <select name="search-method" style="width: 30%; margin-left: 35%; margin-bottom:10px;">
+                <option value="last-name">Last Name</option>
+                <option value="email">Email</option>
+            </select>
+
+            <input type="text" name="search" style="width: 30%; margin-left: 35%;" placeholder="Enter data to search for">
             
-            <button type="submit" style="margin-bottom: 20px;">Search</button>
+            <button type="submit" style="margin-bottom: 20px; width: 30%; margin-left: 35%;">Search</button>
 
             <?php
             if(isset($family)){
