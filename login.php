@@ -28,7 +28,7 @@
             //import family files
             require_once("domain/Family.php");
             require_once("database/dbFamily.php");
-            
+
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
@@ -78,7 +78,7 @@
             //If the user is a family account
             }else if($args['account'] == 'family'){ 
                 //retrieve user by their email (aka the username they filled in at the login page)
-                $user = retrieve_family_by_email($args['username']);
+                $user = retrieve_family_by_email_for_login($args['username']);
                 if(!$user){
                     $badLogin = true;
                 }else if(password_verify($password, $user->getPassword())) { 

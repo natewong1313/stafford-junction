@@ -215,6 +215,23 @@ function retrieve_family_by_email($email){
     
 }
 
+function retrieve_family_by_email_for_login($email){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
+    $result = mysqli_query($conn,$query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row); //here we call make_a_family2 instead of make_a_family because we now have the id from the database that can be included in the instantiation of the family object
+        mysqli_close($conn);
+        return $acct; //need to return an array with the family object because familyView.php needs to cycle through an array to display data
+    }
+
+    return null;
+}
+
 /**
  * Function that retrieves all the families with the specified last name, turns them into Family ohjects, and
  * returns and array of those family objects
