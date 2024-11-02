@@ -1,3 +1,41 @@
+<?php
+    session_cache_expire(30);
+    session_start();
+    //import family files
+    require_once("domain/Family.php");
+    require_once("database/dbFamily.php");
+    require_once('include/input-validation.php');
+    $user = null;
+
+    // Get user security question
+    $question = null;
+    if (isset($_SESSION['familyEmail'])) {
+        $user = retrieve_family_by_email($_SESSION['familyEmail']);
+        // Variable to hold security question
+        $question = $user->getSecurityQuestion();
+    } else {
+        header('Location: login.php');
+        die();
+    }
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $args = sanitize($_POST, null);
+        $required = array('answer');
+        if ($user) {
+            // Get answers
+            $answer = $user->getSecurityAnswer();
+            $enteredAnswer = $_POST['answer'];
+            // Check if answer user submitted matches answer in database
+            if ($answer == $enteredAnswer) {
+                $_SESSION['familyVerified'] = true;
+                header('Location: forgotPassword.php');
+                die();
+            }
+        }
+    }
+    
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,17 +43,6 @@
         <title>Stafford Junction | Change Password</title>
     </head>
     <body>
-        <?php
-            // Variable to hold security question, add way to retrieve the question from dbPersons
-            $question = null;
-            // Get answer
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $answer = $_POST['answer'];
-                // Next two lines is used for testing, add a way to check if user submits the correct answer before going to next page
-                header('Location: forgotPassword.php');
-                die();
-            }
-        ?>
 
         <?php require_once('header.php') ?>
         <h1>Change Password</h1>

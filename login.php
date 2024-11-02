@@ -9,6 +9,10 @@
     ini_set("display_errors",1);
     error_reporting(E_ALL);
 
+    // clear familyEmail and familyVerifed session variables in case user comes back from the forgot password flow
+    unset($_SESSION['familyEmail']);
+    unset($_SESSION['familyVerified']);
+
     // redirect to index if already logged in
     if (isset($_SESSION['_id'])) {
         header('Location: index.php');

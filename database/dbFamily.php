@@ -227,3 +227,11 @@ function retrieve_id_by_email($email){
     return null;
     
 }
+
+function change_family_password($id, $newPass) {
+    $con=connect();
+    $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE email = "' . $id . '"';
+    $result = mysqli_query($con, $query);
+    mysqli_close($con);
+    return $result;
+}
