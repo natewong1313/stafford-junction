@@ -16,6 +16,7 @@
             $email = strtolower($args['email']);
             $user = retrieve_family_by_email($email);
             if ($user) {
+                // Set familyEmail session variable to hold the email of the account
                 $_SESSION['familyEmail'] = $user->getEmail();
                 header('Location: securityQuestions.php');
                 die();

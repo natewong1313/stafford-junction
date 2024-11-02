@@ -11,9 +11,11 @@
     $accessLevel = 0;
     $userID = null;
 
+    // If familyEmail and familyVerified session variables are set, get email and continue
     if (isset($_SESSION['familyEmail']) && isset($_SESSION['familyVerified'])) {
         $userID = $_SESSION['familyEmail'];
     } else {
+        // Else go back to login page
         header('Location: login.php');
         die();
     }
@@ -25,7 +27,6 @@
         }
 
         $newPassword = $_POST['new-password'];
-        $user = retrieve_family_by_email($userID);
         $hash = password_hash($newPassword, PASSWORD_BCRYPT);
         change_family_password($userID, $hash);
         header('Location: index.php?pcSuccess');

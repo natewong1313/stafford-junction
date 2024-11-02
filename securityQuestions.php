@@ -27,6 +27,7 @@
             $enteredAnswer = $_POST['answer'];
             // Check if answer user submitted matches answer in database
             if ($answer == $enteredAnswer) {
+                // Set familyVerified session variable which is used to access the forgotPassword.php page
                 $_SESSION['familyVerified'] = true;
                 header('Location: forgotPassword.php');
                 die();
