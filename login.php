@@ -28,6 +28,7 @@
             //import family files
             require_once("domain/Family.php");
             require_once("database/dbFamily.php");
+
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
@@ -84,7 +85,7 @@
                     //set session variables
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1; //access level for family = 1
-                    $_SESSION['id'] = $user->getEmail();
+                    $_SESSION['id'] = $user->getID();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
                     $_SESSION['account_type'] = "Family";

@@ -1,18 +1,5 @@
 <?php
 
-
-/** 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    require_once('include/input-validation.php');
-    require_once('database/dbFamily.php');
-    $args = sanitize($_POST, null);
-
-    $family = make_a_family($args);
-    var_dump($family);
-
-}
-*/
-
 /**
  * function that just prints the content of var_dump in a more readable way
  */
@@ -38,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if($success){
         //redirect user back to login
-        echo "Account created successfully!";
         header("Location: login.php");
     }
 

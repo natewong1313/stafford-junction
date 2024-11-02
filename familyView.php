@@ -19,7 +19,7 @@ require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_email($userID ?? $_GET['id']); //either retrieve the family by the email set in $userID, or inside the GET array if being accessed from staff account
+$family = retrieve_family_by_id($userID ?? $_GET['id']); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
 
 
 ?>
@@ -100,7 +100,7 @@ $family = retrieve_family_by_email($userID ?? $_GET['id']); //either retrieve th
         <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
         <?php if($_SESSION['access_level'] > 1): ?>
-        <a class="button cancel" href="index.php" style="margin-top: 3rem;">Return to Dashboard</a>
+        <a class="button cancel" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         
 
