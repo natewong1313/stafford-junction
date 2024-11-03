@@ -16,7 +16,7 @@ if (isset($_SESSION['id'])) {
 require_once("domain/Children.php");
 require_once("database/dbFamily.php");
 
-showChildren($userID);
+$children = showChildren($userID);
 
 
 ?>
@@ -34,12 +34,47 @@ showChildren($userID);
     <body>
         <?php require_once('header.php') ?>
         <h1>Children Accounts</h1>
-
-        <div style="margin-left: 20px; margin-right: 20px">
+        <div style="margin-left: 40px; margin-right: 40px;">
+        <?php
+        if(isset($children)){
+                echo '<h3>Children Summary</h3>';
+                echo '
+                <div class="table-wrapper">
+                    <table class="general">
+                        <thead>
+                            <tr>
+                                <th>Acct ID</th>
+                                <th>Name</th>
+                                <th>Date of Birth</th>
+                                <th>gender</th>
+                                <th>medical notes</th>
+                                <th>notes</th>';
+                            echo '</tr>
+                        </thead>
+                        <tbody class="standout">';
+                        foreach($children as $acct){
+                            echo '<tr>';
+                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
+                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
+                            echo '<td>' . $acct->getBirthdate() . '</td>';
+                            echo '<td>' . $acct->getGender() . '</td>';
+                            echo '<td>' . $acct->getMedicalNotes() . '</td>';
+                            echo '<td>' . $acct->getNotes() . '</td>';
+                            echo '<tr>';
+                        }
+                        
+                echo '
+                        </tbody>
+                    </table>
+                </div>';
+            }
+            ?>
         
         </div>
+        
+
         <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
+        <a class="button cancel, button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
         
 

@@ -16,6 +16,19 @@ function make_a_child($result_row){
     return $child;
 }
 
+function make_a_child_from_database($result_row){
+    $child = new Child (
+        $result_row['id'],
+        $result_row['first_name'],
+        $result_row['last_name'],
+        $result_row['dob'],
+        $result_row['gender'],
+        $result_row['medical_notes'],
+        $result_row['notes']
+    );
+    return $child;
+}
+
 /**
  * Function that makes a child from the sign up page
  */
