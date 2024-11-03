@@ -7,11 +7,11 @@ CREATE TABLE dbBrainBuildersHolidayPartyForm (
     child_first_name VARCHAR(50) NOT NULL,
     child_last_name VARCHAR(50) NOT NULL,
     isAttending BOOLEAN NOT NULL,
-    transportation VARCHAR(50), NOT NULL 
-    neighborhood VARCHAR(50), NOT NULL,
+    transportation VARCHAR(50) NOT NULL,
+    neighborhood VARCHAR(50) NOT NULL,
     comments TEXT,
     CONSTRAINT FK_family_id
-    FOREIGN KEY (family_id) REFERENCES dbFamily(id) 
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE,
+        FOREIGN KEY (family_id) REFERENCES dbFamily(id)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
 );
