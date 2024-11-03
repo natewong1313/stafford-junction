@@ -11,7 +11,7 @@ function make_a_child($result_row){
         $result_row['birthdate'],
         $result_row['gender'],
         $result_row['last-child_medical_notes_'],
-        $result_row['child_additonal_notes_-name']
+        $result_row['child_additional_notes_-name']
     );
     return $child;
 }
