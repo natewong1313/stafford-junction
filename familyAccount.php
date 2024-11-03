@@ -15,6 +15,12 @@ function dd($val){
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('include/input-validation.php');
     require_once('database/dbFamily.php');
+    require_once('database/dbChildren.php');
+
+    //grab children data
+    $children = $_POST['children'];
+    unset($_POST['children']); //need to unset, otherwise sanitize breaks 
+
     $args = sanitize($_POST, null);
 
     //creates family object
@@ -24,6 +30,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $success = add_family($family);
 
     if($success){
+        //need to retrieve the family we just inserted because we need the family id primary key via getID()
+        $fam = retrieve_family($args);
+
+        //loop through children and make child objects
+        foreach($children as $child){
+            $child_obj = make_a_child($child);
+            //insert child into dbChildren, passing in family id that will be the foreign key for dbChildren
+            add_child($child_obj, $fam->getID());
+        }
+
         //redirect user back to login
         header("Location: login.php");
     }

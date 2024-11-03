@@ -6,12 +6,12 @@ include_once(dirname(__FILE__).'/../domain/Children.php');
 function make_a_child($result_row){
     $child = new Child (
         $result_row['id'],
-        $result_row['first_name'],
-        $result_row['last_name'],
+        $result_row['first-name'],
+        $result_row['last-name'],
         $result_row['birthdate'],
         $result_row['gender'],
-        $result_row['medical_notes'],
-        $result_row['notes']
+        $result_row['last-child_medical_notes_'],
+        $result_row['child_additonal_notes_-name']
     );
     return $child;
 }
@@ -38,6 +38,24 @@ function retrieve_children_by_email($email){
 
     return null;
     
+}
+
+//add child to database
+function add_child($child, $fam_id){
+    $conn = connect();
+    mysqli_query($conn, 'INSERT INTO dbChildren (family_id, first_name, last_name, dob, gender, medical_notes, notes) VALUES (" ' .
+        $fam_id . '","' .
+        $child->getFirstName() . '","' .
+        $child->getLastName() . '","' .
+        $child->getBirthDate() . '","' .
+        $child->getGender() . '","' .
+        $child->getMedicalNotes() . '","' .
+        $child->getNotes() . 
+        '");'
+    );
+    mysqli_close($conn);
+
+    return true;
 }
 
 
