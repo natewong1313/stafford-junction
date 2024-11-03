@@ -51,7 +51,7 @@ function make_a_family($result_row){
         $result_row['econtact-relation'],
         password_hash($result_row['password'], PASSWORD_BCRYPT), //$result_row['password'],
         $result_row['question'],
-        $result_row['answer'],
+        password_hash($result_row['answer'], PASSWORD_BCRYPT),
         'family',
         'false'
     );
