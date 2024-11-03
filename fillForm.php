@@ -56,6 +56,23 @@ error_reporting(E_ALL);
                     <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
                     <img src="images/brainBuilders.svg">
                     <span>Brain Builders Student Registration Form</span> </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div class="dashboard-item" data-link="holidayPartyForm.php">
+                    <img src="images/party-flyer-svgrepo-com.svg">
+                    <span>Brain Builders Holiday Party Form</span> </div>
+
+
                 </div>
             </div>
             <!--Below deals with the 'Return to dashboard'. Since multiple dashboards share this file, the dashboard to return to will be different depending on access level-->
