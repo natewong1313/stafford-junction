@@ -28,7 +28,7 @@ session_start();
                     <span>View Account</span>
                 </div>
                 <div class="dashboard-item" data-link="childrenView.php">
-                    <img src="images/person-search.svg">
+                    <img src="images/children-svgrepo-com.svg">
                     <span>View Children Accounts</span>
                 </div>
                 <!--Dashboard button that directs the user to the forms page-->
