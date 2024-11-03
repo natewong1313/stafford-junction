@@ -274,3 +274,17 @@ function retrieve_family_by_id($id){
         return $acct;
     }
 }
+
+function showChildren($family_id){
+    $conn = connect();
+    $query = "SELECT dbChildren.id, dbChildren.first_name, dbChildren.last_name FROM dbFamily INNER JOIN dbChildren ON
+        dbFamily.id = dbChildren.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) == 0 || $result == null){
+        return null;
+    }else {
+        foreach($result as $child){
+            var_dump($child);
+        }
+    }
+}

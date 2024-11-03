@@ -16,6 +16,7 @@ if (isset($_SESSION['id'])) {
 require_once("domain/Children.php");
 require_once("database/dbFamily.php");
 
+showChildren($userID);
 
 
 ?>
