@@ -16,6 +16,7 @@ if (isset($_SESSION['id'])) {
 require_once("domain/Children.php");
 require_once("database/dbFamily.php");
 
+//grabs all the children associated with account and puts it into an array
 $children = showChildren($userID);
 
 
@@ -54,7 +55,7 @@ $children = showChildren($userID);
                         <tbody class="standout">';
                         foreach($children as $acct){
                             echo '<tr>';
-                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
+                            echo '<td><a href=familyView.php?id=' . $userID . '>' . $acct->getID() . '</a></td>';
                             echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
                             echo '<td>' . $acct->getBirthdate() . '</td>';
                             echo '<td>' . $acct->getGender() . '</td>';

@@ -276,6 +276,7 @@ function retrieve_family_by_id($id){
     }
 }
 
+/**Function that gets all the children assoicated with a particular family */
 function showChildren($family_id){
     $children = [];
     $conn = connect();
