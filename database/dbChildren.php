@@ -16,6 +16,7 @@ function make_a_child($result_row){
     return $child;
 }
 
+/**Use this function whenever you need to make a child object from a row in the dbChildren database */
 function make_a_child_from_database($result_row){
     $child = new Child (
         $result_row['id'],
