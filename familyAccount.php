@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //loop through children and make child objects
         foreach($children as $child){
-            $child_obj = make_a_child($child);
+            $child_obj = make_a_child_from_sign_up($child);
             //insert child into dbChildren, passing in family id that will be the foreign key for dbChildren
             add_child($child_obj, $fam->getID());
         }

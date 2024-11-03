@@ -10,6 +10,22 @@ function make_a_child($result_row){
         $result_row['last-name'],
         $result_row['birthdate'],
         $result_row['gender'],
+        $result_row['medical_notes'],
+        $result_row['notes']
+    );
+    return $child;
+}
+
+/**
+ * Function that makes a child from the sign up page
+ */
+function make_a_child_from_sign_up($result_row){
+    $child = new Child (
+        $result_row['id'],
+        $result_row['first-name'],
+        $result_row['last-name'],
+        $result_row['birthdate'],
+        $result_row['gender'],
         $result_row['last-child_medical_notes_'],
         $result_row['child_additional_notes_-name']
     );

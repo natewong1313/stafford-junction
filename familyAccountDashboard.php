@@ -27,6 +27,10 @@ session_start();
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>
+                <div class="dashboard-item" data-link="childrenView.php">
+                    <img src="images/person-search.svg">
+                    <span>View Children Accounts</span>
+                </div>
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
