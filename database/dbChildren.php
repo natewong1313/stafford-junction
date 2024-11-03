@@ -8,7 +8,7 @@ function make_a_child($result_row){
         $result_row['id'],
         $result_row['first_name'],
         $result_row['last_name'],
-        $result_row['birthdate'],
+        $result_row['dob'],
         $result_row['gender'],
         $result_row['medical_notes'],
         $result_row['notes']
@@ -16,9 +16,9 @@ function make_a_child($result_row){
     return $child;
 }
 
-function retrieve_children_by_email($email){
+function retrieve_children_by_id($id){
     $conn = connect();
-    $query = "SELECT * FROM dbchildren INNER JOIN dbfamily ON dbchildren.family_id = dbfamily.id WHERE dbfamily.email = '" . $email . "';";
+    $query = "SELECT dbchildren.* FROM dbchildren INNER JOIN dbfamily ON dbchildren.family_id = dbfamily.id WHERE dbfamily.id = '" . $id . "';";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){
