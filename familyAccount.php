@@ -1,5 +1,7 @@
 <?php
 
+$success = false;
+
 /**
  * function that just prints the content of var_dump in a more readable way
  */
@@ -35,13 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //loop through children and make child objects
         foreach($children as $child){
-            $child_obj = make_a_child_from_sign_up($child);
-            //insert child into dbChildren, passing in family id that will be the foreign key for dbChildren
+            $child_obj = make_a_child_from_sign_up($child); //construct child object from form data
+
+            //insert child into dbChildren, passing in family id that which will be the foreign key for dbChildren
             add_child($child_obj, $fam->getID());
         }
-
-        //redirect user back to login
-        header("Location: login.php");
     }
 
 }
@@ -392,6 +392,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </fieldset>
 
                 <input type="submit" name="registration-form" value="Create Account">
+                <?php
+
+                //if registration successful, create pop up notification and direct user back to login
+                if($success){
+                    echo '<script>document.location = "login.php?registerSuccess";</script>';
+                }  
+                ?>
             </form>
             <a class="button cancel" href="index.php" style="margin-top: .5rem">Cancel</a>
         </main>

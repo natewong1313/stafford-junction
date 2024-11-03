@@ -20,6 +20,7 @@ require_once("domain/Family.php");
 require_once("database/dbChildren.php");
 require_once("include/input-validation.php");
 
+//get child by id from childrenInAccount.php
 $child = retrieve_child_by_id($_GET['id']);
 
 ?>
