@@ -1,4 +1,4 @@
-<!--This file shows the complete account information of a family account -->
+<!--This file shows the complete account information of a child account -->
 <?php
 
 session_cache_expire(30);
@@ -14,7 +14,7 @@ if (isset($_SESSION['id'])) {
     $userID = $_SESSION['id'];
 }
 
-//these files will give us all the family functionality and access to the family account database
+//these files will give us all the family and child functionality and access to the family account and child database
 require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("database/dbChildren.php");
