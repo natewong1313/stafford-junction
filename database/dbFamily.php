@@ -18,9 +18,13 @@ function prettyPrint($val){
 /**
  * function that takes the $_POST arguments from the sign up page as an assoc array
  * and instantiates a new Family object with that data
+ *
+ * At this point, the account id hasn't been created yet because that will come from the auto_incremented value in dbFamily database.
+ * The is why for now set the first field (id) to null
  */
 function make_a_family($result_row){
     $family = new Family(
+        null,
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
@@ -49,11 +53,11 @@ function make_a_family($result_row){
         $result_row['econtact-last-name'],
         $result_row['econtact-phone'],
         $result_row['econtact-relation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT), //$result_row['password'],
+        password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['question'],
         $result_row['answer'],
-        'family',
-        'false'
+        'family', //hard code family as account type since this is the family account
+        'false' //hard coded false for isArchived; this could be a boolean in the future
     );
 
     return $family;
@@ -113,7 +117,7 @@ function add_family($family){
     //first checks to see if the family already exists by looking at email
     $query = "SELECT * FROM dbFamily WHERE email = '" . $family->getEmail() . "'";
     $result = mysqli_query($conn,$query);
-    //var_dump($result);
+
     if($result == null || mysqli_num_rows($result) == 0){
         mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, city,
         state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
@@ -151,7 +155,7 @@ function add_family($family){
         $family->getPassword() . '","' .
         $family->getSecurityQuestion() . '","' .
         $family->getSecurityAnswer() . '","' .
-        $family->isArchived() . 
+        $family->isArchived() .
         '");'
     );						
         mysqli_close($conn);
@@ -187,10 +191,11 @@ function retrieve_family($args){
 
 /**
  * Retrieves family data, constructs a family object, and returns the family object based on passed in email
+ *
+ * This function returns an array because an array of family object(s) is needed for findFamily to loop through and display
  */
-function retrieve_family_by_email($email){
+function retrieve_family_by_email_to_display($email){
     $conn = connect();
-    //$query = 'SELECT * FROM dbFamily WHERE email = "' . $email . ';"';
     $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
     $result = mysqli_query($conn,$query);
 
@@ -204,7 +209,7 @@ function retrieve_family_by_email($email){
     }
 
     return null;
-    
+
 }
 
 /**
@@ -219,28 +224,69 @@ function retrieve_family_by_id($id){
         return null;
     }else {
         $row = mysqli_fetch_assoc($result);
-        $acct = make_a_family2($row);
+        $acct = make_a_family2($row); //here we call make_a_family2 instead of make_a_family because we now have the id from the database that can be included in the instantiation of the family object
         mysqli_close($conn);
-        return $acct;
+        return [$acct]; //need to return an array with the family object because familyView.php needs to cycle through an array to display data
     }
 
     return null;
     
 }
 
-function retrieve_id_by_email($email){
-    $con = connect();
+function retrieve_family_by_email($email){
+    $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
-    $result = mysqli_query($con, $query);
+    $result = mysqli_query($conn,$query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){
         return null;
     }else {
         $row = mysqli_fetch_assoc($result);
-        $id = $row['id'];
-        return $id;
+        $acct = make_a_family2($row); //here we call make_a_family2 instead of make_a_family because we now have the id from the database that can be included in the instantiation of the family object
+        mysqli_close($conn);
+        return $acct;
     }
 
     return null;
-    
+}
+
+/**
+ * Function that retrieves all the families with the specified last name, turns them into Family ohjects, and
+ * returns and array of those family objects
+ */
+function retrieve_family_by_lastName($lastName){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE lastName = '" . $lastName . "';";
+    $result = mysqli_query($conn, $query);
+    $families = []; //will store family objects
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else if(mysqli_num_rows($result) > 1){ //case where there are multiple families with the same last name
+        foreach($result as $fam){
+            $families[] = make_a_family2($fam);
+        }
+
+        return $families;
+
+    }else { //case where there is only one family with the specified last name
+        $row = mysqli_fetch_assoc($result);
+        //$acct = make_a_family2($row);
+        $families[] = make_a_family2($row);
+        mysqli_close($conn);
+        return $families;
+    }
+}
+
+function retrieve_family_by_id($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE id = '" . $id . "';";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
 }

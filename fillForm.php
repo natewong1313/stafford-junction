@@ -37,6 +37,10 @@ error_reporting(E_ALL);
                     <img src="images/angel.svg">
                     <span>Angel Gifts Wish Form</span> </div>
 
+                    <div class="dashboard-item" data-link="actualActivityForm.php">
+                    <img src="images/actualActivity-svgrepo.svg">
+                    <span>Actual Activity Form</span> </div>
+
                     <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> </div>

@@ -25,8 +25,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $args = sanitize($_POST, null);
 
-    $family = retrieve_family($args); //retrieves family by email for now (may change later)
-    $id = $family->getEmail();
+    if($args["search-method"] == "last-name"){
+        //will either hold one or mutliple family objects depending on the last name
+        $family = retrieve_family_by_lastName($args['search']);
+    }else if($args['search-method'] == "email"){
+        //retrieve family by email
+        $family = retrieve_family_by_email_to_display($args['search']);
+    }
+
+    
 
 }
 ?>
@@ -46,9 +53,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <h1>Search Family Account</h1>
 
         <form id="formatted_form" method="POST">
-            <label for="email">Account Email</label>
-            <input type="text" name="email" required placeholder="Email">
-            <button type="submit" style="margin-bottom: 20px;">Search</button>
+            <label for="search-method" style="text-align: center;">Search By</label>
+            <select name="search-method">
+                <option value="last-name">Last Name</option>
+                <option value="email">Email</option>
+            </select>
+
+            <input type="text" name="search" style="margin-top: 30px;" placeholder="Enter data to search for">
+            
+            <button type="submit" class="button_style">Search</button>
 
             <?php
             if(isset($family)){
@@ -58,6 +71,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <table class="general">
                         <thead>
                             <tr>
+                                <th>Acct ID</th>
                                 <th>Name</th>
                                 <th>Birthdate</th>
                                 <th>Address</th>
@@ -67,22 +81,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                                 <th>email</th>
                                 <th>phone</th>
                                 <th>Emergency Contact</th>
-                                <th>Emergency Contact Phone</th>';
-                        
+                                <th>Emergency Phone</th>';
+                                //a href=familyView.php?id=' . $id . 
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        echo '<tr>';
-                        echo '<td><a href=familyView.php?id=' . $id . '>' . $family->getFirstName() . " " . $family->getLastName() . '</a></td>';
-                        echo '<td>' . $family->getBirthDate() . '</td>';
-                        echo '<td>' . $family->getAddress() . '</td>';
-                        echo '<td>' . $family->getCity() . '</td>';
-                        echo '<td>' . $family->getState() . '</td>';
-                        echo '<td>' . $family->getZip() . '</td>';
-                        echo '<td>' . $family->getEmail() . '</td>';
-                        echo '<td>' . $family->getPhone() . '</td>';
-                        echo '<td>' . $family->getEContactFirstName() . " " . $family->getEContactLastName() . '</td>';
-                        echo '<td>' . $family->getEContactPhone() . '</td>';
+                        foreach($family as $acct){
+                            echo '<tr>';
+                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
+                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
+                            echo '<td>' . $acct->getBirthDate() . '</td>';
+                            echo '<td>' . $acct->getAddress() . '</td>';
+                            echo '<td>' . $acct->getCity() . '</td>';
+                            echo '<td>' . $acct->getState() . '</td>';
+                            echo '<td>' . $acct->getZip() . '</td>';
+                            echo '<td>' . $acct->getEmail() . '</td>';
+                            echo '<td>' . $acct->getPhone() . '</td>';
+                            echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
+                            echo '<td>' . $acct->getEContactPhone() . '</td>';
+                            echo '<tr>';
+                        }
+                        
                 echo '
                         </tbody>
                     </table>
@@ -92,7 +111,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             ?>
         </form>
      
-        <a class="button cancel" href="index.php"">Return to Dashboard</a>
+        <a class="button cancel button_style"  href="index.php"">Return to Dashboard</a>
      
         
 
