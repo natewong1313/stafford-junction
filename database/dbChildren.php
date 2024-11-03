@@ -88,5 +88,21 @@ function add_child($child, $fam_id){
     return true;
 }
 
+function retrieve_child_by_id($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbChildren WHERE id = '" . $id . "';";
+    $res = mysqli_query($conn, $query);
+    if(mysqli_num_rows($res) < 0 || $res == null){
+        return null;
+    }
+
+    $row = mysqli_fetch_assoc($res);
+
+    $child = make_a_child_from_database($row);
+    mysqli_close($conn);
+
+    return $child;
+}
+
 
 ?>

@@ -277,7 +277,7 @@ function retrieve_family_by_id($id){
 }
 
 /**Function that gets all the children assoicated with a particular family */
-function showChildren($family_id){
+function getChildren($family_id){
     $children = [];
     $conn = connect();
     $query = "SELECT dbChildren.id, dbChildren.first_name, dbChildren.last_name, dbChildren.dob, dbChildren.gender, 

@@ -27,7 +27,7 @@ session_start();
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>
-                <div class="dashboard-item" data-link="childrenView.php">
+                <div class="dashboard-item" data-link="childrenInAccount.php">
                     <img src="images/children-svgrepo-com.svg">
                     <span>View Children Accounts</span>
                 </div>
