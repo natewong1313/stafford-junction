@@ -29,33 +29,42 @@ error_reporting(E_ALL);
                     <span>School Supplies Form</span> </div>
 
 
-                    <div class="dashboard-item" data-link="springBreakForm.php">
+                <div class="dashboard-item" data-link="springBreakForm.php">
                     <img src="images/tent-svgrepo-com.svg">
                     <span>Spring Break Form</span> </div>
 
-                    <div class="dashboard-item" data-link="angelGiftForm.php">
+                <div class="dashboard-item" data-link="angelGiftForm.php">
                     <img src="images/angel.svg">
                     <span>Angel Gifts Wish Form</span> </div>
 
-                    <div class="dashboard-item" data-link="actualActivityForm.php">
+                <div class="dashboard-item" data-link="actualActivityForm.php">
                     <img src="images/actualActivity-svgrepo.svg">
                     <span>Actual Activity Form</span> </div>
 
-                    <div class="dashboard-item" data-link="childCareWaiverForm.php">
+                <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> </div>
 
-                    <div class="dashboard-item" data-link="fieldTripWaiver.php">
+                <div class="dashboard-item" data-link="fieldTripWaiver.php">
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> </div>
 
-                    <div class="dashboard-item" data-link="programInterestForm.php">
+                <div class="dashboard-item" data-link="programInterestForm.php">
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> </div>
 
-                    <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
+                <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
                     <img src="images/brainBuilders.svg">
                     <span>Brain Builders Student Registration Form</span> </div>
+                <div class="dashboard-item" data-link="BrainBuilderReviewForm.php">
+                    <img src="images/brainBuilderReviewIcon.svg.svg">
+                    <span>Brain Builder Review Form</span> </div>
+
+                <div class="dashboard-item" data-link="holidayPartyForm.php">
+                    <img src="images/party-flyer-svgrepo-com.svg">
+                    <span>Brain Builders Holiday Party Form</span> </div>
+
+
                 </div>
             </div>
             <!--Below deals with the 'Return to dashboard'. Since multiple dashboards share this file, the dashboard to return to will be different depending on access level-->

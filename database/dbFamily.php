@@ -2,6 +2,7 @@
 
 include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Family.php');
+include_once('dbChildren.php');
 
 
 /**
@@ -55,7 +56,7 @@ function make_a_family($result_row){
         $result_row['econtact-relation'],
         password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['question'],
-        $result_row['answer'],
+        password_hash($result_row['answer'], PASSWORD_BCRYPT),
         'family', //hard code family as account type since this is the family account
         'false' //hard coded false for isArchived; this could be a boolean in the future
     );
@@ -289,4 +290,32 @@ function retrieve_family_by_id($id){
         mysqli_close($conn);
         return $acct;
     }
+}
+
+/**Function that gets all the children assoicated with a particular family */
+function getChildren($family_id){
+    $children = [];
+    $conn = connect();
+    $query = "SELECT dbChildren.id, dbChildren.first_name, dbChildren.last_name, dbChildren.dob, dbChildren.gender, 
+        dbChildren.medical_notes, dbChildren.notes FROM dbFamily INNER JOIN dbChildren ON
+        dbFamily.id = dbChildren.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) == 0 || $result == null){
+        return null;
+    }else {
+        foreach($result as $child){
+            $children[] = make_a_child_from_database($child);
+        }
+
+        return $children;
+    }
+}
+
+
+function change_family_password($id, $newPass) {
+        $con=connect();
+        $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE email = "' . $id . '"';
+        $result = mysqli_query($con, $query);
+        mysqli_close($con);
+        return $result;
 }
