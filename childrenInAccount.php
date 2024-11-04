@@ -6,11 +6,11 @@ session_start();
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
-if (isset($_SESSION['id'])) {
+if (isset($_SESSION['_id'])) {
     $loggedIn = true;
     //0 - Volunteer, 1 - Family, >=2 Staff/Admin
     $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['id'];
+    $userID = $_SESSION['_id'];
 }
 
 require_once("domain/Children.php");

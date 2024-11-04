@@ -7,11 +7,11 @@ session_start();
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
-if (isset($_SESSION['id'])) {
+if (isset($_SESSION['_id'])) {
     $loggedIn = true;
     //0 - Volunteer, 1 - Family, >=2 Staff/Admin
     $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['id'];
+    $userID = $_SESSION['_id'];
 }
 
 //these files will give us all the family functionality and access to the family account database
@@ -19,7 +19,7 @@ require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
 
-$family = retrieve_family_by_id($userID ?? $_GET['id']); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
 
 
 ?>
