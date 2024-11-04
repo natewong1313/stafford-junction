@@ -89,7 +89,7 @@
                     //set session variables
                     $_SESSION['logged_in'] = true;
                     $_SESSION['access_level'] = 1; //access level for family = 1
-                    $_SESSION['_id'] = $user->getID();
+                    $_SESSION['_id'] = $user->getId();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
                     $_SESSION['account_type'] = "Family";

@@ -19,13 +19,13 @@ function prettyPrint($val){
 /**
  * function that takes the $_POST arguments from the sign up page as an assoc array
  * and instantiates a new Family object with that data
- * 
+ *
  * At this point, the account id hasn't been created yet because that will come from the auto_incremented value in dbFamily database.
  * The is why for now set the first field (id) to null
  */
 function make_a_family($result_row){
     $family = new Family(
-        null, 
+        null,
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
@@ -54,10 +54,10 @@ function make_a_family($result_row){
         $result_row['econtact-last-name'],
         $result_row['econtact-phone'],
         $result_row['econtact-relation'],
-        password_hash($result_row['password'], PASSWORD_BCRYPT), 
+        password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['question'],
         password_hash($result_row['answer'], PASSWORD_BCRYPT),
-        'family', //hard code family as account type since this is the family account 
+        'family', //hard code family as account type since this is the family account
         'false' //hard coded false for isArchived; this could be a boolean in the future
     );
 
@@ -96,14 +96,10 @@ function make_a_family2($result_row){
         $result_row['econtactLastName'],
         $result_row['econtactPhone'],
         $result_row['econtactRelation'],
-        //password_hash($result_row['password'], PASSWORD_BCRYPT),
-        $result_row['password'],
+        $result_row['password'], // we dont need to hash the password because its coming from the db and already hashed
         $result_row['securityQuestion'],
         $result_row['securityAnswer'],
-        $result_row['accountType'],
         $result_row['isArchived']
-        //'family',
-        //'false'
     );
 
     return $family;
@@ -128,7 +124,7 @@ function add_family($family){
         state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
         birthdate2, address2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2, 
         econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, securityQuestion, 
-        securityAnswer, accountType, isArchived) VALUES(" ' .
+        securityAnswer, isArchived) VALUES(" ' .
         $family->getFirstName() . '","' .
         $family->getLastName() . '","' .
         $family->getBirthDate() . '","' .
@@ -160,8 +156,7 @@ function add_family($family){
         $family->getPassword() . '","' .
         $family->getSecurityQuestion() . '","' .
         $family->getSecurityAnswer() . '","' .
-        $family->getAccountType() . '","' .
-        "false" . 
+        $family->isArchived() .
         '");'
     );						
         mysqli_close($conn);
@@ -197,12 +192,33 @@ function retrieve_family($args){
 
 /**
  * Retrieves family data, constructs a family object, and returns the family object based on passed in email
- * 
+ *
  * This function returns an array because an array of family object(s) is needed for findFamily to loop through and display
  */
 function retrieve_family_by_email_to_display($email){
     $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE email = '" . $email . "';";
+    $result = mysqli_query($conn,$query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($result);
+        $acct = make_a_family2($row);
+        mysqli_close($conn);
+        return $acct;
+    }
+
+    return null;
+
+}
+
+/**
+ * Retrieves family data, constructs a family object, and returns the family object based on passed in email
+ */
+function retrieve_family_by_id($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbFamily WHERE id = '" . $id . "';";
     $result = mysqli_query($conn,$query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){
@@ -229,7 +245,7 @@ function retrieve_family_by_email($email){
         $row = mysqli_fetch_assoc($result);
         $acct = make_a_family2($row); //here we call make_a_family2 instead of make_a_family because we now have the id from the database that can be included in the instantiation of the family object
         mysqli_close($conn);
-        return $acct; 
+        return $acct;
     }
 
     return null;
@@ -252,7 +268,7 @@ function retrieve_family_by_lastName($lastName){
         }
 
         return $families;
-        
+
     }else { //case where there is only one family with the specified last name
         $row = mysqli_fetch_assoc($result);
         //$acct = make_a_family2($row);
@@ -295,7 +311,7 @@ function getChildren($family_id){
     }
 }
 
-  
+
 function change_family_password($id, $newPass) {
         $con=connect();
         $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE email = "' . $id . '"';
