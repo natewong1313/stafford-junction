@@ -56,7 +56,7 @@ function make_a_family($result_row){
         $result_row['econtact-relation'],
         password_hash($result_row['password'], PASSWORD_BCRYPT), 
         $result_row['question'],
-        $result_row['answer'],
+        password_hash($result_row['answer'], PASSWORD_BCRYPT),
         'family', //hard code family as account type since this is the family account 
         'false' //hard coded false for isArchived; this could be a boolean in the future
     );
@@ -274,7 +274,6 @@ function retrieve_family_by_id($id){
         mysqli_close($conn);
         return $acct;
     }
-}
 
 /**Function that gets all the children assoicated with a particular family */
 function getChildren($family_id){
@@ -292,5 +291,12 @@ function getChildren($family_id){
         }
 
         return $children;
-    }
+}
+  
+function change_family_password($id, $newPass) {
+        $con=connect();
+        $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE email = "' . $id . '"';
+        $result = mysqli_query($con, $query);
+        mysqli_close($con);
+        return $result;
 }

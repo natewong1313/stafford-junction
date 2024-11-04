@@ -30,25 +30,9 @@ function make_a_child_from_database($result_row){
     return $child;
 }
 
-/**
- * Function that makes a child from the sign up page
- */
-function make_a_child_from_sign_up($result_row){
-    $child = new Child (
-        $result_row['id'],
-        $result_row['first-name'],
-        $result_row['last-name'],
-        $result_row['birthdate'],
-        $result_row['gender'],
-        $result_row['last-child_medical_notes_'],
-        $result_row['child_additional_notes_-name']
-    );
-    return $child;
-}
-
-function retrieve_children_by_email($email){
+function retrieve_children_by_id($id){
     $conn = connect();
-    $query = "SELECT * FROM dbchildren INNER JOIN dbfamily ON dbchildren.family_id = dbfamily.id WHERE dbfamily.email = '" . $email . "';";
+    $query = "SELECT dbchildren.* FROM dbchildren INNER JOIN dbfamily ON dbchildren.family_id = dbfamily.id WHERE dbfamily.id = '" . $id . "';";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) < 1 || $result == null){
@@ -103,6 +87,47 @@ function retrieve_child_by_id($id){
 
     return $child;
 }
+  
+function retrieve_children_by_email($email){
+    $conn = connect();
+    $query = "SELECT * FROM dbchildren INNER JOIN dbfamily ON dbchildren.family_id = dbfamily.id WHERE dbfamily.email = '" . $email . "';";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) < 1 || $result == null){
+        echo "User not found";
+        return null;
+    } else {
+        $children = [];
+        $row = mysqli_fetch_assoc($result);
+        while ($row != null) {
+            $acct = make_a_child($row);
+            array_push($children, $acct);
+            $row = mysqli_fetch_assoc($result);
+        }
+        mysqli_close($conn);
+        return $children;
+    }
+
+    return null;
+    
+}
+  
+/**
+ * Function that makes a child from the sign up page
+ */
+function make_a_child_from_sign_up($result_row){
+    $child = new Child (
+        $result_row['id'],
+        $result_row['first-name'],
+        $result_row['last-name'],
+        $result_row['birthdate'],
+        $result_row['gender'],
+        $result_row['last-child_medical_notes_'],
+        $result_row['child_additional_notes_-name']
+    );
+    return $child;
+}
+  
 
 
 ?>
