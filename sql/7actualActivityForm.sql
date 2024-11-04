@@ -17,7 +17,7 @@ CREATE TABLE `dbActualActivityForm` (
   `materials_used` TEXT NOT NULL,
   `mealinfo` BOOLEAN NOT NULL,
   `act_costs` TEXT NOT NULL,
-  `act_benefits` TEXT NOT NULL,
+  `act_benefits` TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
