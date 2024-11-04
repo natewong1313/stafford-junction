@@ -274,6 +274,7 @@ function retrieve_family_by_id($id){
         mysqli_close($conn);
         return $acct;
     }
+}
 
 /**Function that gets all the children assoicated with a particular family */
 function getChildren($family_id){
@@ -291,7 +292,9 @@ function getChildren($family_id){
         }
 
         return $children;
+    }
 }
+
   
 function change_family_password($id, $newPass) {
         $con=connect();
