@@ -15,6 +15,12 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
+include_once("database/dbFamily.php");
+$family = retrieve_family_by_id($_SESSION["_id"]);
+$family_email = $family->getEmail();
+$family_full_name = $family->getFirstName() . " " . $family->getLastName();
+$family_phone = $family->getPhone();
+
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
     //require_once('database/dbSchoolSupplies.php');
@@ -64,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 1. Email-->
                 <label for="email">1. Email*</label><br><br>
-                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required>
+                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required value="<?php echo htmlspecialchars($family_email); ?>">
                 <br><br><hr>
 
                 <h2>Information / Información</h2>
@@ -72,11 +78,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 
                 <!-- 2. Parent Name-->
                 <label for="parent_name">2. Mom or Dad Name / Nombre de mamá o papá*</label><br><br>
-                <input type="text" name="parent_name" id="parent_name" placeholder="Name/Nombre" required><br><br>
+                <input type="text" name="parent_name" id="parent_name" placeholder="Name/Nombre" required value="<?php echo htmlspecialchars($family_full_name); ?>"><br><br>
 
                 <!-- 3. Phone-->
                 <label for="phone">3. Phone Number / Número de teléfono*</label><br><br>
-                <input type="tel" name="phone" id="phone" placeholder="Phone Number/Número de teléfono" required><br><br>
+                <input type="tel" name="phone" id="phone" placeholder="Phone Number/Número de teléfono" required value="<?php echo htmlspecialchars($family_phone); ?>"><br><br>
 
                 <!--4. Child Name-->
                 <label for="child_name">4. Name of Child / Nombre del niño\a*</label><br><br>

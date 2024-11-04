@@ -69,6 +69,9 @@
         $permission_array['fillform.php'] = 1;
         $permission_array['familyaccountdashboard.php'] = 1;
         $permission_array['familyview.php'] = 1;
+        $permission_array['childrenview.php'] = 1;
+        $permission_array['childreninaccount.php'] = 1;
+        $permission_array['childaccount.php'] = 1;
         //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply

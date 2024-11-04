@@ -15,6 +15,9 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
+include_once("database/dbFamily.php");
+$family = retrieve_family_by_id($_SESSION["_id"]);
+$family_email = $family->getEmail();
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -106,7 +109,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         <!-- Question 1: Email input field (required) -->
         <label for="email">1. Email*</label><br><br>
-        <input type="text" name="email" id="email" placeholder="Email/Electrónico" required><br><br>
+        <input type="text" name="email" id="email" placeholder="Email/Electrónico" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
         <!-- Additional space before next question -->
         <br><br><br>
 

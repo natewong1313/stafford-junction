@@ -27,6 +27,11 @@ session_start();
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>
+                <!--dashboard item to view a summary of all children in account -->
+                <div class="dashboard-item" data-link="childrenInAccount.php">
+                    <img src="images/children-svgrepo-com.svg">
+                    <span>View Children Accounts</span>
+                </div>
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">

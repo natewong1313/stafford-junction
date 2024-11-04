@@ -15,6 +15,10 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
+include_once("database/dbFamily.php");
+$family = retrieve_family_by_id($_SESSION["_id"]);
+$family_email = $family->getEmail();
+
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
     //require_once('database/dbSchoolSupplies.php');
@@ -57,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <form id="suppliesForm" action="" method="post">
                 <!--email-->
                 <label for="email">1. Email*</label><br><br>
-                <input type="text" name="email" id="email" placeholder="Email" required><br><br>
+                <input type="text" name="email" id="email" placeholder="Email" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
                 
                 <!--Child Name-->
                 <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
