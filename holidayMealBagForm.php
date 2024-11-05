@@ -23,7 +23,6 @@ include_once('database/dbinfo.php');
 
 try {
     $conn = connect();
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //get form data
