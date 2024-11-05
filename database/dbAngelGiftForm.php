@@ -41,7 +41,6 @@ function createAngelGiftForm($form) {
     $wants = $form["wants"];
     $interests = $form["interests"];
     $photo_release = $form["photo_release"];
-    var_dump($phone);
 	
     $query = "
         INSERT INTO dbAngelGiftForm (child_id, email, parent_name, phone, child_name, gender, age, pants_size, shirt_size, shoe_size, coat_size, 
