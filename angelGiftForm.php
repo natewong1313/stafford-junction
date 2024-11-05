@@ -10,9 +10,17 @@ $accessLevel = 0;
 $userID = null;
 
 if(isset($_SESSION['_id'])){
+    require_once('domain/Children.php');
+    require_once('database/dbChildren.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbAngelGiftForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $children = retrieve_children_by_id($userID);
+} else {
+    header('Location: login.php');
+    die();
 }
 
 include_once("database/dbFamily.php");
@@ -22,22 +30,16 @@ $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_phone = $family->getPhone();
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    //require_once('database/dbSchoolSupplies.php');
     $args = sanitize($_POST, null);
-    $required = array("email", "parent_name", "phone", "child_name", "gender", "age", "four_wants", "interests", "photo_release");
-    $phone = validateAndFilterPhoneNumber($args['phone']);
-    if (!$phone) {
+    $required = array("email", "parent_name", "phone", "child_name", "gender", "age", "wants", "interests", "photo_release");
+    $args['phone'] = validateAndFilterPhoneNumber($args['phone']);
+    if (!$args['phone']) {
         echo "phone number invalid";
-    } else if (!$email) {
-        echo "email invalid";
     } else if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
         die();
     } else {
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
-        }
+        createAngelGiftForm($args);
     }
 }
 
@@ -86,7 +88,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--4. Child Name-->
                 <label for="child_name">4. Name of Child / Nombre del niño\a*</label><br><br>
-                <input type="text" name="child_name" id="child_name" placeholder="Name/Nombre" required><br><br>
+                <select name="child_name" id="child_name" required>
+                <?php
+                    require_once('domain/Children.php'); 
+                    foreach ($children as $c){
+                        $id = $c->getID();
+                        // Check if form was already completed for the child
+                        if (!isAngelGiftFormComplete($id)) {
+                            $name = $c->getFirstName() . " " . $c->getLastName();
+                            $value = $id . "_" . $name;
+                            echo "<option value='$value'>$name</option>";
+                        }
+                    }
+                ?>
+                </select>
+                <br><br>
 
                 <!--5. Boy or Girl--->
                 <label>5. Boy or Girl / Niño o Niña</label><br><br>
@@ -219,8 +235,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <br>
 
                 <!-- 13. Four Wants -->
-                <label for="four_wants">13. List 4 Things You Want / Enumera 4 cosas que quieres *</label>
-                <textarea name="four_wants" id="four_wants" rows="5" required></textarea><br><br>
+                <label for="wants">13. List 4 Things You Want / Enumera 4 cosas que quieres *</label>
+                <textarea name="wants" id="wants" rows="5" required></textarea><br><br>
 
                 <!-- 14. Interests -->
                 <label for="interests">14. Favorite Sports Teams / Equipos deportivos favoritos,

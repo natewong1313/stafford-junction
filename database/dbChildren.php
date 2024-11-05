@@ -42,7 +42,7 @@ function retrieve_children_by_id($id){
         $children = [];
         $row = mysqli_fetch_assoc($result);
         while ($row != null) {
-            $acct = make_a_child($row);
+            $acct = make_a_child_from_database($row);
             array_push($children, $acct);
             $row = mysqli_fetch_assoc($result);
         }
