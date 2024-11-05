@@ -57,8 +57,7 @@ function make_a_family($result_row){
         password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['question'],
         password_hash($result_row['answer'], PASSWORD_BCRYPT),
-        'family', //hard code family as account type since this is the family account
-        'false' //hard coded false for isArchived; this could be a boolean in the future
+        0
     );
 
     return $family;
@@ -206,7 +205,7 @@ function retrieve_family_by_email_to_display($email){
         $row = mysqli_fetch_assoc($result);
         $acct = make_a_family2($row);
         mysqli_close($conn);
-        return $acct;
+        return [$acct];
     }
 
     return null;
@@ -215,7 +214,7 @@ function retrieve_family_by_email_to_display($email){
 
 /**
  * Retrieves family data, constructs a family object, and returns the family object based on passed in email
- */
+ 
 function retrieve_family_by_id($id){
     $conn = connect();
     $query = "SELECT * FROM dbFamily WHERE id = '" . $id . "';";
@@ -233,6 +232,7 @@ function retrieve_family_by_id($id){
     return null;
     
 }
+*/
 
 function retrieve_family_by_email($email){
     $conn = connect();
