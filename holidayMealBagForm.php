@@ -18,13 +18,11 @@ if (!$loggedIn || $accessLevel < 1) {
 }
 
 //database connection
-$host = 'localhost';
-$dbname = 'odhsmd';
-$username = 'odhsmd';
-$password = 'odhsmd';
+
+include_once('dbinfo.php');
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn = connect();
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
