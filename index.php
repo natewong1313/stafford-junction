@@ -19,6 +19,9 @@
     if (isset($_SESSION['_id'])) {
         $person = retrieve_person($_SESSION['_id']);
     }
+
+    //this line will need to be changed in the future, it will cause the code to break 
+    //if the user with family access clicks on a header option
     $notRoot = $person->get_id() != 'vmsroot';
 
 ?>
