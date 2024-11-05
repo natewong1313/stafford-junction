@@ -3,23 +3,25 @@
 session_cache_expire(30);
 session_start();
 
-$loggedIn = false;
-$accessLevel = 0;
-$userID = null;
-
 if (!isset($_SESSION["_id"])) {
     header("Location: login.php");
     die();
 }
+
+$loggedIn = true;
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
+
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+$family = retrieve_family_by_id($userID);
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
 $family_phone = $family->getPhone();
 
 include_once('database/dbinfo.php');
-
+ini_set('log_errors',1);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 try {
     $conn = connect();
 
@@ -31,7 +33,7 @@ try {
         $name = $_POST['name'];
         $address = $_POST['address'];
         $phone = $_POST['phone'];
-        $photo_release = filter_var($_POST['photo_release'], FILTER_VALIDATE_BOOLEAN);
+        $photo_release = $_POST['photo_release'];
 
         //validate form fields
         $errors = [];
@@ -47,23 +49,19 @@ try {
 
         //insert data if no validation errors
         if (empty($errors)) {
-            $stmt = $conn->prepare("INSERT INTO dbHolidayMealBagForm (family_id, email, household_size, meal_bag, name, address, phone, photo_release)
-                                    VALUES (:family_id, :email, :household_size, :meal_bag, :name, :address, :phone, :photo_release)");
-
-            $stmt->bindParam(':family_id', $userID);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':household_size', $household);
-            $stmt->bindParam(':meal_bag', $meal_bag);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':address', $address);
-            $stmt->bindParam(':phone', $phone);
-            $stmt->bindParam(':photo_release', $photo_release, PDO::PARAM_BOOL);
-
-            if ($stmt->execute()) {
-                $successMessage = "Form submitted successfully!";
-            } else {
+            $query = "
+                INSERT INTO dbHolidayMealBagForm (family_id, email, household_size, meal_bag, name, address, phone, photo_release)
+                values ('$userID', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
+            ";
+            $result = mysqli_query($conn, $query);
+            if (!$result) {
                 $errors[] = "Error submitting form.";
+            }else{
+                $successMessage = "Form submitted successfully!";
             }
+            $id = mysqli_insert_id($conn);
+            mysqli_commit($conn);
+            mysqli_close($conn);
         }
     }
 } catch (PDOException $e) {
