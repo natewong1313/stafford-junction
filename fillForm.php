@@ -17,6 +17,11 @@ error_reporting(E_ALL);
     <body>
         <?php require('header.php'); ?>
         <h1>Forms</h1>
+        <?php 
+            if (isset($_GET['formSubmitSuccess'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Successfully Submitted!</div>';
+            }
+        ?>
         <main class='dashboard'>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="holidayMealBagForm.php">
@@ -26,44 +31,59 @@ error_reporting(E_ALL);
 
                 <div class="dashboard-item" data-link="schoolSuppliesForm.php">
                     <img src="images/school-supplies-svgrepo-com.svg">
-                    <span>School Supplies Form</span> </div>
-
+                    <span>School Supplies Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="springBreakForm.php">
                     <img src="images/tent-svgrepo-com.svg">
-                    <span>Spring Break Form</span> </div>
+                    <span>Spring Break Form</span> 
+                
+                </div>
 
                 <div class="dashboard-item" data-link="angelGiftForm.php">
                     <img src="images/angel.svg">
-                    <span>Angel Gifts Wish Form</span> </div>
+                    <span>Angel Gifts Wish Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="actualActivityForm.php">
                     <img src="images/actualActivity-svgrepo.svg">
-                    <span>Actual Activity Form</span> </div>
+                    <span>Actual Activity Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
-                    <span>Child Care Waiver Form</span> </div>
+                    <span>Child Care Waiver Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="fieldTripWaiver.php">
                     <img src="images/location.svg">
-                    <span>Field Trip Waiver Form</span> </div>
+                    <span>Field Trip Waiver Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="programInterestForm.php">
                     <img src="images/interest.svg">
-                    <span>Program Interest Form</span> </div>
+                    <span>Program Interest Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
                     <img src="images/brainBuilders.svg">
-                    <span>Brain Builders Student Registration Form</span> </div>
+                    <span>Brain Builders Student Registration Form</span> 
+                </div>
+
                 <div class="dashboard-item" data-link="BrainBuilderReviewForm.php">
                     <img src="images/brainBuilderReviewIcon.svg.svg">
-                    <span>Brain Builder Review Form</span> </div>
+                    <span>Brain Builder Review Form</span> 
+                </div>
 
                 <div class="dashboard-item" data-link="holidayPartyForm.php">
                     <img src="images/party-flyer-svgrepo-com.svg">
-                    <span>Brain Builders Holiday Party Form</span> </div>
+                    <span>Brain Builders Holiday Party Form</span> 
+                </div>
 
+                <div class="dashboard-item" data-link="summerJunctionRegistrationForm.php">
+                    <img src="images/summerJunction.svg">
+                    <span>Summer Junction Registration Form</span>
+                </div>
 
                 </div>
             </div>

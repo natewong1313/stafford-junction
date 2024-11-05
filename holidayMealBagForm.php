@@ -1,23 +1,22 @@
 <?php
-//start session and check login status
+
 session_cache_expire(30);
 session_start();
 
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
-if (isset($_SESSION['_id'])) {
-    $loggedIn = true;
-    $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['_id'];
-}
 
-//allow only logged-in users to submit the form
-if (!$loggedIn || $accessLevel < 1) {
-    die("Access denied. Please log in to access the form.");
+if (!isset($_SESSION["_id"])) {
+    header("Location: login.php");
+    die();
 }
-
-//database connection
+include_once("database/dbFamily.php");
+$family = retrieve_family_by_id($_SESSION["_id"]);
+$family_email = $family->getEmail();
+$family_full_name = $family->getFirstName() . " " . $family->getLastName();
+$family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
+$family_phone = $family->getPhone();
 
 include_once('database/dbinfo.php');
 
@@ -103,8 +102,7 @@ try {
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
     <!-- 1. Email -->
     <label for="email">Email *</label><br>
-    <input type="email" id="email" name="email" required><br><br>
-
+    <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
     <!-- 2. How many in household -->
     <label for="household">How many in household / ¿Cuántas personas hay en su hogar? *</label><br>
     <input type="number" id="household" name="household" required><br><br>
@@ -120,15 +118,15 @@ try {
 
     <!-- 4. Name -->
     <label for="name">Name / Nombre *</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+    <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($family_full_name); ?>"><br><br>
 
     <!-- 5. Complete Address -->
     <label for="address">Complete Address / Dirección completa *</label><br>
-    <input type="text" id="address" name="address" required><br><br>
+    <input type="text" id="address" name="address" required value="<?php echo htmlspecialchars($family_full_addr); ?>"><br><br>
 
     <!-- 6. Phone Number -->
     <label for="phone">Phone Number / Número de teléfono *</label><br>
-    <input type="tel" id="phone" name="phone" required><br><br>
+    <input type="tel" id="phone" name="phone" required  value="<?php echo htmlspecialchars($family_phone); ?>"><br><br>
 
     <!-- 7. Photo Release -->
     <p>Stafford Junction Photo Release / Autorización de Prensa de Stafford Junction *</p>

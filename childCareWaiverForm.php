@@ -14,6 +14,24 @@ if(isset($_SESSION['_id'])){
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
 }
+include_once("database/dbFamily.php");
+$family = retrieve_family_by_id($_SESSION["_id"]);
+$guardian_email = $family->getEmail();
+$guardian_fname = $family->getFirstName();
+$guardian_lname = $family->getLastName();
+$guardian_address = $family->getAddress();
+$guardian_city = $family->getCity();
+$guardian_state = $family->getState();
+$guardian_zip = $family->getZip();
+$guardian_phone = $family->getPhone();
+$guardian_2_fname = $family->getFirstName2();
+$guardian_2_lname = $family->getLastName2();
+$guardian_2_address = $family->getAddress2();
+$guardian_2_city = $family->getCity2();
+$guardian_2_state = $family->getState2();
+$guardian_2_zip = $family->getZip2();
+$guardian_2_email = $family->getEmail2();
+$guardian_2_phone = $family->getPhone2();
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -140,35 +158,35 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Parent 1 Information -->
     <label for="parent1_first_name">First Name* / Nombre* </label>
-    <input type="text" name="parent1_first_name" id="parent1_first_name" placeholder="First Name / Nombre" required>
+    <input type="text" name="parent1_first_name" id="parent1_first_name" placeholder="First Name / Nombre" required value="<?php echo htmlspecialchars($guardian_fname); ?>">
 
     <label for="parent1_last_name">Last Name* / Apellido* </label>
     <input type="text" name="parent1_last_name" id="parent1_last_name" placeholder="Last Name / Apellido"
-        required><br><br>
+        required value="<?php echo htmlspecialchars($guardian_lname); ?>"><br><br>
 
     <!-- Parent 1 Address -->
     <label for="parent1_address">Address* / Dirección* </label>
     <input type="text" name="parent1_address" id="parent1_address" placeholder="Street Address / Dirección"
-        required><br><br>
+        required value="<?php echo htmlspecialchars($guardian_address); ?>"><br><br>
 
     <!-- Parent 1 City, State, Zip -->
     <label for="parent1_city">City* / Ciudad* </label>
-    <input type="text" name="parent1_city" id="parent1_city" placeholder="City / Ciudad" required>
+    <input type="text" name="parent1_city" id="parent1_city" placeholder="City / Ciudad" required value="<?php echo htmlspecialchars($guardian_city); ?>">
 
     <label for="parent1_state">State* / Estado* </label>
-    <input type="text" name="parent1_state" id="parent1_state" placeholder="State / Estado" required>
+    <input type="text" name="parent1_state" id="parent1_state" placeholder="State / Estado" required value="<?php echo htmlspecialchars($guardian_state); ?>">
 
     <label for="parent1_zip">Zip Code* / Código Postal* </label>
-    <input type="text" name="parent1_zip" id="parent1_zip" placeholder="Zip Code / Código Postal" required><br><br>
+    <input type="text" name="parent1_zip" id="parent1_zip" placeholder="Zip Code / Código Postal" required value="<?php echo htmlspecialchars($guardian_zip); ?>"><br><br>
 
     <!-- Parent 1 Contact Info -->
     <label for="parent1_email">Email* / Correo Electrónico* </label>
     <input type="email" name="parent1_email" id="parent1_email" placeholder="Email / Correo Electrónico"
-        required><br><br>
+        required value="<?php echo htmlspecialchars($guardian_zip); ?>"><br><br>
 
     <label for="parent1_cell_phone">Cell Phone* / Teléfono Celular* </label>
     <input type="tel" name="parent1_cell_phone" id="parent1_cell_phone" placeholder="Cell Phone / Teléfono Celular"
-        required>
+        required value="<?php echo htmlspecialchars($guardian_phone); ?>">
 
     <label for="parent1_home_phone">Home Phone / Teléfono de Casa </label>
     <input type="tel" name="parent1_home_phone" id="parent1_home_phone" placeholder="Home Phone / Teléfono de Casa">
@@ -179,31 +197,31 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Parent 2 Information -->
     <label for="parent2_first_name">First Name / Nombre </label>
-    <input type="text" name="parent2_first_name" id="parent2_first_name" placeholder="First Name / Nombre">
+    <input type="text" name="parent2_first_name" id="parent2_first_name" placeholder="First Name / Nombre" value="<?php echo htmlspecialchars($guardian_2_fname); ?>">
 
     <label for="parent2_last_name">Last Name / Apellido </label>
-    <input type="text" name="parent2_last_name" id="parent2_last_name" placeholder="Last Name / Apellido"><br><br>
+    <input type="text" name="parent2_last_name" id="parent2_last_name" placeholder="Last Name / Apellido" value="<?php echo htmlspecialchars($guardian_2_lname); ?>"><br><br>
 
     <!-- Parent 2 Address -->
     <label for="parent2_address">Address / Dirección </label>
-    <input type="text" name="parent2_address" id="parent2_address" placeholder="Street Address / Dirección"><br><br>
+    <input type="text" name="parent2_address" id="parent2_address" placeholder="Street Address / Dirección" value="<?php echo htmlspecialchars($guardian_2_address); ?>"><br><br>
 
     <!-- Parent 2 City, State, Zip -->
     <label for="parent2_city">City / Ciudad </label>
-    <input type="text" name="parent2_city" id="parent2_city" placeholder="City / Ciudad">
+    <input type="text" name="parent2_city" id="parent2_city" placeholder="City / Ciudad" value="<?php echo htmlspecialchars($guardian_2_city); ?>">
 
     <label for="parent2_state">State / Estado </label>
-    <input type="text" name="parent2_state" id="parent2_state" placeholder="State / Estado">
+    <input type="text" name="parent2_state" id="parent2_state" placeholder="State / Estado" value="<?php echo htmlspecialchars($guardian_2_state); ?>">
 
     <label for="parent2_zip">Zip Code / Código Postal </label>
-    <input type="text" name="parent2_zip" id="parent2_zip" placeholder="Zip Code / Código Postal"><br><br>
+    <input type="text" name="parent2_zip" id="parent2_zip" placeholder="Zip Code / Código Postal" value="<?php echo htmlspecialchars($guardian_2_zip); ?>"><br><br>
 
     <!-- Parent 2 Contact Info -->
     <label for="parent2_email">Email / Correo Electrónico </label>
-    <input type="email" name="parent2_email" id="parent2_email" placeholder="Email / Correo Electrónico"><br><br>
+    <input type="email" name="parent2_email" id="parent2_email" placeholder="Email / Correo Electrónico" value="<?php echo htmlspecialchars($guardian_2_email); ?>"><br><br>
 
     <label for="parent2_cell_phone">Cell Phone / Teléfono Celular </label>
-    <input type="tel" name="parent2_cell_phone" id="parent2_cell_phone" placeholder="Cell Phone / Teléfono Celular">
+    <input type="tel" name="parent2_cell_phone" id="parent2_cell_phone" placeholder="Cell Phone / Teléfono Celular" value="<?php echo htmlspecialchars($guardian_2_phone); ?>">
 
     <label for="parent2_home_phone">Home Phone / Teléfono de Casa </label>
     <input type="tel" name="parent2_home_phone" id="parent2_home_phone" placeholder="Home Phone / Teléfono de Casa">
@@ -241,7 +259,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Signature Section -->
     <label for="guardian_name">Parent/Guardian Print Name* / Nombre del Padre/Tutor*</label><br>
     <input type="text" name="guardian_name" id="guardian_name"
-        placeholder="Parent/Guardian Name / Nombre del Padre/Tutor" required><br><br>
+        placeholder="Parent/Guardian Name / Nombre del Padre/Tutor" required value="<?php echo htmlspecialchars($guardian_fname . " " . $guardian_lname); ?>"><br><br>
 
     <label for="guardian_signature">Parent/Guardian Signature* / Firma del Padre/Tutor*</label><br>
     <input type="text" name="guardian_signature" id="guardian_signature" placeholder="Signature / Firma"
