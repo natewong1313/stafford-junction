@@ -117,7 +117,8 @@ function retrieve_children_by_email($email){
  */
 function make_a_child_from_sign_up($result_row){
     $child = new Child (
-        $result_row['id'],
+        //$result_row['id'],
+        null,
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
