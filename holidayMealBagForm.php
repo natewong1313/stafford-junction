@@ -20,8 +20,6 @@ $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $
 $family_phone = $family->getPhone();
 
 include_once('database/dbinfo.php');
-ini_set('log_errors',1);
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 try {
     $conn = connect();
 
