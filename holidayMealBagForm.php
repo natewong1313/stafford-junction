@@ -19,7 +19,7 @@ if (!$loggedIn || $accessLevel < 1) {
 
 //database connection
 
-include_once('dbinfo.php');
+include_once('database/dbinfo.php');
 
 try {
     $conn = connect();
