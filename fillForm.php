@@ -17,6 +17,11 @@ error_reporting(E_ALL);
     <body>
         <?php require('header.php'); ?>
         <h1>Forms</h1>
+        <?php 
+            if (isset($_GET['formSubmitSuccess'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Successfully Submitted!</div>';
+            }
+        ?>
         <main class='dashboard'>
             <div id="dashboard">
                 <div class="dashboard-item" data-link="holidayMealBagForm.php">

@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = false;
 
 if(isset($_SESSION['_id'])){
     require_once('domain/Children.php');
@@ -39,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "Not all fields complete";
         die();
     } else {
-        createAngelGiftForm($args);
+        $success = createAngelGiftForm($args);
     }
 }
 
@@ -273,6 +274,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
             </form>
         </div>
+        <?php
+           //if registration successful, create pop up notification and direct user back to login
+            if($success){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            }  
+        ?>
         
     </body>
 </html>
