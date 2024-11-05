@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/base.css">
-    <title>Holiday Meal Bag 2023</title>
-</head>
-<body>
-
 <?php
 
 session_cache_expire(30);
@@ -17,65 +7,89 @@ if (!isset($_SESSION["_id"])) {
     header("Location: login.php");
     die();
 }
+
+$loggedIn = true;
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
+
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+$family = retrieve_family_by_id($userID);
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
 $family_phone = $family->getPhone();
 
+include_once('database/dbinfo.php');
+try {
+    $conn = connect();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
-    $email = $_POST['email'];
-    $household = (int) $_POST['household'];  // Cast to int for question 2
-    $meal_bag = $_POST['meal_bag'];
-    $name = $_POST['name'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $photo_release = filter_var($_POST['photo_release'], FILTER_VALIDATE_BOOLEAN);  // Convert to boolean for question 7
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //get form data
+        $email = $_POST['email'];
+        $household = (int) $_POST['household'];
+        $meal_bag = $_POST['meal_bag'];
+        $name = $_POST['name'];
+        $address = $_POST['address'];
+        $phone = $_POST['phone'];
+        $photo_release = $_POST['photo_release'];
 
-    // Validation for Question 2 (Household) and Question 7 (Photo Release)
-    $errors = [];
-
-    // Validate that household is a positive integer
-    if (!is_int($household) || $household <= 0) {
-        $errors[] = "Please enter a valid number for household members.";
-    }
-
-    // Validate that photo_release is a boolean (it should be true or false)
-    if ($photo_release === null) {
-        $errors[] = "Please select a valid option for photo release.";
-    }
-
-    // Check if all other required fields are filled
-    if (empty($email) || empty($meal_bag) || empty($name) || empty($address) || empty($phone)) {
-        $errors[] = "Please fill out all required fields.";
-    }
-
-    // If no errors, process the form data
-    if (empty($errors)) {
-        echo "<h3>Form submitted successfully!</h3>";
-        echo "Email: $email<br>";
-        echo "Household: $household<br>";
-        echo "Meal Bag: $meal_bag<br>";
-        echo "Name: $name<br>";
-        echo "Address: $address<br>";
-        echo "Phone: $phone<br>";
-        echo "Photo Release: " . ($photo_release ? "Yes" : "No") . "<br>";
-    } else {
-        // Display errors
-        echo "<h3 style='color: red;'>Please correct the following errors:</h3>";
-        echo "<ul>";
-        foreach ($errors as $error) {
-            echo "<li>$error</li>";
+        //validate form fields
+        $errors = [];
+        if ($household <= 0) {
+            $errors[] = "Invalid household size.";
         }
-        echo "</ul>";
+        if ($photo_release === null) {
+            $errors[] = "Photo release must be selected.";
+        }
+        if (empty($email) || empty($meal_bag) || empty($name) || empty($address) || empty($phone)) {
+            $errors[] = "All fields are required.";
+        }
+
+        //insert data if no validation errors
+        if (empty($errors)) {
+            $query = "
+                INSERT INTO dbHolidayMealBagForm (family_id, email, household_size, meal_bag, name, address, phone, photo_release)
+                values ('$userID', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
+            ";
+            $result = mysqli_query($conn, $query);
+            if (!$result) {
+                $errors[] = "Error submitting form.";
+            }else{
+                $successMessage = "Form submitted successfully!";
+            }
+            $id = mysqli_insert_id($conn);
+            mysqli_commit($conn);
+            mysqli_close($conn);
+        }
     }
+} catch (PDOException $e) {
+    $errors[] = "Connection failed: " . $e->getMessage();
 }
 ?>
 
-<h1>Holiday Meal Bag 2023</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/base.css">
+    <title>Holiday Meal Bag <?php echo date("Y"); ?></title>
+</head>
+<body>
+    <?php if (!empty($successMessage)): ?>
+        <h3><?php echo $successMessage; ?></h3>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+        <h3 style="color: red;">Please correct the following errors:</h3>
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?php echo $error; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+<h1>Holiday Meal Bag <?php echo date("Y"); ?></h1>
     <div id="formatted_form">
 
 <p>*Subject to availability / Sujeto a disponibilidad</p>
