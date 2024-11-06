@@ -19,6 +19,11 @@ $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
 $family_phone = $family->getPhone();
 
+function validateAndFilterPhoneNumber($phone) {
+    $filteredPhone = preg_replace('/\D/', '', $phone);  // Remove non-digits
+    return (strlen($filteredPhone) === 10) ? $filteredPhone : false;
+}
+
 include_once('database/dbinfo.php');
 try {
     $conn = connect();
@@ -32,6 +37,14 @@ try {
         $address = $_POST['address'];
         $phone = $_POST['phone'];
         $photo_release = $_POST['photo_release'];
+
+        
+        // Filter and validate the phone number
+        $phone = validateAndFilterPhoneNumber($_POST['phone']);
+        
+        if (!$phone) {
+            $errors[] = "Invalid phone number format.";
+        }
 
         //validate form fields
         $errors = [];
