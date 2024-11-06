@@ -27,17 +27,26 @@ session_start();
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>
+
                 <!--dashboard item to view a summary of all children in account -->
                 <div class="dashboard-item" data-link="childrenInAccount.php">
                     <img src="images/children-svgrepo-com.svg">
                     <span>View Children Accounts</span>
                 </div>
+
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
-                
+
+                <!--Dashboard button that directs the user to edit personal profile-->
+                <div class="dashboard-item" data-link="editProfile.php">
+                    <img src="images/editProfile.svg">
+                    <span>Edit Profile</span>
+                </div>
+
+                <!--Dashboard button that directs the user to logout-->
                 <div class="dashboard-item" data-link="logout.php">
                     <img src="images/logout.svg">
                     <span>Log out</span>
