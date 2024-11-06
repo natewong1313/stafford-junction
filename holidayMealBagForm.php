@@ -45,9 +45,6 @@ try {
         if (!$phone) {
             $errors[] = "Invalid phone number format.";
         }
-        
-        $photo_release = $_POST['photo_release'];
-
 
         //validate form fields
         $errors = [];
