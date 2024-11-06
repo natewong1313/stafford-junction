@@ -1101,3 +1101,49 @@ img.profile-pic {
   margin-bottom: 20px;
   margin-top: 10px;
 }
+
+
+
+/*
+Styling below made for Stafford Junction website
+*/
+
+/*
+ * Styling for smaller buttons to dynamically add or remove inputs 
+ * Created for forms for easier readabliity with many inputs
+ */
+.addRemove-btn {
+  width: 12rem;
+  align-items: center
+  margin-bottom: 20px;
+  margin-top: 10px;
+  background-color: #7e0d07;
+}
+
+.addRemove-btn:hover {
+  background-color: #fcdd2b;
+}
+
+/* 
+ * Styling for input groups to add multiple buttons in one row
+ * Easier readibility when many inputs need to be added
+ */
+#multInputContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.input-group {
+  display: flex;
+  align-self: stretch;
+  display:inline-block;
+  float:left
+  min-width: 18rem;
+  max-width: 18rem;
+}
+
+.input-form {
+  padding: 2rem;
+  flex: 1;
+}

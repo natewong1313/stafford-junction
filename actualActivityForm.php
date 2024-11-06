@@ -17,14 +17,16 @@ if(isset($_SESSION['_id'])){
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSchoolSupplies.php');
+    //require_once('database/dbActualActivityForm.php');
     $args = sanitize($_POST, null);
+    //EDIT: is attendance[] array required here?
     $required = array("activity", "date", "program", "start_time", "end_time", "start_mile", "end_mile", "address",
-        "attend_num", "volstaff_num", "materials_used", "mealinfo", "act_costs", "act_benefits");
+        "attend_num", "volstaff_num", "materials_used", "mealinfo", "act_costs", "act_benefits", "attendance[]");
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
     die();
     } else {
+        //EDIT: testing for valid input entry
         foreach($args as $key => $val){
             echo "{$key}:" . " " . "{$val}" . "<br>";
         }
@@ -38,13 +40,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <head>
         <?php include_once("universal.inc")?>
         <title>Actual Activities Form</title>
+        <link rel="stylesheet" href="base.css">
     </head>
     
     <body>
         <h1>Actual Activities Form</h1>
         <div id="formatted_form">
             
-        <span>* Indicates required</span><br><br>
+        <span>* Indicates required field</span><br><br>
 
         <form id="actualActivityForm" action="" method="post">
             <hr>
@@ -119,20 +122,54 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <br><br>
 
             <!--Benefits-->
-            <label for="act_benefits">12. What actvities took place; what benfits do participants receive from these Activities?*</label><br><br>
-            <input type="text" name="act_benefits" id="act_benefits" placeholder="Actual Volunteer/Staff Number" required><br><br><br>
+            <label for="act_benefits">12. What actvities took place; what benefits do participants receive from these Activities?*</label><br><br>
+            <input type="text" name="act_benefits" id="act_benefits" placeholder="Actual Volunteer/Staff Number" rows="5" required><br><br><br>
 
             <hr>
             <h2>Attendance</h2>
             <br><br>
 
             <!--Attendance-->
-            <label for="attendance">13. Attendance (must already be in AllClients; Waiver and Emergency Contact Information should be on file and in binder)*</label><br><br>
-            <textarea name="attendance" id="attendance" rows="20"></textarea><br><br><br>
-                <hr>
+            <label for="attendance">13. Attendance (must already be in AllClients; Waiver and Emergency Contact Information should be on file and in binder)*</label><br>
+            
+            <button type="button" class= "addRemove-btn" onclick="addInput()">Add Person</button><br><br>
+            <div id="multInputContainer"></div>
 
-            <button type="submit" id="submit">Submit</button>
-            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+            <script>
+                function addInput() {
+                    //creates a new div element for the inputGroup
+                    var newInputGroup = document.createElement('div');
+                    newInputGroup.className = 'input-group';
+
+                    //creates new input element to add an attendee into attendance[] array
+                    var newInput = document.createElement('input');
+                    newInput.className = 'input-form';
+                    newInput.type = 'text';
+                    newInput.name = 'attendance[]';
+                    newInput.placeholder = 'Name of Attendee';
+
+                    //creates remove button
+                    var removeButton = document.createElement('button');
+                    removeButton.className = 'addRemove-btn';
+                    removeButton.type = 'button';
+                    removeButton.textContent = 'Remove Person';
+                    removeButton.onclick = function() {
+                        newInputGroup.remove();
+                    };
+
+                    //adds add and remove buttons to inputGroup parent
+                    newInputGroup.appendChild(newInput);
+                    newInputGroup.appendChild(removeButton);
+
+                    //adds the new inputGroup to the multInputContainer to display
+                    document.getElementById("multInputContainer").appendChild(newInputGroup);
+                }
+                </script>
+
+                <br><hr>
+
+                <button type="submit" id="submit">Submit</button>
+                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
             </form>
         </div>
     </body>
