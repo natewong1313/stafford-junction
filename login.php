@@ -13,10 +13,17 @@
     unset($_SESSION['familyEmail']);
     unset($_SESSION['familyVerified']);
 
-    // redirect to index if already logged in
-    if (isset($_SESSION['_id'])) {
-        header('Location: index.php');
-        die();
+    // redirect to account respective homepage
+    if (isset($_SESSION['_id'])) { //if this session variable is set
+        //if the account type is a family, redirect to family account dashboard
+        if($_SESSION['account_type'] == 'Family'){
+            header("Location: familyAccountDashboard.php");
+            die();
+        }else {
+            //otherwise, redirect to staff dashboard
+            header('Location: index.php');
+            die();
+        }
     }
     $badLogin = false;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
