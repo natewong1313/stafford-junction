@@ -182,8 +182,32 @@
                 echo('<a class="navbar-brand" id="vms-logo"></a></span><img id="menu-toggle" src="images/menu.png"></span>');
 
                 echo('<ul>');
+                //Home page nav item
                 echo('<li><a class="nav-link active" aria-current="page" href="' . $path . 'familyAccountDashboard.php">Home</a></li>');
+
+                //view account
                 echo('<li><a class="nav-link" aria-current="page" href="' . $path . 'familyView.php">View Account</a></li>');
+
+                //view and add children to account
+                echo('<li class="nav-item dropdown">');
+                echo('<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Children</a>');
+                echo('<div class="dropdown-menu" aria-labelledby="navbarDropdown">');
+                    echo('<a class="dropdown-item" href="' . $path . 'childrenInAccount.php">View Children</a>');
+                    echo('<a class="dropdown-item" href="' . $path . '#">Add Child</a>');
+                echo('</div>');
+
+                //enroll in program
+                echo('<li class="nav-item dropdown">');
+                echo('<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Enroll in Program</a>');
+                echo('<div class="dropdown-menu" aria-labelledby="navbarDropdown">');
+                    echo('<a class="dropdown-item" href="' . $path . '#">Program 1</a>');
+                    echo('<a class="dropdown-item" href="' . $path . '#">Program 2</a>');
+                echo('</div>');
+                echo('</li>');
+
+
+                //logout
+                echo('<li><a class="nav-link active" aria-current="page" href="' . $path . 'logout.php">Log out</a></li>');
                 echo '</ul></nav>';
 
             }
