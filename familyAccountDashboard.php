@@ -41,7 +41,7 @@ session_start();
                 </div>
 
                 <!--Dashboard button that directs the user to edit personal profile-->
-                <div class="dashboard-item" data-link="editProfile.php">
+                <div class="dashboard-item" data-link="editFamilyProfile.php">
                     <img src="images/editProfile.svg">
                     <span>Edit Profile</span>
                 </div>
