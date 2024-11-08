@@ -81,7 +81,7 @@ error_reporting(E_ALL);
                 </div>
 
                 <!--Only staff or volunteer accounts can access these forms-->
-                <?php if ($_SESSION['access_level'] >= 2): ?>
+                <?php if ($_SESSION['access_level'] > 1): ?>
                     <div class="dashboard-item" data-link="actualActivityForm.php">
                         <img src="images/actualActivity-svgrepo.svg">
                         <span>Actual Activity Form</span> 
