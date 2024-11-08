@@ -1,53 +1,88 @@
 <?php
-include_once('dbinfo.php');
-include_once(dirname(__FILE__).'/../domain/actualActivityForm.php');
-
 /**
- * Function that takes actualActivity item and adds it to database
+ * Function that takes actual activity form item and adds it into database
  */
-function create_actualAct($actualAct) {
-    $connection = connect();
-	$activity = $actualAct["activity"];
-    $program = $actualAct["program"];
-	$start_time = $actualAct["start_time"];
-    $end_time = $actualAct["end_time"];
-    $start_mile = $actualAct["start_mile"];
-    $end_mile = $actualAct["end_mile"];
-    $address = $actualAct["address"];
-	$attend_num = $actualAct["attend_num"];
-    $volstaff_num = $actualAct["volstaff_num"];
-    $materials_used = $actualAct["materials_used"];
-	$mealinfo = $actualAct["mealinfo"];
-    $act_costs = $actualAct["act_costs"];
-    $act_benefits = $actualAct["act_benefits"];
-    $attendance[] = $actualAct["attendance[]"];
+function createActualActivityForm($form, $connection) {
+	mysqli_begin_transaction($connection);
+    
+    $activity = $form["activity"];
+    $date = $form["date"];
+    $program = $form["program"];
+	$start_time = $form["start_time"];
+    $end_time = $form["end_time"];
+    $start_mile = $form["start_mile"];
+    $end_mile = $form["end_mile"];
+    $address = $form["address"];
+	$attend_num = $form["attend_num"];
+    $volstaff_num = $form["volstaff_num"];
+    $materials_used = $form["materials_used"];
+	$meal_info = $form["meal_info"];
+    $act_costs = $form["act_costs"];
+    $act_benefits = $form["act_benefits"];
+    $attendees = $form["attendees[]"];
     
     $query = "
-        INSERT INTO dbActualActivityForm (odhs_id, name, breed, age, gender, notes, spay_neuter_done, spay_neuter_date, rabies_given_date, rabies_due_date, heartworm_given_date, heartworm_due_date, distemper1_given_date, distemper1_due_date, distemper2_given_date, distemper2_due_date, distemper3_given_date, distemper3_due_date, microchip_done, archived)
-        values ('$odhsid','$name', '$breed', '$age', '$gender', '$notes', '$spay_neuter_done', '$spay_neuter_date', '$rabies_given_date', '$rabies_due_date', '$heartworm_given_date', '$heartworm_due_date', '$distemper1_given_date', '$distemper1_due_date', '$distemper2_given_date', '$distemper2_due_date', '$distemper3_given_date', '$distemper3_due_date', '$microchip_done', 'no')
+        INSERT INTO dbActualActivity (activity, date, program, start_time, end_time, start_mile, end_mile, address, 
+        attend_num, volstaff_num, materials_used, meal_info, act_costs, act_benefits)
+        VALUES ('$activity', '$date', '$program', '$start_time', '$end_time', '$start_mile', '$end_mile', '$address', 
+        '$attend_num', '$volstaff_num', '$materials_used', '$meal_info', '$act_costs', '$act_benefits')
     ";
     
-    //EDIT: needs to get actualAct primary key
-    //EDIT: might need to be wrapped in if else clause in case data is not put into dbActualActivityForm
-    $last_id = $conn->insert_id;
-       
-    //EDIT: insert each attendee in attendance array into Attendees table, if attendee name is not blank
-    foreach ($attendance as $attendee) {
-        //sanitize the attendee name
-        if ($attendee != '') {
-            $sanAttendee = trim($attendee);
-            $query = "
-                INSERT INTO Attendees (name, activity_id) values ('$sanAttendee', '$lastid')
-            ";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        mysqli_rollback($connection);
+        mysqli_close($connection);
+        return null;
+    }
+    
+    $activityID = mysqli_insert_id($connection);
+    
+    $attendeeIDs = createAttendees($attendees, $connection);
+    if ($attendeeIDs === null) {
+        mysqli_rollback($connection);
+        mysqli_close($connection);
+        return null;
+    }
+
+    foreach ($attendeeIDs as $attendeeID) {
+        $insert_query = "
+            INSERT INTO dbActivityAttendees (activityID, attendeeID)
+            VALUES ('$activityID', '$attendeeID')
+        ";
+        $insert_result = mysqli_query($connection, $insert_query);
+        if (!$insert_result) {
+            mysqli_rollback($connection);
+            mysqli_close($connection);
+            return null;
         }
     }
 
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-        return null;
-    }
-    $id = mysqli_insert_id($connection);
     mysqli_commit($connection);
     mysqli_close($connection);
-    return $id;
+    return $activityID;
+}
+
+/**
+ * Function that takes attendees array item and adds it into database
+ */
+function createAttendees($attendees, $connection) {
+    mysqli_begin_transaction($connection);
+    $ids = [];
+
+    foreach ($attendees as $attendee) {
+        $name = trim($attendee);
+        if ($name != '') {
+            $insert_query = "INSERT INTO dbAttendees (name) VALUES ('$name')";
+            $insert_result = mysqli_query($connection, $insert_query);
+            if (!$insert_result) {
+                mysqli_rollback($connection);
+                mysqli_close($connection);
+                return null;
+            }
+            $ids[] = mysqli_insert_id($connection);
+        }
+    }
+
+    mysqli_commit($connection);
+    return $ids;
 }

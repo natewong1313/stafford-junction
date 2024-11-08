@@ -45,11 +45,6 @@ error_reporting(E_ALL);
                     <span>Angel Gifts Wish Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="actualActivityForm.php">
-                    <img src="images/actualActivity-svgrepo.svg">
-                    <span>Actual Activity Form</span> 
-                </div>
-
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
@@ -85,6 +80,13 @@ error_reporting(E_ALL);
                     <span>Summer Junction Registration Form</span>
                 </div>
 
+                <!--Only staff or volunteer accounts can access these forms-->
+                <?php if ($_SESSION['access_level'] >= 2): ?>
+                    <div class="dashboard-item" data-link="actualActivityForm.php">
+                        <img src="images/actualActivity-svgrepo.svg">
+                        <span>Actual Activity Form</span> 
+                    </div>
+                <?php endif ?>
                 </div>
             </div>
             <!--Below deals with the 'Return to dashboard'. Since multiple dashboards share this file, the dashboard to return to will be different depending on access level-->
