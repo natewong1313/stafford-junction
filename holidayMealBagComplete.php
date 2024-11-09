@@ -1,3 +1,7 @@
+<!--This file shows the entire Holiday Meal Bag Form, but fills in each field with data already submitted by the user. It does this
+by retrieving the data from dbHolidayMealBagForm, and sets each input field as the value that was submitted. Each field is disabled so
+the user can't change the data. Editing data will be done elsewhere-->
+
 <?php
 
 session_cache_expire(30);
@@ -65,7 +69,7 @@ $data = getHolidayMealBagData($userID);
 
             <!-- 7. Photo Release -->
             <p>Stafford Junction Photo Release / Autorización de Prensa de Stafford Junction *</p>
-            
+
             <!-- Instead of dispaly 0 or 1, make a variable that holds yes or no and display that instead -->
             <?php 
                 $choice = "no";
