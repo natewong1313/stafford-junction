@@ -198,10 +198,11 @@
 
                 //enroll in program
                 echo('<li class="nav-item dropdown">');
-                echo('<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Enroll in Program</a>');
+                echo('<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Forms</a>');
                 echo('<div class="dropdown-menu" aria-labelledby="navbarDropdown">');
-                    echo('<a class="dropdown-item" href="' . $path . '#">Program 1</a>');
-                    echo('<a class="dropdown-item" href="' . $path . '#">Program 2</a>');
+                    echo('<a class="dropdown-item" href="' . $path . '#">View Completed Forms</a>');
+                    echo('<a class="dropdown-item" href="' . $path . '#">Enroll In Program</a>');
+                    echo('<a class="dropdown-item" href="' . $path . '#">Fill Out waiver</a>');
                 echo('</div>');
                 echo('</li>');
 
