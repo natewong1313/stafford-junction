@@ -70,7 +70,7 @@ $data = getHolidayMealBagData($userID);
             <!-- 7. Photo Release -->
             <p>Stafford Junction Photo Release / Autorización de Prensa de Stafford Junction *</p>
 
-            <!-- Instead of dispaly 0 or 1, make a variable that holds yes or no and display that instead -->
+            <!-- Instead of displaying 0 or 1, make a variable that holds yes or no and display that instead -->
             <?php 
                 $choice = "no";
                 if($data['photo_release'] == 1){

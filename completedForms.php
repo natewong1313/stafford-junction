@@ -24,7 +24,7 @@ require_once("database/dbHolidayMealBag.php");
  */
 
 //retrieve data from holiday meal bag database; if there is no data to retrieve, this will be null
-$holiday_form = get_data_by_family_id($userID);
+$holiday_meal_bag_form = get_data_by_family_id($userID);
 
 ?>
 
@@ -43,7 +43,7 @@ $holiday_form = get_data_by_family_id($userID);
         <h1>Completed Forms</h1>
 
         <!--Check that holiday meal bag form is complete, if it is, have a link that will direct the user to filled out form-->
-        <?php if($holiday_form != null): ?>
+        <?php if($holiday_meal_bag_form != null): ?>
             <h2 style="margin-left: 20px; display: inline;">Holiday Meal Bag</h2>
             <a href="holidayMealBagComplete.php">  View</a>
         <?php endif ?>
