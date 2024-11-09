@@ -45,7 +45,7 @@ $holiday_meal_bag_form = get_data_by_family_id($userID);
         <!--Check that holiday meal bag form is complete, if it is, have a link that will direct the user to filled out form-->
         <?php if($holiday_meal_bag_form != null): ?>
             <h2 style="margin-left: 20px; display: inline;">Holiday Meal Bag</h2>
-            <a href="holidayMealBagComplete.php">  View</a>
+            <a href="holidayMealBagForm.php">  View</a>
         <?php endif ?>
         
 
