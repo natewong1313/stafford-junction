@@ -178,6 +178,10 @@ try {
             <input type="radio" id="release_no" name="photo_release" value="0" required>
             <label for="release_no">No / No</label><br><br>
         <?php endif ?>
+
+        <?php if($data): ?>
+            <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+        <?php else: ?>
         <button type="submit">Submit</button>
         <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
             <?php
@@ -185,6 +189,7 @@ try {
                     echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
                 }
             ?>
+        <?php endif ?>
     </form>
 </div>
     
