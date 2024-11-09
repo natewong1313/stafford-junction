@@ -72,6 +72,7 @@
         $permission_array['childrenview.php'] = 1;
         $permission_array['childreninaccount.php'] = 1;
         $permission_array['childaccount.php'] = 1;
+        $permission_array['completedforms.php'] = 1;
         //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply
@@ -200,9 +201,9 @@
                 echo('<li class="nav-item dropdown">');
                 echo('<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Forms</a>');
                 echo('<div class="dropdown-menu" aria-labelledby="navbarDropdown">');
-                    echo('<a class="dropdown-item" href="' . $path . '#">View Completed Forms</a>');
-                    echo('<a class="dropdown-item" href="' . $path . '#">Enroll In Program</a>');
-                    echo('<a class="dropdown-item" href="' . $path . '#">Fill Out waiver</a>');
+                    echo('<a class="dropdown-item" href="' . $path . 'completedForms.php">View Completed Forms</a>');
+                    //echo('<a class="dropdown-item" href="' . $path . '#">Enroll In Program</a>');
+                    //echo('<a class="dropdown-item" href="' . $path . '#">Fill Out waiver</a>');
                 echo('</div>');
                 echo('</li>');
 
