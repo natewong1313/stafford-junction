@@ -26,7 +26,10 @@ function validateAndFilterPhoneNumber($phone) {
 
 include_once('database/dbinfo.php');
 try {
+    //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
     $data = getHolidayMealBagData($userID);
+
+    //If the user hasn't submitted this form yet
     if($data == null){
         $conn = connect();
 
@@ -119,6 +122,7 @@ try {
         <?php elseif (!$data): ?>
             <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
         <?php endif ?>
+        
         <!-- 2. How many in household -->
         <label for="household">How many in household / ¿Cuántas personas hay en su hogar? *</label><br>
         <?php if($data): ?>
