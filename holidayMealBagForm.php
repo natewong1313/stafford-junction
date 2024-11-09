@@ -11,7 +11,7 @@ if (!isset($_SESSION["_id"])) {
 $loggedIn = true;
 $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
-
+$successMessage = "";
 include_once("database/dbFamily.php");
 $family = retrieve_family_by_id($userID);
 $family_email = $family->getEmail();
@@ -146,6 +146,11 @@ try {
 
     <button type="submit">Submit</button>
     <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+    <?php
+        if($successMessage){
+            echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+        }
+    ?>
 </form>
     </div>
 </body>
