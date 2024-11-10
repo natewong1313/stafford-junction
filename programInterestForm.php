@@ -4,10 +4,25 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
+// Initialize family data variables
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
 $success = false;
+$family = null;
+$family_email = null;
+$family_first_name = null;
+$family_last_name = null;
+$family_phone = null;
+$family_zip = null;
+$family_city = null;
+$family_address = null;
+$family_state = null;
+$children = null;
+$children_count = null;
+$children_ages = null;
+$family_home_phone = null;
+$family_cell_phone = null;
 
 if(isset($_SESSION['_id'])){
     require_once('domain/Family.php');
@@ -23,33 +38,35 @@ if(isset($_SESSION['_id'])){
 
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
-// Get family data for autopopulating form
-$family = retrieve_family_by_id($_SESSION["_id"]);
-$family_email = $family->getEmail();
-$family_first_name = $family->getFirstName();
-$family_last_name = $family->getLastName();
-$family_phone = $family->getPhone();
-$family_zip = $family->getZip();
-$family_city = $family->getCity();
-$family_address = $family->getAddress();
-$family_state = $family->getState();
-$children = getChildren($_SESSION["_id"]);
-$children_count = count($children);
-$children_ages = getChildrenAges($children);
-$family_home_phone = null;
-$family_cell_phone = null;
 
-// Get home phone number
-if ($family->getPhoneType() == "home") {
-    $family_home_phone = $family->getPhone();
-} else if ($family->getSecondaryPhoneType() == "home") {
-    $family_home_phone = $family->getSecondaryPhone();
-}
-// Get cell phone number
-if ($family->getPhoneType() == "cellphone") {
-    $family_cell_phone = $family->getPhone();
-} else if ($family->getSecondaryPhoneType() == "cellphone") {
-    $family_cell_phone = $family->getSecondaryPhone();
+// If logged in as a family
+if (isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1) {
+    // Get family data for autopopulating form
+    $family = retrieve_family_by_id($_SESSION["_id"]);
+    $family_email = $family->getEmail();
+    $family_first_name = $family->getFirstName();
+    $family_last_name = $family->getLastName();
+    $family_phone = $family->getPhone();
+    $family_zip = $family->getZip();
+    $family_city = $family->getCity();
+    $family_address = $family->getAddress();
+    $family_state = $family->getState();
+    $children = getChildren($_SESSION["_id"]);
+    $children_count = count($children);
+    $children_ages = getChildrenAges($children);
+
+    // Get home phone number
+    if ($family->getPhoneType() == "home") {
+        $family_home_phone = $family->getPhone();
+    } else if ($family->getSecondaryPhoneType() == "home") {
+        $family_home_phone = $family->getSecondaryPhone();
+    }
+    // Get cell phone number
+    if ($family->getPhoneType() == "cellphone") {
+        $family_cell_phone = $family->getPhone();
+    } else if ($family->getSecondaryPhoneType() == "cellphone") {
+        $family_cell_phone = $family->getSecondaryPhone();
+    }
 }
 
 // Gets the ages of each child and returns them as a string
