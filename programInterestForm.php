@@ -52,15 +52,19 @@ if ($family->getPhoneType() == "cellphone") {
     $family_cell_phone = $family->getSecondaryPhone();
 }
 
-// Gets the age of each child and returns them as a string
+// Gets the ages of each child and returns them as a string
 function getChildrenAges($children) {
     $ages = "";
     $last = end($children);
     foreach ($children as $child) {
+        // Get current time and child date of birth
         $current_time = strtotime(date("Y-m-d"));
         $dob = strtotime($child->getBirthdate());
+        // Calculate age
         $age = floor((abs($dob - $current_time)) / (365 * 60 * 60 * 24));
+        // Append it to end of ages string
         $ages .= $age;
+        // If not at last child in children array, add a comma to string
         if ($child != $last) {
             $ages .= ", ";
         }
@@ -69,13 +73,13 @@ function getChildrenAges($children) {
 }
 
 // program interests and topic interests both are stored in arrays called "programs" and "topics" within the POST array
-// availability is stored in a multidimentional array called "days"
+// availability data is stored in a multidimentional array called "days" 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    // Ignore days during sanitation array as it will cause an error
+    // Ignore days array during sanitation as it will cause an error
     $ignoreList = array('days');
     $args = sanitize($_POST, $ignoreList);
-    // Sanitize days array individually
+    // Sanitize each day in days array individually
     foreach ($args['days'] as $day) {
         $day = sanitize($day, null);
     }
@@ -83,7 +87,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         "home_phone", "email", "child_num", "child_ages", "adult_num");
     $args['cell_phone'] = validateAndFilterPhoneNumber($args['cell_phone']);
     $args['home_phone'] = validateAndFilterPhoneNumber($args['home_phone']);
-    var_dump($args['days']);
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
         die();
@@ -102,6 +105,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         
         <h1>Program Interest Form / formulario de interés del programa</h1>
+        <?php 
+            if (isset($_GET['formSubmitFail'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
+            }
+        ?>
         <div id="formatted_form">
 
             <p>Please fill out this survey to help us better understand the needs of the community and schedule future classes
@@ -244,7 +252,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 9. Number of Adults in Household-->
                 <label for="adult_num">* How Many Adult in Household? / ¿Cuántos adultos hay en el hogar?</label><br><br>
-                <input type="text" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" required>
+                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" required>
                 <br><br>
 
                 <h2>Programs of Interest / Programas de interés</h2>
@@ -542,10 +550,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             </form>
         </div>
         <?php
-           //if submission successful, create pop up notification and direct user back to fill form page
-            if($success){
+            // if submission successful, create pop up notification and direct user back to fill form page
+            // if fail, notify user on program interest form page
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
                 echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                echo '<script>document.location = "programInterestForm.php?formSubmitFail";</script>';
+            }
         ?>
         
     </body>
