@@ -11,6 +11,7 @@ if (isset($_SESSION['_id'])) {
     // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $success = false;
 }else {
     header("Location: login.php");
 }
@@ -24,7 +25,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     foreach($children as $child){
         $newChild = make_a_child_from_sign_up($child);
-        add_child($newChild, $userID);
+        $success = add_child($newChild, $userID);
     }
 }
 
@@ -43,6 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <body>
         <?php require_once('header.php') ?>
         <h1>Add Child</h1>
+
 
         <form id="formatted_form" action="" method="POST">
             <fieldset>
@@ -125,6 +127,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             </script>
 
             <button style="margin-top: 10px" type="input" name="add">Submit</button>
+            <?php
+                if($success){
+                    echo '<script>document.location = "familyAccountDashboard.php?addChildSuccess";</script>';
+                }
+            ?>
         </form>
     
         
