@@ -16,12 +16,19 @@ if(isset($_SESSION['_id'])){
 }
 
 include_once("database/dbFamily.php");
+include_once("database/dbChildren.php");
+
 $family = retrieve_family_by_id($_SESSION["_id"]);
 $family_email = $family->getEmail();
 
+//Fetch children for the account
+$family_id = $_SESSION['_id'];
+$children = retrieve_children_By_family_id($family_id);
+
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSchoolSupplies.php');
+    require_once('database/dbSchoolSupplies.php');
+    
     $args = sanitize($_POST, null);
     $required = array("email", "name", "grade", "school", "community", "need_backpack");
     if(!wereRequiredFieldsSubmitted($args, $required)){
