@@ -13,6 +13,17 @@ CREATE TABLE `dbVolunteers` (
     `zip` int NOT NULL,
     `homePhone` varchar(256) NOT NULL,
     `cellPhone` varchar(256) NOT NULL,
+    `age` int NOT NULL,
+    `birthDate` date NOT NULL,
+    `hasDriversLicense` boolean NOT NULL,
+    `transportation` varchar(256),
+    `emergencyContact1Name` varchar(256) NOT NULL,
+    `emergencyContact1Relation` varchar(256) NOT NULL,
+    `emergencyContact1Phone` varchar(256) NOT NULL,
+    `emergencyContact2Name` varchar(256),
+    `emergencyContact2Relation` varchar(256),
+    `emergencyContact2Phone` varchar(256),
+    `allergies` varchar(256),
     `sunStart` varchar(5),
     `sunEnd` varchar(5),
     `monStart` varchar(5),
@@ -26,7 +37,10 @@ CREATE TABLE `dbVolunteers` (
     `friStart` varchar(5),
     `friEnd` varchar(5),
     `satStart` varchar(5),
-    `satEnd` varchar(5)
+    `satEnd` varchar(5),
+    `dateAvailable` date NOT NULL,
+    `minHours` int NOT NULL,
+    `maxHours` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `dbVolunteers` (
