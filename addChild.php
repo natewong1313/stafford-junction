@@ -15,15 +15,18 @@ if (isset($_SESSION['_id'])) {
     header("Location: login.php");
 }
 
-require_once("database/dbFamily.php");
-require_once("database/dbChildren.php");
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    //add child here
+    require_once("database/dbFamily.php");
+    require_once("database/dbChildren.php");
+    
+    $children = $_POST['children'];
+
+    foreach($children as $child){
+        $newChild = make_a_child_from_sign_up($child);
+        add_child($newChild, $userID);
+    }
 }
-
-
-
 
 ?>
 
@@ -41,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <?php require_once('header.php') ?>
         <h1>Add Child</h1>
 
-        <div id="formatted_form">
+        <form id="formatted_form" action="" method="POST">
             <fieldset>
                 <p>Add child details below. Click "+ Add Child" to add more children.</p>
                 <div id="children-container"></div>
@@ -120,7 +123,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     });
                 }
             </script>
-        </div>
+
+            <button style="margin-top: 10px" type="input" name="add">Submit</button>
+        </form>
+    
         
 
     </body>
