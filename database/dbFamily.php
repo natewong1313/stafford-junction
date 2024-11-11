@@ -337,6 +337,7 @@ function getHolidayMealBagData($family_id){
     }
 }
 
+// Sets a family to archived using thier id
 function archive_family($id) {
     $query = "UPDATE dbFamily SET isArchived='1' WHERE id='$id'";
     $connection = connect();
@@ -346,6 +347,7 @@ function archive_family($id) {
     return $result;
 }
 
+// Sets a family to unarchived using thier id
 function unarchive_family($id) {
     $query = "UPDATE dbFamily SET isArchived='0' WHERE id='$id'";
     $connection = connect();
@@ -353,26 +355,6 @@ function unarchive_family($id) {
     $result = boolval($result);
     mysqli_close($connection);
     return $result;
-}
-
-function find_archived_families() {
-    $query = "SELECT * FROM dbFamily WHERE isArchived='1' ORDER BY lastName, firstName";
-
-    $connection = connect();
-
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-        mysqli_close($connection);
-        return [];
-    }
-    $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $families = [];
-    foreach ($raw as $row) {
-        $families []= make_a_family2($row);
-    }
-    mysqli_close($connection);
-    return $families;
-
 }
 
 // Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 

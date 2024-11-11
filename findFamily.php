@@ -34,7 +34,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once("include/input-validation.php");
 
     $args = sanitize($_POST, null);
-    
     // Get criteria if set
     if (isset($args['last-name'])) {
         $last_name = $args['last-name'];
@@ -50,18 +49,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
     // Find families based on set criteria
     $family = find_families($last_name, $email, $city, $is_archived);
-
-
-//    if($args["search-method"] == "last-name"){
-//        //will either hold one or mutliple family objects depending on the last name
-//        $family = retrieve_family_by_lastName($args['search']);
-//    }else if($args['search-method'] == "email"){
-        //retrieve family by email
-//        $family = retrieve_family_by_email_to_display($args['search']);
-//    }
-
-    
-
 }
 ?>
 
@@ -80,18 +67,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <h1>Search Family Account</h1>
 
         <form id="formatted_form" method="POST">
-<!--
-            <label for="search-method" style="text-align: center;">Search By</label>
-           <select name="search-method">
-                <option value="last-name">Last Name</option>
-                <option value="email">Email</option>
-            </select>
-            <select name="archive-method">
-                <option value="archived" selected>Unarchived</option>
-                <option value="unacrchived">Archived</option>
-            </select>
-            <input type="text" name="search" style="margin-top: 30px;" placeholder="Enter data to search for">
--->
+        <label>Select any criteria to search for or fill none to view all families</label>
             <!-- Search Criteria Fields -->
             <div class="search-container">
                 <div class="search-label">
