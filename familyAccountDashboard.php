@@ -3,6 +3,10 @@
 session_cache_expire(30);
 session_start();
 
+if($_SESSION['logged_in'] == false){
+    header("Location: login.php");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +48,12 @@ session_start();
                 <div class="dashboard-item" data-link="editFamilyProfile.php">
                     <img src="images/editProfile.svg">
                     <span>Edit Profile</span>
+                </div>
+                
+                <!--Dashboard button that allows the family account to add another child to the account-->
+                <div class="dashboard-item" data-link="#">
+                    <img src="images/add-square-svgrepo-com.svg">
+                    <span>Add Child</span>
                 </div>
 
                 <!--Dashboard button that directs the user to logout-->
