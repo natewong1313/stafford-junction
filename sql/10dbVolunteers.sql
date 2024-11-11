@@ -38,18 +38,19 @@ CREATE TABLE `dbVolunteers` (
     `friEnd` varchar(5),
     `satStart` varchar(5),
     `satEnd` varchar(5),
-    `dateAvailable` date NOT NULL,
+    `dateAvailable` date,
     `minHours` int NOT NULL,
     `maxHours` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `dbVolunteers` (
-    `email`, `password`, `securityQuestion`, `securityAnswer`, `firstName`, `lastName`, `phone`,
-    `phoneType`, `sunStart`, `sunEnd`, `monStart`, `monEnd`, `tueStart`, `tueEnd`, `wedStart`,
-    `wedEnd`, `thurStart`, `thurEnd`, `friStart`, `friEnd`, `satStart`, `satEnd`
+    `email`, `password`, `securityQuestion`, `securityAnswer`, `firstName`, `middleInitial`, `lastName`,
+    `address`, `city`, `state`, `zip`, `homePhone`, `cellPhone`, `age`, `birthDate`, `hasDriversLicense`,
+    `emergencyContact1Name`, `emergencyContact1Relation`, `emergencyContact1Phone`, `minHours`, `maxHours`
 )
 VALUES (
         'volunteer@mail.com', '$2y$10$EZCNkQflMinx5sgoMbJwN.sqGKOlL8fnHiGGhQ3wXKU3uGMkjOx6a', 'Whats 9+10',
-        '$2y$10$RGQ3P7KOXfR2m1a2z6Tr7ekssfMzboKrt7TsmLjaalfeHEpKX0GUG', 'Mr', 'Volunteer', '1112223333',
-        'Mobile', '', '', '', '', '', '', '', '', '', '', '', '', '', ''
+        '$2y$10$RGQ3P7KOXfR2m1a2z6Tr7ekssfMzboKrt7TsmLjaalfeHEpKX0GUG', 'Mr', 'A', 'Volunteer', '123 road st',
+        'Fredericksburg', 'VA', '22401', '1112223333', '2223334444', '20', '1999-01-01', 'true', 'John', 'Smith',
+        '1112223333', '10', '20'
        )
