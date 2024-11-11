@@ -43,7 +43,7 @@ if($_SESSION['logged_in'] == false){
                 </div>
 
                 <!--Dashboard button that allows the family account to add another child to the account-->
-                <div class="dashboard-item" data-link="#">
+                <div class="dashboard-item" data-link="addChild.php">
                     <img src="images/add-square-svgrepo-com.svg">
                     <span>Add Child</span>
                 </div>
