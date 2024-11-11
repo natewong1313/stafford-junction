@@ -41,6 +41,12 @@ if($_SESSION['logged_in'] == false){
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
+
+                <!--Dashboard button that allows the family account to add another child to the account-->
+                <div class="dashboard-item" data-link="#">
+                    <img src="images/add-square-svgrepo-com.svg">
+                    <span>Add Child</span>
+                </div>
                 
                 <div class="dashboard-item" data-link="logout.php">
                     <img src="images/logout.svg">
