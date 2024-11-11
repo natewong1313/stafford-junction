@@ -6,6 +6,18 @@ session_start();
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+
+// Search criteria variables
+$last_name = null;
+$email = null;
+$city = null;
+$is_archived = 0;
+
+require_once("database/dbFamily.php");
+require_once("domain/Family.php");
+// Get all families if no criteria inputted in search
+$family = find_families($last_name, $email, $city, $is_archived);
+
 if (isset($_SESSION['_id'])) {
     $loggedIn = true;
     // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
@@ -19,19 +31,34 @@ if ($accessLevel < 2) {
 }
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once("database/dbFamily.php");
-    require_once("domain/Family.php");
     require_once("include/input-validation.php");
 
     $args = sanitize($_POST, null);
-
-    if($args["search-method"] == "last-name"){
-        //will either hold one or mutliple family objects depending on the last name
-        $family = retrieve_family_by_lastName($args['search']);
-    }else if($args['search-method'] == "email"){
-        //retrieve family by email
-        $family = retrieve_family_by_email_to_display($args['search']);
+    
+    // Get criteria if set
+    if (isset($args['last-name'])) {
+        $last_name = $args['last-name'];
     }
+    if (isset($args['email'])) {
+        $email = $args['email'];
+    }
+    if (isset($args['city'])) {
+        $city = $args['city'];
+    }
+    if (isset($args['is-archived'])) {
+        $is_archived = $args['is-archived'];
+    }
+    // Find families based on set criteria
+    $family = find_families($last_name, $email, $city, $is_archived);
+
+
+//    if($args["search-method"] == "last-name"){
+//        //will either hold one or mutliple family objects depending on the last name
+//        $family = retrieve_family_by_lastName($args['search']);
+//    }else if($args['search-method'] == "email"){
+        //retrieve family by email
+//        $family = retrieve_family_by_email_to_display($args['search']);
+//    }
 
     
 
@@ -53,13 +80,51 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <h1>Search Family Account</h1>
 
         <form id="formatted_form" method="POST">
+<!--
             <label for="search-method" style="text-align: center;">Search By</label>
-            <select name="search-method">
+           <select name="search-method">
                 <option value="last-name">Last Name</option>
                 <option value="email">Email</option>
             </select>
-
+            <select name="archive-method">
+                <option value="archived" selected>Unarchived</option>
+                <option value="unacrchived">Archived</option>
+            </select>
             <input type="text" name="search" style="margin-top: 30px;" placeholder="Enter data to search for">
+-->
+            <!-- Search Criteria Fields -->
+            <div class="search-container">
+                <div class="search-label">
+                <label>Last Name:</label>
+                </div>
+                <div>
+                <input type="text" id="last-name" name='last-name'>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-label">
+                <label>Email:</label>
+                </div>
+                <div>
+                <input type="text" id="email" name='email'>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-label">
+                <label>City:</label>
+                </div>
+                <div>
+                <input type="text" id="city" name='city'>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-label">
+                <label>Archived:</label>
+                </div>
+                <div>
+                <input type="checkbox" id="is-archived" name='is-archived' value=1>
+                </div>
+            </div>
             
             <button type="submit" class="button_style">Search</button>
 
@@ -100,6 +165,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                             echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
                             echo '<td>' . $acct->getEContactPhone() . '</td>';
                             echo '<tr>';
+                            
                         }
                         
                 echo '
