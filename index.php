@@ -15,14 +15,19 @@
         
     include_once('database/dbPersons.php');
     include_once('domain/Person.php');
-    // Get date?
+
+    //if the $_SESSION _id variable is set, check what kind of account
     if (isset($_SESSION['_id'])) {
-        $person = retrieve_person($_SESSION['_id']);
+        //if the account type is staff, call retrieve_person to grab from dbPersons
+        if($_SESSION['account_type'] == 'Staff'){
+            $person = retrieve_person($_SESSION['_id']);
+            $notRoot = $person->get_id() != 'vmsroot'; //gets set to true if the user didn't log in as vmsroot
+        }else if($_SESSION['account_type'] == 'Family'){ //if the account is a family account, simply redirect to the familyAccount dashboard page
+            header("Location: familyAccountDashboard.php");
+        }
     }
 
-    //this line will need to be changed in the future, it will cause the code to break 
-    //if the user with family access clicks on a header option
-    $notRoot = $person->get_id() != 'vmsroot';
+    
 
 ?>
 <!DOCTYPE html>
@@ -119,7 +124,9 @@
                         <span>Create Report</span>
                     </div>
                 <?php endif ?>
-                <?php if ($notRoot) : ?>
+        
+                <?php //if ($notRoot) : ?>
+                    <!--
                     <div class="dashboard-item" data-link="viewProfile.php">
                         <img src="images/view-profile.svg">
                         <span>View Profile</span>
@@ -128,13 +135,17 @@
                         <img src="images/manage-account.svg">
                         <span>Edit Profile</span>
                     </div>
-                <?php endif ?>
-                <?php if ($notRoot) : ?>
+                    -->
+                <?php //endif ?>
+                <?php //if ($notRoot) : ?>
+                    <!--
                     <div class="dashboard-item" data-link="volunteerReport.php">
                         <img src="images/volunteer-history.svg">
                         <span>View My Hours</span>
                     </div>
-                <?php endif ?>
+                    -->
+                <?php //endif ?>
+
 
                 <!--New Dashboard items-->
                 <?php if($_SESSION['access_level'] >= 2): ?>

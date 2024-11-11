@@ -319,3 +319,20 @@ function change_family_password($id, $newPass) {
         mysqli_close($con);
         return $result;
 }
+
+/**
+ * Function that querys the dbHolidayMealBagForm database and retrieves the corresponding row for the family 
+ */
+function getHolidayMealBagData($family_id){
+    $conn = connect();
+    $query = "SELECT  dbHolidayMealBagForm.email, dbHolidayMealBagForm.household_size, dbHolidayMealBagForm.meal_bag, 
+    dbHolidayMealBagForm.name, dbHolidayMealBagForm.address, dbHolidayMealBagForm.phone, dbHolidayMealBagForm.photo_release FROM dbFamily INNER JOIN dbHolidayMealBagForm ON dbFamily.id = dbHolidayMealBagForm.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
+    $res = mysqli_query($conn, $query);
+    if(mysqli_num_rows($res) < 0 || $res == null){
+        mysqli_close($conn);
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($res);
+        return $row;
+    }
+}
