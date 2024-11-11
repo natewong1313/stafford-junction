@@ -1,3 +1,4 @@
+<!--This file is has the front-end and back-end for adding new children to account after the account has already been made-->
 <?php
 
 session_cache_expire(30);
@@ -21,11 +22,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once("database/dbFamily.php");
     require_once("database/dbChildren.php");
     
+    //retreive all the children in POST variable
     $children = $_POST['children'];
 
+    //cycle through each child, creating a new child object and adding that child to the database
     foreach($children as $child){
         $newChild = make_a_child_from_sign_up($child);
-        $success = add_child($newChild, $userID);
+        $success = add_child($newChild, $userID); //success is a boolean; it will remain true so long as children as being added correctly to the database
     }
 }
 
