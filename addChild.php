@@ -15,6 +15,13 @@ if (isset($_SESSION['_id'])) {
     header("Location: login.php");
 }
 
+require_once("database/dbFamily.php");
+require_once("database/dbChildren.php");
+
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    //add child here
+}
+
 
 
 
@@ -33,6 +40,87 @@ if (isset($_SESSION['_id'])) {
     <body>
         <?php require_once('header.php') ?>
         <h1>Add Child</h1>
+
+        <div id="formatted_form">
+            <fieldset>
+                <p>Add child details below. Click "+ Add Child" to add more children.</p>
+                <div id="children-container"></div>
+                <button type="button" onclick="addChildForm()">+ Add Child</button>
+            </fieldset>
+
+            <script>
+                let childCount = 0;
+                const children = [];
+
+                function addChildForm() {
+                    childCount++;
+                    const container = document.getElementById('children-container');
+                    
+                    const childDiv = document.createElement('div');
+                    childDiv.className = 'child-form';
+                    childDiv.id = `child-form-${childCount}`;
+                    
+                    childDiv.innerHTML = `
+                        <h4>Child ${children.length + 1}</h4>
+
+                        <label for="child_name_${childCount}">Child's First Name</label>
+                        <input type="text" id="child_name_${childCount}" name="children[${childCount}][first-name]" required placeholder="Enter child's first name">
+
+                        <label for="child_last_name_${childCount}">Child's Last Name</label>
+                        <input type="text" id="child_last_name_${childCount}" name="children[${childCount}][last-name]" required placeholder="Enter child's last name">
+
+                        <label for="child_birthdate_${childCount}">Child's Date of Birth</label>
+                        <input type="date" id="child_birthdate_${childCount}" name="children[${childCount}][birthdate]" required>
+
+                        <label for="child_gender_${childCount}">Child's Gender</label>
+                        <select id="child_gender_${childCount}" name="children[${childCount}][gender]" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+
+                        <label for="child_medical_notes_${childCount}">Medical Notes</label>
+                        <input type="text" id="child_medical_notes_${childCount}" name="children[${childCount}][last-child_medical_notes_]" required placeholder="Allergies, medications, etc.">
+
+                        <label for="child_additional_notes_${childCount}">Additional Notes</label>
+                        <input type="text" id="child_additional_notes_${childCount}" name="children[${childCount}][child_additional_notes_-name]" required placeholder="Anything else we should know?">
+
+                        <button type="button" onclick="removeChildForm(${childCount})">Remove Child</button>
+
+                        <hr>
+                    `;
+                    
+                    container.appendChild(childDiv);
+                    children.push(childDiv);
+                    renumberChildren();
+                }
+
+                function removeChildForm(childId) {
+                    // Find the child div to remove
+                    const childDiv = document.getElementById(`child-form-${childId}`);
+                    if (childDiv) {
+                        childDiv.remove();  // Remove the specific child form
+
+                        // Remove the corresponding child element from the array
+                        const index = children.findIndex(child => child.id === `child-form-${childId}`);
+                        if (index > -1) {
+                            children.splice(index, 1);
+                        }
+                        
+                        // Renumber the children after removal
+                        renumberChildren();
+                    }
+                }
+
+                function renumberChildren() {
+                    // Iterate over each child form and update the displayed child number
+                    children.forEach((child, index) => {
+                        const childHeader = child.querySelector('h4');
+                        childHeader.textContent = `Child ${index + 1}`;
+                    });
+                }
+            </script>
+        </div>
         
 
     </body>
