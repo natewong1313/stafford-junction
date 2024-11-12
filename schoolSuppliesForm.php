@@ -19,11 +19,15 @@ if (isset($_SESSION['_id'])) {
 
 // Include necessary files
 include_once("database/dbFamily.php");
+include_once("database/dbChildren.php");
 
 // Retrieve family information
 if ($loggedIn) {
     $family = retrieve_family_by_id($_SESSION["_id"]);
     $family_email = $family->getEmail();
+    //retrieve children by family ID
+    $children = retrieve_children_by_family_id($_SESSION["_id"]);
+
 }
 
 // Handle form submission

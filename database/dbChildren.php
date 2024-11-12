@@ -30,7 +30,7 @@ function make_a_child_from_database($result_row){
     return $child;
 }
 
-function retrieve_children_by_id($id){
+function retrieve_children_by_family_id($id){
     $conn = connect();
     $query = "SELECT dbChildren.* FROM dbChildren INNER JOIN dbFamily ON dbChildren.family_id = dbFamily.id WHERE dbFamily.id = '" . $id . "';";
     $result = mysqli_query($conn, $query);
