@@ -400,8 +400,6 @@ function getHolidayMealBagData($family_id){
         return $row;
     }
 }
-<<<<<<< HEAD
-=======
 
 // Sets a family to archived using thier id
 function archive_family($id) {
@@ -485,4 +483,4 @@ function find_families($last_name, $email, $city, $archived){
     mysqli_close($connection);
     return $families;
 }
->>>>>>> main
+
