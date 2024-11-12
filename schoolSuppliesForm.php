@@ -29,6 +29,7 @@ if ($loggedIn) {
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     require_once('include/input-validation.php');
+    
     // Sanitize the form input
     $args = sanitize($_POST, null);
 
@@ -38,9 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (!wereRequiredFieldsSubmitted($args, $required)) {
         $error_message = "Not all fields complete"; // Set error message
     } else {
-        // Output the sanitized form data (or handle further processing, e.g., database insertion)
-        foreach ($args as $key => $val) {
-            echo "{$key}: {$val}<br>";
+    // Call createBackToSchoolForm with sanitized form data
+        $success = createBackToSchoolForm($args);
+        
+        if ($success) {
+            echo "Form submitted successfully!";
+        } else {
+            echo "There was an error submitting the form.";
         }
     }
 }
@@ -93,7 +98,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!-- Child Name -->
             <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
-            <input type="text" name="name" id="name" placeholder="Name/Nombre" required><br><br>
+            <select name="child_name" id="child_name" required>
+                <?php
+                    require_once('domain/Children.php'); 
+                    foreach ($children as $c){
+                        $id = $c->getID();
+                        // Check if form was already completed for the child
+                        if (!isBackToSchoolFormComplete($id)) {
+                            $name = $c->getFirstName() . " " . $c->getLastName();
+                            $value = $id . "_" . $name;
+                            echo "<option value='$value'>$name</option>";
+                        }
+                    }
+                ?>
+                </select>
+                <br><br>
 
             <!-- Grade -->
             <label for="grade">3. Grade / Grado*</label><br><br>

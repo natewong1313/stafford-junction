@@ -1,28 +1,24 @@
 <?php
 
 function createBackToSchoolForm($form) {
-    $child_data = explode("_", $form['child_name']);
-    $child_id = $child_data[0];
-
-    // Check if form is already complete for the child, if so return    
-    if (isBackToSchoolFormComplete($child_id)) {
-        return;
-    }
-
     $connection = connect();
+    
+    // Map form data directly to variables
     $email = $form["email"];
-    $child_name = $child_data[1];
+    $child_name = $form["name"];
     $grade = $form["grade"];
     $school = $form["school"];
-    $bag_pickup_method = !empty($form["bag_pickup_method"]) ? $form["bag_pickup_method"] : null;
-    $need_backpack = !empty($form["need_backpack"]) ? $form["need_backpack"] : null;
+    $bag_pickup_method = $form["community"];
+    $need_backpack = ($form["need_backpack"] === "need_backpack") ? 1 : 0; // Convert to 1 or 0
 
+    // Prepare and execute the insert query
     $query = "
-        INSERT INTO dbSchoolSuppliesForm (child_id, email, child_name, grade, school, bag_pickup_method, need_backpack)
-        VALUES ('$child_id', '$email', '$child_name', '$grade', '$school', '$bag_pickup_method', '$need_backpack');
+        INSERT INTO dbSchoolSuppliesForm (email, child_name, grade, school, bag_pickup_method, need_backpack)
+        VALUES ('$email', '$child_name', '$grade', '$school', '$bag_pickup_method', '$need_backpack');
     ";
-    
+
     $result = mysqli_query($connection, $query);
+
     if (!$result) {
         return null;
     }
@@ -30,6 +26,7 @@ function createBackToSchoolForm($form) {
     $id = mysqli_insert_id($connection);
     mysqli_commit($connection);
     mysqli_close($connection);
+
     return $id;
 }
 
@@ -45,3 +42,4 @@ function isBackToSchoolFormComplete($childID) {
 }
 
 ?>
+
