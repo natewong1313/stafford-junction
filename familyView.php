@@ -21,7 +21,17 @@ require_once("include/input-validation.php");
 
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
 
-
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // Archive or unarchive family
+    if (isset($_POST['archive'])) {
+        archive_family($family->getId());
+    } else if (isset($_POST['unarchive'])) {
+        unarchive_family($family->getId());
+    }
+    // Refresh page because archive button will not change without it
+    header('Refresh:0');
+    die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,16 +106,24 @@ $family = retrieve_family_by_id($_GET['id'] ?? $userID); //either retrieve the f
         
         ?>
         </div>
+        <!-- Archive Family Buttons -->
+        <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
+        <form method="post">
+            <button type="submit" name="archive" style="margin-top: 3rem;">Archive Family</button>
+        </form>
+        <?php endif?>
+        <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
+        <form method="post">
+            <button type="submit" name="unarchive" style="margin-top: 3rem;">Unarchive Family</button>
+        </form>
+        <?php endif?>
+        <!-- Cancel Buttons -->
         <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
+        <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: .5rem;">Return to Dashboard</a>
         <?php endif ?>
         <?php if($_SESSION['access_level'] > 1): ?>
-        <a class="button cancel" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
-        <?php endif?>
-        
-
-        
-        
+        <a class="button cancel" href="findFamily.php" style="margin-top: .5rem;">Return to Search</a>
+        <?php endif?>   
     </body>
 </html>
 

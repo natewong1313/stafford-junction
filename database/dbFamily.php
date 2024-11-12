@@ -400,3 +400,89 @@ function getHolidayMealBagData($family_id){
         return $row;
     }
 }
+<<<<<<< HEAD
+=======
+
+// Sets a family to archived using thier id
+function archive_family($id) {
+    $query = "UPDATE dbFamily SET isArchived='1' WHERE id='$id'";
+    $connection = connect();
+    $result = mysqli_query($connection, $query);
+    $result = boolval($result);
+    mysqli_close($connection);
+    return $result;
+}
+
+// Sets a family to unarchived using thier id
+function unarchive_family($id) {
+    $query = "UPDATE dbFamily SET isArchived='0' WHERE id='$id'";
+    $connection = connect();
+    $result = mysqli_query($connection, $query);
+    $result = boolval($result);
+    mysqli_close($connection);
+    return $result;
+}
+
+// Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
+// More criteria can be added later
+function find_families($last_name, $email, $city, $archived){
+    // Build query
+    $where = 'where ';
+    $first = true;
+    // Add last name
+    if ($last_name) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "lastName like '%$last_name%'";
+        $first = false;
+    }
+    // Add email
+    if ($email) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "email like '%$email%'";
+        $first = false;
+    }
+    // Add city
+    if ($city) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "city like '%$city%'";
+        $first = false;
+    }
+    // Add isArchived
+    if ($archived) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= " isArchived='1'";
+    } else {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= " isArchived='0'";
+    }
+    $query = "select * from dbFamily $where order by lastName";
+    $connection = connect();
+    // Execute query
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        mysqli_close($connection);
+        return [];
+    }
+    // Get family data
+    $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $families = [];
+    foreach ($raw as $row) {
+        if ($row['id'] == 'vmsroot') {
+            continue;
+        }
+        $families []= make_a_family2($row);
+    }
+    mysqli_close($connection);
+    return $families;
+}
+>>>>>>> main
