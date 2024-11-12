@@ -22,6 +22,10 @@ if($_SESSION['logged_in'] == false){
     <body>
         <?php require('header.php'); ?>
         <h1>Family Dashboard</h1>
+        <?php if (isset($_GET['addChildSuccess'])) {
+            echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Children submitted successfully!</div>';
+        }
+        ?>
         <main class='dashboard'>
             <?php echo "<p>Hello" . $_SESSION['f_name'] . "!</p>";?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
@@ -51,7 +55,7 @@ if($_SESSION['logged_in'] == false){
                 </div>
                 
                 <!--Dashboard button that allows the family account to add another child to the account-->
-                <div class="dashboard-item" data-link="#">
+                <div class="dashboard-item" data-link="addChild.php">
                     <img src="images/add-square-svgrepo-com.svg">
                     <span>Add Child</span>
                 </div>
