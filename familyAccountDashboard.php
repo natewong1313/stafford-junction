@@ -31,23 +31,32 @@ if($_SESSION['logged_in'] == false){
                     <img src="images/person-search.svg">
                     <span>View Account</span>
                 </div>
+
                 <!--dashboard item to view a summary of all children in account -->
                 <div class="dashboard-item" data-link="childrenInAccount.php">
                     <img src="images/children-svgrepo-com.svg">
                     <span>View Children Accounts</span>
                 </div>
+
                 <!--Dashboard button that directs the user to the forms page-->
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
 
+                <!--Dashboard button that directs the user to edit personal profile-->
+                <div class="dashboard-item" data-link="editFamilyProfile.php">
+                    <img src="images/editProfile.svg">
+                    <span>Edit Profile</span>
+                </div>
+                
                 <!--Dashboard button that allows the family account to add another child to the account-->
                 <div class="dashboard-item" data-link="#">
                     <img src="images/add-square-svgrepo-com.svg">
                     <span>Add Child</span>
                 </div>
-                
+
+                <!--Dashboard button that directs the user to logout-->
                 <div class="dashboard-item" data-link="logout.php">
                     <img src="images/logout.svg">
                     <span>Log out</span>
