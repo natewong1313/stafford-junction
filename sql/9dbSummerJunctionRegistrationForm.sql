@@ -1,4 +1,4 @@
-CREATE TABLE CampRegistration (
+CREATE TABLE dbSummerJunctionRegistrationForm (
     id INT AUTO_INCREMENT PRIMARY KEY,
     steam BOOLEAN,
     summer_camp BOOLEAN,
