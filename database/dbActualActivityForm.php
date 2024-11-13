@@ -6,20 +6,20 @@ function createActualActivityForm($form) {
 	$connection = connect();
     mysqli_begin_transaction($connection);
     
-    $activity = $form["activity"];
-    $date = $form["date"];
-    $program = $form["program"];
-	$start_time = $form["start_time"];
-    $end_time = $form["end_time"];
-    $start_mile = $form["start_mile"];
-    $end_mile = $form["end_mile"];
-    $address = $form["address"];
-	$attend_num = $form["attend_num"];
-    $volstaff_num = $form["volstaff_num"];
-    $materials_used = $form["materials_used"];
-	$meal_info = $form["meal_info"];
-    $act_costs = $form["act_costs"];
-    $act_benefits = $form["act_benefits"];
+    $activity = mysqli_real_escape_string($connection, $form["activity"]);
+    $date = mysqli_real_escape_string($connection, $form["date"]);
+    $program = mysqli_real_escape_string($connection, $form["program"]);
+	$start_time = mysqli_real_escape_string($connection, $form["start_time"]);
+    $end_time = mysqli_real_escape_string($connection, $form["end_time"]);
+    $start_mile = mysqli_real_escape_string($connection, $form["start_mile"]);
+    $end_mile = mysqli_real_escape_string($connection, $form["end_mile"]);
+    $address = mysqli_real_escape_string($connection, $form["address"]);
+	$attend_num = mysqli_real_escape_string($connection, $form["attend_num"]);
+    $volstaff_num = mysqli_real_escape_string($connection, $form["volstaff_num"]);
+    $materials_used = mysqli_real_escape_string($connection, $form["materials_used"]);
+	$meal_info = mysqli_real_escape_string($connection, $form["meal_info"]);
+    $act_costs = mysqli_real_escape_string($connection, $form["act_costs"]);
+    $act_benefits = mysqli_real_escape_string($connection, $form["act_benefits"]);
     $attendees = $form["attendees"];
     
     $query = "
@@ -73,7 +73,9 @@ function createAttendees($attendees, $connection) {
 
     foreach ($attendees as $attendee) {
         $name = trim($attendee);
+        $name = mysqli_real_escape_string($connection, $name);
         if ($name != '') {
+            
             $insert_query = "
                 INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
             ";
