@@ -19,7 +19,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
     require_once('database/dbActualActivityForm.php');
     $args = sanitize($_POST, null);
-    var_dump($_POST);
     $required = array("activity", "date", "program", "start_time", "end_time", "start_mile", "end_mile", "address",
         "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits", "attendees");
 
