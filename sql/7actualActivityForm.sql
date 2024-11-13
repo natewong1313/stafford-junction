@@ -5,10 +5,10 @@
 CREATE TABLE `dbActualActivityForm` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `activity` varchar(256) NOT NULL,
-  `date` date NOT NULL,
+  `date` varchar(100) NOT NULL,
   `program` varchar(256) NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
+  `start_time` varchar(100) NOT NULL,
+  `end_time` varchar(100) NOT NULL,
   `start_mile` int(11) NOT NULL,
   `end_mile` int(11) NOT NULL,
   `address` varchar(256) NOT NULL,
@@ -21,20 +21,20 @@ CREATE TABLE `dbActualActivityForm` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Table structure for table `Attendees`
+-- Table structure for table `dbActualActivityAttendees`
 --
-CREATE TABLE 'dbAttendees' (
-    'id' int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    'name' varchar(255) NOT NULL
+CREATE TABLE `dbActualActivityAttendees` (
+    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` varchar(255) NOT NULL
 );
 
 --
 -- Table structure for junction table `dbActivityAttendees`
 --
-CREATE TABLE dbActivityAttendees (
-    'activityID' int(11) NOT NULL,
-    'attendeeID' int(11) NOT NULL,
-    PRIMARY KEY (activityID, attendeeID),
-    FOREIGN KEY (activityID) REFERENCES dbActualActivityForm(id),
-    FOREIGN KEY (attendeeID) REFERENCES dbAttendees(id)
+CREATE TABLE `dbActivityAttendees` (
+    `activityID` INT(11) NOT NULL,
+    `attendeeID` INT(11) NOT NULL,
+    PRIMARY KEY (`activityID`, `attendeeID`),
+    FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
