@@ -21,11 +21,9 @@ function createActualActivityForm($form) {
     $act_costs = $form["act_costs"];
     $act_benefits = $form["act_benefits"];
     $attendees = $form["attendees"];
-
-    $attendees = isset($form["attendees"]) ? $form["attendees"] : [];
     
     $query = "
-        INSERT INTO dbActualActivity (activity, date, program, start_time, end_time, start_mile, end_mile, address, 
+        INSERT INTO dbActualActivityForm (activity, date, program, start_time, end_time, start_mile, end_mile, address, 
         attend_num, volstaff_num, materials_used, meal_info, act_costs, act_benefits)
         VALUES ('$activity', '$date', '$program', '$start_time', '$end_time', '$start_mile', '$end_mile', '$address', 
         '$attend_num', '$volstaff_num', '$materials_used', '$meal_info', '$act_costs', '$act_benefits')
@@ -33,6 +31,7 @@ function createActualActivityForm($form) {
     
     $result = mysqli_query($connection, $query);
     if (!$result) {
+        echo "Error in query: " . mysqli_error($connection);
         mysqli_rollback($connection);
         mysqli_close($connection);
         return null;
@@ -75,7 +74,9 @@ function createAttendees($attendees, $connection) {
     foreach ($attendees as $attendee) {
         $name = trim($attendee);
         if ($name != '') {
-            $insert_query = "INSERT INTO dbAttendees (name) VALUES ('$name')";
+            $insert_query = "
+                INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
+            ";
             $insert_result = mysqli_query($connection, $insert_query);
             if (!$insert_result) {
                 mysqli_rollback($connection);
