@@ -66,20 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php include_once("universal.inc")?>
         <title>School Supplies Form</title>
-        <script>
-        // JavaScript to enable 'Other' input when 'Other' is selected
-        const choice3 = document.getElementById('choice_3');
-        const myInput = document.getElementById('other'); 
-
-        choice3.addEventListener('change', () => {
-            if (choice3.checked) {
-                myInput.disabled = false;
-            }
-        });
-
-        document.getElementById('choice_1').addEventListener('change', () => { myInput.disabled = true; });
-        document.getElementById('choice_2').addEventListener('change', () => { myInput.disabled = true; });
-    </script>
 </head>
 <body>
 
@@ -139,7 +125,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <input type="radio" id="choice_3" name="community" value="other" required>
             <label for="choice_3">Other</label>
-            <input type="text" name="other" id="other" disabled>
+            <input type="text" name="community" id="other" disabled>
+
+            <script>
+                // JavaScript to enable 'Other' input when 'Other' is selected
+                const choice3 = document.getElementById('choice_3');
+                const myInput = document.getElementById('other'); 
+
+                choice3.addEventListener('change', () => {
+                    if (choice3.checked) {
+                        myInput.disabled = false;
+                    }
+                });
+
+                document.getElementById('choice_1').addEventListener('change', () => { myInput.disabled = true; });
+                document.getElementById('choice_2').addEventListener('change', () => { myInput.disabled = true; });
+            </script>
 
             <!-- Backpack -->
             <br><br>
