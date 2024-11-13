@@ -61,7 +61,7 @@ $children = getChildren($userID);
                             echo '<td>' . $acct->getGender() . '</td>';
                             echo '<td>' . $acct->getMedicalNotes() . '</td>';
                             echo '<td>' . $acct->getNotes() . '</td>';
-                            echo '<tr>';
+                            echo '</tr>';
                         }
                         
                 echo '

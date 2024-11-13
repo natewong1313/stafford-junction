@@ -49,37 +49,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div style="margin-left: 40px; margin-right: 40px;">
         <?php
         if(isset($family)){
-                echo '<h3>Primary Information</h3>';
+            echo '<h3>Primary Information</h3>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                '//<th>Acct ID</th>
-                                '<th>Name</th>
+                                <th>Name</th>
                                 <th>Date of Birth</th>
-                                <th>Adress</th>
+                                <th>Address</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Phone Type</th>
-                                <th>Secondary Phone</th>
-                                <th>Secondary Phone Type</th>';
+                                <th>Phone 2</th>
+                                <th>Phone 2 Type</th>';
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($family as $acct){
+                        //foreach($family as $family){
                             echo '<tr>';
-                            //echo '<td><a href=familyAccount.php?id=' . $acct->getId() . '>' . $acct->getId() . '</a></td>';
-                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
-                            echo '<td>' . $acct->getBirthdate() . '</td>';
-                            echo '<td>' . $acct->getAddress() . ', ' . $acct->getCity() . ', ' $acct->getState() . ' ' . $acct->getZip() '</td>';
-                            echo '<td>' . $acct->getEmail() . '</td>';
-                            echo '<td>' . $acct->getPhone() . '</td>';
-                            echo '<td>' . $acct->getPhoneType() . '</td>';
-                            echo '<td>' . $acct->getSecondaryPhone()  . '</td>';
-                            echo '<td>' . $acct->getSecondaryPhoneType() . '</td>';
-                            echo '<tr>';
-                        }
+                            echo '<td>' . $family->getFirstName() . " " . $family->getLastName() . '</td>';
+                            echo '<td>' . $family->getBirthdate() . '</td>';
+                            echo '<td>' . $family->getAddress() . ', ' . $family->getCity() . ', ' . $family->getState() . ' ' . $family->getZip() . '</td>';
+                            echo '<td>' . $family->getEmail() . '</td>';
+                            echo '<td>' . $family->getPhone() . '</td>';
+                            echo '<td>' . $family->getPhoneType() . '</td>';
+                            echo '<td>' . $family->getSecondaryPhone()  . '</td>';
+                            echo '<td>' . $family->getSecondaryPhoneType() . '</td>';
+                            echo '</tr>';
+                        //}
                         
                 echo '
                         </tbody>
@@ -94,27 +92,27 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <tr>
                                 <th>Name</th>
                                 <th>Date of Birth</th>
-                                <th>Adress</th>
+                                <th>Address</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Phone Type</th>
-                                <th>Secondary Phone</th>
-                                <th>Secondary Phone Type</th>';
+                                <th>Phone 2</th>
+                                <th>Phone 2 Type</th>';
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($family as $acct){
+                        //foreach($family as $family){
                             echo '<tr>';
-                            echo '<td>' . $acct->getFirstName2() . " " . $acct->getLastName() . '</td>';
-                            echo '<td>' . $acct->getBirthdate2() . '</td>';
-                            echo '<td>' . $acct->getAddress2() . ', ' . $acct->getCity() . ', ' $acct->getState() . ' ' . $acct->getZip() '</td>';
-                            echo '<td>' . $acct->getEmail2() . '</td>';
-                            echo '<td>' . $acct->getPhone2() . '</td>';
-                            echo '<td>' . $acct->getPhoneType2() . '</td>';
-                            echo '<td>' . $acct->getSecondaryPhone2()  . '</td>';
-                            echo '<td>' . $acct->getSecondaryPhoneType2() . '</td>';
-                            echo '<tr>';
-                        }
+                            echo '<td>' . $family->getFirstName2() . " " . $family->getLastName() . '</td>';
+                            echo '<td>' . $family->getBirthdate2() . '</td>';
+                            echo '<td>' . $family->getAddress2() . ', ' . $family->getCity2() . ', ' . $family->getState2() . ' ' . $family->getZip2() . '</td>';
+                            echo '<td>' . $family->getEmail2() . '</td>';
+                            echo '<td>' . $family->getPhone2() . '</td>';
+                            echo '<td>' . $family->getPhoneType2() . '</td>';
+                            echo '<td>' . $family->getSecondaryPhone2()  . '</td>';
+                            echo '<td>' . $family->getSecondaryPhoneType2() . '</td>';
+                            echo '</tr>';
+                        //}
                         
                 echo '
                         </tbody>
@@ -134,13 +132,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($family as $acct){
+                        //foreach($family as $family){
                             echo '<tr>';
-                            echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
-                            echo '<td>' . $acct->getEContactPhone() . '</td>';
-                            echo '<td>' . $acct->getEContactRelation() . '</td>';
-                            echo '<tr>';
-                        }
+                            echo '<td>' . $family->getEContactFirstName() . " " . $family->getEContactLastName() . '</td>';
+                            echo '<td>' . $family->getEContactPhone() . '</td>';
+                            echo '<td>' . $family->getEContactRelation() . '</td>';
+                            echo '</tr>';
+                        //}
                         
                 echo '
                         </tbody>
@@ -161,72 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <?php endif ?>
         
     </body>
-    
-    
-    
-    
-    <body>
-        <?php require_once('header.php') ?>
-        <h1>View Family Account</h1>
 
-        <div style="margin-left: 20px; margin-right: 20px">
-        <?php 
-            if(isset($family)){
-                echo "<h2>Primary Information</h2>";
-                echo "<h3>Name:</h3>" . $family->getFirstName() . " " . $family->getLastName();
-                echo "<br>";
-                echo "<h3>Birthdate:</h3>" . $family->getBirthDate();
-                echo "<br>";
-                echo "<h3>Address</h3>" . $family->getAddress(); 
-                echo "<br>";
-                echo "<h3>City:</h3>" . $family->getCity();
-                echo "<br>";
-                echo "<h3>State:</h3>" . $family->getState();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip();
-                echo "<br>";
-                echo "<h3>Email:</h3>" . $family->getEmail();
-                echo "<br>";
-                echo "<h3>Phone</h3>" . $family->getPhone(); 
-                echo "<br>";
-                echo "<h3>Phone Type:</h3>" . $family->getPhoneType();
-                echo "<br>";
-                echo "<h3>Secondary Phone:</h3>" . $family->getSecondaryPhoneType();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip();
-                echo "<br>";
-                echo "<br>";
-                //Secondary
-                echo "<h2>Secondary Information</h2>";
-                echo "<h3>Name:</h3>" . $family->getFirstName2() . " " . $family->getLastName2();
-                echo "<br>";
-                echo "<h3>Birthdate:</h3>" . $family->getBirthDate2();
-                echo "<br>";
-                echo "<h3>Address</h3>" . $family->getAddress2(); 
-                echo "<br>";
-                echo "<h3>City:</h3>" . $family->getCity2();
-                echo "<br>";
-                echo "<h3>State:</h3>" . $family->getState2();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip2();
-                echo "<br>";
-                echo "<h3>Email:</h3>" . $family->getEmail2();
-                echo "<br>";
-                echo "<h3>Phone</h3>" . $family->getPhone2(); 
-                echo "<br>";
-                echo "<h3>Phone Type:</h3>" . $family->getSecondaryPhone2();
-                echo "<br>";
-                echo "<h3>Secondary Phone:</h3>" . $family->getSecondaryPhoneType2();
-                echo "<br>";
-                echo "<h3>Emergency Contact</h3>" . $family->getEContactFirstName() . " " . $family->getEContactLastName(); 
-                echo "<br>";
-                echo "<h3>Emergency Contact Number:</h3>" . $family->getEContactPhone();
-                echo "<br>";
-                echo "<h3>Emergency Contact Relation:</h3>" . $family->getEContactRelation();
-            }
-        
-        ?>
-        </div>
         <!-- Archive Family Buttons -->
         <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
         <form method="post">
