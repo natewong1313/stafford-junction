@@ -153,12 +153,6 @@
                         <img src="images/person-search.svg">
                         <span>Find Family Account</span>
                 </div>
-
-                <div class="dashboard-item" data-link="familyView.php">
-                        <img src="images/person-search.svg">
-                        <span>View Family Account</span>
-                </div>
-
                 <?php endif ?>
 
                 <!--Dashboard button that directs the user to the forms page-->

@@ -55,7 +55,7 @@ $children = getChildren($userID);
                         <tbody class="standout">';
                         foreach($children as $acct){
                             echo '<tr>';
-                            echo '<td><a href=childAccount.php?id=' . $acct->getId() . '>' . $acct->getId() . '</a></td>';
+                            echo '<td><a href=childAccount.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
                             echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
                             echo '<td>' . $acct->getBirthdate() . '</td>';
                             echo '<td>' . $acct->getGender() . '</td>';
