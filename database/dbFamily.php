@@ -319,3 +319,168 @@ function change_family_password($id, $newPass) {
         mysqli_close($con);
         return $result;
 }
+
+/**
+ * Function used to update the family profile
+ */
+function update_profile($form, $id) {
+    $conn = connect();
+
+    // Prepare the SQL statement
+    $sql = "
+        UPDATE `dbFamily` 
+        SET 
+            firstName = ?, lastName = ?, birthdate = ?, address = ?, city = ?, state = ?, zip = ?, email = ?, phone = ?, phoneType = ?, 
+            secondaryPhone = ?, secondaryPhoneType = ?, firstName2 = ?, lastName2 = ?, birthdate2 = ?, address2 = ?, city2 = ?, 
+            state2 = ?, zip2 = ?, email2 = ?, phone2 = ?, phoneType2 = ?, secondaryPhone2 = ?, secondaryPhoneType2 = ?, 
+            econtactFirstName = ?, econtactLastName = ?, econtactPhone = ?, econtactRelation = ?
+        WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+
+    // Ensure all form fields are set, or provide a default (e.g., null)
+    $firstName = $form['first-name'] ?? '';
+    $lastName = $form['last-name'] ?? '';
+    $birthdate = $form['birthdate'] ?? '';
+    $address = $form['address'] ?? '';
+    $city = $form['city'] ?? '';
+    $state = $form['state'] ?? '';
+    $zip = $form['zip'] ?? '';
+    $email = $form['email'] ?? '';
+    $phone = $form['phone'] ?? '';
+    $phoneType = $form['phone-type'] ?? '';
+    $secondaryPhone = $form['secondary-phone'] ?? '';
+    $secondaryPhoneType = $form['secondary-phone-type'] ?? '';
+    $firstName2 = $form['first-name2'] ?? '';
+    $lastName2 = $form['last-name2'] ?? '';
+    $birthdate2 = $form['birthdate2'] ?? '';
+    $address2 = $form['address2'] ?? '';
+    $city2 = $form['city2'] ?? '';
+    $state2 = $form['state2'] ?? '';
+    $zip2 = $form['zip2'] ?? '';
+    $email2 = $form['email2'] ?? '';
+    $phone2 = $form['phone2'] ?? '';
+    $phoneType2 = $form['phone-type2'] ?? '';
+    $secondaryPhone2 = $form['secondary-phone2'] ?? '';
+    $secondaryPhoneType2 = $form['secondary-phone-type2'] ?? '';
+    $econtactFirstName = $form['econtact-first-name'] ?? '';
+    $econtactLastName = $form['econtact-last-name'] ?? '';
+    $econtactPhone = $form['econtact-phone'] ?? '';
+    $econtactRelation = $form['econtact-relation'] ?? '';
+
+    // Bind parameters to the statement
+    $stmt->bind_param(
+        "ssssssssssssssssssssssssssssi",
+        $firstName, $lastName, $birthdate, $address, $city, $state, $zip, $email, $phone, $phoneType, 
+        $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2, $address2, $city2, 
+        $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, 
+        $econtactFirstName, $econtactLastName, $econtactPhone, $econtactRelation, $id
+    );
+
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    return $success;
+}
+
+/**
+ * Function that querys the dbHolidayMealBagForm database and retrieves the corresponding row for the family 
+ */
+function getHolidayMealBagData($family_id){
+    $conn = connect();
+    $query = "SELECT  dbHolidayMealBagForm.email, dbHolidayMealBagForm.household_size, dbHolidayMealBagForm.meal_bag, 
+    dbHolidayMealBagForm.name, dbHolidayMealBagForm.address, dbHolidayMealBagForm.phone, dbHolidayMealBagForm.photo_release FROM dbFamily INNER JOIN dbHolidayMealBagForm ON dbFamily.id = dbHolidayMealBagForm.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
+    $res = mysqli_query($conn, $query);
+    if(mysqli_num_rows($res) < 0 || $res == null){
+        mysqli_close($conn);
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($res);
+        return $row;
+    }
+}
+
+// Sets a family to archived using thier id
+function archive_family($id) {
+    $query = "UPDATE dbFamily SET isArchived='1' WHERE id='$id'";
+    $connection = connect();
+    $result = mysqli_query($connection, $query);
+    $result = boolval($result);
+    mysqli_close($connection);
+    return $result;
+}
+
+// Sets a family to unarchived using thier id
+function unarchive_family($id) {
+    $query = "UPDATE dbFamily SET isArchived='0' WHERE id='$id'";
+    $connection = connect();
+    $result = mysqli_query($connection, $query);
+    $result = boolval($result);
+    mysqli_close($connection);
+    return $result;
+}
+
+// Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
+// More criteria can be added later
+function find_families($last_name, $email, $city, $archived){
+    // Build query
+    $where = 'where ';
+    $first = true;
+    // Add last name
+    if ($last_name) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "lastName like '%$last_name%'";
+        $first = false;
+    }
+    // Add email
+    if ($email) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "email like '%$email%'";
+        $first = false;
+    }
+    // Add city
+    if ($city) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= "city like '%$city%'";
+        $first = false;
+    }
+    // Add isArchived
+    if ($archived) {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= " isArchived='1'";
+    } else {
+        if (!$first) {
+            $where .= ' and ';
+        }
+        $where .= " isArchived='0'";
+    }
+    $query = "select * from dbFamily $where order by lastName";
+    $connection = connect();
+    // Execute query
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        mysqli_close($connection);
+        return [];
+    }
+    // Get family data
+    $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $families = [];
+    foreach ($raw as $row) {
+        if ($row['id'] == 'vmsroot') {
+            continue;
+        }
+        $families []= make_a_family2($row);
+    }
+    mysqli_close($connection);
+    return $families;
+}
+

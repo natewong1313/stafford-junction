@@ -1095,9 +1095,73 @@ img.profile-pic {
   width: 6rem;
 }
 
+/*
+ * This is used to change the attributes of the availability days in the availability secion in the programInterestForm
+ */
+ .search-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/*
+ * This is used to change the attributes of the day label in the availability secion in the programInterestForm
+ */
+.search-label {
+  width: 6rem;
+}
+
 .button_style {
   width: 30%;
   margin-left: 35%;
   margin-bottom: 20px;
   margin-top: 10px;
+}
+
+/*
+Styling below made for Stafford Junction website
+*/
+
+/*
+ * Styling for smaller buttons to dynamically add or remove inputs 
+ * Created for forms for easier readabliity with many inputs
+ */
+.addRemove-btn {
+  width: 12rem;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  background-color: #7e0d07;
+}
+
+.addRemove-btn:hover {
+  background-color: #fcdd2b;
+}
+
+/* 
+ * Styling for input groups to add multiple buttons in one row
+ * Easier readibility when many inputs need to be added
+ */
+#multInputContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.input-group {
+  display: flex;
+  align-self: stretch;
+  display: inline-block;
+  /*float: left;*/
+  min-width: 18rem;
+  max-width: 18rem;
+}
+
+.input-form {
+  padding: 2rem;
+  flex: 1;
+}
+
+input[type="checkbox"]:checked {
+  accent-color: #7e0d07;
 }
