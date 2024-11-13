@@ -2,8 +2,9 @@
 /**
  * Function that takes actual activity form item and adds it into database
  */
-function createActualActivityForm($form, $connection) {
-	mysqli_begin_transaction($connection);
+function createActualActivityForm($form) {
+	$connection = connect();
+    mysqli_begin_transaction($connection);
     
     $activity = $form["activity"];
     $date = $form["date"];
@@ -19,7 +20,9 @@ function createActualActivityForm($form, $connection) {
 	$meal_info = $form["meal_info"];
     $act_costs = $form["act_costs"];
     $act_benefits = $form["act_benefits"];
-    $attendees = $form["attendees[]"];
+    $attendees = $form["attendees"];
+
+    $attendees = isset($form["attendees"]) ? $form["attendees"] : [];
     
     $query = "
         INSERT INTO dbActualActivity (activity, date, program, start_time, end_time, start_mile, end_mile, address, 

@@ -19,15 +19,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
     require_once('database/dbActualActivityForm.php');
     $args = sanitize($_POST, null);
+    var_dump($_POST);
     $required = array("activity", "date", "program", "start_time", "end_time", "start_mile", "end_mile", "address",
-        "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits", "attendees[]");
+        "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits", "attendees");
+
     if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Error: Not all fields complete";
+        echo "Error: Not all required fields were completed.";
         die();
     } else {
-        $activityID = createActualActivityForm($args, $connection);
+        $activityID = createActualActivityForm($args);
         if ($activityID === null) {
-            echo "Error: dbActualActivityForm insertion error.";
+            echo "Error: There was an issue inserting the data into the database.";
         }
     }
 }
@@ -53,7 +55,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <br><br>
 
             <!-- 1. Activity -->
-            <label for="activity">1. Activity*</label><br><br>
+            <label for="activity">1. Activity name*</label><br><br>
             <input type="text" name="activity" id="activity" placeholder="Activity" required><br><br>
             
             <!-- 2. Date -->
@@ -61,45 +63,45 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <input type="date" name="date" id="date" placeholder="Date" required><br><br>
 
             <!-- 3. Program -->
-            <label for="program">3. Program*</label><br><br>
+            <label for="program">3. Program name*</label><br><br>
             <input type="text" name="program" id="program" placeholder="Program" required><br><br>
 
             <!--4. Start Time -->
-            <label for="start_time">4. Start Time*</label><br><br>
-            <input type="time" name="start_time" id="start_time" placeholder="Start Time" required><br><br>
+            <label for="start_time">4. Start time*</label><br><br>
+            <input type="time" name="start_time" id="start_time" placeholder="Start time" required><br><br>
 
             <!--End Time-->
-            <label for="end_time">5. End Time*</label><br><br>
-            <input type="time" name="end_time" id="end_time" placeholder="End Time" required><br><br>
+            <label for="end_time">5. End time*</label><br><br>
+            <input type="time" name="end_time" id="end_time" placeholder="End time" required><br><br>
             
             <!--Vehicle Start Mileage-->
-            <label for="start_mile">6. Vehicle Start Mileage*</label><br><br>
-            <input type="number" name="start_mile" id="start_mile" placeholder="Vehicle Start Mileage" required><br><br>
+            <label for="start_mile">6. Vehicle mileage at start of activity*</label><br><br>
+            <input type="number" name="start_mile" id="start_mile" placeholder="Vehicle start mileage" required><br><br>
 
             <!--Vehicle End Mileage-->
-            <label for="end_mile">7. Vehicle End Mileage*</label><br><br>
-            <input type="number" name="end_mile" id="end_mile" placeholder="Vehicle End Mileage" required><br><br>
+            <label for="end_mile">7. Vehicle mileage at end*</label><br><br>
+            <input type="number" name="end_mile" id="end_mile" placeholder="Vehicle end mileage" required><br><br>
 
             <!--Site Address-->
-            <label for="address">8. Site Address*</label><br><br>
-            <input type="text" name="address" id="address" placeholder="Site Address" required><br><br>
+            <label for="address">8. Site address*</label><br><br>
+            <input type="text" name="address" id="address" placeholder="Site address" required><br><br>
 
             <!--Actual Attendance Number-->
-            <label for="attend_num">7. Actual Attendance Number*</label><br><br>
-            <input type="number" name="attend_num" id="attend_num" placeholder="Actual Attendance Number" required><br><br>
+            <label for="attend_num">7. Actual attendance number*</label><br><br>
+            <input type="number" name="attend_num" id="attend_num" placeholder="Actual attendance number" required><br><br>
 
             <!--Actual Volunteer/Staff Number-->
-            <label for="volstaff_num">8. Actual Volunteer/Staff Number*</label><br><br>
-            <input type="number" name="volstaff_num" id="volstaff_num" placeholder="Actual Volunteer/Staff Number" required><br><br><br>
+            <label for="volstaff_num">8. Actual volunteer/staff number*</label><br><br>
+            <input type="number" name="volstaff_num" id="volstaff_num" placeholder="Actual volunteer/staff number" required><br><br><br>
 
             <hr>
             <h2>Materials/Costs</h2>
             <br><br>
 
             <!--Materials Used--->
-            <label for="materials_used">9. Materials Used*</label><br><br>
-            <input type="text" name="materials_used" id="materials_used" placeholder="Materials Used" required><br><br><br>
-
+            <label for="materials_used">9. Materials used*</label><br><br>
+            <textarea rows="12" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
+            
             <!--Meal Information--->
             <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
             <input type="radio" id="choice_1" name="meal_info" value="meal_provided" required>
@@ -111,9 +113,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <input type="radio" id="choice_3" name="meal_info" value="no_meal" required>
             <label for="choice_3">No meal</label><br><br><br>
 
-            <!--Activity Costs-->
+            <!--Activity Costs
             <label for="act_costs">11. Activity Costs (Please list and seperately provide PA's)*</label><br><br>
-            <input type="text" name="act_costs" id="act_costs" placeholder="Actual Volunteer/Staff Number" required><br><br><br>
+            <input type="text" name="act_costs" id="act_costs" placeholder="Activity Costs" rows="required><br><br><br>
+-->
+            <!--Activity Costs-->
+            <label for="act_costs">11. Activity costs (Please list and seperately provide PA's)*</label><br><br>
+            <textarea rows="12" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
         
             <hr>
             <h2>Educational Benefits</h2>
@@ -121,7 +127,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <!--Benefits-->
             <label for="act_benefits">12. What actvities took place; what benefits do participants receive from these Activities?*</label><br><br>
-            <input type="text" name="act_benefits" id="act_benefits" placeholder="Actual Volunteer/Staff Number" rows="5" required><br><br><br>
+            <textarea rows="12" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea><br><br><br>
 
             <hr>
             <h2>Attendance</h2>
@@ -139,7 +145,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     var newInputGroup = document.createElement('div');
                     newInputGroup.className = 'input-group';
 
-                    //creates new input element to add an attendee into attendance[] array
+                    //creates new input element to add an attendee into attendees[] array
                     var newInput = document.createElement('input');
                     newInput.className = 'input-form';
                     newInput.type = 'text';
