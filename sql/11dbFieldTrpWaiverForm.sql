@@ -15,28 +15,26 @@ CREATE TABLE dbFieldTrpWaiverForm (
     medical_issues TEXT,
     foods_to_avoid TEXT,
     parent_email VARCHAR(256),
-    
+
     contact_1 INT NOT NULL,
     emgcy_contact1_first_name VARCHAR(256),
     emgcy_contact1_last_name VARCHAR(256),
     emgcy_contact1_rship VARCHAR(100),
     emgcy_contact1_phone VARCHAR(15),
-    
+
     contact_2 INT NOT NULL,
     emgcy_contact2_first_name VARCHAR(256),
     emgcy_contact2_last_name VARCHAR(256),
     emgcy_contact2_rship VARCHAR(100),
     emgcy_contact2_phone VARCHAR(15),
-    
+
     medical_insurance_company VARCHAR(256),
     policy_number VARCHAR(50),
     photo_waiver_signature VARCHAR(256),
     photo_waiver_date DATE,
-    
-    family_id INT,
-    
-    CONSTRAINT FK_family_id
-        FOREIGN KEY (family_id) REFERENCES dbFamily(id)
+
+    CONSTRAINT FK_child_id
+        FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
