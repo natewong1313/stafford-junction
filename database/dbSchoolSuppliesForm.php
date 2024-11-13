@@ -2,10 +2,12 @@
 
 function createBackToSchoolForm($form) {
     $connection = connect();
+    $child_data = explode("_", $form['name']);
     
     // Map form data directly to variables
+    $child_id = $child_data[0];
+    $child_name = $child_data[1];
     $email = $form["email"];
-    $child_name = $form["name"];
     $grade = $form["grade"];
     $school = $form["school"];
     $bag_pickup_method = $form["community"];
@@ -13,8 +15,8 @@ function createBackToSchoolForm($form) {
 
     // Prepare and execute the insert query
     $query = "
-        INSERT INTO dbSchoolSuppliesForm (email, child_name, grade, school, bag_pickup_method, need_backpack)
-        VALUES ('$email', '$child_name', '$grade', '$school', '$bag_pickup_method', '$need_backpack');
+        INSERT INTO dbSchoolSuppliesForm (child_id, email, child_name, grade, school, bag_pickup_method, need_backpack)
+        VALUES ('$child_id', '$email', '$child_name', '$grade', '$school', '$bag_pickup_method', '$need_backpack');
     ";
 
     $result = mysqli_query($connection, $query);

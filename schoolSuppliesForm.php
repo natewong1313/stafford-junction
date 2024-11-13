@@ -20,6 +20,7 @@ if (isset($_SESSION['_id'])) {
 // Include necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
+require_once('database/dbSchoolSuppliesForm.php');
 
 // Retrieve family information
 if ($loggedIn) {
@@ -102,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!-- Child Name -->
             <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
-            <select name="child_name" id="child_name" required>
+            <select name="name" id="name" required>
                 <?php
                     require_once('domain/Children.php'); 
                     foreach ($children as $c){
@@ -158,4 +159,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 </body>
 </html>
-
