@@ -111,35 +111,38 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p><?php echo $family->getEContactRelation() ?></p>
             </fieldset>
             <fieldset>
-            
+            <legend>Children Summary</legend>
+
             <?php 
-            if (isset($children) && !empty($children)) {
-                echo '<table style="width: 100%; border-collapse: collapse;">';
-                echo '<thead>';
-                echo '<tr>';
-                echo '<th>Account ID</th>';
-                echo '<th>Full Name</th>';
-                echo '<th>Date of Birth</th>';
-                echo '<th>Gender</th>';
-                echo '<th>Medical Notes</th>';
-                echo '<th>Other Notes</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                
-                foreach ($children as $acct) {
-                    echo '<tr>';
-                    echo '<td><a href="childAccount.php?id=' . $acct->getID() . '">' . $acct->getID() . '</a></td>';
-                    echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
-                    echo '<td>' . $acct->getBirthdate() . '</td>';
-                    echo '<td>' . $acct->getGender() . '</td>';
-                    echo '<td>' . $acct->getMedicalNotes() . '</td>';
-                    echo '<td>' . $acct->getNotes() . '</td>';
-                    echo '</tr>';
-                }
+            if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
+                echo '
+                <div class="table-wrapper">
+                    <table class="general">';
+                    echo '<thead>';
+                        echo '<tr>';
+                            echo '<th>Account ID</th>';
+                            echo '<th>Full Name</th>';
+                            echo '<th>Date of Birth</th>';
+                            echo '<th>Gender</th>';
+                            echo '<th>Medical Notes</th>';
+                            echo '<th>Other Notes</th>';
+                        echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody class="standout">';
+                    foreach ($children as $acct) {
+                        echo '<tr>';
+                        echo '<td><a href=' . $acct->getID() . '</td>';
+                        echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
+                        echo '<td>' . $acct->getBirthdate() . '</td>';
+                        echo '<td>' . $acct->getGender() . '</td>';
+                        echo '<td>' . $acct->getMedicalNotes() . '</td>';
+                        echo '<td>' . $acct->getNotes() . '</td>';
+                        echo '</tr>';
+                    }
 
                 echo '</tbody>';
                 echo '</table>';
+                echo '</div>';
             } 
             ?>
         </div>
@@ -155,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     <button type="submit" name="unarchive" class="button_style">Unarchive Family</button>
                 </form>
             <?php endif?>
+            
             <!-- Cancel Buttons -->
             <?php if($_SESSION['access_level'] == 1): ?>
                 <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
