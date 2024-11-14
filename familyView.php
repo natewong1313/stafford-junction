@@ -17,6 +17,10 @@ if (isset($_SESSION['_id'])) {
 require_once("database/dbFamily.php");
 require_once("domain/Family.php");
 require_once("include/input-validation.php");
+require_once("domain/Children.php");
+
+//grabs all the children associated with account and puts it into an array
+$children = getChildren($userID);
 
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
 
@@ -50,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             require_once('header.php'); 
             require_once('include/output.php');
         ?>
-        <h1>View Family Account</h1>
+        <h1>Family Account Information</h1>
 
         <div id="view-family" style="margin-left: 20px; margin-right: 20px">
         <main class="general">
@@ -106,6 +110,38 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <label>Relation</label>
                 <p><?php echo $family->getEContactRelation() ?></p>
             </fieldset>
+            <fieldset>
+            
+            <?php 
+            if (isset($children) && !empty($children)) {
+                echo '<table style="width: 100%; border-collapse: collapse;">';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>Account ID</th>';
+                echo '<th>Full Name</th>';
+                echo '<th>Date of Birth</th>';
+                echo '<th>Gender</th>';
+                echo '<th>Medical Notes</th>';
+                echo '<th>Other Notes</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                
+                foreach ($children as $acct) {
+                    echo '<tr>';
+                    echo '<td><a href="childAccount.php?id=' . $acct->getID() . '">' . $acct->getID() . '</a></td>';
+                    echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
+                    echo '<td>' . $acct->getBirthdate() . '</td>';
+                    echo '<td>' . $acct->getGender() . '</td>';
+                    echo '<td>' . $acct->getMedicalNotes() . '</td>';
+                    echo '<td>' . $acct->getNotes() . '</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tbody>';
+                echo '</table>';
+            } 
+            ?>
         </div>
 
             <!-- Archive Family Buttons -->

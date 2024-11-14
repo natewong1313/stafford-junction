@@ -22,65 +22,61 @@ $children = getChildren($userID);
 ?>
 
 <!DOCTYPE html>
+
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php require_once('universal.inc') ?>
-        <title>Stafford Junction | Children Accounts</title>
+        <title>Stafford Junction | View Children Accounts</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
-        <?php require_once('header.php') ?>
-        <h1>Children Accounts</h1>
-        
-        
-        
-        <div style="margin-left: 40px; margin-right: 40px;">
-        <?php
-        if(isset($children)){
-                echo '<h3>Children Summary</h3>';
-                echo '
-                <div class="table-wrapper">
-                    <table class="general">
-                        <thead>
-                            <tr>
-                                <th>Account ID</th>
-                                <th>Name</th>
-                                <th>Date of Birth</th>
-                                <th>Gender</th>
-                                <th>Medical Notes</th>
-                                <th>Other Notes</th>';
-                            echo '</tr>
-                        </thead>
-                        <tbody class="standout">';
-                        foreach($children as $acct){
-                            echo '<tr>';
-                            echo '<td><a href=childAccount.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
-                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
-                            echo '<td>' . $acct->getBirthdate() . '</td>';
-                            echo '<td>' . $acct->getGender() . '</td>';
-                            echo '<td>' . $acct->getMedicalNotes() . '</td>';
-                            echo '<td>' . $acct->getNotes() . '</td>';
-                            echo '<tr>';
-                        }
-                        
-                echo '
-                        </tbody>
-                    </table>
-                </div>';
-            }
-            ?>
-        
+        <?php 
+            require_once('header.php'); 
+            require_once('include/output.php');
+        ?>
+        <h1>View Children Accounts</h1>
+
+        <div id="view-family" style="margin-left: 20px; margin-right: 20px">
+        <main class="general">
+        <?php if(isset($children) && !empty($children)) {
+            $num = 1;
+            foreach($children as $acct){
+                echo '<fieldset>';
+                echo '<legend>' . $acct->getFirstName() . '</legend>';
+                echo '<label>Account ID</label>';
+                echo '<p><a href=childAccount.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></p>';
+                echo '<label>Full Name</label>';
+                echo '<p>' . $acct->getFirstName() . " " . $acct->getLastName() . '</p>';
+                echo '<label>Date of Birth</label>';
+                echo '<p>' . $acct->getBirthdate() . '</p>';
+                echo '<label>Gender</label>';
+                echo '<p>' . $acct->getGender() . '</p>';
+                echo '<label>Medical Notes</label>';
+                echo '<p>' . $acct->getMedicalNotes() . '</p>';
+                echo '<label>Other Notes</label>';
+                echo '<p>' . $acct->getNotes() . '</p>';
+                echo '<label>Enrolled Programs</label>';
+                echo '<p>' . '</p>';
+                echo '</fieldset>';
+                $num++;
+            } 
+        } else {
+            echo '<p>No children accounts found.</p>';
+        }
+
+        ?>
         </div>
-        
+
 
         <?php if($_SESSION['access_level'] == 1): ?>
             <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
         <?php endif ?>
         
+
     </body>
 </html>
 
