@@ -11,9 +11,7 @@ CREATE TABLE dbFieldTrpWaiverForm (
     child_address VARCHAR(256),
     child_city VARCHAR(100),
     child_state VARCHAR(100),
-    child_zip VARCHAR(10),
-    medical_issues TEXT,
-    foods_to_avoid TEXT,
+    child_zip VARCHAR(10), 
     parent_email VARCHAR(256),
 
     contact_1 INT NOT NULL,
