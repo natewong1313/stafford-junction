@@ -112,15 +112,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Acct ID</th>
+                                <th>Account ID</th>
                                 <th>Name</th>
-                                <th>Birthdate</th>
+                                <th>Date of Birth</th>
                                 <th>Address</th>
-                                <th>city</th>
-                                <th>state</th>
-                                <th>zip</th>
-                                <th>email</th>
-                                <th>phone</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zip</th>
+                                <th>Email</th>
+                                <th>Phone</th>
                                 <th>Emergency Contact</th>
                                 <th>Emergency Phone</th>';
                                 //a href=familyView.php?id=' . $id . 
@@ -155,9 +155,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
      
         <a class="button cancel button_style"  href="index.php"">Return to Dashboard</a>
      
-        
 
-        
-        
     </body>
 </html>

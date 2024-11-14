@@ -19,7 +19,6 @@ require_once("database/dbFamily.php");
 //grabs all the children associated with account and puts it into an array
 $children = getChildren($userID);
 
-
 ?>
 
 <!DOCTYPE html>
@@ -31,10 +30,14 @@ $children = getChildren($userID);
         <title>Stafford Junction | Children Accounts</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
         <?php require_once('header.php') ?>
         <h1>Children Accounts</h1>
+        
+        
+        
         <div style="margin-left: 40px; margin-right: 40px;">
         <?php
         if(isset($children)){
@@ -44,12 +47,12 @@ $children = getChildren($userID);
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Acct ID</th>
+                                <th>Account ID</th>
                                 <th>Name</th>
                                 <th>Date of Birth</th>
-                                <th>gender</th>
-                                <th>medical notes</th>
-                                <th>notes</th>';
+                                <th>Gender</th>
+                                <th>Medical Notes</th>
+                                <th>Other Notes</th>';
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
@@ -75,11 +78,8 @@ $children = getChildren($userID);
         
 
         <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel, button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
+            <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
         <?php endif ?>
-        
-
-        
         
     </body>
 </html>

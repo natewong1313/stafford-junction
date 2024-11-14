@@ -1,4 +1,3 @@
-<!--This file shows the complete account information of a family account -->
 <?php
 
 session_cache_expire(30);
@@ -32,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     header('Refresh:0');
     die();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -43,87 +43,90 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <title>Stafford Junction | View Account</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
-        <?php require_once('header.php') ?>
+        <?php 
+            require_once('header.php'); 
+            require_once('include/output.php');
+        ?>
         <h1>View Family Account</h1>
 
-        <div style="margin-left: 20px; margin-right: 20px">
-        <?php 
-            if(isset($family)){
-                echo "<h2>Primary Information</h2>";
-                echo "<h3>Name:</h3>" . $family->getFirstName() . " " . $family->getLastName();
-                echo "<br>";
-                echo "<h3>Birthdate:</h3>" . $family->getBirthDate();
-                echo "<br>";
-                echo "<h3>Address</h3>" . $family->getAddress(); 
-                echo "<br>";
-                echo "<h3>City:</h3>" . $family->getCity();
-                echo "<br>";
-                echo "<h3>State:</h3>" . $family->getState();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip();
-                echo "<br>";
-                echo "<h3>Email:</h3>" . $family->getEmail();
-                echo "<br>";
-                echo "<h3>Phone</h3>" . $family->getPhone(); 
-                echo "<br>";
-                echo "<h3>Phone Type:</h3>" . $family->getPhoneType();
-                echo "<br>";
-                echo "<h3>Secondary Phone:</h3>" . $family->getSecondaryPhoneType();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip();
-                echo "<br>";
-                echo "<br>";
-                //Secondary
-                echo "<h2>Secondary Information</h2>";
-                echo "<h3>Name:</h3>" . $family->getFirstName2() . " " . $family->getLastName2();
-                echo "<br>";
-                echo "<h3>Birthdate:</h3>" . $family->getBirthDate2();
-                echo "<br>";
-                echo "<h3>Address</h3>" . $family->getAddress2(); 
-                echo "<br>";
-                echo "<h3>City:</h3>" . $family->getCity2();
-                echo "<br>";
-                echo "<h3>State:</h3>" . $family->getState2();
-                echo "<br>";
-                echo "<h3>Zip</h3>" . $family->getZip2();
-                echo "<br>";
-                echo "<h3>Email:</h3>" . $family->getEmail2();
-                echo "<br>";
-                echo "<h3>Phone</h3>" . $family->getPhone2(); 
-                echo "<br>";
-                echo "<h3>Phone Type:</h3>" . $family->getSecondaryPhone2();
-                echo "<br>";
-                echo "<h3>Secondary Phone:</h3>" . $family->getSecondaryPhoneType2();
-                echo "<br>";
-                echo "<h3>Emergency Contact</h3>" . $family->getEContactFirstName() . " " . $family->getEContactLastName(); 
-                echo "<br>";
-                echo "<h3>Emergency Contact Number:</h3>" . $family->getEContactPhone();
-                echo "<br>";
-                echo "<h3>Emergency Contact Relation:</h3>" . $family->getEContactRelation();
-            }
-        
-        ?>
+        <div id="view-family" style="margin-left: 20px; margin-right: 20px">
+        <main class="general">
+            <fieldset>
+                    <legend>General Information</legend>
+                    <label>Account ID</label>
+                    <p><?php echo $family->getId() ?></p>
+            </fieldset>
+            <fieldset>
+            <legend>Primary Information</legend>
+                <label>Name</label>
+                <p><?php echo $family->getFirstName() . " " . $family->getLastName() ?></p>
+                <label>Date of Birth</label>
+                <p><?php echo $family->getBirthdate() ?></p>
+                <label>Address</label>
+                <p><?php echo $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . " " . $family->getZip() ?></p>
+                <label>Email</label>
+                <p><?php echo $family->getEmail() ?></p>
+                <label>Phone</label>
+                <p><?php echo $family->getPhone() ?></p>
+                <label>Phone type</label>
+                <p><?php echo $family->getPhoneType() ?></p>
+                <label>Secondary phone</label>
+                <p><?php echo $family->getSecondaryPhone() ?></p>
+                <label>Secondary phone type</label>
+                <p><?php echo $family->getSecondaryPhoneType() ?></p>
+            </fieldset>
+            <fieldset>
+            <legend>Secondary Information</legend>
+                <label>Name</label>
+                <p><?php echo $family->getFirstName2() . " " . $family->getLastName2() ?></p>
+                <label>Birthdate</label>
+                <p><?php echo $family->getBirthDate2() ?></p>
+                <label>Address</label>
+                <p><?php echo $family->getAddress2() . ", " . $family->getCity2() . ", " . $family->getState2() . " " . $family->getZip2() ?></p>
+                <label>Email</label>
+                <p><?php echo $family->getEmail2() ?></p>
+                <label>Phone</label>
+                <p><?php echo $family->getPhone2() ?></p>
+                <label>Phone type</label>
+                <p><?php echo $family->getPhoneType2() ?></p>
+                <label>Secondary phone</label>
+                <p><?php echo $family->getSecondaryPhone2() ?></p>
+                <label>Secondary phone type</label>
+                <p><?php echo $family->getSecondaryPhoneType2() ?></p>
+            </fieldset>
+            <fieldset>
+            <legend>Emergency Contact</legend>
+                <label>Name</label>
+                <p><?php echo $family->getEContactFirstName() . " " . $family->getEContactLastName() ?></p>
+                <label>Phone</label>
+                <p><?php echo $family->getEContactPhone() ?></p>
+                <label>Relation</label>
+                <p><?php echo $family->getEContactRelation() ?></p>
+            </fieldset>
         </div>
-        <!-- Archive Family Buttons -->
-        <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
-        <form method="post">
-            <button type="submit" name="archive" style="margin-top: 3rem;">Archive Family</button>
-        </form>
-        <?php endif?>
-        <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
-        <form method="post">
-            <button type="submit" name="unarchive" style="margin-top: 3rem;">Unarchive Family</button>
-        </form>
-        <?php endif?>
-        <!-- Cancel Buttons -->
-        <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: .5rem;">Return to Dashboard</a>
-        <?php endif ?>
-        <?php if($_SESSION['access_level'] > 1): ?>
-        <a class="button cancel" href="findFamily.php" style="margin-top: .5rem;">Return to Search</a>
-        <?php endif?>   
+
+            <!-- Archive Family Buttons -->
+            <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
+                <form method="post">
+                    <button type="submit" name="archive" class="button_style">Archive Family</button>
+                </form>
+            <?php endif?>
+            <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
+                <form method="post">
+                    <button type="submit" name="unarchive" class="button_style">Unarchive Family</button>
+                </form>
+            <?php endif?>
+            <!-- Cancel Buttons -->
+            <?php if($_SESSION['access_level'] == 1): ?>
+                <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
+            <?php endif ?>
+            <?php if($_SESSION['access_level'] > 1): ?>
+                <a class="button cancel button_style" href="findFamily.php" style="margin-top: 1rem;">Return to Search</a>
+            <?php endif?>   
+
     </body>
 </html>
 
