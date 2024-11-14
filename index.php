@@ -19,7 +19,7 @@
     //if the $_SESSION _id variable is set, check what kind of account
     if (isset($_SESSION['_id'])) {
         //if the account type is staff, call retrieve_person to grab from dbPersons
-        if($_SESSION['account_type'] == 'Staff'){
+        if($_SESSION['account_type'] == 'admin'){
             $person = retrieve_person($_SESSION['_id']);
             $notRoot = $person->get_id() != 'vmsroot'; //gets set to true if the user didn't log in as vmsroot
         }else if($_SESSION['account_type'] == 'Family'){ //if the account is a family account, simply redirect to the familyAccount dashboard page
