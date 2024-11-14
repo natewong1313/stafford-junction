@@ -20,7 +20,7 @@
             header("Location: familyAccountDashboard.php");
             die();
         }else {
-            //otherwise, redirect to staff dashboard
+            //otherwise, redirect to admin dashboard
             header('Location: index.php');
             die();
         }
@@ -43,7 +43,7 @@
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
-            //If the user is staff; original login code contained in this block
+            //If the user is admin; original login code contained in this block
             if($args['account'] == 'admin'){
                 $user = retrieve_person($username);
                 if (!$user) {
@@ -56,16 +56,6 @@
                     } else {
                         $_SESSION['logged_in'] = true;
                     }
-                    /** 
-                    $types = $user->get_type();
-                    if (in_array('superadmin', $types)) {
-                        $_SESSION['access_level'] = 3;
-                    } else if (in_array('admin', $types)) {
-                        $_SESSION['access_level'] = 2;
-                    } else {
-                        $_SESSION['access_level'] = 1;
-                    }
-                    */
                     $_SESSION['f_name'] = $user->get_first_name();
                     $_SESSION['l_name'] = $user->get_last_name();
                     $_SESSION['venue'] = $user->get_venue();
@@ -147,7 +137,7 @@
                 <select name="account" id="account">
                     <option value="admin">Admin</option>
                     <option value="family">Family</option>
-                    <option value="staff">Staff</option>
+                    <!--<option value="staff">Staff</option>--> 
                 </select>
 
                 <label for="username">Username</label>
