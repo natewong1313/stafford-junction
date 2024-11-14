@@ -10,8 +10,6 @@ CREATE TABLE dbChildCareWaiverForm (
     child_city VARCHAR(100),
     child_state VARCHAR(100),
     child_zip VARCHAR(10),
-    medical_issues TEXT,
-    foods_to_avoid TEXT,
     
     parent_1 INT NOT NULL,
     parent1_first_name VARCHAR(256),
@@ -42,8 +40,8 @@ CREATE TABLE dbChildCareWaiverForm (
     
     family_id INT,
     
-    CONSTRAINT FK_family_id
-        FOREIGN KEY (family_id) REFERENCES dbFamily(id)
+    CONSTRAINT FK_child_id
+        FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
