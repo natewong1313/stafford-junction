@@ -38,7 +38,7 @@ CREATE TABLE dbChildCareWaiverForm (
     parent_guardian_signature VARCHAR(256),
     signature_date DATE,
     
-    family_id INT,
+    child_id INT,
     
     CONSTRAINT FK_child_id
         FOREIGN KEY (child_id) REFERENCES dbChildren(id)
