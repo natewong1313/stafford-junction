@@ -107,6 +107,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <?php
             if(isset($family)){
                 echo '<h3>Account Summary</h3>';
+                echo '<p>Click on an Account ID to view or edit that family\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
@@ -120,9 +121,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                                 <th>State</th>
                                 <th>Zip</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Emergency Contact</th>
-                                <th>Emergency Phone</th>';
+                                <th>Phone</th>';
                                 //a href=familyView.php?id=' . $id . 
                             echo '</tr>
                         </thead>
@@ -138,8 +137,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                             echo '<td>' . $acct->getZip() . '</td>';
                             echo '<td>' . $acct->getEmail() . '</td>';
                             echo '<td>' . $acct->getPhone() . '</td>';
-                            echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
-                            echo '<td>' . $acct->getEContactPhone() . '</td>';
                             echo '<tr>';
                             
                         }

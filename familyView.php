@@ -19,10 +19,10 @@ require_once("domain/Family.php");
 require_once("include/input-validation.php");
 require_once("domain/Children.php");
 
-//grabs all the children associated with account and puts it into an array
-$children = getChildren($userID);
-
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //either retrieve the family by the unique account identifier set in $userID, or inside the GET array if being accessed from staff account
+
+//grabs all the children associated with family account and puts it into an array
+$children = getChildren($family->getId());
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     // Archive or unarchive family
@@ -110,11 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <label>Relation</label>
                 <p><?php echo $family->getEContactRelation() ?></p>
             </fieldset>
-            <fieldset>
-            <legend>Children Summary</legend>
-
-            <?php 
-            if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
+        
+            <?php if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
+                echo '<fieldset>';
+                echo '<legend>Children Summary</legend>';
+                echo '<p>Click on an Account ID to view or edit that child\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">';
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     echo '<tbody class="standout">';
                     foreach ($children as $acct) {
                         echo '<tr>';
-                        echo '<td><a href=' . $acct->getID() . '</td>';
+                        echo '<td><a href=childAccount.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
                         echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
                         echo '<td>' . $acct->getBirthdate() . '</td>';
                         echo '<td>' . $acct->getGender() . '</td>';
@@ -143,6 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 echo '</tbody>';
                 echo '</table>';
                 echo '</div>';
+                echo '</fieldset>';
             } 
             ?>
         </div>
