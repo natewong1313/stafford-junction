@@ -179,7 +179,7 @@
                 echo('<li><a class="nav-link active" aria-current="page" href="' . $path . 'logout.php">Log out</a></li>');
                 echo '</ul></nav>';
             //if the account type is a family account, show the following navbar
-            }else if($_SESSION['account_type'] == 'Family'){
+            }else if($_SESSION['account_type'] == 'family'){
                 echo('<nav>');
                 echo('<span id="nav-top"><span class="logo"><a class="navbar-brand" href="' . $path . 'familyAccountDashboard.php"><img src="images/staffordjunction.png"></a>');
                 echo('<a class="navbar-brand" id="vms-logo"></a></span><img id="menu-toggle" src="images/menu.png"></span>');
