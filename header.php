@@ -125,7 +125,7 @@
         	echo(' | <a href="' . $path . 'logout.php">Logout</a><br>');
         }
         else {
-            //if the access level is staff or superadmin, show the following navbar
+            //if the access level is superadmin, show the following navbar
             if($_SESSION['account_type'] == 'admin'){
                 echo('<nav>');
                 echo('<span id="nav-top"><span class="logo"><a class="navbar-brand" href="' . $path . 'index.php"><img src="images/staffordjunction.png"></a>');

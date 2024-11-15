@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     //cycle through each child, creating a new child object and adding that child to the database
     foreach($children as $child){
         $newChild = make_a_child_from_sign_up($child);
-        $success = add_child($newChild, $userID); //success is a boolean; it will remain true so long as children as being added correctly to the database
+        $success = add_child($newChild, $userID); //success is a boolean; it will remain true so long as children are being added correctly to the database
     }
 }
 
