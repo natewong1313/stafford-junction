@@ -160,6 +160,13 @@
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
+
+                <!--Dashboard button that directs the user to the forms page-->
+                <div class="dashboard-item" data-link="createStaffAccount.php">
+                    <img src="images/form-dropdown-svgrepo-com.svg">
+                    <span>Create Staff Account</span>
+                </div>
+
                 <div class="dashboard-item" data-link="changePassword.php">
                     <img src="images/change-password.svg">
                     <span>Change Password</span>
