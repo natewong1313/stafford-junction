@@ -27,7 +27,7 @@ if($_SESSION['logged_in'] == false){
         }
         ?>
         <main class='dashboard'>
-            <?php echo "<p>Hello " . $_SESSION['f_name'] . "!</p>";?>
+        <?php echo "<p>Hello " . ucfirst($_SESSION['f_name']) . "!</p>"; ?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
             <div id="dashboard">
                 <!--dashboard item to view the account information of user -->
