@@ -100,6 +100,8 @@
         $permission_array['animal.php'] = 2;
         $permission_array['editanimal.php'] = 2;
         $permission_array['findfamily.php'] = 2;
+        //pages only admin can view
+        $permission_array['createstaffaccount.php'] = 3;
 
 
         //Check if they're at a valid page for their access level.
