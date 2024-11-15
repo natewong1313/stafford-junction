@@ -117,6 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <button type="submit" name="unarchive" style="margin-top: 3rem;">Unarchive Family</button>
         </form>
         <?php endif?>
+        <!-- Edit Family Button -->
+        <?php if($_SESSION['access_level'] > 1): ?>
+        <a class="button edit" href="editFamilyProfile.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Edit Family</a>
+        <?php endif?>
         <!-- Cancel Buttons -->
         <?php if($_SESSION['access_level'] == 1): ?>
         <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: .5rem;">Return to Dashboard</a>
