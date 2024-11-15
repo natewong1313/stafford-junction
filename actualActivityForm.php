@@ -13,30 +13,31 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+} else {
+    header('Location: login.php');
+    die();
 }
 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+require_once('database/dbActualActivityForm.php');
+
+if($_SERVER['REQUEST_METHOD'] == "POST") {
     require_once('include/input-validation.php');
-    require_once('database/dbActualActivityForm.php');
+    
     $args = sanitize($_POST, null);
+    
     $required = array("activity", "date", "program", "start_time", "end_time", "start_mile", "end_mile", "address",
-        "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits", "attendees");
+        "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits");
 
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Error: Not all required fields were completed.";
-        die();
-    } else {
-        $activityID = createActualActivityForm($args);
-        if ($activityID === null) {
-            echo "Error: There was an issue inserting the data into the database.";
-        }
-    }
+    $activityID = createActualActivityForm($args);
 }
+
 
 ?>
 
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php include_once("universal.inc")?>
         <title>Actual Activities Form</title>
         <link rel="stylesheet" href="base.css">
@@ -44,12 +45,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     <body>
         <h1>Actual Activities Form</h1>
+        <?php 
+            if (isset($_GET['formSubmitFail'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
+            }
+        ?>
+        
         <div id="formatted_form">
             
-        <span>* Indicates required field</span><br><br>
+        <p><b>* Indicates a required field</b></p><hr><br>
 
-        <form id="actualActivityForm" action="" method="post">
-            <hr>
+        <form id="actualActivityForm" action="actualActivityForm.php" method="post">
             <h2>General Information</h2>
             <br><br>
 
@@ -103,6 +109,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             
             <!--Meal Information--->
             <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
+            
             <input type="radio" id="choice_1" name="meal_info" value="meal_provided" required>
             <label for="choice_1">Meal: Provided</label><br><br>
 
@@ -132,19 +139,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <label for="attendance">13. Attendance (must already be in AllClients; Waiver and Emergency Contact Information should be on file and in binder)*</label><br>
             
             <button type="button" class= "addRemove-btn" onclick="addInput()">Add Person</button><br><br>
-            <div id="attendeesContainer"></div>
+            <div id="attendanceContainer"></div>
 
             <script>
+                // adds new attendance input when add person is pressed
                 function addInput() {
                     //creates a new div element for the inputGroup
                     var newInputGroup = document.createElement('div');
                     newInputGroup.className = 'input-group';
 
-                    //creates new input element to add an attendee into attendees[] array
+                    //creates new input element to add an attendee into attendance[] array
                     var newInput = document.createElement('input');
                     newInput.className = 'input-form';
                     newInput.type = 'text';
-                    newInput.name = 'attendees[]';
+                    newInput.name = 'attendance[]';
                     newInput.placeholder = 'Name of Attendee';
 
                     //creates remove button
@@ -160,16 +168,63 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     newInputGroup.appendChild(newInput);
                     newInputGroup.appendChild(removeButton);
 
-                    //adds the new inputGroup to the attendeesContainer to display
-                    document.getElementById("attendeesContainer").appendChild(newInputGroup);
+                    //adds the new inputGroup to the attendanceContainer to display
+                    document.getElementById("attendanceContainer").appendChild(newInputGroup);
                 }
-                </script>
 
-                <br><hr>
+                //VALIDATES attendance and date variables
+                function validateAttendanceAndDate() {
+                    var attendanceInputs = document.querySelectorAll('input[name="attendance[]"]');
+                    var atLeastOneAttendee = false;
+
+                    // checks attendance variable for a non-empty value
+                    for (var i = 0; i < attendanceInputs.length; i++) {
+                        if (attendanceInputs[i].value.trim() !== "") {
+                            atLeastOneAttendee = true; 
+                            break; 
+                        }
+                    }
+
+                    // ensures at least one attendee is filled in
+                    if (!atLeastOneAttendee) {
+                        alert("Please fill in at least one field in 'Attendance'.");
+                        return false;
+                    }
+
+                    // validates the "date" field
+                    var dateValue = document.getElementById("date").value;
+
+                    // checks if the year is exactly four digits
+                    var year = dateValue.split('-')[0];
+                    if (year.length !== 4 || isNaN(year)) {
+                        alert("Please enter a valid year with four digits.");
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                // validates both attendance and date fields before allowing submission
+                document.getElementById("actualActivityForm").onsubmit = function() {
+                    return validateAttendanceAndDate(); 
+                };
+            </script>
+
+            <br><hr>
 
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+        
             </form>
         </div>
+        <?php
+            // if submission successful, create pop up notification and direct user back to fill form page
+            // if fail, notify user on program interest form page
+            if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($activityID)){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && empty($activityID)) {
+                echo '<script>document.location = "actualActivityForm.php?formSubmitFail";</script>';
+            }
+        ?>
     </body>
 </html>
