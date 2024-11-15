@@ -38,7 +38,7 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-        <h1>Stafford Junction Dashboard</h1>
+        <h1>Stafford Junction Admin Dashboard</h1>
         <main class='dashboard'>
             <?php if (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
