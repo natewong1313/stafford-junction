@@ -1152,7 +1152,6 @@ Styling below made for Stafford Junction website
   display: flex;
   align-self: stretch;
   display: inline-block;
-  /*float: left;*/
   min-width: 18rem;
   max-width: 18rem;
 }

@@ -3,29 +3,38 @@
 --
 
 CREATE TABLE `dbActualActivityForm` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `activity` INT NOT NULL,
-  `date` VARCHAR(256) NOT NULL,
-  `program` VARCHAR(256) NOT NULL,
-  `start_time` VARCHAR(15) NOT NULL,
-  `end_time` VARCHAR(15) NOT NULL,
-  `start_mile` VARCHAR(15) NOT NULL,
-  `end_mile` VARCHAR(15) NOT NULL,
-  `address` VARCHAR(256) NOT NULL,
-  `attend_num` INT NOT NULL,
-  `volstaff_num` INT NOT NULL,
-  `materials_used` TEXT NOT NULL,
-  `mealinfo` BOOLEAN NOT NULL,
-  `act_costs` TEXT NOT NULL,
-  `act_benefits` TEXT NOT NULL
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `activity` varchar(256) NOT NULL,
+  `date` varchar(100) NOT NULL,
+  `program` varchar(256) NOT NULL,
+  `start_time` varchar(100) NOT NULL,
+  `end_time` varchar(100) NOT NULL,
+  `start_mile` int(11) NOT NULL,
+  `end_mile` int(11) NOT NULL,
+  `address` varchar(256) NOT NULL,
+  `attend_num` int(11) NOT NULL,
+  `volstaff_num` int(11) NOT NULL,
+  `materials_used` text NOT NULL,
+  `meal_info` text NOT NULL,
+  `act_costs` text NOT NULL,
+  `act_benefits` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Table structure for table `Attendees`
+-- Table structure for table `dbActualActivityAttendees`
 --
-CREATE TABLE `Attendees` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(256) NOT NULL,
-    `activity_id` INT NOT NULL,
-    FOREIGN KEY (`activity_id`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE
+CREATE TABLE `dbActualActivityAttendees` (
+    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` varchar(255) NOT NULL
+);
+
+--
+-- Table structure for junction table `dbActivityAttendees`
+--
+CREATE TABLE `dbActivityAttendees` (
+    `activityID` INT(11) NOT NULL,
+    `attendeeID` INT(11) NOT NULL,
+    PRIMARY KEY (`activityID`, `attendeeID`),
+    FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );

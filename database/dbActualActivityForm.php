@@ -1,53 +1,117 @@
 <?php
-include_once('dbinfo.php');
-include_once(dirname(__FILE__).'/../domain/actualActivityForm.php');
+/**
+ * Function that takes actual activity form and adds data into correct data tables
+ */
+function createActualActivityForm($form) {
+	$connection = connect();
+    
+    $activity = mysqli_real_escape_string($connection, $form["activity"]);
+    $date = $form["date"];
+    $program = mysqli_real_escape_string($connection, $form["program"]);
+	$start_time = $form["start_time"];
+    $end_time = $form["end_time"];
+    $start_mile = $form["start_mile"];
+    $end_mile = $form["end_mile"];
+    $address = mysqli_real_escape_string($connection, $form["address"]);
+	$attend_num = $form["attend_num"];
+    $volstaff_num = $form["volstaff_num"];
+    $materials_used = mysqli_real_escape_string($connection, $form["materials_used"]);
+	$meal_info = $form["meal_info"];
+    $act_costs = mysqli_real_escape_string($connection, $form["act_costs"]);
+    $act_benefits = mysqli_real_escape_string($connection, $form["act_benefits"]);
+    $attendance = $form["attendance"];
+    
+    mysqli_begin_transaction($connection);
+    $activityID = null;
+    try {
+        //insert information into database for Actual Activity Form
+        $query = "
+            INSERT INTO dbActualActivityForm (activity, date, program, start_time, end_time, start_mile, end_mile, address, 
+            attend_num, volstaff_num, materials_used, meal_info, act_costs, act_benefits)
+            VALUES ('$activity', '$date', '$program', '$start_time', '$end_time', '$start_mile', '$end_mile', '$address', 
+            '$attend_num', '$volstaff_num', '$materials_used', '$meal_info', '$act_costs', '$act_benefits')
+        ";
+        
+        $result = mysqli_query($connection, $query);
+        if (!$result) {
+            throw new Exception("Error in query: " . mysqli_error($connection));
+        }
+        
+        $activityID = mysqli_insert_id($connection);
+        
+        //insert attendance into database for Actual Activity Attendees
+        if (isset($attendance)) {
+            $attendeeIDs = createActualActivityAttendees($attendance, $connection);
+            if (empty($attendeeIDs)) {
+                throw new Exception("Error in actual activity attendees table insert.");
+            }
+        } else {
+            throw new Exception("No attendance variable transfered from form.");
+        }
+
+        //insert into junction table
+        $activityAttendeeID = createActivityAttendees($activityID, $attendeeIDs, $connection);
+        if (empty($activityAttendeeID)) {
+            throw new Exception("Error in junction table insert.");
+        }
+
+        mysqli_commit($connection);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        mysqli_rollback($connection);
+        mysqli_close($connection);
+        return null;
+    }
+
+    mysqli_close($connection);
+    return $activityID;
+}
 
 /**
- * Function that takes actualActivity item and adds it to database
+ * Function that takes attendees array and adds each attendee into database table
  */
-function create_actualAct($actualAct) {
-    $connection = connect();
-	$activity = $actualAct["activity"];
-    $program = $actualAct["program"];
-	$start_time = $actualAct["start_time"];
-    $end_time = $actualAct["end_time"];
-    $start_mile = $actualAct["start_mile"];
-    $end_mile = $actualAct["end_mile"];
-    $address = $actualAct["address"];
-	$attend_num = $actualAct["attend_num"];
-    $volstaff_num = $actualAct["volstaff_num"];
-    $materials_used = $actualAct["materials_used"];
-	$mealinfo = $actualAct["mealinfo"];
-    $act_costs = $actualAct["act_costs"];
-    $act_benefits = $actualAct["act_benefits"];
-    $attendance[] = $actualAct["attendance[]"];
-    
-    $query = "
-        INSERT INTO dbActualActivityForm (odhs_id, name, breed, age, gender, notes, spay_neuter_done, spay_neuter_date, rabies_given_date, rabies_due_date, heartworm_given_date, heartworm_due_date, distemper1_given_date, distemper1_due_date, distemper2_given_date, distemper2_due_date, distemper3_given_date, distemper3_due_date, microchip_done, archived)
-        values ('$odhsid','$name', '$breed', '$age', '$gender', '$notes', '$spay_neuter_done', '$spay_neuter_date', '$rabies_given_date', '$rabies_due_date', '$heartworm_given_date', '$heartworm_due_date', '$distemper1_given_date', '$distemper1_due_date', '$distemper2_given_date', '$distemper2_due_date', '$distemper3_given_date', '$distemper3_due_date', '$microchip_done', 'no')
-    ";
-    
-    //EDIT: needs to get actualAct primary key
-    //EDIT: might need to be wrapped in if else clause in case data is not put into dbActualActivityForm
-    $last_id = $conn->insert_id;
-       
-    //EDIT: insert each attendee in attendance array into Attendees table, if attendee name is not blank
-    foreach ($attendance as $attendee) {
-        //sanitize the attendee name
-        if ($attendee != '') {
-            $sanAttendee = trim($attendee);
-            $query = "
-                INSERT INTO Attendees (name, activity_id) values ('$sanAttendee', '$lastid')
+function createActualActivityAttendees($attendees, $connection) {
+    mysqli_begin_transaction($connection);
+    $ids = [];
+
+    foreach ($attendees as $attendee) {
+        $name = trim($attendee);
+        $name = mysqli_real_escape_string($connection, $name);
+        if ($name != '') {
+            $insert_query = "
+                INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
             ";
+            $insert_result = mysqli_query($connection, $insert_query);
+            if (!$insert_result) {
+                mysqli_rollback($connection);
+                return null;
+            }
+            $ids[] = mysqli_insert_id($connection);
         }
     }
 
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-        return null;
-    }
-    $id = mysqli_insert_id($connection);
     mysqli_commit($connection);
-    mysqli_close($connection);
-    return $id;
+    return $ids;
+}
+
+/**
+ * Function that takes actual activity form ID and attendees IDs array and adds it into junction table
+ */
+function createActivityAttendees($activityID, $attendeeIDs, $connection) {
+    mysqli_begin_transaction($connection);
+
+    foreach ($attendeeIDs as $attendeeID) {
+        $insert_query = "
+            INSERT INTO dbActivityAttendees (activityID, attendeeID)
+            VALUES ('$activityID', '$attendeeID')
+        ";
+        $insert_result = mysqli_query($connection, $insert_query);
+        if (!$insert_result) {
+            mysqli_rollback($connection);
+            return null;
+        }
+    }
+
+    mysqli_commit($connection);
+    return true;  // Return success as true
 }
