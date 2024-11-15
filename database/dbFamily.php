@@ -30,6 +30,7 @@ function make_a_family($result_row){
         $result_row['last-name'],
         $result_row['birthdate'],
         $result_row['address'],
+        $result_row['neighborhood'],
         $result_row['city'],
         $result_row['state'],
         $result_row['zip'],
@@ -38,10 +39,14 @@ function make_a_family($result_row){
         $result_row['phone-type'],
         $result_row['secondary-phone'],
         $result_row['secondary-phone-type'],
+        $result_row['isHispanic'],
+        $result_row['race'],
+        $result_row['income'],
         $result_row['first-name2'] ?? null,
         $result_row['last-name2'] ?? null,
         $result_row['birthdate2'] ?? null,
         $result_row['address2'] ?? null,
+        $result_row['neighborhood2'] ?? null,
         $result_row['city2'] ?? null,
         $result_row['state2'] ?? null,
         $result_row['zip2'] ?? null,
@@ -50,6 +55,8 @@ function make_a_family($result_row){
         $result_row['phone-type2'] ?? null,
         $result_row['secondary-phone2'] ?? null,
         $result_row['secondary-phone-type2'] ?? null,
+        $result_row['isHispanic2'] ?? null,
+        $result_row['race2'] ?? null,
         $result_row['econtact-first-name'],
         $result_row['econtact-last-name'],
         $result_row['econtact-phone'],
@@ -71,6 +78,7 @@ function make_a_family2($result_row){
         $result_row['lastName'],
         $result_row['birthdate'],
         $result_row['address'],
+        $result_row['neighborhood'],
         $result_row['city'],
         $result_row['state'],
         $result_row['zip'],
@@ -79,10 +87,14 @@ function make_a_family2($result_row){
         $result_row['phoneType'],
         $result_row['secondaryPhone'],
         $result_row['secondaryPhoneType'],
+        $result_row['isHispanic'],
+        $result_row['race'],
+        $result_row['income'],
         $result_row['firstName2'] ?? null,
         $result_row['lastName2'] ?? null,
         $result_row['birthdate2'] ?? null,
         $result_row['address2'] ?? null,
+        $result_row['neighborhood2'],
         $result_row['city2'] ?? null,
         $result_row['state2'] ?? null,
         $result_row['zip2'] ?? null,
@@ -91,6 +103,8 @@ function make_a_family2($result_row){
         $result_row['phoneType2'] ?? null,
         $result_row['secondaryPhone2'] ?? null,
         $result_row['secondaryPhoneType2'] ?? null,
+        $result_row['isHispanic2'] ?? null,
+        $result_row['race2'] ?? null,
         $result_row['econtactFirstName'],
         $result_row['econtactLastName'],
         $result_row['econtactPhone'],
@@ -117,17 +131,17 @@ function add_family($family){
     //first checks to see if the family already exists by looking at email
     $query = "SELECT * FROM dbFamily WHERE email = '" . $family->getEmail() . "'";
     $result = mysqli_query($conn,$query);
-
     if($result == null || mysqli_num_rows($result) == 0){
-        mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, city,
-        state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
-        birthdate2, address2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2, 
-        econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, securityQuestion, 
-        securityAnswer, isArchived) VALUES(" ' .
+        mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, neighborhood, city,
+        state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, isHispanic, race,  income, firstName2, lastName2, 
+        birthdate2, address2, neighborhood2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2,
+        isHispanic2, race2, econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, 
+        securityQuestion, securityAnswer, isArchived) VALUES(" ' .
         $family->getFirstName() . '","' .
         $family->getLastName() . '","' .
         $family->getBirthDate() . '","' .
         $family->getAddress() . '","' .
+        $family->getNeighborhood() . '","' .
         $family->getCity() . '","' . 
         $family->getState() . '","' .
         $family->getZip() . '","' .
@@ -136,10 +150,14 @@ function add_family($family){
         $family->getPhoneType() . '","' . 
         $family->getSecondaryPhone() . '","' .
         $family->getSecondaryPhoneType() . '","' .
+        $family->isHispanic() . '","' .
+        $family->getRace() . '","' .
+        $family->getIncome() . '","' .
         $family->getFirstName2() . '","' .
         $family->getLastName2() . '","' .
         $family->getBirthDate2() . '","' .
         $family->getAddress2() . '","' .
+        $family->getNeighborhood2() . '","' .
         $family->getCity2() . '","' .
         $family->getState2() . '","' .
         $family->getZip2() . '","' .
@@ -148,6 +166,8 @@ function add_family($family){
         $family->getPhoneType2() . '","' .
         $family->getSecondaryPhone2() . '","' .
         $family->getSecondaryPhoneType2() . '","' .
+        $family->isHispanic2() . '","' .
+        $family->getRace2() . '","' .
         $family->getEContactFirstName() . '","' .
         $family->getEContactLastName() . '","' .
         $family->getEContactPhone() . '","' .
@@ -296,8 +316,7 @@ function retrieve_family_by_id($id){
 function getChildren($family_id){
     $children = [];
     $conn = connect();
-    $query = "SELECT dbChildren.id, dbChildren.first_name, dbChildren.last_name, dbChildren.dob, dbChildren.gender, 
-        dbChildren.medical_notes, dbChildren.notes FROM dbFamily INNER JOIN dbChildren ON
+    $query = "SELECT dbChildren.* FROM dbFamily INNER JOIN dbChildren ON
         dbFamily.id = dbChildren.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
     $result = mysqli_query($conn, $query);
     if(mysqli_num_rows($result) == 0 || $result == null){
@@ -484,3 +503,62 @@ function find_families($last_name, $email, $city, $archived){
     return $families;
 }
 
+// Inserts family and language ids in junction table
+function insert_family_languages($languages, $family_id) {
+    $connection = connect();
+
+    // Query inserts ids in dbFamily_Languages junction table
+    $query = "INSERT INTO dbFamily_Languages (family_id, language_id) values ";
+    $last = end($languages);
+    foreach ($languages as $language) {
+       // Check if topic exists in database, if not then insert new topic in dbTopicInterests
+       $result = mysqli_query($connection, "SELECT * FROM dbLanguages WHERE language = '$language';");
+       if (mysqli_num_rows($result) <= 0) {
+           mysqli_query($connection, "INSERT INTO dbLanguages (language) values ('$language');");
+       }
+       // Add value to query
+       $query .= "($family_id, (SELECT id FROM dbLanguages WHERE language = '$language'))";
+       if ($language != $last) {
+           $query .= ", ";
+       } else {
+           $query .= ";";
+       }
+   }
+   $result = mysqli_query($connection, $query);
+   if (!$result) {
+       return null;
+   }
+   $id = mysqli_insert_id($connection);
+   mysqli_close($connection);
+   return $id;
+}
+
+// Inserts family and assistance ids in junction table
+function insert_family_assistance($assistance, $family_id) {
+    $connection = connect();
+
+    // Query inserts ids in dbFamily_Assistance junction table
+    $query = "INSERT INTO dbFamily_Assistance (family_id, assistance_id) values ";
+    $last = end($assistance);
+    foreach ($assistance as $a) {
+       // Check if assiatnce exists in database, if not then insert data in dbAssistance
+       $result = mysqli_query($connection, "SELECT * FROM dbAssistance WHERE assistance = '$a';");
+       if (mysqli_num_rows($result) <= 0) {
+           mysqli_query($connection, "INSERT INTO dbAssistance (assistance) values ('$a');");
+       }
+       // Add value to query
+       $query .= "($family_id, (SELECT id FROM dbAssistance WHERE assistance = '$a'))";
+       if ($a != $last) {
+           $query .= ", ";
+       } else {
+           $query .= ";";
+       }
+   }
+   $result = mysqli_query($connection, $query);
+   if (!$result) {
+       return null;
+   }
+   $id = mysqli_insert_id($connection);
+   mysqli_close($connection);
+   return $id;
+}
