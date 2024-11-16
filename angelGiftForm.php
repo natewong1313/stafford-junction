@@ -18,7 +18,7 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-    $children = retrieve_children_by_id($userID);
+    $children = retrieve_children_by_family_id($userID);
 } else {
     header('Location: login.php');
     die();
@@ -91,7 +91,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <label for="child_name">4. Name of Child / Nombre del niño\a*</label><br><br>
                 <select name="child_name" id="child_name" required>
                 <?php
-                    require_once('domain/Children.php'); 
+                    require_once('domain/Children.php');
                     foreach ($children as $c){
                         $id = $c->getID();
                         // Check if form was already completed for the child
