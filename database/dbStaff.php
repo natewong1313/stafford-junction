@@ -24,6 +24,7 @@ function make_staff_from_signup($result_row){
     return $staff;
 }
 
+//Function that gets all the info of a staff user from dbStaff and constructs a staff object from that data
 function make_staff_from_db($result_row){
     $staff = new Staff(
         $result_row['id'],
@@ -75,6 +76,7 @@ function add_staff($staff){
     
 }
 
+//Function that retrieves staff member from dbStaff by email
 function retrieve_staff($email){
     $conn = connect();
     $query = "SELECT * FROM dbStaff where email = '" . $email . "';";
@@ -89,6 +91,7 @@ function retrieve_staff($email){
     }
 }
 
+//Function that retrieves staff member from dbStaff by id
 function retrieve_staff_by_id($id){
     $conn = connect();
     $query = "SELECT * FROM dbStaff where id = '" . $id . "';";

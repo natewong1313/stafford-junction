@@ -20,7 +20,7 @@
             header("Location: familyAccountDashboard.php");
             die();
         }else {
-            //otherwise, redirect to admin dashboard
+            //otherwise, redirect to admin/staff dashboard
             header('Location: index.php');
             die();
         }
@@ -32,6 +32,7 @@
         $args = sanitize($_POST, $ignoreList);
         $required = array('username', 'password');
         if (wereRequiredFieldsSubmitted($args, $required)) {
+            //used for admin
             require_once('domain/Person.php');
             require_once('database/dbPersons.php');
             require_once('database/dbMessages.php');
@@ -107,8 +108,8 @@
                     echo $password . " " . $user->getPassword();
                     
                 }
-            }else if($args['account'] == 'staff'){
-                $user = retrieve_staff($username);
+            }else if($args['account'] == 'staff'){ //if the account is a staff account
+                $user = retrieve_staff($username); //grab staff user
                 if(!$user){
                     $badLogin = true;
                 }else if(password_verify($password, $user->getPassword())) {

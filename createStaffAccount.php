@@ -69,7 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="text" name="address" placeholder="Enter your address" required>
 
                 <!--Email-->
-                
+
                 <label for="email" required>* E-mail</label>
                 <p>This will also serve as your username when logging in.</p>
                 <input type="email" id="email" name="email" required placeholder="Enter your e-mail address">
@@ -77,6 +77,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <!--Phone-->
                 <label for="phone">Phone *</label>
                 <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
+
+                <!--Job Title-->
+                <label for="jobTitle">Job Title *</label>
+                <input type="text" name="jobTitle" placeholder="Enter your job title" required>
+
+                <h3>Emergency Contact</h3>
 
                 <!--Emergency Contact Name-->
                 <label for="econtactName">Emergency Contact Name *</label>
@@ -86,9 +92,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <label for="econtactPhone">Emergency Contact Phone *</label>
                 <input type="tel" id="phone" name="econtactPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
-                <!--Job Title-->
-                <label for="jobTitle">Job Title *</label>
-                <input type="text" name="jobTitle" placeholder="Enter your job title" required>
 
                 <h3>Login Credentials</h3>
                 <fieldset>
