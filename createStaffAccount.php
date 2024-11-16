@@ -37,5 +37,22 @@ if(isset($_SESSION['_id'])){
     <body>
         <?php require_once("header.php");?>
         <h1>Create Staff Account</h1>
+
+        <main class="signup-form">
+            <form class="signup-form" method="POST">
+                <h2>Staff Account Registration Form</h2>
+                <p>Please fill out each section of the following form if you would like to become a member of Stafford Junction</p>
+                <p>An asterisk (*) indicates a required field.</p>
+
+                <!--First Name-->
+                <label for="firstName">First Name *</label>
+                <input type="text" name="firstName" placeholder="Enter your first name" required>
+
+                <!--Last Name-->
+                <label for="lastName">Last Name *</label>
+                <input type="text" name="lastName" placeholder="Enter your last name" required>
+
+            </form>
+        </main> 
     </body>
 </html>
