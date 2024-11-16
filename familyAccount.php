@@ -19,8 +19,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('database/dbFamily.php');
     require_once('database/dbChildren.php');
 
-    //grab children data
-    $children = $_POST['children'];
+    $children = null;
+    // grab children data if any were added
+    if (isset($_POST['children'])) {
+        $children = $_POST['children'];
+        // Sanitize children input
+        foreach ($children as $child) {
+            $child = sanitize($child);
+        }
+    }
     unset($_POST['children']); //need to unset, otherwise sanitize breaks 
 
     $args = sanitize($_POST, null);
@@ -34,13 +41,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($success){
         //need to retrieve the family we just inserted because we need the family id primary key via getID()
         $fam = retrieve_family($args);
+        // Insert family languages
+        insert_family_languages($args['languages'], $fam->getId());
+        // Insert current asisatnce if any were added
+        if (isset($args['assistance'])) {
+            insert_family_assistance($args['assistance'], $fam->getId());
+        }
+        // If any children were added, loop through children and make child objects
+        if ($children != null) {
+            foreach($children as $child){
+                $child_obj = make_a_child_from_sign_up($child); //construct child object from form data
 
-        //loop through children and make child objects
-        foreach($children as $child){
-            $child_obj = make_a_child_from_sign_up($child); //construct child object from form data
-
-            //insert child into dbChildren, passing in family id that which will be the foreign key for dbChildren
-            add_child($child_obj, $fam->getID());
+                //insert child into dbChildren, passing in family id that which will be the foreign key for dbChildren
+                add_child($child_obj, $fam->getID());
+            }
         }
     }
 
@@ -77,6 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="birthdate" required>* Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
+                    <label for="neighborhood" required>* Neighborhood</label>
+                    <input type="text" id="address" name="neighborhood" required placeholder="Enter your neighborhood">
 
                     <label for="address" required>* Street Address</label>
                     <input type="text" id="address" name="address" required placeholder="Enter your street address">
@@ -141,7 +157,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <label for="zip" required>* Zip Code</label>
                     <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
+
+                    <label for="isHispanic">* Hispanic, Latino, or Spanish Origin</label><br><br>
+                    <select id="isHispanic" name="isHispanic" required>
+                        <option value="" disabled selected>Select Yes or No</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                    <br><br>
+
+                    <label for="race" required>* Race</label><br><br>
+                    <select id="race" name="race" required>
+                        <option value="" disabled selected>Select Race</option>
+                        <option value="Caucasian">Caucasian</option>
+                        <option value="Black/African American">Black/African American</option>
+                        <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
+                        <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Multiracial">Multiracial</option>
+                        <option value="Other">Other</option>
+                    </select><br><br>
                 </fieldset>
+                    
 
                 <fieldset>
                     <legend>Contact Information</legend>
@@ -169,6 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="radio" id="secondary-phone-type-home" name="secondary-phone-type" value="home" required><label for="secondary-phone-type-home">Home</label>
                         <input type="radio" id="secondary-phone-type-work" name="secondary-phone-type" value="work" required><label for="secondary-phone-type-work">Work</label>
                     </div>
+
                 </fieldset>
 
                 <h3>Secondary Parent / Guardian</h3>
@@ -183,6 +221,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="birthdate2">Date of Birth</label>
                     <input type="date" id="birthdate2" name="birthdate2" placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>">
 
+                    <label for="neighborhood2">Neighborhood</label>
+                    <input type="text" id="neighborhood2" name="neighborhood2" placeholder="Enter your neighborhood">
 
                     <label for="address2">Street Address</label>
                     <input type="text" id="address2" name="address2" placeholder="Enter your street address">
@@ -248,6 +288,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <label for="zip2">Zip Code</label>
                     <input type="text" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code">
+
+                    <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label><br><br>
+                    <select id="isHispanic2" name="isHispanic2">
+                        <option value="" disabled selected>Select Yes or No</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                    <br><br>
+
+                    <label for="race2" required>Race</label><br><br>
+                    <select id="race2" name="race2">
+                        <option value="" disabled selected>Select Race</option>
+                        <option value="Caucasian">Caucasian</option>
+                        <option value="Black/African American">Black/African American</option>
+                        <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
+                        <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Multiracial">Multiracial</option>
+                        <option value="Other">Other</option>
+                    </select><br><br>
+
                 </fieldset>
                 <fieldset>
                     <legend>Contact Information</legend>
@@ -273,6 +334,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="radio" id="secondary-phone-type-home2" name="secondary-phone-type2" value="home"><label for="secondary-phone-type-home2">Home</label>
                         <input type="radio" id="secondary-phone-type-work2" name="secondary-phone-type2" value="work"><label for="secondary-phone-type-work2">Work</label>
                     </div>
+                    
                 </fieldset>
 
                 <h3>Children</h3>
@@ -306,11 +368,118 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="child_birthdate_${childCount}">Child's Date of Birth</label>
                             <input type="date" id="child_birthdate_${childCount}" name="children[${childCount}][birthdate]" required>
 
+                            <label for="neighborhood" required>Child's Neighborhood</label>
+                            <input type="text" id="child_neighborhood_${childCount}" name="children[${childCount}][neighborhood]" required placeholder="Enter child's neighborhood">
+
+                            <label for="address" required>Child's Street Address</label>
+                            <input type="text" id="child_address_${childCount}" name="children[${childCount}][address]" required placeholder="Enter child's street address">
+
+                            <label for="city" required>Child's City</label>
+                            <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's school">
+
+                            <label for="state2">State</label>
+                            <select id="child_state_${childCount}" name="children[${childCount}][state]">
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="DC">District Of Columbia</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <option value="HI">Hawaii</option>
+                                <option value="ID">Idaho</option>
+                                <option value="IL">Illinois</option>
+                                <option value="IN">Indiana</option>
+                                <option value="IA">Iowa</option>
+                                <option value="KS">Kansas</option>
+                                <option value="KY">Kentucky</option>
+                                <option value="LA">Louisiana</option>
+                                <option value="ME">Maine</option>
+                                <option value="MD">Maryland</option>
+                                <option value="MA">Massachusetts</option>
+                                <option value="MI">Michigan</option>
+                                <option value="MN">Minnesota</option>
+                                <option value="MS">Mississippi</option>
+                                <option value="MO">Missouri</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NV">Nevada</option>
+                                <option value="NH">New Hampshire</option>
+                                <option value="NJ">New Jersey</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="NY">New York</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="OH">Ohio</option>
+                                <option value="OK">Oklahoma</option>
+                                <option value="OR">Oregon</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="RI">Rhode Island</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="SD">South Dakota</option>
+                                <option value="TN">Tennessee</option>
+                                <option value="TX">Texas</option>
+                                <option value="UT">Utah</option>
+                                <option value="VT">Vermont</option>
+                                <option value="VA" selected>Virginia</option>
+                                <option value="WA">Washington</option>
+                                <option value="WV">West Virginia</option>
+                                <option value="WI">Wisconsin</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
+
+                            <label for="zip" required>Child's Zip Code</label>
+                            <input type="text" id="child_zip_${childCount}" pattern="[0-9]{5}" name="children[${childCount}][zip]" required placeholder="Enter child's zip">
+
                             <label for="child_gender_${childCount}">Child's Gender</label>
                             <select id="child_gender_${childCount}" name="children[${childCount}][gender]" required>
                                 <option value="" disabled selected>Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
+                            </select>
+
+                            <label for="school" required>Child's School</label>
+                            <input type="text" id="child_school_${childCount}" name="children[${childCount}][school]" required placeholder="Enter child's school">
+
+                            <label for="grade" required>Child's Grade</label>
+                            <select id="child_grade_${childCount}" name="children[${childCount}][grade]" required>
+                                <option value="Kindergarten">Kindergarten</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="Graduated">Graduated</option>
+                            </select>
+
+                            <label for="child_hispanic_${childCount}">Hispanic, Latino, or Spanish Origin</label>
+                            <select id="child_hispanic_${childCount}" name="children[${childCount}][is_hispanic]" required>
+                                <option value="" disabled selected>Select Yes or No</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+
+                            <label for="child_race_${childCount}" required>Race</label>
+                            <select id="child_race_${childCount}" name="children[${childCount}][race]" required>
+                                <option value="" disabled selected>Select Race</option>
+                                <option value="Caucasian">Caucasian</option>
+                                <option value="Black/African American">Black/African American</option>
+                                <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
+                                <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+                                <option value="Asian">Asian</option>
+                                <option value="Multiracial">Multiracial</option>
+                                <option value="Other">Other</option>
                             </select>
 
                             <label for="child_medical_notes_${childCount}">Medical Notes</label>
@@ -370,6 +539,96 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="econtact-name" required> Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
                 </fieldset>
+
+                <h3>Household Information</h3>
+                <fieldset>
+                <label for="income" required>* Estimated Household Income</label>
+                    <select id="income" name="income" required>
+                        <option value="Under $15,0000">Under 20,000</option>
+                        <option value="$15,000 - $24,999">20,000 - 40,000</option>
+                        <option value="$25,000 - $34,999">40,001 - 60,000</option>
+                        <option value="$35,000 - $49,999">60,001 - 80,000</option>
+                        <option value="$100,000 and above">Over 80,000</option>
+                    </select>
+                    <br><br>
+
+                    <!-- Household Languages -->
+                    <fieldset style="border: none;">
+                        <label for="languages" required>* Languages Spoken in Household</label>
+                        <input type="text" id="languages[]" name="languages[]" required placeholder="Enter Language">
+                        <div id="language-container" ></div>
+                        <button type="button" onclick="addLanguageForm()">+ Add Language</button>
+                    </fieldset>
+                    <script>
+                        let languageCount = 0;
+
+                        function addLanguageForm() {
+                            languageCount++;
+                            const container = document.getElementById('language-container');
+                            
+                            const languageDiv = document.createElement('div');
+                            languageDiv.className = 'language-form';
+                            languageDiv.id = `language-form-${languageCount}`;
+                            
+                            languageDiv.innerHTML = `
+                                <div style="display: flex; flex: 1;">
+                                <div><input type="text" id="other_language" name="languages[]" required placeholder="Enter Language" style="width: 57.8rem;"></div>
+                                <div><button type="button" onclick="removeLanguageForm(${languageCount})" style="height: 2.55rem;">Remove</button></div>
+                                </div>
+                            `;
+                            
+                            container.appendChild(languageDiv);
+                        }
+
+                        function removeLanguageForm(languageId) {
+                            // Find the topic div to remove
+                            const languageDiv = document.getElementById(`language-form-${languageId}`);
+                            if (languageDiv) {
+                                languageDiv.remove();  // Remove the specific topic form
+                                languageCount--;
+                            }
+                        }
+                    </script>
+                    <br>
+
+                    <!-- Current Assistance -->
+                    <fieldset style="border: none;">
+                        <label for="languages" required>Do You Currently Receive Any Assistance? (WIC, SNAP, SSI, SSD, etc.)<label>
+                        <div id="assistance-container" ></div>
+                        <button type="button" onclick="addAssistanceForm()">+ Add Assistance</button>
+                    </fieldset>
+                    <script>
+                        let assistanceCount = 0;
+
+                        function addAssistanceForm() {
+                            assistanceCount++;
+                            const container = document.getElementById('assistance-container');
+                            
+                            const assistanceDiv = document.createElement('div');
+                            assistanceDiv.className = 'assistance-form';
+                            assistanceDiv.id = `assistance-form-${assistanceCount}`;
+                            
+                            assistanceDiv.innerHTML = `
+                                <div style="display: flex; flex: 1;">
+                                <div><input type="text" id="other_assistance" name="assistance[]" required placeholder="Enter Other Assistance" style="width: 57.8rem;"></div>
+                                <div><button type="button" onclick="removeAssistanceForm(${assistanceCount})" style="height: 2.55rem;">Remove</button></div>
+                                </div>
+                            `;
+                            
+                            container.appendChild(assistanceDiv);
+                        }
+
+                        function removeAssistanceForm(assistanceId) {
+                            // Find the assistance div to remove
+                            const assistanceDiv = document.getElementById(`assistance-form-${assistanceId}`);
+                            if (assistanceDiv) {
+                                assistanceDiv.remove();  // Remove the specific topic form
+                                assistanceCount--;
+                            }
+                        }
+                    </script>
+                </fieldset>
+                <br><br>
 
                 <h3>Login Credentials</h3>
                 <fieldset>
