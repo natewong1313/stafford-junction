@@ -128,7 +128,7 @@
         }
         else {
             //if the access level is superadmin, show the following navbar
-            if($_SESSION['account_type'] == 'admin'){
+            if($_SESSION['account_type'] == 'admin' || $_SESSION['account_type'] == 'staff'){
                 echo('<nav>');
                 echo('<span id="nav-top"><span class="logo"><a class="navbar-brand" href="' . $path . 'index.php"><img src="images/staffordjunction.png"></a>');
                 echo('<a class="navbar-brand" id="vms-logo"></a></span><img id="menu-toggle" src="images/menu.png"></span>');

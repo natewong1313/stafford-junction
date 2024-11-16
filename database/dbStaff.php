@@ -24,6 +24,27 @@ function make_staff_from_signup($result_row){
     return $staff;
 }
 
+function make_staff_from_db($result_row){
+    $staff = new Staff(
+        $result_row['id'],
+        $result_row['firstName'],
+        $result_row['lastName'],
+        $result_row['birthdate'],
+        $result_row['address'],
+        $result_row['email'],
+        $result_row['phone'],
+        $result_row['econtactName'],
+        $result_row['econtactPhone'],
+        $result_row['jobTitle'],
+        $result_row['password'],
+        $result_row['securityQuestion'],
+        $result_row['securityAnswer']
+    );
+
+    return $staff;
+}
+
+//function that inserts staff into dbStaff
 function add_staff($staff){
     if(!$staff instanceof Staff){
         die("Add staff mismatch");
@@ -52,5 +73,33 @@ function add_staff($staff){
         return true;
     }
     
+}
+
+function retrieve_staff($email){
+    $conn = connect();
+    $query = "SELECT * FROM dbStaff where email = '" . $email . "';";
+    $res = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($res) < 1 || $res == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($res);
+        $staff = make_staff_from_db($row);
+        return $staff;
+    }
+}
+
+function retrieve_staff_by_id($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbStaff where id = '" . $id . "';";
+    $res = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($res) < 1 || $res == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($res);
+        $staff = make_staff_from_db($row);
+        return $staff;
+    }
 }
 

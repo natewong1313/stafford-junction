@@ -40,6 +40,10 @@
             require_once("domain/Family.php");
             require_once("database/dbFamily.php");
 
+            //import staff files
+            require_once("domain/Staff.php");
+            require_once("database/dbStaff.php");
+
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
@@ -82,13 +86,13 @@
             //If the user is a family account
             }else if($args['account'] == 'family'){ 
                 //retrieve user by their email (aka the username they filled in at the login page)
-                $user = retrieve_family_by_email($args['username']);
+                $user = retrieve_family_by_email($username);
                 if(!$user){
                     $badLogin = true;
                 }else if(password_verify($password, $user->getPassword())) { 
                     //set session variables
                     $_SESSION['logged_in'] = true;
-                    $_SESSION['access_level'] = 1; //access level for family = 1
+                    $_SESSION['access_level'] = 1; //access level for family == 1
                     $_SESSION['_id'] = $user->getId();
                     $_SESSION['f_name'] = $user->getFirstName();
                     $_SESSION['l_name'] = $user->getLastName();
@@ -102,6 +106,23 @@
                     //debugging; if you're here, the password wasn't able to be verified
                     echo $password . " " . $user->getPassword();
                     
+                }
+            }else if($args['account'] == 'staff'){
+                $user = retrieve_staff($username);
+                if(!$user){
+                    $badLogin = true;
+                }else if(password_verify($password, $user->getPassword())) {
+                    $_SESSION['logged_in'] = true;
+                    $_SESSION['access_level'] = 2; //access level for staff == 2
+                    $_SESSION['_id'] = $user->getId();
+                    $_SESSION['f_name'] = $user->getFirstName();
+                    $_SESSION['l_name'] = $user->getLastName();
+                    $_SESSION['account_type'] = "staff";
+                    $_SESSION['venue'] = "-"; //this session variable needs to be set to anything other than "", or else the header.php file won't run
+
+                    header('Location: index.php');
+                }else {
+                    echo $password . " " . $user->getPassword();
                 }
             } 
             
@@ -137,7 +158,7 @@
                 <select name="account" id="account">
                     <option value="admin">Admin</option>
                     <option value="family">Family</option>
-                    <!--<option value="staff">Staff</option>--> 
+                    <option value="staff">Staff</option>
                 </select>
 
                 <label for="username">Username</label>
