@@ -1,7 +1,6 @@
 --
 -- Table structure for table `dbActualActivityForm`
 --
-
 CREATE TABLE `dbActualActivityForm` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `activity` varchar(256) NOT NULL,
@@ -25,15 +24,15 @@ CREATE TABLE `dbActualActivityForm` (
 --
 CREATE TABLE `dbActualActivityAttendees` (
     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` varchar(255) NOT NULL
+    `name` varchar(256) NOT NULL
 );
 
 --
 -- Table structure for junction table `dbActivityAttendees`
 --
 CREATE TABLE `dbActivityAttendees` (
-    `activityID` INT(11) NOT NULL,
-    `attendeeID` INT(11) NOT NULL,
+    `activityID` int(11) NOT NULL,
+    `attendeeID` int(11) NOT NULL,
     PRIMARY KEY (`activityID`, `attendeeID`),
     FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
