@@ -15,12 +15,13 @@ CREATE TABLE `dbStaff` (
     `address` VARCHAR(256) NOT NULL,
     `email` VARCHAR(256) NOT NULL,
     `phone` VARCHAR(256) NOT NULL,
-    `econtact` VARCHAR(256) NOT NULL,
+    `econtactName` VARCHAR(256) NOT NULL,
+    `econtactPhone` VARCHAR(256) NOT NULL,
     `jobTitle` VARCHAR(256) NOT NULL,
     `password` VARCHAR(256) NOT NULL,
     `securityQuestion` VARCHAR(256) NOT NULL,
     `securityAnswer` VARCHAR(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `dbStaff` (`firstName`, `lastName`, `birthdate`, `address`, `email`, `phone`, `econtact`, `jobTitle`, `password`, `securityQuestion`, `securityAnswer`) VALUES
-    ('John', 'Doe', '10-13-24', '12 Little Oak Road', 'jdoe@gmail.com', '(555)555-5555', 'Jane Doe', 'Teacher', '123', 'question', 'answer');
+INSERT INTO `dbStaff` (`firstName`, `lastName`, `birthdate`, `address`, `email`, `phone`, `econtactName`, `econtactPhone`, `jobTitle`, `password`, `securityQuestion`, `securityAnswer`) VALUES
+    ('John', 'Doe', '10-13-24', '12 Little Oak Road', 'jdoe@gmail.com', '(555)555-5555', 'Jane Doe', '555-555-5555', 'Teacher', '123', 'question', 'answer');

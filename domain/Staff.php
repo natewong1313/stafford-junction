@@ -8,13 +8,14 @@ class Staff {
     private $address;
     private $email;
     private $phone;
-    private $econtact;
+    private $econtactName;
+    private $econtactPhone;
     private $jobTitle;
     private $password;
     private $securityQuestion;
     private $securityAnswer;
 
-    public function __construct($id, $firstName, $lastName, $birthdate, $address, $email, $phone, $econtact, $jobTitle, $password, $securityQuestion, $securityAnswer){
+    public function __construct($id, $firstName, $lastName, $birthdate, $address, $email, $phone, $econtactName, $econtactPhone, $jobTitle, $password, $securityQuestion, $securityAnswer){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -22,10 +23,11 @@ class Staff {
         $this->address = $address;
         $this->email = $email;
         $this->phone = $phone;
-        $this->econtact = $econtact;
+        $this->econtactName = $econtactName;
+        $this->econtactPhone = $econtactPhone;
         $this->jobTitle = $jobTitle;
         $this->password = $password;
-        $this->$securityQuestion = $securityQuestion;
+        $this->securityQuestion = $securityQuestion;
         $this->securityAnswer = $securityAnswer;
     }
 
@@ -59,8 +61,12 @@ class Staff {
         return $this->phone;
     }
 
-    public function getEContact(){
-        return $this->econtact;
+    public function getEContactName(){
+        return $this->econtactName;
+    }
+
+    public function getEContactPhone(){
+        return $this->econtactPhone;
     }
 
     public function getJobTitle(){

@@ -40,7 +40,9 @@
         <?php require('header.php'); ?>
         <h1>Stafford Junction Admin Dashboard</h1>
         <main class='dashboard'>
-            <?php if (isset($_GET['pcSuccess'])): ?>
+            <?php if (isset($_GET['addStaffSuccess'])): ?>
+                <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Staff account created!</div>';?>
+            <?php elseif (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
             <?php elseif (isset($_GET['deleteService'])): ?>
                 <div class="happy-toast">Service successfully removed!</div>

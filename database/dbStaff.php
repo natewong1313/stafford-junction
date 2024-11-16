@@ -13,15 +13,18 @@ function make_staff_from_signup($result_row){
         $result_row['address'],
         $result_row['email'],
         $result_row['phone'],
-        $result_row['econtact'],
+        $result_row['econtactName'],
+        $result_row['econtactPhone'],
         $result_row['jobTitle'],
         password_hash($result_row['password'], PASSWORD_BCRYPT),
         $result_row['securityQuestion'],
         password_hash($result_row['securityAnswer'], PASSWORD_BCRYPT)
     );
+
+    return $staff;
 }
 
-public function add_staff($staff){
+function add_staff($staff){
     if(!$staff instanceof Staff){
         die("Add staff mismatch");
     }
@@ -31,15 +34,16 @@ public function add_staff($staff){
 
     if(mysqli_num_rows($res) < 1 || $res == null){
         mysqli_query($conn,'INSERT INTO dbStaff (firstName, lastName, birthdate, address, email,
-        phone, econtact, password, securityQuestion, securityAnswer) VALUES(" ' .
+        phone, econtactName, econtactPhone, jobTitle, password, securityQuestion, securityAnswer) VALUES(" ' .
         $staff->getFirstName() . '","' .
         $staff->getLastName() . '","' .
         $staff->getBirthdate() . '","' .
         $staff->getAddress() . '","' .
         $staff->getEmail() . '","' . 
         $staff->getPhone() . '","' .
-        $staff->getEContact() . '","' .
-        $staff->jobTitle() . '","' . 
+        $staff->getEContactName() . '","' .
+        $staff->getEContactPhone() . '","' .
+        $staff->getJobTitle() . '","' . 
         $staff->getPassword() . '","' .
         $staff->getSecurityQuestion() . '","' . 
         $staff->getSecurityAnswer() . '");'
