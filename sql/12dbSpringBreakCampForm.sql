@@ -8,10 +8,10 @@ CREATE TABLE dbSpringBreakCampForm (
     waiver_completed BOOLEAN NOT NULL,
     notes TEXT,
     
-    family_id INT,
-    
-    CONSTRAINT FK_family_id
-        FOREIGN KEY (family_id) REFERENCES dbFamily(id)
+    child_id INT,
+   
+    CONSTRAINT FK_child_id
+        FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
