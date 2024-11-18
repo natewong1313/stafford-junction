@@ -20,10 +20,10 @@ function connect() {
     $database = "odhsmd";
     $user = "odhsmd";
     $pass = "odhsmd";
-    if ($_SERVER['SERVER_NAME'] == 'jenniferp122.sg-host.com') {
-        $user = 'uc1op8sb8zdqp';
-        $database = 'dbjyzu1z500h5e';
-        $pass = "7f8r0d57ltxn";
+    if ($_SERVER['SERVER_NAME'] == 'jenniferp129.sg-host.com') {
+        $user = 'ubojj5bhroaex';
+        $database = 'dbvswbwbmfnmrx';
+        $pass = "51@#11*c3@:3"; // this is really insecure lol
     } else if ($_SERVER['SERVER_NAME'] == 'gwynethsgiftvms.org') {
         $user = "uybhc603shfl5";
         $pass = "f11kwvhy4yic";
