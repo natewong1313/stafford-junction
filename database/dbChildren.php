@@ -76,24 +76,24 @@ function retrieve_children_by_family_id($id){
 //add child to database
 function add_child($child, $fam_id){
     $conn = connect();
-    mysqli_query($conn, 'INSERT INTO dbChildren (family_id, first_name, last_name, dob, address, neighborhood, city, state, zip, gender,
-        school, grade, is_hispanic, race, medical_notes, notes) VALUES (" ' .
+    mysqli_query($conn, 'INSERT INTO dbChildren (family_id, first_name, last_name, dob, gender, medical_notes, notes, neighborhood, address, city, state, zip,
+        school, grade, is_hispanic, race) VALUES (" ' .
         $fam_id . '","' .
         $child->getFirstName() . '","' .
         $child->getLastName() . '","' .
         $child->getBirthDate() . '","' .
-        $child->getAddress() . '","' .
+        $child->getGender() . '","' .
+        $child->getMedicalNotes() . '","' .
+        $child->getNotes() . '","' .
         $child->getNeighborhood() . '","' .
+        $child->getAddress() . '","' .
         $child->getCity() . '","' .
         $child->getState() . '","' .
         $child->getZip() . '","' .
-        $child->getGender() . '","' .
         $child->getSchool() . '","' .
         $child->getGrade() . '","' .
         $child->isHispanic() . '","' .
-        $child->getRace() . '","' .
-        $child->getMedicalNotes() . '","' .
-        $child->getNotes() . 
+        $child->getRace() .
         '");'
     );
     mysqli_close($conn);

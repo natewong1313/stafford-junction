@@ -132,16 +132,16 @@ function add_family($family){
     $query = "SELECT * FROM dbFamily WHERE email = '" . $family->getEmail() . "'";
     $result = mysqli_query($conn,$query);
     if($result == null || mysqli_num_rows($result) == 0){
-        mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, neighborhood, city,
-        state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, isHispanic, race,  income, firstName2, lastName2, 
-        birthdate2, address2, neighborhood2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2,
-        isHispanic2, race2, econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, 
-        securityQuestion, securityAnswer, isArchived) VALUES(" ' .
+        mysqli_query($conn,'INSERT INTO dbFamily (firstName, lastName, birthdate, address, city,
+        state, zip, email, phone, phoneType, secondaryPhone, secondaryPhoneType, firstName2, lastName2, 
+        birthdate2, address2, city2, state2, zip2, email2, phone2, phoneType2, secondaryPhone2, secondaryPhoneType2, 
+        econtactFirstName, econtactLastName, econtactPhone, econtactRelation, password, 
+        securityQuestion, securityAnswer, isArchived, neighborhood, isHispanic, race,  income, neighborhood2,
+        isHispanic2, race2) VALUES(" ' .
         $family->getFirstName() . '","' .
         $family->getLastName() . '","' .
         $family->getBirthDate() . '","' .
         $family->getAddress() . '","' .
-        $family->getNeighborhood() . '","' .
         $family->getCity() . '","' . 
         $family->getState() . '","' .
         $family->getZip() . '","' .
@@ -150,14 +150,10 @@ function add_family($family){
         $family->getPhoneType() . '","' . 
         $family->getSecondaryPhone() . '","' .
         $family->getSecondaryPhoneType() . '","' .
-        $family->isHispanic() . '","' .
-        $family->getRace() . '","' .
-        $family->getIncome() . '","' .
         $family->getFirstName2() . '","' .
         $family->getLastName2() . '","' .
         $family->getBirthDate2() . '","' .
         $family->getAddress2() . '","' .
-        $family->getNeighborhood2() . '","' .
         $family->getCity2() . '","' .
         $family->getState2() . '","' .
         $family->getZip2() . '","' .
@@ -166,8 +162,6 @@ function add_family($family){
         $family->getPhoneType2() . '","' .
         $family->getSecondaryPhone2() . '","' .
         $family->getSecondaryPhoneType2() . '","' .
-        $family->isHispanic2() . '","' .
-        $family->getRace2() . '","' .
         $family->getEContactFirstName() . '","' .
         $family->getEContactLastName() . '","' .
         $family->getEContactPhone() . '","' .
@@ -175,7 +169,14 @@ function add_family($family){
         $family->getPassword() . '","' .
         $family->getSecurityQuestion() . '","' .
         $family->getSecurityAnswer() . '","' .
-        $family->isArchived() .
+        $family->isArchived() . '","' . 
+        $family->getNeighborhood() . '","' .
+        $family->isHispanic() . '","' .
+        $family->getRace() . '","' .
+        $family->getIncome() . '","' .
+        $family->getNeighborhood2() . '","' .
+        $family->isHispanic2() . '","' .
+        $family->getRace2() . 
         '");'
     );						
         mysqli_close($conn);
