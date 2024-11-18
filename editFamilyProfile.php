@@ -10,20 +10,26 @@ $accessLevel = 0;
 $userID = null;
 $success = false;
 
-if(isset($_SESSION['_id'])){
+if (isset($_SESSION['_id'])) {
     require_once('database/dbFamily.php');
     require_once('include/input-validation.php');
+    require_once("domain/Family.php");
+    
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    
+    // Get the family ID from the GET parameter or default to the logged-in user's ID
+    $familyId = $_GET['id'] ?? $userID;
+    
+    // Retrieve the selected family's profile
+    $family = retrieve_family_by_id($familyId);
 } else {
     header('Location: login.php');
     die();
 }
 
 // Get field values to auto-populate
-include_once('domain/Family.php');
-$family = retrieve_family_by_id($_SESSION["_id"]);
 $first_name = $family->getFirstName();
 $last_name = $family->getLastName();
 $birthdate = $family->getBirthDate();
@@ -55,10 +61,11 @@ $econtact_last_name = $family->getEContactLastName();
 $econtact_phone = $family->getEContactPhone();
 $econtact_relation = $family->getEContactRelation();
 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+if($_SERVER['REQUEST_METHOD'] == "POST")
+{
     $args = sanitize($_POST);
-    $success = update_profile($args, $_SESSION["_id"]);
-    header("Location: familyView.php");
+    $success = update_profile($args, $familyId);
+    header("Location: findFamily.php");
 }
 
 ?>
@@ -312,9 +319,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <input type="text" id="econtact-relation" name="econtact-relation" value="<?php echo htmlspecialchars($econtact_relation); ?>">
                 </fieldset>
 
-                <input type="submit" href="familyView.php" name="profile-edit-form" value="Update Profile">
+                <input type="submit" name="profile-edit-form" value="Update Profile">
             </form>
-            <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: .5rem">Cancel</a>
+            <a class="button cancel" 
+                href="<?php echo $accessLevel > 1 ? 'index.php' : 'familyAccountDashboard.php'; ?>" 
+                style="margin-top: .5rem">
+                Cancel
+            </a>
         </main>
     </body>
 </html>

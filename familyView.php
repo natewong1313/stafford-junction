@@ -147,27 +147,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             } 
             ?>
         </div>
-
-            <!-- Archive Family Buttons -->
-            <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
-                <form method="post">
-                    <button type="submit" name="archive" class="button_style">Archive Family</button>
-                </form>
-            <?php endif?>
-            <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
-                <form method="post">
-                    <button type="submit" name="unarchive" class="button_style">Unarchive Family</button>
-                </form>
-            <?php endif?>
-            
-            <!-- Cancel Buttons -->
-            <?php if($_SESSION['access_level'] == 1): ?>
-                <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
-            <?php endif ?>
-            <?php if($_SESSION['access_level'] > 1): ?>
-                <a class="button cancel button_style" href="findFamily.php" style="margin-top: 1rem;">Return to Search</a>
-            <?php endif?>   
-
+        <!-- Archive Family Buttons -->
+        <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
+        <form method="post">
+            <button type="submit" name="archive" class="button_stlye">Archive Family</button>
+        </form>
+        <?php endif?>
+        <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
+        <form method="post">
+            <button type="submit" name="unarchive" class="button_stlye">Unarchive Family</button>
+        </form>
+        <?php endif?>
+        <!-- Edit Family Button -->
+        <?php if($_SESSION['access_level'] > 1): ?>
+        <a class="button edit" href="editFamilyProfile.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Edit Family</a>
+        <?php endif?>
+        <!-- Cancel Buttons -->
+        <?php if($_SESSION['access_level'] == 1): ?>
+        <a class="button cancel button_stlye" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
+        <?php endif ?>
+        <?php if($_SESSION['access_level'] > 1): ?>
+        <a class="button cancel button_stlye" href="findFamily.php" style="margin-top: 1rem;">Return to Search</a>
+        <?php endif?>   
     </body>
 </html>
 
