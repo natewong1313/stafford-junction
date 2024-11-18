@@ -534,6 +534,25 @@ function insert_family_languages($languages, $family_id) {
    return $id;
 }
 
+// Retrieves all langauges associated with a family
+function retrieve_family_langauges($family_id) {
+    $connection = connect();
+
+    // Query selects all languages that a family has
+    $query = "SELECT dbLanguages.language FROM dbLanguages INNER JOIN dbFamily_Languages ON dbLanguages.id = dbFamily_Languages.language_id 
+    INNER JOIN dbFamily ON dbFamily.id = dbFamily_Languages.family_id WHERE dbFamily.id = $family_id;";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        return null;
+    }
+    $languages = [];
+    foreach ($result as $row) {
+        $languages[] = $row['language'];
+    }
+    mysqli_close($connection);
+    return $languages;
+}
+
 // Inserts family and assistance ids in junction table
 function insert_family_assistance($assistance, $family_id) {
     $connection = connect();
@@ -563,3 +582,23 @@ function insert_family_assistance($assistance, $family_id) {
    mysqli_close($connection);
    return $id;
 }
+
+// Retrieves all assistance associated with a family
+function retrieve_family_assistance($family_id) {
+    $connection = connect();
+
+    // Query selects all languages that a family has
+    $query = "SELECT dbAssistance.assistance FROM dbAssistance INNER JOIN dbFamily_Assistance ON dbAssistance.id = dbFamily_Assistance.assistance_id 
+    INNER JOIN dbFamily ON dbFamily.id = dbFamily_Assistance.family_id WHERE dbFamily.id = $family_id;";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        return null;
+    }
+    $assistance = [];
+    foreach ($result as $row) {
+        $assistance[] = $row['assistance'];
+    }
+    mysqli_close($connection);
+    return $assistance;
+}
+?>
