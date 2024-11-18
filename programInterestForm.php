@@ -51,7 +51,7 @@ if (isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1) {
     $family_city = $family->getCity();
     $family_address = $family->getAddress();
     $family_state = $family->getState();
-    $children = getChildren($_SESSION["_id"]);
+    $children = retrieve_children_by_family_id($userID);
     $children_count = count($children);
     $children_ages = getChildrenAges($children);
 

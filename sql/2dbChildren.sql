@@ -1,7 +1,6 @@
 --
 -- Table structure for table `dbChildren`
 --
-
 CREATE TABLE `dbChildren` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `family_id` int(11) NOT NULL,

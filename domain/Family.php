@@ -6,6 +6,7 @@ class Family {
     private $lastName;
     private $birthdate;
     private $address;
+    private $neighborhood;
     private $city;
     private $state;
     private $zip;
@@ -14,10 +15,14 @@ class Family {
     private $phoneType;
     private $secondaryPhone;
     private $secondaryPhoneType;
+    private $isHispanic;
+    private $race;
+    private $income;
     private $firstName2;
     private $lastName2;
     private $birthdate2;
     private $address2;
+    private $neighborhood2;
     private $city2;
     private $state2;
     private $zip2;
@@ -26,6 +31,8 @@ class Family {
     private $phoneType2;
     private $secondaryPhone2;
     private $secondaryPhoneType2;
+    private $isHispanic2;
+    private $race2;
     private $econtactFirstName;
     private $econtactLastName;
     private $econtactPhone;
@@ -36,10 +43,10 @@ class Family {
     private $accountType;
     private $isArchived;
 
-    public function __construct($id, $firstName, $lastName, $birthdate, $address, $city, $state,
-        $zip, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2,
-        $address2, $city2, $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, $econtactFirstName,
-        $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $isArchived
+    public function __construct($id, $firstName, $lastName, $birthdate, $address, $neighborhood, $city, $state,
+        $zip, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, $isHispanic, $race, $income, $firstName2, $lastName2, $birthdate2,
+        $address2, $neighborhood2, $city2, $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2,
+        $isHispanic2, $race2, $econtactFirstName, $econtactLastName, $econtactPhone, $econtactRelation, $password, $question, $answer, $isArchived
     
     ){
         $this->id = $id;
@@ -47,6 +54,7 @@ class Family {
         $this->lastName = $lastName;
         $this->birthdate = $birthdate;
         $this->address = $address;
+        $this->neighborhood = $neighborhood;
         $this->city = $city;
         $this->state = $state;
         $this->zip = $zip;
@@ -55,10 +63,14 @@ class Family {
         $this->phoneType = $phoneType;
         $this->secondaryPhone = $secondaryPhone;
         $this->secondaryPhoneType = $secondaryPhoneType;
+        $this->isHispanic = $isHispanic;
+        $this->race = $race;
+        $this->income = $income;
         $this->firstName2 = $firstName2;
         $this->lastName2 = $lastName2;
         $this->birthdate2 = $birthdate2;
         $this->address2 = $address2;
+        $this->neighborhood2 = $neighborhood2;
         $this->city2 = $city2;
         $this->state2 = $state2;
         $this->zip2 = $zip2;
@@ -67,6 +79,8 @@ class Family {
         $this->phoneType2 = $phoneType2;
         $this->secondaryPhone2 = $secondaryPhone2;
         $this->secondaryPhoneType2 = $secondaryPhoneType2;
+        $this->isHispanic2 = $isHispanic2;
+        $this->race2 = $race2;
         $this->econtactFirstName = $econtactFirstName;
         $this->econtactLastName = $econtactLastName;
         $this->econtactPhone = $econtactPhone;
@@ -97,6 +111,10 @@ class Family {
 
     public function getBirthDate(){
         return $this->birthdate;
+    }
+
+    public function getNeighborhood(){
+        return $this->neighborhood;
     }
 
     public function getAddress(){
@@ -135,6 +153,18 @@ class Family {
         return $this->secondaryPhoneType;
     }
 
+    public function isHispanic(){
+        return $this->isHispanic;
+    }
+
+    public function getRace(){
+        return $this->race;
+    }
+
+    public function getIncome(){
+        return $this->income;
+    }
+
     //
     public function getFirstName2(){
         return $this->firstName2;
@@ -146,6 +176,10 @@ class Family {
 
     public function getBirthDate2(){
         return $this->birthdate2;
+    }
+
+    public function getNeighborhood2(){
+        return $this->neighborhood2;
     }
 
     public function getAddress2(){
@@ -182,6 +216,14 @@ class Family {
 
     public function getSecondaryPhoneType2(){
         return $this->secondaryPhoneType2;
+    }
+
+    public function isHispanic2(){
+        return $this->isHispanic2;
+    }
+
+    public function getRace2(){
+        return $this->race2;
     }
 
     public function getEContactFirstName(){
