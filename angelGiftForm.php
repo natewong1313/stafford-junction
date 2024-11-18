@@ -91,7 +91,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <label for="child_name">4. Name of Child / Nombre del niño\a*</label><br><br>
                 <select name="child_name" id="child_name" required>
                 <?php
-                    require_once('domain/Children.php'); 
+                    require_once('domain/Children.php');
                     foreach ($children as $c){
                         $id = $c->getID();
                         var_dump($c);

@@ -31,7 +31,7 @@ CREATE TABLE dbFieldTrpWaiverForm (
     photo_waiver_signature VARCHAR(256),
     photo_waiver_date DATE,
 
-    CONSTRAINT FK_child_id
+    CONSTRAINT FK_field_trip_child_id
         FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE
