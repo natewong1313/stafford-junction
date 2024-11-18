@@ -4,25 +4,111 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
+// Initialize family data variables
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = false;
+$family = null;
+$family_email = null;
+$family_first_name = null;
+$family_last_name = null;
+$family_phone = null;
+$family_zip = null;
+$family_city = null;
+$family_address = null;
+$family_state = null;
+$children = null;
+$children_count = null;
+$children_ages = null;
+$family_home_phone = null;
+$family_cell_phone = null;
 
 if(isset($_SESSION['_id'])){
+    require_once('domain/Family.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbProgramInterestForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+} else {
+    header('Location: login.php');
+    die();
+}
+
+include_once("database/dbFamily.php");
+include_once("database/dbChildren.php");
+
+// If logged in as a family
+if (isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1) {
+    // Get family data for autopopulating form
+    $family = retrieve_family_by_id($_SESSION["_id"]);
+    $family_email = $family->getEmail();
+    $family_first_name = $family->getFirstName();
+    $family_last_name = $family->getLastName();
+    $family_phone = $family->getPhone();
+    $family_zip = $family->getZip();
+    $family_city = $family->getCity();
+    $family_address = $family->getAddress();
+    $family_state = $family->getState();
+    $children = retrieve_children_by_family_id($userID);
+    $children_count = count($children);
+    $children_ages = getChildrenAges($children);
+
+    // Get home phone number
+    if ($family->getPhoneType() == "home") {
+        $family_home_phone = $family->getPhone();
+    } else if ($family->getSecondaryPhoneType() == "home") {
+        $family_home_phone = $family->getSecondaryPhone();
+    }
+    // Get cell phone number
+    if ($family->getPhoneType() == "cellphone") {
+        $family_cell_phone = $family->getPhone();
+    } else if ($family->getSecondaryPhoneType() == "cellphone") {
+        $family_cell_phone = $family->getSecondaryPhone();
+    }
+}
+
+// Gets the ages of each child and returns them as a string
+function getChildrenAges($children) {
+    $ages = "";
+    $last = end($children);
+    foreach ($children as $child) {
+        // Get current time and child date of birth
+        $current_time = strtotime(date("Y-m-d"));
+        $dob = strtotime($child->getBirthdate());
+        // Calculate age
+        $age = floor((abs($dob - $current_time)) / (365 * 60 * 60 * 24));
+        // Append it to end of ages string
+        $ages .= $age;
+        // If not at last child in children array, add a comma to string
+        if ($child != $last) {
+            $ages .= ", ";
+        }
+    }
+    return $ages;
 }
 
 // program interests and topic interests both are stored in arrays called "programs" and "topics" within the POST array
+// availability data is stored in a multidimentional array called "days" 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    $args = sanitize($_POST, null);
-    $required = array("first_name", "second_name", "address", "city", "neighborhood", "state", "zip", "cell_phone",
+    // Ignore days array during sanitation as it will cause an error
+    $ignoreList = array('days');
+    $args = sanitize($_POST, $ignoreList);
+    // Sanitize each day in days array individually
+    foreach ($args['days'] as $day) {
+        $day = sanitize($day, null);
+    }
+    $required = array("first_name", "last_name", "address", "city", "neighborhood", "state", "zip", "cell_phone",
         "home_phone", "email", "child_num", "child_ages", "adult_num");
+    $args['cell_phone'] = validateAndFilterPhoneNumber($args['cell_phone']);
+    $args['home_phone'] = validateAndFilterPhoneNumber($args['home_phone']);
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
         die();
+    } else {
+        $success = createProgramInterestForm($args);
     }
 }
 ?>
@@ -36,6 +122,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         
         <h1>Program Interest Form / formulario de interés del programa</h1>
+        <?php 
+            if (isset($_GET['formSubmitFail'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
+            }
+        ?>
         <div id="formatted_form">
 
             <p>Please fill out this survey to help us better understand the needs of the community and schedule future classes
@@ -57,17 +148,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 1. First Name-->
                 <label for="first_name">* First Name / Nombre</label><br><br>
-                <input type="text" name="first_name" id="first_name" placeholder="First Name/Nombre" required>
+                <input type="text" name="first_name" id="first_name" placeholder="First Name/Nombre" required value="<?php if ($family_first_name != null) echo htmlspecialchars($family_first_name)?>">
                 <br><br>
 
                 <!-- 2. Last Name-->
                 <label for="last_name">* Last Name / Apellido</label><br><br>
-                <input type="text" name="last_name" id="last_name" placeholder="Last Name/Apellido " required>
+                <input type="text" name="last_name" id="last_name" placeholder="Last Name/Apellido " required value="<?php if ($family_last_name != null) echo $family_last_name?>">
                 <br><br>
 
                 <!-- 3. Address-->
                 <label for="address">* Address / Dirección</label><br><br>
-                <input type="text" name="address" id="address" placeholder="Address/Dirección" required>
+                <input type="text" name="address" id="address" placeholder="Address/Dirección" required value="<?php if ($family_address != null) echo $family_address?>">
                 <br><br>
 
                 <!-- 4. Neighborhood-->
@@ -77,7 +168,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 4. City-->
                 <label for="city">* City / Ciudad</label><br><br>
-                <input type="text" name="city" id="city" placeholder="City/Ciudad" required>
+                <input type="text" name="city" id="city" placeholder="City/Ciudad" required value="<?php if ($family_city != null) echo $family_city?>">
                 <br><br>
 
                 <!-- 4. State-->
@@ -130,46 +221,55 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         <option value="TX">Texas</option>
                         <option value="UT">Utah</option>
                         <option value="VT">Vermont</option>
-                        <option value="VA" selected>Virginia</option>
+                        <option value="VA">Virginia</option>
                         <option value="WA">Washington</option>
                         <option value="WV">West Virginia</option>
                         <option value="WI">Wisconsin</option>
                         <option value="WY">Wyoming</option>
                 </select><br><br>
 
+                <script>
+                    // Get state from family data, then select that state in the form
+                    if ('<?php echo $family_state;?>' != null) {
+                        element = document.getElementById("state");
+                        option = element.querySelector("option[value = '<?php echo $family_state;?>'");
+                        option.selected = true;
+                    }
+                </script>
+
                 <!-- 5. Zip Code-->
                 <label for="zip">* Zip Code / Código postal</label><br><br>
-                <input type="text" name="zip" id="zip" placeholder="Zip Code/Código postal" required>
+                <input type="text" name="zip" id="zip" placeholder="Zip Code/Código postal" required value="<?php if ($family_zip != null) echo $family_zip?>">
                 <br><br>
 
                 <!-- 6. Cell Phone-->
                 <label for="cell_phone">* Cell Phone / Teléfono móvil</label><br><br>
-                <input type="text" name="cell_phone" id="cell_phone" placeholder="Cell Phone/Teléfono móvil" required>
+                <input type="text" name="cell_phone" id="cell_phone" placeholder="Cell Phone/Teléfono móvil" required value="<?php if ($family_cell_phone != null) echo $family_cell_phone?>">
                 <br><br>
 
                 <!-- 7. Home Phone-->
                 <label for="home_phone">* Home Phone / Teléfono residencial</label><br><br>
-                <input type="text" name="home_phone" id="home_phone" placeholder="Home Phone/Teléfono residencial" required>
+                <input type="text" name="home_phone" id="home_phone" placeholder="Home Phone/Teléfono residencial" required value="<?php if ($family_home_phone != null) echo $family_home_phone?>">
                 <br><br>
 
                 <!-- 8. Email-->
                 <label for="email">* Email / Correo electrónico</label><br><br>
-                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required>
+                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required value="<?php if ($family_cell_phone != null) echo $family_email?>">
                 <br><br>
 
                 <!-- 7. Number of Children in Household-->
                 <label for="child_num">* How Many Children in Household? / ¿Cuántos niños hay en el hogar?</label><br><br>
-                <input type="text" name="child_num" id="child_num" placeholder="Number of Children/Número de niños" required>
+                <input type="number" oninput="getChildNum()" pattern="[0-9]*" name="child_num" id="child_num" placeholder="Number of Children/Número de niños" required value="<?php if ($children_count != null) echo $children_count?>">
                 <br><br>
 
                 <!-- 8. Ages of Children in Household-->
                 <label for="child_ages">* What ages? / ¿Cuántos años?</label><br><br>
-                <input type="text" name="child_ages" id="child_ages" placeholder="Ages/Años" required>
+                <input type="text" name="child_ages" id="child_ages" placeholder="Ages/Años" required value="<?php if ($children_ages != null) echo $children_ages?>">
                 <br><br>
 
                 <!-- 9. Number of Adults in Household-->
                 <label for="adult_num">* How Many Adult in Household? / ¿Cuántos adultos hay en el hogar?</label><br><br>
-                <input type="text" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" required>
+                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" required>
                 <br><br>
 
                 <h2>Programs of Interest / Programas de interés</h2>
@@ -269,22 +369,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <label>Monday:</label>
                     </div>
                     <div>
-                    <input type="checkbox" id="monday_morning" name="monday_morning" value="Morning">
+                    <input type='hidden'name='days[Monday][morning]' value='0'>
+                    <input type="checkbox" id="monday_morning" name='days[Monday][morning]' value='1'>
                     <label for="monday_morning"> Morning</label><br> 
                     </div>
                     <div>
-                    <input type="checkbox" id="monday_afternoon" name="monday_afternoon" value="Afternoon">
+                    <input type='hidden'name='days[Monday][afternoon]' value='no'>
+                    <input type="checkbox" id="monday_afternoon" name='days[Monday][afternoon]' value='1'>
                     <label for="monday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
-                    <input type="checkbox" id="monday_evening" name="monday_evening" value="Evening">
+                    <input type='hidden'name='days[Monday][evening]' value='no'>
+                    <input type="checkbox" id="monday_evening" name='days[Monday][evening]' value='1'>
                     <label for="monday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name="monday_times" id="monday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Monday][specific_time]' id="monday_times" placeholder="Time/Horas" >
                     </div>
                 </div>
                 <br>
@@ -294,22 +397,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <label>Tuesday:</label>
                     </div>
                     <div>
-                    <input type="checkbox" id="tuesday_morning" name="tuesday_morning">
+                    <input type='hidden'name='days[Tuesday][morning]' value='0'>
+                    <input type="checkbox" id="tuesday_morning" name='days[Tuesday][morning]' value='1'>
                     <label for="tuesday_morning"> Morning</label><br> 
                     </div>
                     <div>
-                    <input type="checkbox" id="tuesday_afternoon" name="tuesday_afternoon">
+                    <input type='hidden'name='days[Tuesday][afternoon]' value='no'>
+                    <input type="checkbox" id="tuesday_afternoon" name='days[Tuesday][afternoon]' value='1'>
                     <label for="tuesday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
-                    <input type="checkbox" id="tuesday_evening" name="tuesday_evening">
+                    <input type='hidden'name='days[Tuesday][evening]' value='no'>
+                    <input type="checkbox" id="tuesday_evening" name='days[Tuesday][evening]' value='1'>
                     <label for="tuesday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name="tuesday_times" id="tuesday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Tuesday][specific_time]' id="tuesday_times" placeholder="Time/Horas" >
                     </div>
                 </div>
                 <br>
@@ -319,22 +425,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <label>Wednesday:</label>
                     </div>
                     <div>
-                    <input type="checkbox" id="wednesday_morning" name="wednesday_morning">
+                    <input type='hidden'name='days[Wednesday][morning]' value='0'>
+                    <input type="checkbox" id="wednesday_morning" name='days[Wednesday][morning]' value='1'>
                     <label for="wednesday_morning"> Morning</label><br> 
                     </div>
                     <div>
-                    <input type="checkbox" id="wednesday_afternoon" name="wednesday_afternoon">
+                    <input type='hidden'name='days[Wednesday][afternoon]' value='no'>
+                    <input type="checkbox" id="wednesday_afternoon" name='days[Wednesday][afternoon]' value='1'>
                     <label for="wednesday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
-                    <input type="checkbox" id="wednesday_evening" name="wednesday_evening">
+                    <input type='hidden'name='days[Wednesday][evening]' value='no'>
+                    <input type="checkbox" id="wednesday_evening" name='days[Wednesday][evening]' value='1'>
                     <label for="wednesday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name="wednesday_times" id="wednesday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Wednesday][specific_time]' id="wednesday_times" placeholder="Time/Horas" >
                     </div>
                 </div>
                 <br>
@@ -344,34 +453,128 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <label>Thursday:</label>
                     </div>
                     <div>
-                    <input type="checkbox" id="thursday_morning" name="thursday_morning">
+                    <input type='hidden'name='days[Thursday][morning]' value='0'>
+                    <input type="checkbox" id="thursday_morning" name='days[Thursday][morning]' value='1'>
                     <label for="thursday_morning"> Morning</label><br> 
                     </div>
                     <div>
-                    <input type="checkbox" id="thursday_afternoon" name="thursday_afternoon">
+                    <input type='hidden'name='days[Thursday][afternoon]' value='no'>
+                    <input type="checkbox" id="thursday_afternoon" name='days[Thursday][afternoon]' value='1'>
                     <label for="thursday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
-                    <input type="checkbox" id="thursday_evening" name="thursday_evening">
+                    <input type='hidden'name='days[Thursday][evening]' value='no'>
+                    <input type="checkbox" id="thursday_evening" name='days[Thursday][evening]' value='1'>
                     <label for="thursday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name="thursday_times" id="thursday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Thursday][specific_time]' id="thursday_times" placeholder="Time/Horas" >
                     </div>
                 </div>
-                <br><br>
+                <br><br><br>
 
-                <label for="other_times">Are there any other days or times that would work best for you? / ¿Hay otro horario que funcione mejor?</label><br><br>
-                <input type="text" name="other_times" id="other_times" placeholder="Time/Horas">
-                <br><br>
+                <p>Are there any other days or times that would work best for you? / ¿Hay otro horario que funcione mejor?</p><br><br>
+
+                <div class="availability-day-form">
+                    <div class="day-label">
+                    <label>Friday:</label>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Friday][morning]' value='0'>
+                    <input type="checkbox" id="friday_morning" name='days[Friday][morning]' value='1'>
+                    <label for="friday_morning"> Morning</label><br> 
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Friday][afternoon]' value='no'>
+                    <input type="checkbox" id="friday_afternoon" name='days[Friday][afternoon]' value='1'>
+                    <label for="friday_afternoon"> Afternoon</label><br>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Friday][evening]' value='no'>
+                    <input type="checkbox" id="friday_evening" name='days[Friday][evening]' value='1'>
+                    <label for="friday_evening"> Evening</label><br>
+                    </div>
+                    <div>
+                    <label>Only Specific Times:</label><br>
+                    </div>
+                    <div>
+                    <input type="text" name='days[Friday][specific_time]' id="friday_times" placeholder="Time/Horas" >
+                    </div>
+                </div>
+                <br>
+
+                <div class="availability-day-form">
+                    <div class="day-label">
+                    <label>Saturday:</label>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Saturday][morning]' value='0'>
+                    <input type="checkbox" id="saturday_morning" name='days[Saturday][morning]' value='1'>
+                    <label for="saturday_morning"> Morning</label><br> 
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Saturday][afternoon]' value='no'>
+                    <input type="checkbox" id="saturday_afternoon" name='days[Saturday][afternoon]' value='1'>
+                    <label for="saturday_afternoon"> Afternoon</label><br>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Saturday][evening]' value='no'>
+                    <input type="checkbox" id="saturday_evening" name='days[Saturday][evening]' value='1'>
+                    <label for="saturday_evening"> Evening</label><br>
+                    </div>
+                    <div>
+                    <label>Only Specific Times:</label><br>
+                    </div>
+                    <div>
+                    <input type="text" name='days[Saturday][specific_time]' id="saturday_times" placeholder="Time/Horas" >
+                    </div>
+                </div>
+                <br>
+
+                <div class="availability-day-form">
+                    <div class="day-label">
+                    <label>Sunday:</label>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Sunday][morning]' value='0'>
+                    <input type="checkbox" id="sunday_morning" name='days[Sunday][morning]' value='1'>
+                    <label for="sunday_morning"> Morning</label><br> 
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Sunday][afternoon]' value='no'>
+                    <input type="checkbox" id="sunday_afternoon" name='days[Sunday][afternoon]' value='1'>
+                    <label for="sunday_afternoon"> Afternoon</label><br>
+                    </div>
+                    <div>
+                    <input type='hidden'name='days[Sunday][evening]' value='no'>
+                    <input type="checkbox" id="sunday_evening" name='days[Sunday][evening]' value='1'>
+                    <label for="sunday_evening"> Evening</label><br>
+                    </div>
+                    <div>
+                    <label>Only Specific Times:</label><br>
+                    </div>
+                    <div>
+                    <input type="text" name='days[Sunday][specific_time]' id="sunday_times" placeholder="Time/Horas" >
+                    </div>
+                </div>
+                <br>
 
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
             </form>
         </div>
+        <?php
+            // if submission successful, create pop up notification and direct user back to fill form page
+            // if fail, notify user on program interest form page
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                echo '<script>document.location = "programInterestForm.php?formSubmitFail";</script>';
+            }
+        ?>
         
     </body>
 </html>

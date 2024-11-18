@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `dbSchoolSuppliesForm`;
+
 --
 -- Table structure for table `dbSchoolSuppliesForm`
 --
