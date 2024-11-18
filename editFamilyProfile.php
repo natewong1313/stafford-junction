@@ -321,7 +321,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
                 <input type="submit" name="profile-edit-form" value="Update Profile">
             </form>
-            <a class="button cancel" href="familyAccountDashboard.php" style="margin-top: .5rem">Cancel</a>
+            <a class="button cancel" 
+                href="<?php echo $accessLevel > 1 ? 'index.php' : 'familyAccountDashboard.php'; ?>" 
+                style="margin-top: .5rem">
+                Cancel
+            </a>
         </main>
     </body>
 </html>

@@ -107,22 +107,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <?php
             if(isset($family)){
                 echo '<h3>Account Summary</h3>';
+                echo '<p>Click on an Account ID to view or edit that family\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Acct ID</th>
+                                <th>Account ID</th>
                                 <th>Name</th>
-                                <th>Birthdate</th>
+                                <th>Date of Birth</th>
                                 <th>Address</th>
-                                <th>city</th>
-                                <th>state</th>
-                                <th>zip</th>
-                                <th>email</th>
-                                <th>phone</th>
-                                <th>Emergency Contact</th>
-                                <th>Emergency Phone</th>';
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zip</th>
+                                <th>Email</th>
+                                <th>Phone</th>';
                                 //a href=familyView.php?id=' . $id . 
                             echo '</tr>
                         </thead>
@@ -138,8 +137,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                             echo '<td>' . $acct->getZip() . '</td>';
                             echo '<td>' . $acct->getEmail() . '</td>';
                             echo '<td>' . $acct->getPhone() . '</td>';
-                            echo '<td>' . $acct->getEContactFirstName() . " " . $acct->getEContactLastName() . '</td>';
-                            echo '<td>' . $acct->getEContactPhone() . '</td>';
                             echo '<tr>';
                             
                         }
@@ -155,9 +152,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
      
         <a class="button cancel button_style"  href="index.php"">Return to Dashboard</a>
      
-        
 
-        
-        
     </body>
 </html>
