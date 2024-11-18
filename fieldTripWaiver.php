@@ -27,12 +27,12 @@ $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
 
-// include the header .php file s
+include('database/dbFieldTripWaiverForm.php');
+require_once('include/input-validation.php');
+//check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
+    //sanitize form input
     $args = sanitize($_POST, null);
-
 
     $required = array(
             'child_first_name',
@@ -65,8 +65,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "Not all fields complete";
         die();
     }else {
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
+       //call the function to create the waiver form
+        $waiver_id = createFieldTripWaiverForm($args);
+        
+        if ($waiver_id) {
+            echo "Field trip waiver form submitted successfully!";
+        } else {
+            echo "Error submitting the form.";
+        //foreach($args as $key => $val){
+           //echo "{$key}:" . " " . "{$val}" . "<br>";
         }
     }
 }
@@ -79,13 +86,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <?php include_once("universal.inc") ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stafford Junction | Field Trip Waiver Form</title>
+    <title>Stafford Junction | Field Trip Waiver Form <?php echo date("Y"); ?></title>
 </head>
 <body>
 
     <!-- Main heading of the page -->
-    <h1>Stafford Junction Field Trip Release Waiver 2024 / Exención de Responsabilidad para Excursiones de Stafford
-        Junction</h1>
+    <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
 
