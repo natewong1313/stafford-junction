@@ -1095,6 +1095,22 @@ img.profile-pic {
   width: 6rem;
 }
 
+/*
+ * This is used to change the attributes of the availability days in the availability secion in the programInterestForm
+ */
+ .search-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/*
+ * This is used to change the attributes of the day label in the availability secion in the programInterestForm
+ */
+.search-label {
+  width: 6rem;
+}
+
 .button_style {
   width: 30%;
   margin-left: 35%;
@@ -1102,13 +1118,10 @@ img.profile-pic {
   margin-top: 10px;
 }
 
-/*
-Styling below made for Stafford Junction website
-*/
 
 /*
  * Styling for smaller buttons to dynamically add or remove inputs 
- * Created for forms for easier readabliity with many inputs
+ * for Actual Actvity Form
  */
 .addRemove-btn {
   width: 12rem;
@@ -1124,7 +1137,7 @@ Styling below made for Stafford Junction website
 
 /* 
  * Styling for input groups to add multiple buttons in one row
- * Easier readibility when many inputs need to be added
+ * for Actual Actvity Form
  */
 #multInputContainer {
   display: flex;
@@ -1144,4 +1157,57 @@ Styling below made for Stafford Junction website
 .input-form {
   padding: 2rem;
   flex: 1;
+}
+
+input[type="checkbox"]:checked {
+  accent-color: #7e0d07;
+}
+
+/* 
+ * Styling for fieldset in Viewing Information
+ * for viewFamily.php
+ */
+
+#view-family fieldset {
+  border: 2px solid #ccc; /* Light gray border */
+  padding: 20px; /* Space inside the fieldset */
+  margin-bottom: 20px; /* Space between fieldsets */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for a 3D effect */
+  background-color: #f9f9f9; /* Light background color */
+}
+
+#view-family legend {
+  font-size: 1.2em; /* Larger font for legend */
+  font-weight: bold; /* Make the legend text bold */
+  color: #333; /* Dark text color for better contrast */
+  padding: 0 10px; /* Add horizontal padding to the legend */
+  background-color: #e2e2e2; /* Light gray background for the legend */
+  border-radius: 4px; /* Rounded corners for the legend */
+}
+
+#view-family fieldset label {
+  display: block;
+  font-weight: bold; /* Make labels bold */
+  margin-bottom: 5px; /* Space below labels */
+}
+
+#view-family fieldset p {
+  margin-bottom: 10px; /* Space between paragraphs */
+  font-size: 1em; /* Standard font size for paragraphs */
+  color: #383838; /* Slightly darker text color for better readability */
+}
+
+#view-family fieldset textarea {
+  width: 100%; /* Make form elements take the full width of the container */
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc; /* Border for input fields */
+  border-radius: 4px; /* Rounded corners for form elements */
+  box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+#view-family fieldset textarea:focus {
+  border-color: #007bff; /* Change border color on focus */
+  outline: none; /* Remove default outline */
 }

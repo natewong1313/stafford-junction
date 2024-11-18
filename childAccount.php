@@ -34,31 +34,42 @@ $child = retrieve_child_by_id($_GET['id']);
         <title>Stafford Junction | Child Account</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
-        <?php require_once('header.php') ?>
+        <?php 
+            require_once('header.php');
+            require_once('include/output.php');
+        ?>
         <h1>Account Page for <?php echo $child->getFirstName() ?></h1>
 
-        <div style="margin-left: 20px; margin-right: 20px">
-        <?php 
-            if(isset($child)){
-                echo "<h2>Primary Information</h2>";
-                echo "<h3>Name:</h3>" . $child->getFirstName() . " " . $child->getLastName();
-                echo "<br>";
-                echo "<h3>Birthdate:</h3>" . $child->getBirthdate();
-                echo "<br>";
-                echo "<h3>Gender</h3>" . $child->getGender(); 
-                echo "<br>";
-                echo "<h3>Medical Notes:</h3>" . $child->getMedicalNotes();
-                echo "<br>";
-                echo "<h3>Notes:</h3>" . $child->getMedicalNotes();
-                echo "<br>";
-                echo "<h3>Enrolled Programs:</h3>";
-
-            }
+        <div  id="view-family" style="margin-left: 20px; margin-right: 20px">
+        <main class="general">
+        <?php if(isset($child)) {
+            echo '<fieldset>';
+            echo '<legend>' . $child->getFirstName() . '</legend>';
+            echo '<label>Account ID</label>';
+            echo '<p>' . $child->getID() . '</a></p>';
+            echo '<label>Full Name</label>';
+            echo '<p>' . $child->getFirstName() . " " . $child->getLastName() . '</p>';
+            echo '<label>Date of Birth</label>';
+            echo '<p>' . $child->getBirthdate() . '</p>';
+            echo '<label>Gender</label>';
+            echo '<p>' . $child->getGender() . '</p>';
+            echo '<label>Medical Notes</label>';
+            echo '<p>' . $child->getMedicalNotes() . '</p>';
+            echo '<label>Other Notes</label>';
+            echo '<p>' . $child->getNotes() . '</p>';
+            echo '<label>Enrolled Programs</label>';
+            echo '<p>' . '</p>';
+            echo '</fieldset>';
+        }
         
         ?>
+        
         </div>
+
+
         <?php if($_SESSION['access_level'] == 1): ?>
         <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
@@ -67,7 +78,5 @@ $child = retrieve_child_by_id($_GET['id']);
         <?php endif?>
         
 
-        
-        
     </body>
 </html>
