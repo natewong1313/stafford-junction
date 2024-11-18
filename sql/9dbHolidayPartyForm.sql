@@ -6,7 +6,7 @@ CREATE TABLE dbBrainBuildersHolidayPartyForm (
     email VARCHAR(100) NOT NULL,
     child_first_name VARCHAR(50) NOT NULL,
     child_last_name VARCHAR(50) NOT NULL,
-    isAttending TINYINT(1) NOT NULL, 
+    isAttending BOOLEAN NOT NULL, 
     transportation VARCHAR(50) NOT NULL,
     neighborhood VARCHAR(50) NOT NULL,
     comments TEXT,
@@ -15,4 +15,3 @@ CREATE TABLE dbBrainBuildersHolidayPartyForm (
         ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
-
