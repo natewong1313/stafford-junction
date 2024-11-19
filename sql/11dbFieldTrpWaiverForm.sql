@@ -25,8 +25,7 @@ CREATE TABLE `dbFieldTrpWaiverForm` (
     `emgcy_contact1_last_name` VARCHAR(256),
     `emgcy_contact1_rship` VARCHAR(100),
     `emgcy_contact1_phone` VARCHAR(15),
-<<<<<<< HEAD
-    
+   
     `contact_2` INT, -- Made nullable in case a second emergency contact is not provided
     `emgcy_contact2_first_name` VARCHAR(256),
     `emgcy_contact2_last_name` VARCHAR(256),
@@ -42,24 +41,6 @@ CREATE TABLE `dbFieldTrpWaiverForm` (
 -- Constraints for table `dbFieldTripWaiverForm`
 --
     CONSTRAINT FK_field_trip_child_id
-=======
-
-    `contact_2` INT NOT NULL,
-    `emgcy_contact2_first_name` VARCHAR(256),
-    `emgcy_contact2_last_name` VARCHAR(256),
-    `emgcy_contact2_rship` VARCHAR(100),
-    `emgcy_contact2_phone` VARCHAR(15),
-
-    `medical_insurance_company` VARCHAR(256),
-    `policy_number` VARCHAR(50),
-    `photo_waiver_signature` VARCHAR(256),
-    `photo_waiver_date` DATE,
-
---
--- Constraints for table `dbFieldTripWaiverForm`
---
-    CONSTRAINT FK_child_idFTF
->>>>>>> 30e4876f31830fa878afa177539a52fbb51dc876
         FOREIGN KEY (`child_id`) REFERENCES `dbChildren` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
