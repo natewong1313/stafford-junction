@@ -8,21 +8,22 @@ $accessLevel = 0;
 $userID = null;
 
 // Search criteria variables
-// Search criteria variables
 $last_name = null;
-$email = null;
-$neighborhood = null;
-$address = null;
 $city = null;
-$zip = null;
+$address = null;
+$neighborhood = null;
+$school = null;
+$grade = null;
 $income = null;
-$assistance = null;
-$is_archived = 0;
+$is_hispanic = null;
+$race = null;
 
 require_once("database/dbFamily.php");
 require_once("domain/Family.php");
-// Get all families if no criteria inputted in search
-$family = find_families($last_name, $email, $neighborhood, $address, $city, $zip, $income, $assistance, $is_archived);
+require_once("database/dbChildren.php");
+require_once("domain/Children.php");
+// Get all children if no criteria inputted in search
+$children = find_children($last_name, $address, $city, $neighborhood, $school, $grade, $income, $is_hispanic, $race);
 
 if (isset($_SESSION['_id'])) {
     $loggedIn = true;
@@ -38,16 +39,11 @@ if ($accessLevel < 2) {
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once("include/input-validation.php");
+
     $args = sanitize($_POST, null);
     // Get criteria if set
     if (isset($args['last-name'])) {
         $last_name = $args['last-name'];
-    }
-    if (isset($args['email'])) {
-        $email = $args['email'];
-    }
-    if (isset($args['neighborhood'])) {
-        $neighborhood = $args['neighborhood'];
     }
     if (isset($args['address'])) {
         $address = $args['address'];
@@ -55,24 +51,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     if (isset($args['city'])) {
         $city = $args['city'];
     }
-    if (isset($args['zip'])) {
-        $zip = $args['zip'];
+    if (isset($args['neighborhood'])) {
+        $neighborhood = $args['neighborhood'];
+    }
+    if (isset($args['school'])) {
+        $school = $args['school'];
+    }
+    if (isset($args['grade'])) {
+        $grade = $args['grade'];
     }
     if (isset($args['income'])) {
         $income = $args['income'];
     }
-    if (isset($args['assistance'])) {
-        if ($args['assistance'] != "") {
-            $assistance = preg_split("/\s*,\s*/", $args['assistance']);
-        }
+    if (isset($args['is-hispanic'])) {
+        $is_hispanic = $args['is-hispanic'];
     }
-    if (isset($args['is-archived'])) {
-        $is_archived = $args['is-archived'];
+    if (isset($args['race'])) {
+        $race = $args['race'];
     }
     // Find families based on set criteria
-    $family = find_families($last_name, $email, $neighborhood, $address, $city, $zip, $income, $assistance, $is_archived);
+    $children = find_children($last_name, $address, $city, $neighborhood, $school, $grade, $income, $is_hispanic, $race);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -87,10 +86,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     </head>
     <body>
         <?php require_once('header.php') ?>
-        <h1>Search Family Account</h1>
+        <h1>Search Children</h1>
 
         <form id="formatted_form" method="POST">
-        <label>Select any criteria to search for or fill none to view all families</label>
+        <label>Select any criteria to search for or fill none to view all children</label>
             <!-- Search Criteria Fields -->
             <div class="search-container">
                 <div class="search-label">
@@ -98,14 +97,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
                 <div>
                 <input type="text" id="last-name" name='last-name'>
-                </div>
-            </div>
-            <div class="search-container">
-                <div class="search-label">
-                <label>Email:</label>
-                </div>
-                <div>
-                <input type="text" id="email" name='email'>
                 </div>
             </div>
             <div class="search-container">
@@ -134,18 +125,34 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             </div>
             <div class="search-container">
                 <div class="search-label">
-                <label>Zip:</label>
+                <label>School:</label>
                 </div>
                 <div>
-                <input type="number" id="zip" name='zip'>
+                <input type="text" id="school" name='school'>
                 </div>
             </div>
             <div class="search-container">
                 <div class="search-label">
-                <label>Current Assistance:</label>
+                <label>Hispanic, Latino, or Spanish Origin:</label>
                 </div>
                 <div>
-                <input type="text" id="assistance" name='assistance'>
+                <input type="checkbox" id="is-hispanic" name='is-hispanic' value=1>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-label">
+                <label for="race" required>Race</label><br><br>
+                </div>
+                <div>
+                <select id="race" name="race[]" multiple>
+                    <option value="Caucasian">Caucasian</option>
+                    <option value="Black/African American">Black/African American</option>
+                    <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
+                    <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Multiracial">Multiracial</option>
+                    <option value="Other">Other</option>
+                </select><br><br>
                 </div>
             </div>
             <div class="search-container">
@@ -163,41 +170,43 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
             </div>
             
+            
             <button type="submit" class="button_style">Search</button>
 
             <?php
-            if(isset($family)){
+            if(isset($children)){
                 echo '<h3>Account Summary</h3>';
-                echo '<p>Click on an Account ID to view or edit that family\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Account ID</th>
+                                <th>Acct ID</th>
                                 <th>Name</th>
-                                <th>Date of Birth</th>
+                                <th>Birthdate</th>
+                                <th>Neighborhood</th>
                                 <th>Address</th>
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Zip</th>
-                                <th>Email</th>
-                                <th>Phone</th>';
+                                <th>School</th>
+                                <th>Grade</th>';
                                 //a href=familyView.php?id=' . $id . 
                             echo '</tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($family as $acct){
+                        foreach($children as $c){
                             echo '<tr>';
-                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
-                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
-                            echo '<td>' . $acct->getBirthDate() . '</td>';
-                            echo '<td>' . $acct->getAddress() . '</td>';
-                            echo '<td>' . $acct->getCity() . '</td>';
-                            echo '<td>' . $acct->getState() . '</td>';
-                            echo '<td>' . $acct->getZip() . '</td>';
-                            echo '<td>' . $acct->getEmail() . '</td>';
-                            echo '<td>' . $acct->getPhone() . '</td>';
+                            echo '<td><a href=childAccount.php?findChildren=true&id=' . $c->getID() . '>' . $c->getID() . '</a></td>';
+                            echo '<td>' . $c->getFirstName() . " " . $c->getLastName() . '</td>';
+                            echo '<td>' . $c->getBirthDate() . '</td>';
+                            echo '<td>' . $c->getNeighborhood() . '</td>';
+                            echo '<td>' . $c->getAddress() . '</td>';
+                            echo '<td>' . $c->getCity() . '</td>';
+                            echo '<td>' . $c->getState() . '</td>';
+                            echo '<td>' . $c->getZip() . '</td>';
+                            echo '<td>' . $c->getSchool() . '</td>';
+                            echo '<td>' . $c->getGrade() . '</td>';
                             echo '<tr>';
                             
                         }
@@ -211,8 +220,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             ?>
         </form>
      
-        <a class="button cancel button_style"  href="index.php"">Return to Dashboard</a>
-     
-
+        <a class="button cancel button_style"  href="index.php">Return to Dashboard</a>      
     </body>
 </html>
