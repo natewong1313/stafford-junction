@@ -137,3 +137,21 @@ function retrieve_volunteer_by_email($email)
         return $volunteer;
     }
 }
+
+// get a volunteer by id
+function retrieve_volunteer_by_id($id)
+{
+    $conn = connect();
+    $query = "SELECT * FROM dbVolunteers WHERE id = '" . $id . "';";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) < 1 || $result == null) {
+        mysqli_close($conn);
+        return null;
+    } else {
+        $row = mysqli_fetch_assoc($result);
+        $volunteer = create_volunteer_from_db($row);
+        mysqli_close($conn);
+        return $volunteer;
+    }
+}
