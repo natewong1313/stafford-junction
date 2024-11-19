@@ -104,9 +104,7 @@
                     header("Location: familyAccountDashboard.php");
 
                 }else {
-                    //debugging; if you're here, the password wasn't able to be verified
-                    echo $password . " " . $user->getPassword();
-                    
+                    $badLogin = true;       
                 }
             }else if($args['account'] == 'staff'){ //if the account is a staff account
                 $user = retrieve_staff($username); //grab staff user
@@ -123,7 +121,7 @@
 
                     header('Location: index.php');
                 }else {
-                    echo $password . " " . $user->getPassword();
+                    $badLogin = true;
                 }
             } 
             
