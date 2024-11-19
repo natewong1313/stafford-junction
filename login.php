@@ -45,6 +45,10 @@
             require_once("domain/Staff.php");
             require_once("database/dbStaff.php");
 
+            // import volunteer files
+            require_once("domain/Volunteer.php");
+            require_once("database/dbVolunteers.php");
+
             dateChecker();
             $username = strtolower($args['username']);
             $password = $args['password'];
@@ -125,6 +129,21 @@
                 }else {
                     echo $password . " " . $user->getPassword();
                 }
+            }else if($args['account'] == 'volunteer'){ //if the account is a staff account
+                $user = retrieve_volunteer_by_email($username); //grab staff user
+                if(!$user){
+                    $badLogin = true;
+                }else if(password_verify($password, $user->getPassword())) {
+                    $_SESSION['logged_in'] = true;
+                    $_SESSION['access_level'] = 3; //access level for volunteers == 3
+                    $_SESSION['_id'] = $user->getId();
+                    $_SESSION['f_name'] = $user->getFirstName();
+                    $_SESSION['l_name'] = $user->getLastName();
+                    $_SESSION['account_type'] = "volunteer";
+                    $_SESSION['venue'] = "-"; //this session variable needs to be set to anything other than "", or else the header.php file won't run
+
+                    header('Location: index.php');
+                }
             } 
             
         }
@@ -160,6 +179,7 @@
                     <option value="admin">Admin</option>
                     <option value="family">Family</option>
                     <option value="staff">Staff</option>
+                    <option value="volunteer">Volunteer</option>
                 </select>
 
                 <label for="username">Username</label>
