@@ -13,7 +13,7 @@ $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
 $successMessage = "";
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
@@ -27,8 +27,8 @@ function validateAndFilterPhoneNumber($phone) {
 include_once('database/dbinfo.php');
 try {
     //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
-    $data = getHolidayMealBagData($userID);
-
+    //$data = getHolidayMealBagData($userID);
+    $data = getHolidayMealBagData($family->getId());
     //If the user hasn't submitted this form yet
     if($data == null){
         $conn = connect();
@@ -42,6 +42,7 @@ try {
             $address = $_POST['address'];
             $phone = $_POST['phone'];
             $photo_release = $_POST['photo_release'];
+            $id = $family->getId();
 
             
             // Filter and validate the phone number
@@ -67,7 +68,7 @@ try {
             if (empty($errors)) {
                 $query = "
                     INSERT INTO dbHolidayMealBagForm (family_id, email, household_size, meal_bag, name, address, phone, photo_release)
-                    values ('$userID', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
+                    values ('$id', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
                 ";
                 $result = mysqli_query($conn, $query);
                 if (!$result) {
@@ -114,7 +115,7 @@ try {
     <p>*Subject to availability / Sujeto a disponibilidad</p>
     <p>*Based on donations, requests will be processed on a first-come, first-served basis / Basado en donaciones, solicitudes seran procesadas en orden que sean recibidas</p>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+    <form method="POST">
         <!-- 1. Email -->
         <label for="email">Email *</label><br>
         <?php if($data): ?>

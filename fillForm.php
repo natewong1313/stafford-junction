@@ -5,7 +5,6 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
-
 ?>
 
 <!DOCTYPE html>
@@ -24,10 +23,18 @@ error_reporting(E_ALL);
         ?>
         <main class='dashboard'>
             <div id="dashboard">
+                <!--will display this dashboard item if viewing the page from staff pov-->
+                <?php if(isset($_GET['id'])): ?>
+                    <div class="dashboard-item" data-link="holidayMealBagForm.php?id=<?php echo $_GET['id']?>">
+                    <img src="images/holdiayMealBagIcon.svg">
+                    <span>Holiday Meal Bag Form</span>
+                </div>
+                <?php else: ?>
                 <div class="dashboard-item" data-link="holidayMealBagForm.php">
                     <img src="images/holdiayMealBagIcon.svg">
                     <span>Holiday Meal Bag Form</span>
                 </div>
+                <?php endif?>
 
                 <div class="dashboard-item" data-link="schoolSuppliesForm.php">
                     <img src="images/school-supplies-svgrepo-com.svg">
