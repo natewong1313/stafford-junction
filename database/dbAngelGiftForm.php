@@ -63,7 +63,7 @@ function createAngelGiftForm($form) {
 function isAngelGiftFormComplete($childID) {
     $connection = connect();
 
-    $query = "SELECT * FROM dbangelgiftform INNER JOIN dbchildren ON dbangelgiftform.child_id = dbchildren.id WHERE dbchildren.id = $childID";
+    $query = "SELECT * FROM dbAngelGiftForm INNER JOIN dbChildren ON dbAngelGiftForm.child_id = dbChildren.id WHERE dbChildren.id = $childID";
     $result = mysqli_query($connection, $query);
     if (!$result->num_rows > 0) {
         mysqli_close($connection);
