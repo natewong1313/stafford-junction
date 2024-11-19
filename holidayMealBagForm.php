@@ -191,13 +191,17 @@ try {
                 <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
             <?php endif ?>
         <?php else: ?>
-        <button type="submit">Submit</button>
-        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            <?php
-                if($successMessage){
-                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                }
-            ?>
+        <button type="submit">Submit</button><br>
+        <?php if($accessLevel > 1):?>
+            <a class="button cancel" href="index.php">Return to Dashboard</a>
+        <?php else: ?>
+            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+        <?php endif ?>
+        <?php
+            if($successMessage){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            }
+        ?>
         <?php endif ?>
     </form>
 </div>

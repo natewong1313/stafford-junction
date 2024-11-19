@@ -84,11 +84,12 @@
                 </div>
                 <?php endif ?>
 
-                <!--Dashboard button that directs the user to the forms page-->
+                <!--Dashboard button that directs the user to the forms page
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
+                -->
 
                 <!--Dashboard button that directs the admin user to staff account create page-->
                 <?php if($_SESSION['account_type'] == 'admin'): ?>
