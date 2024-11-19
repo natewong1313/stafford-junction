@@ -13,24 +13,22 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+} else {
+    header('Location: login.php');
+    die();
 }
 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+require_once('database/dbActualActivityForm.php');
+
+if($_SERVER['REQUEST_METHOD'] == "POST") {
     require_once('include/input-validation.php');
-    //require_once('database/dbActualActivityForm.php');
+    
     $args = sanitize($_POST, null);
-    //EDIT: is attendance[] array required here?
+    
     $required = array("activity", "date", "program", "start_time", "end_time", "start_mile", "end_mile", "address",
-        "attend_num", "volstaff_num", "materials_used", "mealinfo", "act_costs", "act_benefits", "attendance[]");
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-    die();
-    } else {
-        //EDIT: testing for valid input entry
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
-        }
-    }
+        "attend_num", "volstaff_num", "materials_used", "meal_info", "act_costs", "act_benefits");
+
+    $activityID = createActualActivityForm($args);
 }
 
 
@@ -38,6 +36,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php include_once("universal.inc")?>
         <title>Actual Activities Form</title>
         <link rel="stylesheet" href="base.css">
@@ -45,77 +45,83 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     <body>
         <h1>Actual Activities Form</h1>
+        <?php 
+            if (isset($_GET['formSubmitFail'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
+            }
+        ?>
+        
         <div id="formatted_form">
             
-        <span>* Indicates required field</span><br><br>
+        <p><b>* Indicates a required field</b></p><hr><br>
 
-        <form id="actualActivityForm" action="" method="post">
-            <hr>
+        <form id="actualActivityForm" action="actualActivityForm.php" method="post">
             <h2>General Information</h2>
             <br><br>
 
             <!-- 1. Activity -->
-            <label for="activity">1. Activity*</label><br><br>
+            <label for="activity">1. Activity name*</label><br><br>
             <input type="text" name="activity" id="activity" placeholder="Activity" required><br><br>
             
             <!-- 2. Date -->
             <label for="date">2. Date*</label><br><br>
-            <input type="text" name="date" id="date" placeholder="Date" required><br><br>
+            <input type="date" name="date" id="date" placeholder="Date" required><br><br>
 
             <!-- 3. Program -->
-            <label for="program">3. Program*</label><br><br>
+            <label for="program">3. Program name*</label><br><br>
             <input type="text" name="program" id="program" placeholder="Program" required><br><br>
 
             <!--4. Start Time -->
-            <label for="start_time">4. Start Time*</label><br><br>
-            <input type="text" name="start_time" id="start_time" placeholder="Start Time" required><br><br>
+            <label for="start_time">4. Start time*</label><br><br>
+            <input type="time" name="start_time" id="start_time" placeholder="Start time" required><br><br>
 
             <!--End Time-->
-            <label for="end_time">5. End Time*</label><br><br>
-            <input type="text" name="end_time" id="endtend_timeime" placeholder="End Time" required><br><br>
+            <label for="end_time">5. End time*</label><br><br>
+            <input type="time" name="end_time" id="end_time" placeholder="End time" required><br><br>
             
             <!--Vehicle Start Mileage-->
-            <label for="start_mile">6. Vehicle Start Mileage*</label><br><br>
-            <input type="text" name="start_mile" id="start_mile" placeholder="Vehicle Start Mileage" required><br><br>
+            <label for="start_mile">6. Vehicle mileage at start of activity*</label><br><br>
+            <input type="number" name="start_mile" id="start_mile" placeholder="Vehicle start mileage" required><br><br>
 
             <!--Vehicle End Mileage-->
-            <label for="end_mile">7. Vehicle End Mileage*</label><br><br>
-            <input type="text" name="end_mile" id="end_mile" placeholder="Vehicle End Mileage" required><br><br>
+            <label for="end_mile">7. Vehicle mileage at end*</label><br><br>
+            <input type="number" name="end_mile" id="end_mile" placeholder="Vehicle end mileage" required><br><br>
 
             <!--Site Address-->
-            <label for="address">8. Site Address*</label><br><br>
-            <input type="text" name="address" id="address" placeholder="Site Address" required><br><br>
+            <label for="address">8. Site address*</label><br><br>
+            <input type="text" name="address" id="address" placeholder="Site address" required><br><br>
 
             <!--Actual Attendance Number-->
-            <label for="attend_num">7. Actual Attendance Number*</label><br><br>
-            <input type="text" name="attend_num" id="attend_num" placeholder="Actual Attendance Number" required><br><br>
+            <label for="attend_num">7. Actual attendance number*</label><br><br>
+            <input type="number" name="attend_num" id="attend_num" placeholder="Actual attendance number" required><br><br>
 
             <!--Actual Volunteer/Staff Number-->
-            <label for="volstaff_num">8. Actual Volunteer/Staff Number*</label><br><br>
-            <input type="text" name="volstaff_num" id="volstaff_num" placeholder="Actual Volunteer/Staff Number" required><br><br><br>
+            <label for="volstaff_num">8. Actual volunteer/staff number*</label><br><br>
+            <input type="number" name="volstaff_num" id="volstaff_num" placeholder="Actual volunteer/staff number" required><br><br><br>
 
             <hr>
             <h2>Materials/Costs</h2>
             <br><br>
 
             <!--Materials Used--->
-            <label for="materials_used">9. Materials Used*</label><br><br>
-            <input type="text" name="materials_used" id="materials_used" placeholder="Materials Used" required><br><br><br>
-
+            <label for="materials_used">9. Materials used*</label><br><br>
+            <textarea rows="10" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
+            
             <!--Meal Information--->
-            <label for="mealinfo">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
-            <input type="radio" id="choice_1" name="mealinfo" value="meal_provided" required>
+            <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
+            
+            <input type="radio" id="choice_1" name="meal_info" value="meal_provided" required>
             <label for="choice_1">Meal: Provided</label><br><br>
 
-            <input type="radio" id="choice_2" name="mealinfo" value="meal_paid" required>
+            <input type="radio" id="choice_2" name="meal_info" value="meal_paid" required>
             <label for="choice_2">Meal: Paid</label><br><br>
 
-            <input type="radio" id="choice_3" name="mealinfo" value="no_meal" required>
+            <input type="radio" id="choice_3" name="meal_info" value="no_meal" required>
             <label for="choice_3">No meal</label><br><br><br>
 
             <!--Activity Costs-->
-            <label for="act_costs">11. Activity Costs (Please list and seperately provide PA's)*</label><br><br>
-            <input type="text" name="act_costs" id="act_costs" placeholder="Actual Volunteer/Staff Number" required><br><br><br>
+            <label for="act_costs">11. Activity costs (Please list and seperately provide PA's)*</label><br><br>
+            <textarea rows="10" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
         
             <hr>
             <h2>Educational Benefits</h2>
@@ -123,7 +129,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <!--Benefits-->
             <label for="act_benefits">12. What actvities took place; what benefits do participants receive from these Activities?*</label><br><br>
-            <input type="text" name="act_benefits" id="act_benefits" placeholder="Actual Volunteer/Staff Number" rows="5" required><br><br><br>
+            <textarea rows="10" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea><br><br><br>
 
             <hr>
             <h2>Attendance</h2>
@@ -133,9 +139,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <label for="attendance">13. Attendance (must already be in AllClients; Waiver and Emergency Contact Information should be on file and in binder)*</label><br>
             
             <button type="button" class= "addRemove-btn" onclick="addInput()">Add Person</button><br><br>
-            <div id="multInputContainer"></div>
+            <div id="attendanceContainer"></div>
 
             <script>
+                // adds new attendance input when add person is pressed
                 function addInput() {
                     //creates a new div element for the inputGroup
                     var newInputGroup = document.createElement('div');
@@ -161,17 +168,63 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     newInputGroup.appendChild(newInput);
                     newInputGroup.appendChild(removeButton);
 
-                    //adds the new inputGroup to the multInputContainer to display
-                    document.getElementById("multInputContainer").appendChild(newInputGroup);
+                    //adds the new inputGroup to the attendanceContainer to display
+                    document.getElementById("attendanceContainer").appendChild(newInputGroup);
                 }
-                </script>
 
-                <br><hr>
+                //VALIDATES attendance and date variables
+                function validateAttendanceAndDate() {
+                    var attendanceInputs = document.querySelectorAll('input[name="attendance[]"]');
+                    var atLeastOneAttendee = false;
+
+                    // checks attendance variable for a non-empty value
+                    for (var i = 0; i < attendanceInputs.length; i++) {
+                        if (attendanceInputs[i].value.trim() !== "") {
+                            atLeastOneAttendee = true; 
+                            break; 
+                        }
+                    }
+
+                    // ensures at least one attendee is filled in
+                    if (!atLeastOneAttendee) {
+                        alert("Please fill in at least one field in 'Attendance'.");
+                        return false;
+                    }
+
+                    // validates the "date" field
+                    var dateValue = document.getElementById("date").value;
+
+                    // checks if the year is exactly four digits
+                    var year = dateValue.split('-')[0];
+                    if (year.length !== 4 || isNaN(year)) {
+                        alert("Please enter a valid year with four digits.");
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                // validates both attendance and date fields before allowing submission
+                document.getElementById("actualActivityForm").onsubmit = function() {
+                    return validateAttendanceAndDate(); 
+                };
+            </script>
+
+            <br><hr>
 
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+        
             </form>
         </div>
+        <?php
+            // if submission successful, create pop up notification and direct user back to fill form page
+            // if fail, notify user on program interest form page
+            if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($activityID)){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && empty($activityID)) {
+                echo '<script>document.location = "actualActivityForm.php?formSubmitFail";</script>';
+            }
+        ?>
     </body>
 </html>
-

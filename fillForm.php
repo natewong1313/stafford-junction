@@ -56,11 +56,6 @@ error_reporting(E_ALL);
                     <span>Angel Gifts Wish Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="actualActivityForm.php">
-                    <img src="images/actualActivity-svgrepo.svg">
-                    <span>Actual Activity Form</span> 
-                </div>
-
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
@@ -95,6 +90,14 @@ error_reporting(E_ALL);
                     <img src="images/summerJunction.svg">
                     <span>Summer Junction Registration Form</span>
                 </div>
+
+                <!--Only staff and volunteer accounts can access these forms-->
+                <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
+                    <div class="dashboard-item" data-link="actualActivityForm.php">
+                        <img src="images/actualActivity-svgrepo.svg">
+                        <span>Actual Activity Form</span> 
+                    </div>
+                <?php endif ?>
 
                 </div>
             </div>
