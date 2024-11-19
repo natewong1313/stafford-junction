@@ -1,5 +1,6 @@
--- Table for the dbFieldTripWaiverForm
-CREATE TABLE dbFieldTrpWaiverForm (
+DROP TABLE IF EXISTS dbFieldTripWaiverForm;
+
+CREATE TABLE dbFieldTripWaiverForm (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     child_id INT NOT NULL,
     child_first_name VARCHAR(256),
@@ -20,7 +21,7 @@ CREATE TABLE dbFieldTrpWaiverForm (
     emgcy_contact1_rship VARCHAR(100),
     emgcy_contact1_phone VARCHAR(15),
 
-    contact_2 INT NOT NULL,
+    contact_2 INT, -- Made nullable in case a second emergency contact is not provided
     emgcy_contact2_first_name VARCHAR(256),
     emgcy_contact2_last_name VARCHAR(256),
     emgcy_contact2_rship VARCHAR(100),
@@ -31,7 +32,7 @@ CREATE TABLE dbFieldTrpWaiverForm (
     photo_waiver_signature VARCHAR(256),
     photo_waiver_date DATE,
 
-    CONSTRAINT FK_child_id
+    CONSTRAINT FK_field_trip_child_id
         FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE

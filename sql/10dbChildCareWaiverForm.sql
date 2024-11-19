@@ -1,4 +1,5 @@
--- Table for the dbChildCareWaiverForm
+DROP TABLE IF EXISTS dbChildCareWaiverForm;
+
 CREATE TABLE dbChildCareWaiverForm (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     child_id INT NOT NULL,
@@ -10,7 +11,7 @@ CREATE TABLE dbChildCareWaiverForm (
     child_city VARCHAR(100),
     child_state VARCHAR(100),
     child_zip VARCHAR(10),
-    
+
     parent_1 INT NOT NULL,
     parent1_first_name VARCHAR(256),
     parent1_last_name VARCHAR(256),
@@ -22,8 +23,8 @@ CREATE TABLE dbChildCareWaiverForm (
     parent1_cell_phone VARCHAR(15),
     parent1_home_phone VARCHAR(15),
     parent1_work_phone VARCHAR(15),
-    
-    parent_2 INT NOT NULL,
+
+    parent_2 INT, -- Updated to allow NULL, as a second parent may not always exist
     parent2_first_name VARCHAR(256),
     parent2_last_name VARCHAR(256),
     parent2_address VARCHAR(256),
@@ -34,13 +35,11 @@ CREATE TABLE dbChildCareWaiverForm (
     parent2_cell_phone VARCHAR(15),
     parent2_home_phone VARCHAR(15),
     parent2_work_phone VARCHAR(15),
-    
+
     parent_guardian_signature VARCHAR(256),
     signature_date DATE,
-    
-    child_id INT,
-    
-    CONSTRAINT FK_child_id
+
+    CONSTRAINT FK_dbcwaiverform_child_id
         FOREIGN KEY (child_id) REFERENCES dbChildren(id)
         ON DELETE CASCADE 
         ON UPDATE CASCADE

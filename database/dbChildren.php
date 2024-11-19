@@ -9,7 +9,16 @@ function make_a_child($result_row){
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
+        $result_row['address'],
+        $result_row['neighborhood'],
+        $result_row['city'],
+        $result_row['state'],
+        $result_row['zip'],
         $result_row['gender'],
+        $result_row['school'],
+        $result_row['grade'],
+        $result_row['is_hispanic'],
+        $result_row['race'],
         $result_row['medical_notes'],
         $result_row['notes']
     );
@@ -23,7 +32,16 @@ function make_a_child_from_database($result_row){
         $result_row['first_name'],
         $result_row['last_name'],
         $result_row['dob'],
+        $result_row['address'],
+        $result_row['neighborhood'],
+        $result_row['city'],
+        $result_row['state'],
+        $result_row['zip'],
         $result_row['gender'],
+        $result_row['school'],
+        $result_row['grade'],
+        $result_row['is_hispanic'],
+        $result_row['race'],
         $result_row['medical_notes'],
         $result_row['notes']
     );
@@ -46,6 +64,7 @@ function retrieve_children_by_family_id($id){
             array_push($children, $acct);
             $row = mysqli_fetch_assoc($result);
         }
+        //var_dump($children);
         mysqli_close($conn);
         return $children;
     }
@@ -57,14 +76,24 @@ function retrieve_children_by_family_id($id){
 //add child to database
 function add_child($child, $fam_id){
     $conn = connect();
-    mysqli_query($conn, 'INSERT INTO dbChildren (family_id, first_name, last_name, dob, gender, medical_notes, notes) VALUES (" ' .
+    mysqli_query($conn, 'INSERT INTO dbChildren (family_id, first_name, last_name, dob, gender, medical_notes, notes, neighborhood, address, city, state, zip,
+        school, grade, is_hispanic, race) VALUES (" ' .
         $fam_id . '","' .
         $child->getFirstName() . '","' .
         $child->getLastName() . '","' .
         $child->getBirthDate() . '","' .
         $child->getGender() . '","' .
         $child->getMedicalNotes() . '","' .
-        $child->getNotes() . 
+        $child->getNotes() . '","' .
+        $child->getNeighborhood() . '","' .
+        $child->getAddress() . '","' .
+        $child->getCity() . '","' .
+        $child->getState() . '","' .
+        $child->getZip() . '","' .
+        $child->getSchool() . '","' .
+        $child->getGrade() . '","' .
+        $child->isHispanic() . '","' .
+        $child->getRace() .
         '");'
     );
     mysqli_close($conn);
@@ -122,7 +151,16 @@ function make_a_child_from_sign_up($result_row){
         $result_row['first-name'],
         $result_row['last-name'],
         $result_row['birthdate'],
+        $result_row['address'],
+        $result_row['neighborhood'],
+        $result_row['city'],
+        $result_row['state'],
+        $result_row['zip'],
         $result_row['gender'],
+        $result_row['school'],
+        $result_row['grade'],
+        $result_row['is_hispanic'],
+        $result_row['race'],
         $result_row['last-child_medical_notes_'],
         $result_row['child_additional_notes_-name']
     );
