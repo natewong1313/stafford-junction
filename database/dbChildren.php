@@ -236,12 +236,12 @@ function find_children($last_name, $address, $city, $neighborhood, $school, $gra
                 $where .= "income LIKE '%$i%'";
             }
         }
-        $where .= ")";
+        $where .= ") ";
         $first = false;
     }
     // Add isHispanic
     if ($isHispanic) {
-        if (!$isHispanic) {
+        if (!$first) {
             $where .= ' AND ';
         }
         $where .= "dbChildren.is_hispanic=1";
