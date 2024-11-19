@@ -443,47 +443,104 @@ function unarchive_family($id) {
 
 // Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
 // More criteria can be added later
-function find_families($last_name, $email, $city, $archived){
+// Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
+// More criteria can be added later
+function find_families($last_name, $email, $neighborhood, $address, $city, $zip, $income, $assistance, $archived){
     // Build query
-    $where = 'where ';
+    $where = 'WHERE ';
+    $joins = '';
     $first = true;
     // Add last name
     if ($last_name) {
         if (!$first) {
-            $where .= ' and ';
+            $where .= ' AND ';
         }
-        $where .= "lastName like '%$last_name%'";
+        $where .= "lastName LIKE '%$last_name%'";
         $first = false;
     }
     // Add email
     if ($email) {
         if (!$first) {
-            $where .= ' and ';
+            $where .= ' AND ';
         }
-        $where .= "email like '%$email%'";
+        $where .= "email LIKE '%$email%'";
+        $first = false;
+    }
+    // Add neighborhood
+    if ($neighborhood) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "neighborhood LIKE '%$neighborhood%'";
+        $first = false;
+    }
+    // Add address
+    if ($address) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "address LIKE '%$address%'";
         $first = false;
     }
     // Add city
     if ($city) {
         if (!$first) {
-            $where .= ' and ';
+            $where .= ' AND ';
         }
-        $where .= "city like '%$city%'";
+        $where .= "city LIKE '%$city%'";
+        $first = false;
+    }
+    // Add income
+    if ($income) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "(";
+        $last = end($income);
+        // Go through each income in the input
+        foreach ($income as $i) {
+            if ($i != $last) {
+                $where .= "income LIKE '%$i%' OR ";
+            } else {
+                $where .= "income LIKE '%$i%'";
+            }
+        }
+        $where .= ")";
+        $first = false;
+    }
+    // Add current assistance
+    if ($assistance) {
+        $joins .= " INNER JOIN dbFamily_Assistance ON dbFamily.id = dbFamily_Assistance.family_id INNER JOIN 
+        dbAssistance ON dbFamily_Assistance.assistance_id = dbassistance.id";
+        $where .= "(";
+        $last = end($assistance);
+        // Go through each income in the input
+        foreach ($assistance as $a) {
+            if ($a != $last) {
+                $where .= "assistance LIKE '%$a%' OR ";
+            } else {
+                $where .= "assistance LIKE '%$a%'";
+            }
+        }
+        $where .= ")";
+        if (!$first) {
+            $where .= ' AND ';
+        }
         $first = false;
     }
     // Add isArchived
     if ($archived) {
         if (!$first) {
-            $where .= ' and ';
+            $where .= ' AND ';
         }
         $where .= " isArchived='1'";
     } else {
         if (!$first) {
-            $where .= ' and ';
+            $where .= ' AND ';
         }
         $where .= " isArchived='0'";
     }
-    $query = "select * from dbFamily $where order by lastName";
+    $query = "SELECT * FROM dbFamily $joins $where ORDER BY lastName";
     $connection = connect();
     // Execute query
     $result = mysqli_query($connection, $query);

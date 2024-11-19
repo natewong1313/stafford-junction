@@ -167,6 +167,126 @@ function make_a_child_from_sign_up($result_row){
     return $child;
 }
   
-
-
+// Find children gets children based in criteria in parameters, it builds the query based on what is in it and what isn't 
+// More criteria can be added later
+function find_children($last_name, $address, $city, $neighborhood, $school, $grade, $income, $isHispanic, $race) {
+    // Build query
+    $where = 'WHERE ';
+    $first = true;
+    // Add last name
+    if ($last_name) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "dbChildren.last_name LIKE '%$last_name%'";
+        $first = false;
+    }
+    // Add address
+    if ($address) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "dbChildren.address LIKE '%$address%'";
+        $first = false;
+    }
+    // Add city
+    if ($city) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "dbChildren.city LIKE '%$city%'";
+        $first = false;
+    }
+    // Add neighborhood
+    if ($neighborhood) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "dbChildren.neighborhood LIKE '%$neighborhood%'";
+        $first = false;
+    }
+    // Add school
+    if ($school) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "school LIKE '%$school%'";
+        $first = false;
+    }
+    // Add city
+    if ($grade) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "grade LIKE '%$grade%'";
+        $first = false;
+    }
+    // Add income
+    if ($income) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "(";
+        $last = end($income);
+        // Go through each income in the input
+        foreach ($income as $i) {
+            if ($i != $last) {
+                $where .= "income LIKE '%$i%' OR ";
+            } else {
+                $where .= "income LIKE '%$i%'";
+            }
+        }
+        $where .= ")";
+        $first = false;
+    }
+    // Add isHispanic
+    if ($isHispanic) {
+        if (!$isHispanic) {
+            $where .= ' AND ';
+        }
+        $where .= "dbChildren.is_hispanic=1";
+        $first = false;
+    }
+    // Add race
+    if ($race) {
+        if (!$first) {
+            $where .= ' AND ';
+        }
+        $where .= "(";
+        $last = end($race);
+        // Go through each income in the input
+        foreach ($race as $r) {
+            if ($r != $last) {
+                $where .= "dbChildren.race LIKE '%$r%' OR ";
+            } else {
+                $where .= "dbChildren.race LIKE '%$r%'";
+            }
+        }
+        $where .= ")";
+        $first = false;
+    }
+    if (!$first) {
+        $where .= ' AND ';
+    }
+    $where .= " isArchived='0'";
+    $query = "SELECT dbChildren.* from dbChildren INNER JOIN dbFamily ON dbChildren.family_id = dbFamily.id $where ORDER BY dbChildren.last_name";
+    $connection = connect();
+    // Execute query
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        mysqli_close($connection);
+        return [];
+    }
+    // Get family data
+    $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $children = [];
+    foreach ($raw as $row) {
+        if ($row['id'] == 'vmsroot') {
+            continue;
+        }
+        $children []= make_a_child_from_database($row);
+    }
+    mysqli_close($connection);
+    return $children;
+}
 ?>
