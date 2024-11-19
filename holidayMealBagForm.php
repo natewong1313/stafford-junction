@@ -185,7 +185,11 @@ try {
         <?php endif ?>
 
         <?php if($data): ?>
-            <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+            <?php if($accessLevel > 1):?>
+                <a class="button cancel" href="index.php">Return to Dashboard</a>
+            <?php else: ?>
+                <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+            <?php endif ?>
         <?php else: ?>
         <button type="submit">Submit</button>
         <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
