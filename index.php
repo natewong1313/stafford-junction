@@ -54,6 +54,8 @@
         <main class='dashboard'>
             <?php if (isset($_GET['addStaffSuccess'])): ?>
                 <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Staff account created!</div>';?>
+            <?php elseif (isset($_GET['formSubmitSuccess'])): ?>
+                <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form submitted successfully!</div>';?>
             <?php elseif (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
             <?php elseif (isset($_GET['deleteService'])): ?>
@@ -84,11 +86,12 @@
                 </div>
                 <?php endif ?>
 
-                <!--Dashboard button that directs the user to the forms page-->
+                <!--Dashboard button that directs the user to the forms page
                 <div class="dashboard-item" data-link="fillForm.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Fill Out Form</span>
                 </div>
+                -->
 
                 <!--Dashboard button that directs the admin user to staff account create page-->
                 <?php if($_SESSION['account_type'] == 'admin'): ?>

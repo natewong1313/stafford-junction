@@ -13,7 +13,7 @@ $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
 $successMessage = "";
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
@@ -27,8 +27,8 @@ function validateAndFilterPhoneNumber($phone) {
 include_once('database/dbinfo.php');
 try {
     //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
-    $data = getHolidayMealBagData($userID);
-
+    //$data = getHolidayMealBagData($userID);
+    $data = getHolidayMealBagData($family->getId()); //its possible that userID would store the staff id instead, so its important to use the family object retrieved by $_GET['id'] up top to ensure we are checking for the family
     //If the user hasn't submitted this form yet
     if($data == null){
         $conn = connect();
@@ -42,6 +42,7 @@ try {
             $address = $_POST['address'];
             $phone = $_POST['phone'];
             $photo_release = $_POST['photo_release'];
+            $id = $family->getId();
 
             
             // Filter and validate the phone number
@@ -67,7 +68,7 @@ try {
             if (empty($errors)) {
                 $query = "
                     INSERT INTO dbHolidayMealBagForm (family_id, email, household_size, meal_bag, name, address, phone, photo_release)
-                    values ('$userID', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
+                    values ('$id', '$email', '$household', '$meal_bag', '$name', '$address', '$phone', '$photo_release');
                 ";
                 $result = mysqli_query($conn, $query);
                 if (!$result) {
@@ -95,9 +96,7 @@ try {
     <title>Holiday Meal Bag <?php echo date("Y"); ?></title>
 </head>
 <body>
-    <?php if (!empty($successMessage)): ?>
-        <h3><?php echo $successMessage; ?></h3>
-    <?php endif; ?>
+    
 
     <?php if (!empty($errors)): ?>
         <h3 style="color: red;">Please correct the following errors:</h3>
@@ -114,7 +113,7 @@ try {
     <p>*Subject to availability / Sujeto a disponibilidad</p>
     <p>*Based on donations, requests will be processed on a first-come, first-served basis / Basado en donaciones, solicitudes seran procesadas en orden que sean recibidas</p>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+    <form method="POST">
         <!-- 1. Email -->
         <label for="email">Email *</label><br>
         <?php if($data): ?>
@@ -184,15 +183,25 @@ try {
         <?php endif ?>
 
         <?php if($data): ?>
-            <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+            <?php if($accessLevel > 1):?> <!--If staff or admin, return back to index.php-->
+                <a class="button cancel" href="index.php">Return to Dashboard</a>
+            <?php else: ?> <!--If family, return back to family home page-->
+                <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+            <?php endif ?>
         <?php else: ?>
-        <button type="submit">Submit</button>
-        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            <?php
-                if($successMessage){
-                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                }
-            ?>
+        <button type="submit">Submit</button><br>
+        <?php if($accessLevel > 1):?>
+            <a class="button cancel" href="index.php">Return to Dashboard</a>
+        <?php else: ?>
+            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+        <?php endif ?>
+        <?php //If the user is an admin or staff, the message should appear at index.php
+            if($successMessage && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if($successMessage && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }
+        ?>
         <?php endif ?>
     </form>
 </div>
