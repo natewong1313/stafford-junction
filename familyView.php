@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <?php if($_SESSION['access_level'] > 1): ?>
         <a class="button edit" href="editFamilyProfile.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Edit Family</a>
         <?php endif?>
-        <?php if($accessLevel > 1): ?>
+        <?php if($accessLevel > 1): ?> <!--Option for staff to fill a form out for family-->
         <a class="button edit" href="fillForm.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Fill Form</a>   
         <?php endif?>
         <!-- Cancel Buttons -->

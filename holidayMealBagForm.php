@@ -13,7 +13,7 @@ $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
 $successMessage = "";
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_GET['id'] ?? $userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
@@ -28,7 +28,7 @@ include_once('database/dbinfo.php');
 try {
     //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
     //$data = getHolidayMealBagData($userID);
-    $data = getHolidayMealBagData($family->getId());
+    $data = getHolidayMealBagData($family->getId()); //its possible that userID would store the staff id instead, so its important to use the family object retrieved by $_GET['id'] up top to ensure we are checking for the family
     //If the user hasn't submitted this form yet
     if($data == null){
         $conn = connect();
@@ -185,9 +185,9 @@ try {
         <?php endif ?>
 
         <?php if($data): ?>
-            <?php if($accessLevel > 1):?>
+            <?php if($accessLevel > 1):?> <!--If staff or admin, return back to index.php-->
                 <a class="button cancel" href="index.php">Return to Dashboard</a>
-            <?php else: ?>
+            <?php else: ?> <!--If family, return back to family home page-->
                 <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
             <?php endif ?>
         <?php else: ?>
@@ -197,10 +197,10 @@ try {
         <?php else: ?>
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
         <?php endif ?>
-        <?php
+        <?php //If the user is an admin or staff, the message should appear at index.php
             if($successMessage && $accessLevel > 1){
                 echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($successMessage && $accessLevel == 1){
+            }else if($successMessage && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
                 echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
             }
         ?>
