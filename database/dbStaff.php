@@ -98,10 +98,12 @@ function retrieve_staff_by_id($id){
     $res = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($res) < 1 || $res == null){
+        mysqli_close($conn);
         return null;
     }else {
         $row = mysqli_fetch_assoc($res);
         $staff = make_staff_from_db($row);
+        mysqli_close($conn);
         return $staff;
     }
 }

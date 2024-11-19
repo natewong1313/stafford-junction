@@ -28,6 +28,9 @@
         require_once('include/input-validation.php');
         require_once('domain/Person.php');
         require_once('database/dbPersons.php');
+        require_once('database/dbFamily.php');
+        require_once("database/dbStaff.php");
+        require_once("database/dbVolunteers.php");
         if ($forced) {
             if (!wereRequiredFieldsSubmitted($_POST, array('new-password'))) {
                 echo "Args missing";
@@ -53,8 +56,27 @@
             }
             $password = $_POST['password'];
             $newPassword = $_POST['new-password'];
-            $user = retrieve_person($userID);
-            if (!password_verify($password, $user->get_password())) {
+            $user = null;
+            $passwordToVerify = "";
+            switch ($accessLevel) {
+                case 0:
+                    $user = retrieve_person($userID);
+                    $passwordToVerify = $user->get_password();
+                    break;
+                case 1:
+                    $user = retrieve_family_by_id($userID);
+                    $passwordToVerify = $user->getPassword();
+                    break;
+                case 2:
+                    $user = retrieve_staff_by_id($userID);
+                    $passwordToVerify = $user->getPassword();
+                    break;
+                case 3:
+                    $user = retrieve_volunteer_by_id($userID);
+                    $passwordToVerify = $user->getPassword();
+                    break;
+            }
+            if (!password_verify($password, $passwordToVerify)) {
                 $error1 = true;
             } else if($password == $newPassword) {     // old password is same as new one
                 $error2 = true;
