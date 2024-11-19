@@ -16,7 +16,9 @@ if(isset($_SESSION['_id'])){
 }
 
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+include_once("database/dbChildren.php");
+
+$family = retrieve_family_by_id($userID);
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
 $family_state = $family->getState();
@@ -26,17 +28,19 @@ $guardian_name = $family->getFirstName() . " " . $family->getLastName();
 $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
+//retrieve children by family ID
+$children = retrieve_children_by_family_id($userID);
 
 include('database/dbFieldTripWaiverForm.php');
 require_once('include/input-validation.php');
+
 //check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     //sanitize form input
     $args = sanitize($_POST, null);
 
     $required = array(
-            'child_first_name',
-            'child_last_name',
+            'child_name',
             'child_gender',
             'child_birthdate',
             'child_neighborhood',
@@ -63,12 +67,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
-        die();
     }else {
        //call the function to create the waiver form
-        $waiver_id = createFieldTripWaiverForm($args);
+        $success = createFieldTripWaiverForm($args);
         
-        if ($waiver_id) {
+        if ($success) {
             echo "Field trip waiver form submitted successfully!";
         } else {
             echo "Error submitting the form.";
@@ -80,7 +83,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
@@ -94,19 +98,28 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
-
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
         <p><strong>General Information / Información General</strong></p>
     </div>
 
-    <!-- Child's First Name -->
-    <label for="child_first_name">Child's First Name* / Nombre del Niño*</label><br>
-    <input type="text" name="child_first_name" id="child_first_name" placeholder="First Name / Nombre" required><br><br>
-
-    <!-- Child's Last Name -->
-    <label for="child_last_name">Child's Last Name* / Apellido del Niño*</label><br>
-    <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" required><br><br>
+    <!-- Child Name -->
+    <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
+    <select name="name" id="name" required>
+        <?php
+            require_once('domain/Children.php'); 
+            foreach ($children as $c){
+                $id = $c->getID();
+                // Check if form was already completed for the child
+                if (!isBackToSchoolFormComplete($id)) {
+                    $name = $c->getFirstName() . " " . $c->getLastName();
+                    $value = $id . "_" . $name;
+                    echo "<option value='$value'>$name</option>";
+                }
+            }
+        ?>
+    </select>
+    <br><br>
 
     <!-- Child's Gender -->
     <label for="child_gender">Gender* / Género*</label><br>
@@ -128,7 +141,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Child's Street Address -->
     <label for="child_address">Street Address* / Dirección*</label><br>
     <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección"
-        required value="<?php echo htmlspecialchars($family_address); ?>"><br><br>
+    required value="<?php echo htmlspecialchars($family_address); ?>"><br><br>
 
     <!-- Child's City -->
     <label for="child_city">City* / Ciudad*</label><br>
@@ -348,10 +361,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
 
                 <!-- Submit and Cancel buttons -->
-                <br>
-                <button type="submit" id="submit">Submit</button>
+                <?php if($data): ?>
+                    <a class="button cancel" href="fillForm.php">Cancel</a>
+                <?php else: ?>
+                <button type="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            </form>
+                <?php
+                    if($successMessage){
+                        echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                    }
+                ?>
+                <?php endif ?>                
+
+           </form>
         </div>
     </div>
     </body>
