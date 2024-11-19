@@ -198,8 +198,10 @@ try {
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
         <?php endif ?>
         <?php
-            if($successMessage){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            if($successMessage && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if($successMessage && $accessLevel == 1){
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
             }
         ?>
         <?php endif ?>

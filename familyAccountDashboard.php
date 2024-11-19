@@ -26,6 +26,10 @@ if($_SESSION['logged_in'] == false){
             echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Children submitted successfully!</div>';
         }
         ?>
+        <?php if (isset($_GET['formSubmitSuccess'])) {
+            echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Submitted Successfully!</div>';
+        }
+        ?>
         <main class='dashboard'>
             <?php echo "<p>Hello " . $_SESSION['f_name'] . "!</p>";?>
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>

@@ -54,6 +54,8 @@
         <main class='dashboard'>
             <?php if (isset($_GET['addStaffSuccess'])): ?>
                 <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Staff account created!</div>';?>
+            <?php elseif (isset($_GET['formSubmitSuccess'])): ?>
+                <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form submitted successfully!</div>';?>
             <?php elseif (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
             <?php elseif (isset($_GET['deleteService'])): ?>
