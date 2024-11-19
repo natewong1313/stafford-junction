@@ -15,10 +15,24 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }
 
+if (!$loggedIn) {
+    echo "Please log in to access this form.";
+    exit;
+}
+
+//necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
+include('database/dbFieldTripWaiverForm.php');
+require_once('include/input-validation.php');
+require_once('domain/Children.php');
 
+//retrieve family details
 $family = retrieve_family_by_id($userID);
+if (!$family) {
+    echo "Family information could not be retrieved.";
+    exit;
+}
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
 $family_state = $family->getState();
@@ -30,9 +44,21 @@ $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
 //retrieve children by family ID
 $children = retrieve_children_by_family_id($userID);
+$child_id = $_POST['child_id'] ?? null;  // Ensure you get a valid child ID from the form submission
 
-include('database/dbFieldTripWaiverForm.php');
-require_once('include/input-validation.php');
+if ($child_id) {
+    $child = retrieve_child_by_id($child_id);  // Retrieve the child using the ID
+    if ($child !== null) {  // Check if child is found
+        // Safely use the child object to populate form fields
+        $child_gender = $child->getGender();
+        $child_birthdate = $child->getBirthdate();
+        $child_school = $child->getSchool();
+    } else {
+        echo "Child not found!";
+    }
+} else {
+    echo "Invalid or missing child ID.";
+}
 
 //check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -50,7 +76,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             'child_state',
             'child_zip',
             'religious_foods',
-            "medical_issues",
+            'medical_issues',
             'parent_email',
             'emergency_contact_name_1',
             'emergency_contact_relationship_1',
@@ -75,8 +101,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             echo "Field trip waiver form submitted successfully!";
         } else {
             echo "Error submitting the form.";
-        //foreach($args as $key => $val){
-           //echo "{$key}:" . " " . "{$val}" . "<br>";
         }
     }
 }
@@ -98,45 +122,43 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
+    <form method="POST" action="fieldTripWaiver.php">
+
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
         <p><strong>General Information / Información General</strong></p>
     </div>
 
-    <!-- Child Name -->
-    <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
-    <select name="name" id="name" required>
+    <!-- Child's Name -->
+    <label for="child_name">Child's Name / Nombre del Niño(a)*</label><br><br>
+    <select name="child_name" id="child_name" required onchange="updateChildDetails()">
+        <option value="">Select a child</option>
         <?php
-            require_once('domain/Children.php'); 
-            foreach ($children as $c){
+            require_once('domain/Children.php');
+            foreach ($children as $c) {
                 $id = $c->getID();
-                // Check if form was already completed for the child
-                if (!isBackToSchoolFormComplete($id)) {
-                    $name = $c->getFirstName() . " " . $c->getLastName();
-                    $value = $id . "_" . $name;
-                    echo "<option value='$value'>$name</option>";
-                }
+                $name = $c->getFirstName() . " " . $c->getLastName();
+                echo "<option value='$id'>$name</option>";
             }
         ?>
-    </select>
-    <br><br>
+    </select><br><br>
 
-    <!-- Child's Gender -->
-    <label for="child_gender">Gender* / Género*</label><br>
-    <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" required><br><br>
+        <!-- Child's Gender -->
+    <label for="child_gender">Child's Gender / Género del Niño(a)*</label><br><br>
+    <input type="text" id="child_gender" name="child_gender" required readonly><br><br>
 
     <!-- Child's Birthdate -->
-    <label for="child_birthdate">Birthdate* / Fecha de Nacimiento*</label><br>
-    <input type="date" name="child_birthdate" id="child_birthdate" required><br><br>
+    <label for="child_birthdate">Child's Birthdate / Fecha de Nacimiento del Niño(a)*</label><br><br>
+    <input type="date" id="child_birthdate" name="child_birthdate" required readonly><br><br>
 
     <!-- Child's Neighborhood -->
     <label for="child_neighborhood">Neighborhood* / Barrio*</label><br>
     <input type="text" name="child_neighborhood" id="child_neighborhood" placeholder="Neighborhood / Barrio"
         required><br><br>
 
-    <!-- Child's School -->
-    <label for="child_school">School* / Escuela*</label><br>
-    <input type="text" name="child_school" id="child_school" placeholder="School / Escuela" required><br><br>
+        <!-- Child's School -->
+    <label for="child_school">Child's School / Escuela del Niño(a)*</label><br><br>
+    <input type="text" id="child_school" name="child_school" required readonly><br><br>
 
     <!-- Child's Street Address -->
     <label for="child_address">Street Address* / Dirección*</label><br>
@@ -374,6 +396,33 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <?php endif ?>                
 
            </form>
+
+        <script>
+    // Array to store child details for easy access
+    const childData = <?php echo json_encode($children); ?>;
+
+    function updateChildDetails() {
+        const selectedChildId = document.getElementById('child_name').value;
+
+        if (selectedChildId) {
+            // Find the child data based on the selected ID
+            const child = childData.find(c => c.id == selectedChildId);
+
+            if (child) {
+                // Update the fields with the child's information
+                document.getElementById('child_gender').value = child.gender;
+                document.getElementById('child_birthdate').value = child.dob;
+                document.getElementById('child_school').value = child.school;
+            }
+        } else {
+            // Clear the fields if no child is selected
+            document.getElementById('child_gender').value = '';
+            document.getElementById('child_birthdate').value = '';
+            document.getElementById('child_school').value = '';
+        }
+    }
+</script>
+
         </div>
     </div>
     </body>
