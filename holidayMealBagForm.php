@@ -96,9 +96,7 @@ try {
     <title>Holiday Meal Bag <?php echo date("Y"); ?></title>
 </head>
 <body>
-    <?php if (!empty($successMessage)): ?>
-        <h3><?php echo $successMessage; ?></h3>
-    <?php endif; ?>
+    
 
     <?php if (!empty($errors)): ?>
         <h3 style="color: red;">Please correct the following errors:</h3>
