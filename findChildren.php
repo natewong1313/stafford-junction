@@ -69,7 +69,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     if (isset($args['race'])) {
         $race = $args['race'];
     }
-    var_dump($args);
     // Find families based on set criteria
     $children = find_children($last_name, $address, $city, $neighborhood, $school, $grade, $income, $is_hispanic, $race);
 }
