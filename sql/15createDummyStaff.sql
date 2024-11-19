@@ -1,0 +1,2 @@
+INSERT INTO `dbStaff` (`firstName`, `lastName`, `birthdate`, `address`, `email`, `phone`, `econtactName`, `econtactPhone`, `jobTitle`, `password`, `securityQuestion`, `securityAnswer`) VALUES
+    ('John', 'Doe', '10-13-24', '12 Little Oak Road', 'teststaff@gmail.com', '(555)555-5555', 'Jane Doe', '555-555-5555', 'Teacher', '$2a$10$rY0GMvYj5/fKH4fugjYd4eYUJUugosmq5DH9fnBS9ijo7eiAHedSO', 'question', 'answer');
