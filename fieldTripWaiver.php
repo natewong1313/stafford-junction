@@ -13,26 +13,19 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-}
-
-if (!$loggedIn) {
-    echo "Please log in to access this form.";
-    exit;
+}else {
+    header("Location: login.php");
 }
 
 //necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
-include('database/dbFieldTripWaiverForm.php');
-require_once('include/input-validation.php');
-require_once('domain/Children.php');
+include_once('database/dbFieldTripWaiverForm.php');
+require('include/input-validation.php');
+include_once('domain/Children.php');
 
 //retrieve family details
-$family = retrieve_family_by_id($userID);
-if (!$family) {
-    echo "Family information could not be retrieved.";
-    exit;
-}
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
 $family_state = $family->getState();
@@ -43,68 +36,65 @@ $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
 //retrieve children by family ID
-$children = retrieve_children_by_family_id($userID);
-$child_id = $_POST['child_id'] ?? null;  // Ensure you get a valid child ID from the form submission
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
-if ($child_id) {
-    $child = retrieve_child_by_id($child_id);  // Retrieve the child using the ID
-    if ($child !== null) {  // Check if child is found
-        // Safely use the child object to populate form fields
-        $child_gender = $child->getGender();
-        $child_birthdate = $child->getBirthdate();
-        $child_school = $child->getSchool();
-    } else {
-        echo "Child not found!";
-    }
-} else {
-    echo "Invalid or missing child ID.";
-}
+include_once('database/dbinfo.php');
+try {
+    //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
 
-//check if the form is submitted
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+    $data = getFielTripWaiverData($family->getId());
+    if($data == null){
+        $conn = connect();
+
+    //check if the form is submitted
+        if($_SERVER['REQUEST_METHOD'] == "POST"){
+        
+
     //sanitize form input
-    $args = sanitize($_POST, null);
-
-    $required = array(
-            'child_name',
-            'child_gender',
-            'child_birthdate',
-            'child_neighborhood',
-            'child_school',
-            'child_address',
-            'child_city',
-            'child_state',
-            'child_zip',
-            'religious_foods',
-            'medical_issues',
-            'parent_email',
-            'emergency_contact_name_1',
-            'emergency_contact_relationship_1',
-            'emergency_contact_phone_1',
-            'emergency_contact_name_2',
-            'emergency_contact_relationship_2',
-            'emergency_contact_phone_2',
-            'insurance_company',
-            'policy_number',
-            'parent_name',
-            'parent_signature',
-            'signature_date'
-    );
+            $args = sanitize($_POST, null);
+            $required = array(
+                'child_name',
+                'child_gender',
+                'child_birthdate',
+                'child_neighborhood',
+                'child_school',
+                'child_address',
+                'child_city',
+                'child_state',
+                'child_zip',
+                'religious_foods',
+                'medical_issues',
+                'parent_email',
+                'emergency_contact_name_1',
+                'emergency_contact_relationship_1',
+                'emergency_contact_phone_1',
+                'emergency_contact_name_2',
+                'emergency_contact_relationship_2',
+                'emergency_contact_phone_2',
+                'insurance_company',
+                'policy_number',
+                'parent_name',
+                'parent_signature',
+                'signature_date'
+            );
     
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-    }else {
+        if(!wereRequiredFieldsSubmitted($args, $required)){
+            echo "Not all fields complete";
+        }else {
        //call the function to create the waiver form
         $success = createFieldTripWaiverForm($args);
         
         if ($success) {
-            echo "Field trip waiver form submitted successfully!";
+            echo "Form submitted successfully!";
         } else {
-            echo "Error submitting the form.";
+                echo "Error submitting the form.";
+        }
+            }
         }
     }
+}catch (PDOException $e) {
+    $errors[] = "Connection failed: " . $e->getMessage();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -117,6 +107,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <title>Stafford Junction | Field Trip Waiver Form <?php echo date("Y"); ?></title>
 </head>
 <body>
+
+    <!--Please fill out error message pop up -->
+    <?php if (!empty($errors)): ?>
+        <h3 style="color: red;">Please correct the following errors:</h3>
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?php echo $error; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
 
     <!-- Main heading of the page -->
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
@@ -131,8 +131,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Child's Name -->
     <label for="child_name">Child's Name / Nombre del Niño(a)*</label><br><br>
-    <select name="child_name" id="child_name" required onchange="updateChildDetails()">
-        <option value="">Select a child</option>
+    <select name="child_name" id="child_name" required>
         <?php
             require_once('domain/Children.php');
             foreach ($children as $c) {
@@ -143,22 +142,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         ?>
     </select><br><br>
 
-        <!-- Child's Gender -->
-    <label for="child_gender">Child's Gender / Género del Niño(a)*</label><br><br>
-    <input type="text" id="child_gender" name="child_gender" required readonly><br><br>
+    <!-- Child's Gender -->
+    <label for="child_gender">Gender* / Género*</label><br>
+    <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" required><br><br>
 
     <!-- Child's Birthdate -->
-    <label for="child_birthdate">Child's Birthdate / Fecha de Nacimiento del Niño(a)*</label><br><br>
-    <input type="date" id="child_birthdate" name="child_birthdate" required readonly><br><br>
+    <label for="child_birthdate">Birthdate* / Fecha de Nacimiento*</label><br>
+    <input type="date" name="child_birthdate" id="child_birthdate" required><br><br>
 
     <!-- Child's Neighborhood -->
     <label for="child_neighborhood">Neighborhood* / Barrio*</label><br>
-    <input type="text" name="child_neighborhood" id="child_neighborhood" placeholder="Neighborhood / Barrio"
-        required><br><br>
+    <input type="text" name="child_neighborhood" id="child_neighborhood" placeholder="Neighborhood / Barrio" required><br><br>
 
-        <!-- Child's School -->
-    <label for="child_school">Child's School / Escuela del Niño(a)*</label><br><br>
-    <input type="text" id="child_school" name="child_school" required readonly><br><br>
+    <!-- Child's School -->
+    <label for="child_school">School* / Escuela*</label><br>
+    <input type="text" name="child_school" id="child_school" placeholder="School / Escuela" required><br><br>
 
     <!-- Child's Street Address -->
     <label for="child_address">Street Address* / Dirección*</label><br>
@@ -211,8 +209,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Emergency Contact 1 Phone -->
     <label for="emergency_contact_phone_1">Phone* / Teléfono*</label><br>
-    <input type="tel" name="emergency_contact_phone_1" id="emergency_contact_phone_1"
+    <?php if($data): ?>
+        <input style="background-color: yellow; color: black;" type="tel" id="emergency_contact_phone_1" name="emergency_contact_phone_1" disabled value="<?php echo htmlspecialchars($data['emerg_phone_1']); ?>"><br><br>
+    <?php elseif(!$data): ?>
+        <input type="tel" name="emergency_contact_phone_1" id="emergency_contact_phone_1"
         placeholder="Phone Number / Número de Teléfono" required value="<?php echo htmlspecialchars($guardian_phone); ?>"><br><br>
+    <?php endif?>
 
     <!-- Emergency Contact 2 Name -->
     <label for="emergency_contact_name_2">Emergency Contact Name 2* / Nombre del Contacto de Emergencia 2*</label><br>
@@ -396,33 +398,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <?php endif ?>                
 
            </form>
-
-        <script>
-    // Array to store child details for easy access
-    const childData = <?php echo json_encode($children); ?>;
-
-    function updateChildDetails() {
-        const selectedChildId = document.getElementById('child_name').value;
-
-        if (selectedChildId) {
-            // Find the child data based on the selected ID
-            const child = childData.find(c => c.id == selectedChildId);
-
-            if (child) {
-                // Update the fields with the child's information
-                document.getElementById('child_gender').value = child.gender;
-                document.getElementById('child_birthdate').value = child.dob;
-                document.getElementById('child_school').value = child.school;
-            }
-        } else {
-            // Clear the fields if no child is selected
-            document.getElementById('child_gender').value = '';
-            document.getElementById('child_birthdate').value = '';
-            document.getElementById('child_school').value = '';
-        }
-    }
-</script>
-
         </div>
     </div>
     </body>

@@ -1,5 +1,8 @@
 <?php
 
+require_once("dbinfo.php");
+require_once("dbFamily.php");
+
 function createFieldTripWaiverForm($form) {
     // Parse the child_name to get the child_id and full name
     $child_data = explode("_", $form['child_name']);
@@ -100,6 +103,20 @@ function isFieldTripWaiverFormComplete($childID) {
     } else {
         mysqli_close($connection);
         return true; // Entry found, form is complete
+    }
+}
+
+//Function that retrieves the data from the field trip waiver for children on the family
+function getFielTripWaiverData($id){
+    $conn = connect();
+    $query = "SELECT * FROM dbFieldTrpWaiverForm INNER JOIN dbChildren ON dbChildren.id =  dbFieldTrpWaiverForm.child_id WHERE family_id = ". $id . "';";
+    $res = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($res) < 0 || $res == null){
+        return null;
+    }else {
+        $row = mysqli_fetch_assoc($res);
+        return $row; //return the data as an associative array;
     }
 }
 ?>
