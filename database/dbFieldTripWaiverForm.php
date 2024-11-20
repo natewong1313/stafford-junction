@@ -8,7 +8,9 @@ function createFieldTripWaiverForm($form) {
     $child_data = explode("_", $form['child_name']);
     $child_id = $child_data[0];
     $child_name = $child_data[1]; // Assuming this combines first and last names
+    // Split contact names
     $contact1_name = explode(" ", $form['emergency_contact_name_1']);
+    $contact2_name = explode(" ", $form['emergency_contact_name_2']);
 
     // Check if form is already complete for the child, if so then return
     if (isFieldTripWaiverFormComplete($child_id)) {
@@ -36,10 +38,10 @@ function createFieldTripWaiverForm($form) {
     $emgcy_contact1_phone = $form["emergency_contact_phone_1"];
 
     // Emergency contact 2
-    $emgcy_contact2_first_name = $form["emgcy_contact2_first_name"] ?? null;
-    $emgcy_contact2_last_name = $form["emgcy_contact2_last_name"] ?? null;
-    $emgcy_contact2_rship = $form["emgcy_contact2_rship"] ?? null;
-    $emgcy_contact2_phone = $form["emgcy_contact2_phone"] ?? null;
+    $emgcy_contact2_first_name = $contact2_name[0] ?? null;
+    $emgcy_contact2_last_name = $contact2_name[1] ?? null;
+    $emgcy_contact2_rship = $form["emergency_contact_relationship_2"] ?? null;
+    $emgcy_contact2_phone = $form["emergency_contact_phone_2"] ?? null;
 
     // Insurance info
     $medical_insurance_company = $form["insurance_company"];

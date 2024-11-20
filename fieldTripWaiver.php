@@ -40,61 +40,48 @@ $guardian_2_phone = $family->getPhone2();
 $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
 include_once('database/dbinfo.php');
-try {
-    //Retrieve the data from the database. If the user has already filled out this form, this variable will store the users data
-
-    $data = getFielTripWaiverData($family->getId());
-    if($data == null){
-        $conn = connect();
-
-    //check if the form is submitted
-        if($_SERVER['REQUEST_METHOD'] == "POST"){
-        
-
+//check if the form is submitted
+if($_SERVER['REQUEST_METHOD'] == "POST"){
     //sanitize form input
-            $args = sanitize($_POST, null);
-            $required = array(
-                'child_name',
-                'child_gender',
-                'child_birthdate',
-                'child_neighborhood',
-                'child_school',
-                'child_address',
-                'child_city',
-                'child_state',
-                'child_zip',
-                'religious_foods',
-                'medical_issues',
-                'parent_email',
-                'emergency_contact_name_1',
-                'emergency_contact_relationship_1',
-                'emergency_contact_phone_1',
-                'emergency_contact_name_2',
-                'emergency_contact_relationship_2',
-                'emergency_contact_phone_2',
-                'insurance_company',
-                'policy_number',
-                'parent_name',
-                'parent_signature',
-                'signature_date'
-            );
+    $args = sanitize($_POST, null);
+    $required = array(
+        'child_name',
+        'child_gender',
+        'child_birthdate',
+        'child_neighborhood',
+        'child_school',
+        'child_address',
+        'child_city',
+        'child_state',
+        'child_zip',
+        'religious_foods',
+        'medical_issues',
+        'parent_email',
+        'emergency_contact_name_1',
+        'emergency_contact_relationship_1',
+        'emergency_contact_phone_1',
+        'emergency_contact_name_2',
+        'emergency_contact_relationship_2',
+        'emergency_contact_phone_2',
+        'insurance_company',
+        'policy_number',
+        'parent_name',
+        'parent_signature',
+        'signature_date'
+    );
     
-        if(!wereRequiredFieldsSubmitted($args, $required)){
-            echo "Not all fields complete";
-        }else {
-       //call the function to create the waiver form
+    if(!wereRequiredFieldsSubmitted($args, $required)){
+        echo "Not all fields complete";
+    } else {
+        //call the function to create the waiver form
         $success = createFieldTripWaiverForm($args);
         
         if ($success) {
             echo "Form submitted successfully!";
         } else {
-                echo "Error submitting the form.";
-        }
-            }
+            echo "Error submitting the form.";
         }
     }
-}catch (PDOException $e) {
-    $errors[] = "Connection failed: " . $e->getMessage();
 }
 ?>
 
@@ -123,7 +110,7 @@ try {
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
-    <form method="POST" action="fieldTripWaiver.php">
+    <form method="post" action="fieldTripWaiver.php">
 
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
@@ -137,9 +124,11 @@ try {
             require_once('domain/Children.php');
             foreach ($children as $c) {
                 $id = $c->getID();
-                $name = $c->getFirstName() . " " . $c->getLastName();
-                $value = $id . "_" . $name;
-                echo "<option value='$value'>$name</option>";
+                if (!isFieldTripWaiverFormComplete($id)) {
+                    $name = $c->getFirstName() . " " . $c->getLastName();
+                    $value = $id . "_" . $name;
+                    echo "<option value='$value'>$name</option>";
+                }
             }
         ?>
     </select><br><br>
@@ -382,19 +371,19 @@ try {
                     <label for="signature_date">Date* / Fecha*</label><br>
                     <input type="date" name="signature_date" id="signature_date" required><br><br>
                 </div>
+                <hr>
 
                 <!-- Submit and Cancel buttons -->
-               
-                <button type="submit">Submit</button>
+                <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-                <?php
-                    if($success){
-                        echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                    }
-                ?>          
-
+            </div>
            </form>
-        </div>
+           <?php
+           //if registration successful, create pop up notification and direct user back to login
+            if($success){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            }  
+            ?>
     </div>
     </body>
 </html>
