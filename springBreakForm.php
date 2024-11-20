@@ -10,9 +10,15 @@ $accessLevel = 0;
 $userID = null;
 
 if(isset($_SESSION['_id'])){
+    require_once('domain/Children.php');
+    require_once('database/dbChildren.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbSpringBreakCampForm.php');
+    
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $children = retrieve_children_by_family_id($userID);
 }
 
 include_once("database/dbFamily.php");
@@ -21,8 +27,6 @@ $family_email = $family->getEmail();
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
     $args = sanitize($_POST, null);
     $required = array("email", "name", "school_date", "isAttending", "hasWaiver", "questions_comments");
     if(!wereRequiredFieldsSubmitted($args, $required)){
@@ -115,7 +119,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         <!-- Question 2: Name input field (required) -->
         <label for="name">2. Registered Brain Builder Student Name - Nombre del estudiante *</label><br><br>
-        <input type="text" name="name" id="name" placeholder="Name/Nombre" required><br><br>
+        <select name="child_name" id="child_name" required>
+                <?php
+                    require_once('domain/Children.php');
+                    foreach ($children as $c){
+                        $id = $c->getID();
+                        var_dump($c);
+                        // Check if form was already completed for the child
+                        if (!isSpringBreakCampFormComplete($id)) {
+                            $name = $c->getFirstName() . " " . $c->getLastName();
+                            $value = $id . "_" . $name;
+                            echo "<option value='$value'>$name</option>";
+                        }
+                    }
+                ?>
+                </select>
         <!-- Additional space before next question -->
         <br><br><br>
 
