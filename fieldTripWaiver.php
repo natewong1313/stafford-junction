@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = null;
 
 if(isset($_SESSION['_id'])){
     $loggedIn = true;
@@ -137,7 +138,8 @@ try {
             foreach ($children as $c) {
                 $id = $c->getID();
                 $name = $c->getFirstName() . " " . $c->getLastName();
-                echo "<option value='$id'>$name</option>";
+                $value = $id . "_" . $name;
+                echo "<option value='$value'>$name</option>";
             }
         ?>
     </select><br><br>
@@ -209,12 +211,9 @@ try {
 
     <!-- Emergency Contact 1 Phone -->
     <label for="emergency_contact_phone_1">Phone* / Teléfono*</label><br>
-    <?php if($data): ?>
-        <input style="background-color: yellow; color: black;" type="tel" id="emergency_contact_phone_1" name="emergency_contact_phone_1" disabled value="<?php echo htmlspecialchars($data['emerg_phone_1']); ?>"><br><br>
-    <?php elseif(!$data): ?>
         <input type="tel" name="emergency_contact_phone_1" id="emergency_contact_phone_1"
         placeholder="Phone Number / Número de Teléfono" required value="<?php echo htmlspecialchars($guardian_phone); ?>"><br><br>
-    <?php endif?>
+   
 
     <!-- Emergency Contact 2 Name -->
     <label for="emergency_contact_name_2">Emergency Contact Name 2* / Nombre del Contacto de Emergencia 2*</label><br>
@@ -385,17 +384,14 @@ try {
                 </div>
 
                 <!-- Submit and Cancel buttons -->
-                <?php if($data): ?>
-                    <a class="button cancel" href="fillForm.php">Cancel</a>
-                <?php else: ?>
+               
                 <button type="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
                 <?php
-                    if($successMessage){
+                    if($success){
                         echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
                     }
-                ?>
-                <?php endif ?>                
+                ?>          
 
            </form>
         </div>

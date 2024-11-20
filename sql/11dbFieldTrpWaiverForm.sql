@@ -1,12 +1,12 @@
 --
 -- Drop table if it already exist
 --
-DROP TABLE IF EXISTS `dbFieldTrpWaiverForm`;
+DROP TABLE IF EXISTS `dbFieldTripWaiverForm`;
 
 --
 -- Table for the `dbFieldTripWaiverForm`
 --
-CREATE TABLE `dbFieldTrpWaiverForm` (
+CREATE TABLE `dbFieldTripWaiverForm` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `child_id` INT NOT NULL,
     `child_name` varchar(256) NOT NULL,
@@ -20,13 +20,11 @@ CREATE TABLE `dbFieldTrpWaiverForm` (
     `child_zip` VARCHAR(10), 
     `parent_email` VARCHAR(256),
 
-    `contact_1` INT NOT NULL,
     `emgcy_contact1_first_name` VARCHAR(256),
     `emgcy_contact1_last_name` VARCHAR(256),
     `emgcy_contact1_rship` VARCHAR(100),
     `emgcy_contact1_phone` VARCHAR(15),
-   
-    `contact_2` INT, -- Made nullable in case a second emergency contact is not provided
+
     `emgcy_contact2_first_name` VARCHAR(256),
     `emgcy_contact2_last_name` VARCHAR(256),
     `emgcy_contact2_rship` VARCHAR(100),

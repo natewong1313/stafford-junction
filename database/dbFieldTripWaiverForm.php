@@ -8,6 +8,7 @@ function createFieldTripWaiverForm($form) {
     $child_data = explode("_", $form['child_name']);
     $child_id = $child_data[0];
     $child_name = $child_data[1]; // Assuming this combines first and last names
+    $contact1_name = explode(" ", $form['emergency_contact_name_1']);
 
     // Check if form is already complete for the child, if so then return
     if (isFieldTripWaiverFormComplete($child_id)) {
@@ -18,52 +19,48 @@ function createFieldTripWaiverForm($form) {
     $connection = connect();
 
     // Extract form fields
-    $email = $form["email"];
-    $gender = $form["gender"];
-    $birth_date = $form["birth_date"];
-    $neighborhood = $form["neighborhood"];
-    $school = $form["school"];
+    $email = $form["parent_email"];
+    $gender = $form["child_gender"];
+    $birth_date = $form["child_birthdate"];
+    $neighborhood = $form["child_neighborhood"];
+    $school = $form["child_school"];
     $child_address = $form["child_address"];
     $child_city = $form["child_city"];
     $child_state = $form["child_state"];
     $child_zip = $form["child_zip"];
 
     // Emergency contact 1
-    $contact_1 = $form["contact_1"];
-    $emgcy_contact1_first_name = $form["emgcy_contact1_first_name"];
-    $emgcy_contact1_last_name = $form["emgcy_contact1_last_name"];
-    $emgcy_contact1_rship = $form["emgcy_contact1_rship"];
-    $emgcy_contact1_phone = $form["emgcy_contact1_phone"];
+    $emgcy_contact1_first_name = $contact1_name[0];
+    $emgcy_contact1_last_name = $contact1_name[1];
+    $emgcy_contact1_rship = $form["emergency_contact_relationship_1"];
+    $emgcy_contact1_phone = $form["emergency_contact_phone_1"];
 
     // Emergency contact 2
-    $contact_2 = $form["contact_2"] ?? null; // Handle nullable field
     $emgcy_contact2_first_name = $form["emgcy_contact2_first_name"] ?? null;
     $emgcy_contact2_last_name = $form["emgcy_contact2_last_name"] ?? null;
     $emgcy_contact2_rship = $form["emgcy_contact2_rship"] ?? null;
     $emgcy_contact2_phone = $form["emgcy_contact2_phone"] ?? null;
 
     // Insurance info
-    $medical_insurance_company = $form["medical_insurance_company"];
+    $medical_insurance_company = $form["insurance_company"];
     $policy_number = $form["policy_number"];
 
     // Photo waiver
-    $photo_waiver_signature = $form["photo_waiver_signature"];
-    $photo_waiver_date = $form["photo_waiver_date"];
+    $photo_waiver_signature = $form["parent_signature"];
+    $photo_waiver_date = $form["signature_date"];
 
     // Prepare query
     $query = "
-        INSERT INTO dbFieldTrpWaiverForm (
+        INSERT INTO dbFieldTripWaiverForm (
             child_id, child_name, gender, birth_date, neighborhood, school,
-            child_address, child_city, child_state, child_zip, parent_email,
-            contact_1, emgcy_contact1_first_name, emgcy_contact1_last_name, emgcy_contact1_rship, emgcy_contact1_phone,
-            contact_2, emgcy_contact2_first_name, emgcy_contact2_last_name, emgcy_contact2_rship, emgcy_contact2_phone,
+            child_address, child_city, child_state, child_zip, parent_email, emgcy_contact1_first_name, 
+            emgcy_contact1_last_name, emgcy_contact1_rship, emgcy_contact1_phone, emgcy_contact2_first_name, emgcy_contact2_last_name, 
+            emgcy_contact2_rship, emgcy_contact2_phone,
             medical_insurance_company, policy_number, photo_waiver_signature, photo_waiver_date
         )
         VALUES (
             '$child_id', '$child_name', '$gender', '$birth_date', '$neighborhood', '$school',
-            '$child_address', '$child_city', '$child_state', '$child_zip', '$email',
-            '$contact_1', '$emgcy_contact1_first_name', '$emgcy_contact1_last_name', '$emgcy_contact1_rship', '$emgcy_contact1_phone',
-            " . ($contact_2 !== null ? "'$contact_2'" : "NULL") . ", 
+            '$child_address', '$child_city', '$child_state', '$child_zip', '$email', '$emgcy_contact1_first_name', '$emgcy_contact1_last_name', '$emgcy_contact1_rship', '$emgcy_contact1_phone',
             " . ($emgcy_contact2_first_name !== null ? "'$emgcy_contact2_first_name'" : "NULL") . ",
             " . ($emgcy_contact2_last_name !== null ? "'$emgcy_contact2_last_name'" : "NULL") . ",
             " . ($emgcy_contact2_rship !== null ? "'$emgcy_contact2_rship'" : "NULL") . ",
@@ -71,6 +68,7 @@ function createFieldTripWaiverForm($form) {
             '$medical_insurance_company', '$policy_number', '$photo_waiver_signature', '$photo_waiver_date'
         );
     ";
+    echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -91,7 +89,7 @@ function isFieldTripWaiverFormComplete($childID) {
     $connection = connect();
 
     $query = "
-        SELECT * FROM dbFieldTrpWaiverForm
+        SELECT * FROM dbFieldTripWaiverForm
         WHERE child_id = $childID
     ";
 
@@ -109,7 +107,7 @@ function isFieldTripWaiverFormComplete($childID) {
 //Function that retrieves the data from the field trip waiver for children on the family
 function getFielTripWaiverData($id){
     $conn = connect();
-    $query = "SELECT * FROM dbFieldTrpWaiverForm INNER JOIN dbChildren ON dbChildren.id =  dbFieldTrpWaiverForm.child_id WHERE family_id = ". $id . "';";
+    $query = "SELECT * FROM dbFieldTripWaiverForm INNER JOIN dbChildren ON dbChildren.id =  dbFieldTripWaiverForm.child_id WHERE dbChildren.family_id = $id";
     $res = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($res) < 0 || $res == null){
