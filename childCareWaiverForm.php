@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = false;
 
 if(isset($_SESSION['_id'])){
     $loggedIn = true;
@@ -74,16 +75,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'guardian_signature',
         'signature_date'
     );
-    
-    if(!wereRequiredFieldsSubmitted($args, $required)){
+
+    $args['phone'] = validateAndFilterPhoneNumber($args['phone']);
+
+    if (!$args['phone']) {
+        echo "phone number invalid";
+    } else if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
         die();
     }else {
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
+            $success = createChildCareForm($args);
         }
     }
-}
+
 
 ?>
 
@@ -188,45 +192,45 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <input type="tel" name="parent1_cell_phone" id="parent1_cell_phone" placeholder="Cell Phone / Teléfono Celular"
         required value="<?php echo htmlspecialchars($guardian_phone); ?>">
 
-    <label for="parent1_home_phone">Home Phone / Teléfono de Casa </label>
+    <label for="parent1_home_phone">Home Phone* / Teléfono de Casa* </label>
     <input type="tel" name="parent1_home_phone" id="parent1_home_phone" placeholder="Home Phone / Teléfono de Casa">
 
-    <label for="parent1_work_phone">Work Phone / Teléfono del Trabajo </label>
+    <label for="parent1_work_phone">Work Phone* / Teléfono del Trabajo* </label>
     <input type="tel" name="parent1_work_phone" id="parent1_work_phone"
         placeholder="Work Phone / Teléfono del Trabajo"><br><br>
 
     <!-- Parent 2 Information -->
-    <label for="parent2_first_name">First Name / Nombre </label>
+    <label for="parent2_first_name">(Parent 2) First Name* / Nombre* </label>
     <input type="text" name="parent2_first_name" id="parent2_first_name" placeholder="First Name / Nombre" value="<?php echo htmlspecialchars($guardian_2_fname); ?>">
 
-    <label for="parent2_last_name">Last Name / Apellido </label>
+    <label for="parent2_last_name">(Parent 2) Last Name* / Apellido* </label>
     <input type="text" name="parent2_last_name" id="parent2_last_name" placeholder="Last Name / Apellido" value="<?php echo htmlspecialchars($guardian_2_lname); ?>"><br><br>
 
     <!-- Parent 2 Address -->
-    <label for="parent2_address">Address / Dirección </label>
+    <label for="parent2_address">(Parent 2) Address* / Dirección* </label>
     <input type="text" name="parent2_address" id="parent2_address" placeholder="Street Address / Dirección" value="<?php echo htmlspecialchars($guardian_2_address); ?>"><br><br>
 
     <!-- Parent 2 City, State, Zip -->
-    <label for="parent2_city">City / Ciudad </label>
+    <label for="parent2_city">(Parent 2)  City* / Ciudad* </label>
     <input type="text" name="parent2_city" id="parent2_city" placeholder="City / Ciudad" value="<?php echo htmlspecialchars($guardian_2_city); ?>">
 
-    <label for="parent2_state">State / Estado </label>
+    <label for="parent2_state">(Parent 2) State* / Estado* </label>
     <input type="text" name="parent2_state" id="parent2_state" placeholder="State / Estado" value="<?php echo htmlspecialchars($guardian_2_state); ?>">
 
-    <label for="parent2_zip">Zip Code / Código Postal </label>
+    <label for="parent2_zip">(Parent 2) Zip Code* / Código Postal* </label>
     <input type="text" name="parent2_zip" id="parent2_zip" placeholder="Zip Code / Código Postal" value="<?php echo htmlspecialchars($guardian_2_zip); ?>"><br><br>
 
     <!-- Parent 2 Contact Info -->
-    <label for="parent2_email">Email / Correo Electrónico </label>
+    <label for="parent2_email">(Parent 2) Email* / Correo Electrónico* </label>
     <input type="email" name="parent2_email" id="parent2_email" placeholder="Email / Correo Electrónico" value="<?php echo htmlspecialchars($guardian_2_email); ?>"><br><br>
 
-    <label for="parent2_cell_phone">Cell Phone / Teléfono Celular </label>
+    <label for="parent2_cell_phone">(Parent 2) Cell Phone* / Teléfono Celular*</label>
     <input type="tel" name="parent2_cell_phone" id="parent2_cell_phone" placeholder="Cell Phone / Teléfono Celular" value="<?php echo htmlspecialchars($guardian_2_phone); ?>">
 
-    <label for="parent2_home_phone">Home Phone / Teléfono de Casa </label>
+    <label for="parent2_home_phone">(Parent 2) Home Phone* / Teléfono de Casa* </label>
     <input type="tel" name="parent2_home_phone" id="parent2_home_phone" placeholder="Home Phone / Teléfono de Casa">
 
-    <label for="parent2_work_phone">Work Phone / Teléfono del Trabajo </label>
+    <label for="parent2_work_phone">(Parent 2) Work Phone* / Teléfono del Trabajo* </label>
     <input type="tel" name="parent2_work_phone" id="parent2_work_phone"
         placeholder="Work Phone / Teléfono del Trabajo"><br><br>
 
@@ -275,3 +279,4 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 </body>
 
 </html>
+
