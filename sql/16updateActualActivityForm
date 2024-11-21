@@ -29,7 +29,7 @@ CREATE TABLE `dbActualActivityForm` (
 CREATE TABLE `dbActualActivityAttendees` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(256) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Table structure for junction table `dbActivityAttendees`
@@ -40,4 +40,4 @@ CREATE TABLE `dbActivityAttendees` (
     PRIMARY KEY (`activityID`, `attendeeID`),
     FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
