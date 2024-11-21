@@ -10,22 +10,30 @@ $accessLevel = 0;
 $userID = null;
 $success = false;
 
-if(isset($_SESSION['_id'])){
+include_once("database/dbChildren.php");
+// Check if user is logged in
+if (isset($_SESSION['_id'])) {
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
 } else {
-    header("Location: login.php");
+    $loggedIn = false;
 }
 
-//necessary files
+// Include necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
-include_once('database/dbChildCareForm.php');
-require('include/input-validation.php');
-include_once('domain/Children.php');
+require_once('database/dbChildCareForm.php');
 
-// retrieve family data
+// Retrieve family information
+if ($loggedIn) {
+    $family = retrieve_family_by_id($_SESSION["_id"]);
+    $family_email = $family->getEmail();
+    //retrieve children by family ID
+    $children = retrieve_children_by_family_id($_SESSION["_id"]);
+
+}
+include_once("database/dbFamily.php");
 $family = retrieve_family_by_id($_SESSION["_id"]);
 $guardian_email = $family->getEmail();
 $guardian_fname = $family->getFirstName();
@@ -43,16 +51,15 @@ $guardian_2_state = $family->getState2();
 $guardian_2_zip = $family->getZip2();
 $guardian_2_email = $family->getEmail2();
 $guardian_2_phone = $family->getPhone2();
-// retrieve children by family data
-$children = retrieve_children_by_family_id($userID);
 
-include_once('database/dbinfo.php');
-// check if the form has been submitted
+// include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    // sanitize form input
+    //require_once('database/dbSpringBreakForm.php');
     $args = sanitize($_POST, null);
+
     $required = array(
+        'name',
         'child_first_name',
         'child_last_name',
         'child_dob',
@@ -85,12 +92,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent2_cell_phone',
         'parent2_home_phone',
         'parent2_work_phone',
-
         'guardian_name',
         'guardian_signature',
         'signature_date'
     );
-
+    
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
     } else {
@@ -108,6 +114,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
@@ -115,6 +122,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stafford Junction | Child Care Waiver Form</title>
 </head>
+
 <body>
 
     <!-- Main heading of the page -->
@@ -132,91 +140,49 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     Claridad)</strong></p>
         </div>
 
-        <!--Added a form tag to aid in the process of the post method-->
-        <form method="post" action="childCareWaiverForm.php">
+        <form method="POST" action="childCareWaiverForm.php">
 
-        <!-- Child Name-->
-        <label for="child_name">Select Child</label><br><br>
-        <select name="child_name" id="child_name" required>
-            <?php
-                    require_once('domain/Children.php');
+        <!-- Child Name -->
+        <label for="name">Child Name / Nombre del Estudiante*</label><br><br>
+            <select name="name" id="name" required>
+                <?php
+                    require_once('domain/Children.php'); 
                     foreach ($children as $c){
                         $id = $c->getID();
-                        var_dump($c);
-
                         // Check if form was already completed for the child
-                        if (!isChildCareFormComplete($id)) {
+                        if (!isChildCareWaiverFormComplete($id)) {
                             $name = $c->getFirstName() . " " . $c->getLastName();
                             $value = $id . "_" . $name;
                             echo "<option value='$value'>$name</option>";
                         }
                     }
                 ?>
-        </select>
-        <br><br>
-
-        <!-- Child's First Name -->
-        <label for="child_first_name">First Name* / Nombre* </label>
-        <input type="text" name="child_first_name" id="child_first_name" placeholder="First Name / Nombre" value="<?php 
-                    // Extract the default first name from the dropdown value
-                $defaultChild = $children[0]; // Assuming the first child is the default
-                echo htmlspecialchars($defaultChild->getFirstName());
-        ?> " required>
-
-        <!-- Child's Last Name -->
-        <label for="child_last_name">Last Name* / Apellido* </label>
-        <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" value="<?php 
-                    // Extract the default last name from the dropdown value
-                    $defaultChild = $children[0]; // Assuming the first child is the default
-                    echo htmlspecialchars($defaultChild->getLastName());
-        ?>" required>
+                </select>
+                <br><br>
 
         <!-- Child's Date of Birth -->
-        <label for="child_dob">Date of Birth* / Fecha de Nacimiento* </label>
-        <input type="date" name="child_dob" id="child_dob" value="<?php 
-        // Extract the default birthdate from the dropdown value
-        $defaultChild = $children[0]; // Assuming the first child is the default
-        echo htmlspecialchars($defaultChild->getBirthdate());
-        ?>" required>
-
+        <label for="child_dob">Date of Birth* / Fecha de Nacimiento*</label>
+        <input type="date" name="child_dob" id="child_dob" placeholder="Date of Birth / Fecha de Nacimiento" <br><br>
+        
         <!-- Child's Gender -->
-        <label for="child_gender">Gender* / Género* </label>
-        <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" value="<?php 
-        // Extract the default gender from the dropdown value
-        $defaultChild = $children[0]; // Assuming the first child is the default
-        echo htmlspecialchars($defaultChild->getGender());
-        ?>" required>
-        <br><br>
+        <label for="child_gender">Gender* / Género*</label>
+        <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" <br><br>
 
         <!-- Address -->
-        <label for="child_address">Address* / Dirección* </label>
-        <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección" value="<?php 
-        $defaultChild = $children[0]; // Assuming the first child is the default
-        echo htmlspecialchars($defaultChild->getAddress());
-        ?>" required>
-        <br><br>
+        <label for="child_address">Address* / Dirección*</label>
+        <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección" <br><br>
 
         <!-- City -->
-        <label for="child_city">City* / Ciudad* </label>
-        <input type="text" name="child_city" id="child_city" placeholder="City / Ciudad" value="<?php 
-        $defaultChild = $children[0];
-        echo htmlspecialchars($defaultChild->getCity());
-        ?>" required>
+        <label for="child_city">City* / Ciudad*</label>
+        <input type="text" name="child_city" id="child_city" placeholder="City / Ciudad" <br><br>
 
         <!-- State -->
-        <label for="child_state">State* / Estado* </label>
-        <input type="text" name="child_state" id="child_state" placeholder="State / Estado" value="<?php 
-        $defaultChild = $children[0];
-        echo htmlspecialchars($defaultChild->getState());
-        ?>" required>
+        <label for="child_state">State* / Estado*</label>
+        <input type="text" name="child_state" id="child_state" placeholder="State / Estado" <br><br>
 
         <!-- Zip Code -->
-        <label for="child_zip">Zip Code* / Código Postal* </label>
-        <input type="text" name="child_zip" id="child_zip" placeholder="Zip Code / Código Postal" value="<?php 
-        $defaultChild = $children[0];
-        echo htmlspecialchars($defaultChild->getZip());
-        ?>" required>
-        <br><br>
+        <label for="child_zip">Zip Code* / Código Postal*</label>
+        <input type="text" name="child_zip" id="child_zip" placeholder="Zip Code / Código Postal" <br><br>
 
         <!-- Medical Issues or Allergies -->
         <label for="medical_issues">Medical Issues or Allergies / Problemas Médicos o Alergias: </label><br>
@@ -321,32 +287,42 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
         <!-- Waiver Section -->
         <div class="info-box-rect">
-            <p><strong>Photograph / Video and General Waiver / Autorización General y para Fotografía / Video</strong>
+            <p><strong>Photograph / Video and General Waiver / Autorización General y para Fotografía /
+                    Video</strong>
             </p>
         </div>
 
         <p>
-            I acknowledge that Stafford Junction may use photographs or videos of participants taken during involvement
+            I acknowledge that Stafford Junction may use photographs or videos of participants taken during
+            involvement
             in
-            Stafford Junction activities. This includes internal and external use, including but not limited to Stafford
-            Junction’s website, Facebook, and publications. I consent to such uses and waive all rights to compensation.
-            If I do not wish my child’s image to be included, I am responsible for informing them to exclude themselves
-            from photographs or videos. I acknowledge the risks associated with such activities, and I release Stafford
+            Stafford Junction activities. This includes internal and external use, including but not limited to
+            Stafford
+            Junction’s website, Facebook, and publications. I consent to such uses and waive all rights to
+            compensation.
+            If I do not wish my child’s image to be included, I am responsible for informing them to exclude
+            themselves
+            from photographs or videos. I acknowledge the risks associated with such activities, and I release
+            Stafford
             Junction from liability for any injury, loss, or damage.
         </p>
         <br>
         <p>
-            Reconozco que Stafford Junction puede utilizar fotografías o vídeos de los participantes que sean tomadas
+            Reconozco que Stafford Junction puede utilizar fotografías o vídeos de los participantes que sean
+            tomadas
             durante
-            su participación en las actividades de Stafford Junction. Esto incluye uso interno y externo, incluyendo,
+            su participación en las actividades de Stafford Junction. Esto incluye uso interno y externo,
+            incluyendo,
             pero no limitado
             a la página web de Stafford Junction, Facebook, y publicaciones. Doy mi consentimiento para tales usos y
             renuncio a
-            todos los derechos de compensación. Si no deseo que la imagen de mi hijo/a se incluya en lo anteriormente
+            todos los derechos de compensación. Si no deseo que la imagen de mi hijo/a se incluya en lo
+            anteriormente
             mencionado,
             es mi responsabilidad informarles que no participen en las fotografías o vídeos tomados durante dichas
             actividades. Doy
-            mi consentimiento para que mi hijo/a asista a los programas y actividades organizados por Stafford Junction.
+            mi consentimiento para que mi hijo/a asista a los programas y actividades organizados por Stafford
+            Junction.
             Entiendo que
             hay riesgos involucrados en cualquier actividad y libero a Stafford Junction, sus empleados, agentes y
             voluntarios de toda
@@ -367,20 +343,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <label for="signature_date">Date* / Fecha*</label><br>
         <input type="date" name="signature_date" id="signature_date" required><br><br>
 
-       <!-- Submit and Cancel buttons -->
-       <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            </div>
-            </form>
-            <?php
+        <!-- Submit and Cancel buttons -->
+        <button type="submit" id="submit">Submit</button>
+        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+    </div>
+    </form>
+    <?php
            //if registration successful, create pop up notification and direct user back to login
             if($success){
                 echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
             }  
             ?>
-            </div>
-    </body>
+    </div>
+</body>
+
 </html>
-
-
 

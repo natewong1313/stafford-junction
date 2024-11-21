@@ -10,21 +10,23 @@ require_once("dbFamily.php");
  * @return int|null The ID of the inserted form or null on failure.
  */
 function createChildCareForm($form) {
-    // Parse the child_name to get the child_id and full name
-    $child_data = explode("_", $form['child_name']); 
-    $child_id = $child_data[0]; 
-
+     // Establish a connection to the database
+     $connection = connect();
+    
     // Check if form is already complete for the child, if so then return
     if (isChildCareWaiverFormComplete($child_id)) {
         return;
     }
 
-    // Establish a connection to the database
-    $connection = connect();
+    $child_data = explode("_", $form['name']);
+    
+    // Map form data directly to variables
+    $child_id = $child_data[0];
+    $child_name = $child_data[1];
 
     // Extract form fields
-    $child_first_name = $form["child_first_name"];
-    $child_last_name = $form["child_last_name"];
+    //$child_first_name = $form["child_first_name"];
+    //$child_last_name = $form["child_last_name"];
     $birth_date = $form["child_dob"]; // Match table column name
     $gender = $form["child_gender"];
     $child_address = $form["child_address"];
@@ -63,14 +65,14 @@ function createChildCareForm($form) {
     // Insert query for childcare form
     $query = "
         INSERT INTO dbChildCareWaiverForm (
-            child_id, child_first_name, child_last_name, birth_date, gender, child_address, child_city, child_state, child_zip, 
+            child_id, child_name, birth_date, gender, child_address, child_city, child_state, child_zip, 
             parent1_first_name, parent1_last_name, parent1_address, parent1_city, 
             parent1_state, parent1_zip_code, parent1_email, parent1_cell_phone, parent1_home_phone, parent1_work_phone, 
             parent2_first_name, parent2_last_name, parent2_address, parent2_city, parent2_state, parent2_zip_code, 
             parent2_email, parent2_cell_phone, parent2_home_phone, parent2_work_phone, 
             parent_guardian_signature, signature_date
         ) VALUES (
-            '$child_id', '$child_first_name', '$child_last_name', '$birth_date', '$gender', '$child_address', '$child_city', 
+            '$child_id', '$child_name, '$birth_date', '$gender', '$child_address', '$child_city', 
             '$child_state', '$child_zip', '$parent1_first_name', 
             '$parent1_last_name', '$parent1_address', '$parent1_city', '$parent1_state', '$parent1_zip_code', '$parent1_email', 
             '$parent1_cell_phone', '$parent1_home_phone', '$parent1_work_phone', '$parent2_first_name', 

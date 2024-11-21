@@ -3,8 +3,7 @@ DROP TABLE IF EXISTS `dbChildCareWaiverForm`;
 CREATE TABLE `dbChildCareWaiverForm` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `child_id` INT NOT NULL,
-    `child_first_name` VARCHAR(256) NOT NULL,
-    `child_last_name` VARCHAR(256) NOT NULL,
+    `child_name` VARCHAR(256) NOT NULL,
     `birth_date` DATE NOT NULL,
     `gender` VARCHAR(6) NOT NULL,
     `child_address` VARCHAR(256) NOT NULL,
