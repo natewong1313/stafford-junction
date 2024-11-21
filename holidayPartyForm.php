@@ -49,8 +49,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $row = retrieve_child_by_firstName_lastName_famID($args['child_first_name'], $args['child_last_name'], $userID);
         $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form data and child id
 
+        //If the child was successfully inserted into db, create success message
         if($success){
             $successMessage = "Form submitted successfully!";
+        }else { //otherwise, create fail message
+            $failMessage = "Failed to add child. Child Account Already enrolled";
         }
     }
 }
@@ -189,6 +192,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
             }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
                 echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }else if(isset($failMessage) && $accessLevel == 1){
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitFailure";</script>';
             }
             ?>
             </div>

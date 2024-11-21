@@ -30,6 +30,10 @@ if($_SESSION['logged_in'] == false){
             echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Submitted Successfully!</div>';
         }
         ?>
+        <?php if (isset($_GET['formSubmitFailure'])) {
+            echo '<div class="error-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Failed to Enroll! Child already enrolled or inelligible</div>';
+        }
+        ?>
         <main class='dashboard'>
         <?php echo "<p>Hello " . ucfirst($_SESSION['f_name']) . "!</p>"; ?>
 
