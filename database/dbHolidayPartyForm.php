@@ -6,8 +6,11 @@ include_once("dbinfo.php");
 function insert_into_dbHolidayPartyForm($args, $child_id){
     $conn = connect();
     $email = $args['email'];
-    $fn = $args['child_first_name'];
-    $ln = $args['child_last_name'];
+    $nameOfChild = explode(" ", $args['name']);
+    //$fn = $args['child_first_name'];
+    //$ln = $args['child_last_name'];
+    $fn = $nameOfChild[0];
+    $ln = $nameOfChild[1];
     $isAttending = $args['isAttending'];
     $transportation = $args['transportation'];
     $neighborhood = $args['neighborhood'];
@@ -31,14 +34,13 @@ function insert_into_dbHolidayPartyForm($args, $child_id){
     }
 }
 
-/** 
+//Function that checks to see if the form was completed for a specific child or not
 function isHolidayPartyFormComplete($childId){
     $conn = connect();
-    $query = "SELECT * FROM dbBrainBuildersHolidayPartyForm where id = '$childId'";
+    $query = "SELECT * FROM dbBrainBuildersHolidayPartyForm where child_id = $childId";
     $res = mysqli_query($conn, $query);
 
-    $complete = $result && mysqli_num_rows($res) > 0;
+    $complete = $res && mysqli_num_rows($res) > 0;
     mysqli_close($conn);
     return $complete;
 }
-*/

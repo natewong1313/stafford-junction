@@ -15,23 +15,26 @@ if(isset($_SESSION['_id'])){
     $userID = $_SESSION['_id'];
 }else {
     $loggedIn = false;
+    header("Location: login.php");
 }
 
 require_once("database/dbFamily.php");
+require_once("database/dbChildren.php");
+require_once("database/dbHolidayPartyForm.php");
 
+//retrieve family and children of family by userID
 $family = retrieve_family_by_id($userID);
 $children = retrieve_children_by_family_id($userID);
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
+
     $args = sanitize($_POST, null);
 
     $required = array(
         'email',
-        'child_first_name',
-        'child_last_name',
+        'name',
         'isAttending',
         'transportation',
         'neighborhood',
@@ -42,12 +45,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "Not all fields complete";
         die();
     }else {
-        require_once("database/dbChildren.php");
-        require_once("database/dbHolidayPartyForm.php");
-        
+        //args['name'] will look like this ('John Doe'), exploding it on " " will create and array -> ['John', 'Doe']
+        $childName = explode(" ", $args['name']);
         //retrieves child specified in form
-        $row = retrieve_child_by_firstName_lastName_famID($args['child_first_name'], $args['child_last_name'], $userID);
-        $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form data and child id
+        $row = retrieve_child_by_firstName_lastName_famID($childName[0], $childName[1], $userID);
+        $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form submitted data and the child's id to link back to dbChildren
 
         //If the child was successfully inserted into db, create success message
         if($success){
@@ -113,14 +115,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <!-- Email -->
             <label for="email">Email - Correo Electrónico* </label>
             <input type="text" name="email" id="email" placeholder="Email - Correo Electrónico"  value="<?php echo htmlspecialchars($family->getEmail());?>" required>
+            <br><br>
 
-            <!-- Child's First Name and Last Name -->
-            <label for="child_first_name">Registered Brain Builder Student First Name - Nombre del estudiante *</label>
-            <input type="text" name="child_first_name" id="child_first_name" placeholder="First Name / Nombre" required>
+            <!-- Child Name -->
+            <label for="name">Registered Brain Builder Student Name / Nombre del Estudiante*</label><br><br>
+            <select name="name" id="name" required>
+            <?php
+            foreach ($children as $c){ //cycle through each child of family account user
+                $id = $c->getID();
+                // Check if form was already completed for the child
+                if (!isHolidayPartyFormComplete($id)) {
+                    $name = $c->getFirstName() . " " . $c->getLastName(); //display name if they don't have a form filled out for them
+                    //$value = $id . "_" . $name;
+                    echo "<option>$name</option>";
+                }
+            }
+            ?>
+            </select>
 
-            <label for="child_last_name">Registered Brain Builder Student Last Name - Apellido del estudiante * </label>
-            <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" required><br><br>
-
+            <br><br>
             <!-- Attendance Section -->
             <div>
                 <p><strong>Will your student be attending? * ¿Asistirá su estudiante?</strong></p>
