@@ -8,6 +8,12 @@ ALTER TABLE dbBrainBuildersHolidayPartyForm
 ADD COLUMN child_id INT NOT NULL AFTER id;
 
 ALTER TABLE dbBrainBuildersHolidayPartyForm
+DROP COLUMN isAttending;
+
+ALTER TABLE dbBrainBuildersHolidayPartyForm
+ADD COLUMN isAttending TINYINT NOT NULL;
+
+ALTER TABLE dbBrainBuildersHolidayPartyForm
 ADD CONSTRAINT fk_holidayParty_form_child
 FOREIGN KEY(child_id) REFERENCES dbChildren(id);
 
