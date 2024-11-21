@@ -1,17 +1,41 @@
+-- Alter the `activity` column from INT to VARCHAR(256)
+ALTER TABLE `dbActualActivityForm`
+  CHANGE COLUMN `activity` `activity` VARCHAR(256) NOT NULL;
+
+-- Alter the `date` column from VARCHAR(256) to DATE
+ALTER TABLE `dbActualActivityForm`
+  CHANGE COLUMN `date` `date` DATE NOT NULL;
+
+-- Alter the `start_mile` column from VARCHAR(15) to INT(11)
+ALTER TABLE `dbActualActivityForm`
+  CHANGE COLUMN `start_mile` `start_mile` INT(11) NOT NULL;
+
+-- Alter the `end_mile` column from VARCHAR(15) to INT(11)
+ALTER TABLE `dbActualActivityForm`
+  CHANGE COLUMN `end_mile` `end_mile` INT(11) NOT NULL;
+
+-- Rename the `mealinfo` column to `meal_info` and change its type from BOOLEAN to ENUM
+ALTER TABLE `dbActualActivityForm`
+  CHANGE COLUMN `mealinfo` `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL;
+
+
+-- Drop the existing `Attendees` table if it exists
+DROP TABLE IF EXISTS `Attendees`;
+
 --
 -- Table structure for table `dbActualActivityAttendees`
 --
 CREATE TABLE `dbActualActivityAttendees` (
-    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` varchar(256) NOT NULL
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(256) NOT NULL
 );
 
 --
 -- Table structure for junction table `dbActivityAttendees`
 --
 CREATE TABLE `dbActivityAttendees` (
-    `activityID` int(11) NOT NULL,
-    `attendeeID` int(11) NOT NULL,
+    `activityID` INT NOT NULL,
+    `attendeeID` INT NOT NULL,
     PRIMARY KEY (`activityID`, `attendeeID`),
     FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
