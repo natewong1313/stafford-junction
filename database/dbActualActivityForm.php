@@ -43,16 +43,16 @@ function createActualActivityForm($form) {
         if (isset($attendance)) {
             $attendeeIDs = createActualActivityAttendees($attendance, $connection);
             if (empty($attendeeIDs)) {
-                throw new Exception("Error in data insert (dbActualActivityAttendees): " . mysqli_error($connection));
+                ("Error in actual activity attendees table insert.");
             }
         } else {
-            throw new Exception("Error: No attendance variable transfered from form.");
+            throw new Exception("No attendance variable transfered from form.");
         }
 
         //insert into junction table
         $activityAttendeeID = createActivityAttendees($activityID, $attendeeIDs, $connection);
         if (empty($activityAttendeeID)) {
-            throw new Exception("Error in data insert (dbActvityAttendees): " . mysqli_error($connection));
+            throw new Exception("Error in junction table insert.");
         }
 
         mysqli_commit($connection);
@@ -70,26 +70,20 @@ function createActualActivityForm($form) {
 /**
  * Function that takes attendees array and adds each attendee into database table
  */
-function createActualActivityAttendees($attendance, $connection) {
+function createActualActivityAttendees($attendees, $connection) {
     mysqli_begin_transaction($connection);
     $ids = [];
 
-    foreach ($attendance as $attendee) {
+    foreach ($attendees as $attendee) {
         $name = trim($attendee);
         $name = mysqli_real_escape_string($connection, $name);
-        if ($name != '') {
-            try {
-                $insert_query = "
-                INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
+        if ($name != '') {}
+            $insert_query = "
+            INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
             ";
             $insert_result = mysqli_query($connection, $insert_query);
-                if (!$insert_result) {
-                    throw new Exception("Error in query: " . mysqli_error($connection));
-                }
-            } catch (Exception $e) {
-                echo $e->getMessage();
+            if (!$insert_result) {   
                 mysqli_rollback($connection);
-                mysqli_close($connection);
                 return null;
             }
             $ids[] = mysqli_insert_id($connection);
@@ -107,19 +101,13 @@ function createActivityAttendees($activityID, $attendeeIDs, $connection) {
     mysqli_begin_transaction($connection);
 
     foreach ($attendeeIDs as $attendeeID) {
-        try {
         $insert_query = "
             INSERT INTO dbActivityAttendees (activityID, attendeeID)
             VALUES ('$activityID', '$attendeeID')
         ";
         $insert_result = mysqli_query($connection, $insert_query);
             if (!$insert_result) {
-                throw new Exception("Error in query: " . mysqli_error($connection));
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
             mysqli_rollback($connection);
-            mysqli_close($connection);
             return null;
         }
     }
