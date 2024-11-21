@@ -43,7 +43,7 @@ function createActualActivityForm($form) {
         if (isset($attendance)) {
             $attendeeIDs = createActualActivityAttendees($attendance, $connection);
             if (empty($attendeeIDs)) {
-                ("Error in actual activity attendees table insert.");
+                throw new Exception("Error in actual activity attendees table insert.");
             }
         } else {
             throw new Exception("No attendance variable transfered from form.");
@@ -77,12 +77,12 @@ function createActualActivityAttendees($attendees, $connection) {
     foreach ($attendees as $attendee) {
         $name = trim($attendee);
         $name = mysqli_real_escape_string($connection, $name);
-        if ($name != '') {}
+        if ($name != '') {
             $insert_query = "
-            INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
+                INSERT INTO dbActualActivityAttendees (name) VALUES ('$name')
             ";
             $insert_result = mysqli_query($connection, $insert_query);
-            if (!$insert_result) {   
+            if (!$insert_result) {
                 mysqli_rollback($connection);
                 return null;
             }
@@ -106,7 +106,7 @@ function createActivityAttendees($activityID, $attendeeIDs, $connection) {
             VALUES ('$activityID', '$attendeeID')
         ";
         $insert_result = mysqli_query($connection, $insert_query);
-            if (!$insert_result) {
+        if (!$insert_result) {
             mysqli_rollback($connection);
             return null;
         }
