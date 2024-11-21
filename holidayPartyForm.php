@@ -37,6 +37,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }else {
         require_once("database/dbChildren.php");
         require_once("database/dbHolidayPartyForm.php");
+        
+        //retrieves child specified in form
         $row = retrieve_child_by_firstName_lastName_famID($args['child_first_name'], $args['child_last_name'], $userID);
         $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form data and child id
 
