@@ -13,6 +13,7 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $children = retrieve_children_by_family_id($userID);
 } else {
     header('Location: login.php');
     die();
@@ -39,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php include_once("universal.inc")?>
-        <title>Actual Activities Form</title>
+        <title>Stafford Junction | Actual Activities Form</title>
         <link rel="stylesheet" href="base.css">
     </head>
     
@@ -105,7 +106,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!--Materials Used--->
             <label for="materials_used">9. Materials used*</label><br><br>
-            <textarea rows="10" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
+            <textarea rows="5" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
             
             <!--Meal Information--->
             <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
@@ -121,7 +122,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!--Activity Costs-->
             <label for="act_costs">11. Activity costs (Please list and seperately provide PA's)*</label><br><br>
-            <textarea rows="10" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
+            <textarea rows="5" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
         
             <hr>
             <h2>Educational Benefits</h2>
@@ -129,7 +130,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!--Benefits-->
             <label for="act_benefits">12. What actvities took place; what benefits do participants receive from these Activities?*</label><br><br>
-            <textarea rows="10" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea><br><br><br>
+            <textarea rows="5" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea><br><br><br>
 
             <hr>
             <h2>Attendance</h2>
