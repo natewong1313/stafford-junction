@@ -1,26 +1,27 @@
--- Alter the `activity` column from INT to VARCHAR(256)
-ALTER TABLE `dbActualActivityForm`
-  CHANGE COLUMN `activity` `activity` VARCHAR(256) NOT NULL;
-
--- Alter the `date` column from VARCHAR(256) to DATE
-ALTER TABLE `dbActualActivityForm`
-  CHANGE COLUMN `date` `date` DATE NOT NULL;
-
--- Alter the `start_mile` column from VARCHAR(15) to INT(11)
-ALTER TABLE `dbActualActivityForm`
-  CHANGE COLUMN `start_mile` `start_mile` INT(11) NOT NULL;
-
--- Alter the `end_mile` column from VARCHAR(15) to INT(11)
-ALTER TABLE `dbActualActivityForm`
-  CHANGE COLUMN `end_mile` `end_mile` INT(11) NOT NULL;
-
--- Rename the `mealinfo` column to `meal_info` and change its type from BOOLEAN to ENUM
-ALTER TABLE `dbActualActivityForm`
-  CHANGE COLUMN `mealinfo` `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL;
-
+-- Drop the existing `Attendees` table if it exists
+DROP TABLE IF EXISTS `dbActualActivityForm`;
 
 -- Drop the existing `Attendees` table if it exists
 DROP TABLE IF EXISTS `Attendees`;
+
+-- Alter the `activity` column from INT to VARCHAR(256)
+CREATE TABLE `dbActualActivityForm` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `activity` VARCHAR(256) NOT NULL,
+  `date` DATE NOT NULL,
+  `program` VARCHAR(256) NOT NULL,
+  `start_time` VARCHAR(15) NOT NULL,
+  `end_time` VARCHAR(15) NOT NULL,
+  `start_mile` INT(11) NOT NULL,
+  `end_mile` INT(11) NOT NULL,
+  `address` VARCHAR(256) NOT NULL,
+  `attend_num` INT NOT NULL,
+  `volstaff_num` INT NOT NULL,
+  `materials_used` TEXT NOT NULL,
+  `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL,
+  `act_costs` TEXT NOT NULL,
+  `act_benefits` TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Table structure for table `dbActualActivityAttendees`
