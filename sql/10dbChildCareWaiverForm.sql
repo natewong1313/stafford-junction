@@ -12,7 +12,6 @@ CREATE TABLE `dbChildCareWaiverForm` (
     `child_state` VARCHAR(100) NOT NULL,
     `child_zip` VARCHAR(10) NOT NULL,
 
-    `parent_1` INT NOT NULL,
     `parent1_first_name` VARCHAR(256) NOT NULL,
     `parent1_last_name` VARCHAR(256) NOT NULL,
     `parent1_address` VARCHAR(256) NOT NULL,
@@ -24,7 +23,6 @@ CREATE TABLE `dbChildCareWaiverForm` (
     `parent1_home_phone` VARCHAR(15) NOT NULL,
     `parent1_work_phone` VARCHAR(15) NOT NULL,
 
-    `parent_2` INT, -- Parent 2 fields remain nullable
     `parent2_first_name` VARCHAR(256),
     `parent2_last_name` VARCHAR(256),
     `parent2_address` VARCHAR(256),

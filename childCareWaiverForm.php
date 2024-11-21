@@ -11,18 +11,21 @@ $userID = null;
 $success = false;
 
 if(isset($_SESSION['_id'])){
-    require_once('domain/Children.php');
-    require_once('database/dbChildren.php');
-    require_once('include/input-validation.php');
-    require_once('database/dbChildCareForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-    $children = retrieve_children_by_family_id($userID);
+} else {
+    header("Location: login.php");
 }
 
-// include necessay files
+//necessary files
 include_once("database/dbFamily.php");
+include_once("database/dbChildren.php");
+include_once('database/dbChildCareForm.php');
+require('include/input-validation.php');
+include_once('domain/Children.php');
+
+// retrieve family data
 $family = retrieve_family_by_id($_SESSION["_id"]);
 $guardian_email = $family->getEmail();
 $guardian_fname = $family->getFirstName();
@@ -40,13 +43,15 @@ $guardian_2_state = $family->getState2();
 $guardian_2_zip = $family->getZip2();
 $guardian_2_email = $family->getEmail2();
 $guardian_2_phone = $family->getPhone2();
+// retrieve children by family data
+$children = retrieve_children_by_family_id($userID);
 
-// include the header .php file s
+include_once('database/dbinfo.php');
+// check if the form has been submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
+    // sanitize form input
     $args = sanitize($_POST, null);
-
     $required = array(
         'child_first_name',
         'child_last_name',
@@ -58,6 +63,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'child_zip',
         'medical_issues',
         'religious_foods',
+
         'parent1_first_name',
         'parent1_last_name',
         'parent1_address',
@@ -68,6 +74,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent1_cell_phone',
         'parent1_home_phone', 
         'parent1_work_phone', 
+
         'parent2_first_name', 
         'parent2_last_name',
         'parent2_address',
@@ -78,28 +85,29 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent2_cell_phone',
         'parent2_home_phone',
         'parent2_work_phone',
+
         'guardian_name',
         'guardian_signature',
         'signature_date'
     );
 
-    $args['phone'] = validateAndFilterPhoneNumber($args['phone']);
-
-    if (!$args['phone']) {
-        echo "phone number invalid";
-    } else if(!wereRequiredFieldsSubmitted($args, $required)){
+    if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
-        die();
-    }else {
-            $success = createChildCareForm($args);
+    } else {
+        //call the function to create the waiver form
+        $success = createChildCareForm($args);
+        
+        if ($success) {
+            echo "Form submitted successfully!";
+        } else {
+            echo "Error submitting the form.";
         }
     }
-
-
+}
 ?>
 
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
@@ -107,7 +115,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stafford Junction | Child Care Waiver Form</title>
 </head>
-
 <body>
 
     <!-- Main heading of the page -->
@@ -125,12 +132,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     Claridad)</strong></p>
         </div>
 
-
-
-
+        <!--Added a form tag to aid in the process of the post method-->
+        <form method="post" action="childCareWaiverForm.php">
 
         <!-- Child Name-->
-        <label for="child_name">Name of Child / Nombre del niño\a*</label><br><br>
+        <label for="child_name">Select Child</label><br><br>
         <select name="child_name" id="child_name" required>
             <?php
                     require_once('domain/Children.php');
@@ -157,9 +163,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 echo htmlspecialchars($defaultChild->getFirstName());
         ?> " required>
 
-
-
-
         <!-- Child's Last Name -->
         <label for="child_last_name">Last Name* / Apellido* </label>
         <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" value="<?php 
@@ -168,15 +171,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     echo htmlspecialchars($defaultChild->getLastName());
         ?>" required>
 
-
         <!-- Child's Date of Birth -->
         <label for="child_dob">Date of Birth* / Fecha de Nacimiento* </label>
         <input type="date" name="child_dob" id="child_dob" value="<?php 
         // Extract the default birthdate from the dropdown value
         $defaultChild = $children[0]; // Assuming the first child is the default
         echo htmlspecialchars($defaultChild->getBirthdate());
-    ?>" required>
-
+        ?>" required>
 
         <!-- Child's Gender -->
         <label for="child_gender">Gender* / Género* </label>
@@ -184,7 +185,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         // Extract the default gender from the dropdown value
         $defaultChild = $children[0]; // Assuming the first child is the default
         echo htmlspecialchars($defaultChild->getGender());
-    ?>" required>
+        ?>" required>
         <br><br>
 
         <!-- Address -->
@@ -192,31 +193,29 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección" value="<?php 
         $defaultChild = $children[0]; // Assuming the first child is the default
         echo htmlspecialchars($defaultChild->getAddress());
-    ?>" required>
+        ?>" required>
         <br><br>
-
 
         <!-- City -->
         <label for="child_city">City* / Ciudad* </label>
         <input type="text" name="child_city" id="child_city" placeholder="City / Ciudad" value="<?php 
         $defaultChild = $children[0];
         echo htmlspecialchars($defaultChild->getCity());
-    ?>" required>
-
+        ?>" required>
 
         <!-- State -->
         <label for="child_state">State* / Estado* </label>
         <input type="text" name="child_state" id="child_state" placeholder="State / Estado" value="<?php 
         $defaultChild = $children[0];
         echo htmlspecialchars($defaultChild->getState());
-    ?>" required>
+        ?>" required>
 
         <!-- Zip Code -->
         <label for="child_zip">Zip Code* / Código Postal* </label>
         <input type="text" name="child_zip" id="child_zip" placeholder="Zip Code / Código Postal" value="<?php 
         $defaultChild = $children[0];
         echo htmlspecialchars($defaultChild->getZip());
-    ?>" required>
+        ?>" required>
         <br><br>
 
         <!-- Medical Issues or Allergies -->
@@ -264,7 +263,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <!-- Parent 1 Contact Info -->
         <label for="parent1_email">Email* / Correo Electrónico* </label>
         <input type="email" name="parent1_email" id="parent1_email" placeholder="Email / Correo Electrónico" required
-            value="<?php echo htmlspecialchars($guardian_zip); ?>"><br><br>
+            value="<?php echo htmlspecialchars($guardian_email); ?>"><br><br>
 
         <label for="parent1_cell_phone">Cell Phone* / Teléfono Celular* </label>
         <input type="tel" name="parent1_cell_phone" id="parent1_cell_phone" placeholder="Cell Phone / Teléfono Celular"
@@ -368,16 +367,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <label for="signature_date">Date* / Fecha*</label><br>
         <input type="date" name="signature_date" id="signature_date" required><br><br>
 
-        <!-- Submit and Cancel Buttons -->
-        <button type="submit">Submit</button>
-        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-    </div>
-    <?php
+       <!-- Submit and Cancel buttons -->
+       <button type="submit" id="submit">Submit</button>
+                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+            </div>
+            </form>
+            <?php
            //if registration successful, create pop up notification and direct user back to login
             if($success){
                 echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
             }  
-        ?>
-</body>
-
+            ?>
+            </div>
+    </body>
 </html>
+
+
+
