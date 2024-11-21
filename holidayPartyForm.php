@@ -158,7 +158,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <input type="radio" name="neighborhood" value="olde_forge" required> Olde Forge
                 </label>
                 <br><br>
-
+                
                 <!-- Option for "Jefferson Place" -->
                 <label>
                     <input type="radio" name="neighborhood" value="jefferson_place" required> Jefferson Place
@@ -182,6 +182,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <input type="radio" name="neighborhood" value="other" required> Other:
                     <input type="text" name="neighborhood" placeholder="Specify other neighborhood">
                 </label>
+
             </div>
             <br><br>
 
