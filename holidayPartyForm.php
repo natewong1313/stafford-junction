@@ -13,7 +13,13 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+}else {
+    $loggedIn = false;
 }
+
+require_once("database/dbFamily.php");
+
+$family = retrieve_family_by_id($userID);
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -102,7 +108,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <form method="POST">
             <!-- Email -->
             <label for="email">Email - Correo Electrónico* </label>
-            <input type="text" name="email" id="email" placeholder="Email - Correo Electrónico" required>
+            <input type="text" name="email" id="email" placeholder="Email - Correo Electrónico"  value="<?php echo htmlspecialchars($family->getEmail());?>" required>
 
             <!-- Child's First Name and Last Name -->
             <label for="child_first_name">Registered Brain Builder Student First Name - Nombre del estudiante *</label>
@@ -153,34 +159,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <p><strong>Which neighborhood will your student be picked up from? * ¿De qué vecindario recogerán a su
                         estudiante?</strong></p>
 
-                <!-- Option for "Olde Forge" 
-                <label>
-                    <input type="radio" name="neighborhood" value="olde_forge" required> Olde Forge
-                </label>
-                <br><br>
-
-                
-                <label>
-                    <input type="radio" name="neighborhood" value="jefferson_place" required> Jefferson Place
-                </label>
-                <br><br>
-
-    
-                <label>
-                    <input type="radio" name="neighborhood" value="foxwood" required> Foxwood
-                </label>
-                <br><br>
-
-       
-                <label>
-                    <input type="radio" name="neighborhood" value="england_run" required> England Run
-                </label>
-                <br><br>
-                -->
-
                 <!-- Option for "Other" with text input for specifying neighborhood -->
                 <label>
-                    <input type="text" name="neighborhood" placeholder="Specify neighborhood">
+                    <input type="text" name="neighborhood" placeholder="Specify neighborhood" value="<?php echo htmlspecialchars($family->getNeighborhood());?>" required>
                 </label>
 
             </div>
