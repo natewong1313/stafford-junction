@@ -1,0 +1,18 @@
+--
+-- Table structure for table `dbActualActivityAttendees`
+--
+CREATE TABLE `dbActualActivityAttendees` (
+    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` varchar(256) NOT NULL
+);
+
+--
+-- Table structure for junction table `dbActivityAttendees`
+--
+CREATE TABLE `dbActivityAttendees` (
+    `activityID` int(11) NOT NULL,
+    `attendeeID` int(11) NOT NULL,
+    PRIMARY KEY (`activityID`, `attendeeID`),
+    FOREIGN KEY (`activityID`) REFERENCES `dbActualActivityForm`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`attendeeID`) REFERENCES `dbActualActivityAttendees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
