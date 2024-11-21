@@ -20,6 +20,7 @@ if(isset($_SESSION['_id'])){
 require_once("database/dbFamily.php");
 
 $family = retrieve_family_by_id($userID);
+$children = retrieve_children_by_family_id($userID);
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){

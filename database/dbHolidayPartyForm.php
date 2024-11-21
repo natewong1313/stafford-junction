@@ -2,6 +2,7 @@
 
 include_once("dbinfo.php");
 
+//Function that inserts data into dbBrainBuilderHolidayPartyForm
 function insert_into_dbHolidayPartyForm($args, $child_id){
     $conn = connect();
     $email = $args['email'];
@@ -29,3 +30,15 @@ function insert_into_dbHolidayPartyForm($args, $child_id){
         return false;
     }
 }
+
+/** 
+function isHolidayPartyFormComplete($childId){
+    $conn = connect();
+    $query = "SELECT * FROM dbBrainBuildersHolidayPartyForm where id = '$childId'";
+    $res = mysqli_query($conn, $query);
+
+    $complete = $result && mysqli_num_rows($res) > 0;
+    mysqli_close($conn);
+    return $complete;
+}
+*/
