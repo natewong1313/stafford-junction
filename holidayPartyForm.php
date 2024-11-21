@@ -153,34 +153,34 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <p><strong>Which neighborhood will your student be picked up from? * ¿De qué vecindario recogerán a su
                         estudiante?</strong></p>
 
-                <!-- Option for "Olde Forge" -->
+                <!-- Option for "Olde Forge" 
                 <label>
                     <input type="radio" name="neighborhood" value="olde_forge" required> Olde Forge
                 </label>
                 <br><br>
+
                 
-                <!-- Option for "Jefferson Place" -->
                 <label>
                     <input type="radio" name="neighborhood" value="jefferson_place" required> Jefferson Place
                 </label>
                 <br><br>
 
-                <!-- Option for "Foxwood" -->
+    
                 <label>
                     <input type="radio" name="neighborhood" value="foxwood" required> Foxwood
                 </label>
                 <br><br>
 
-                <!-- Option for "England Run" -->
+       
                 <label>
                     <input type="radio" name="neighborhood" value="england_run" required> England Run
                 </label>
                 <br><br>
+                -->
 
                 <!-- Option for "Other" with text input for specifying neighborhood -->
                 <label>
-                    <input type="radio" name="neighborhood" value="other" required> Other:
-                    <input type="text" name="neighborhood" placeholder="Specify other neighborhood">
+                    <input type="text" name="neighborhood" placeholder="Specify neighborhood">
                 </label>
 
             </div>
