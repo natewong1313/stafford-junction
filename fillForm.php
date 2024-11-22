@@ -54,7 +54,7 @@ error_reporting(E_ALL);
                 <!-- Angel Wish Gift Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "angelGiftForm.php?id=" . $_GET['id'] : "angelGiftForm.php"; ?>">
                     <img src="images/angel.svg">
-                    <span>Angel Wish Gift Form</span>
+                    <span>Angel Gifts Wish Form</span>
                 </div>
 
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
