@@ -200,7 +200,7 @@ try {
             <p><b>If any information is incorrect, consider editing your family account or your child's account information before continuing.</b></p>
             <br><br><br>
             
-            <h2>Student Information</h2><br><hr><br>
+            <h2>Student Information</h2><hr><br>
 
             <!-- 1. Child First Name -->
             <label for="child_first_name">Child First Name *</label><br><br>
@@ -324,7 +324,7 @@ try {
             <input type="text" id="child_food_avoidances" name="child_food_avoidances" placeholder="Foods to avoid due to religious beliefs">
             <br><br><br>
                 
-            <h2>Parent 1 Information</h2><br><hr><br>
+            <h2>Parent 1 Information</h2><hr><br>
 
             <!--Parent 1 Name-->
             <label for="parent1_name">Full Name *</label><br><br>
@@ -349,6 +349,7 @@ try {
             <!--State-->
             <label for="parent1_state">State *</label><br><br>
             <select id="parent1_state" name="parent1_state" required>
+                <option value="" disabled>Select State</option>
                 <option value="AL" <?php echo (isset($family_state1) && $family_state1 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
                 <option value="AK" <?php echo (isset($family_state1) && $family_state1 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
                 <option value="AZ" <?php echo (isset($family_state1) && $family_state1 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
@@ -416,7 +417,7 @@ try {
             <input type="tel" id="parent1_altPhone" name="parent1_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"
                 value="<?php echo isset($family_altphone1) ? $family_altphone1 : ''; ?>"><br><br><br>
 
-            <h2>Parent 2 Information</h2><br><hr><br>
+            <h2>Parent 2 Information</h2><hr><br>
 
             <!--Parent 2 Name-->
             <label for="parent2_name">Full Name</label><br><br>
@@ -439,6 +440,7 @@ try {
             <!--State-->
             <label for="parent2_state">State </label><br><br>
             <select id="parent2_state" name="parent2_state">
+                <option value="" disabled>Select State</option>
                 <option value="AL" <?php echo (isset($family_state2) && $family_state2 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
                 <option value="AK" <?php echo (isset($family_state2) && $family_state2 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
                 <option value="AZ" <?php echo (isset($family_state2) && $family_state2 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
@@ -506,7 +508,7 @@ try {
             <input type="tel" id="parent2_altPhone" name="parent2_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" 
                 value="<?php echo isset($family_altphone2) ? $family_altphone2 : ''; ?>"><br><br><br>
 
-            <h2>Emergency Contact 1 Information</h2><br><hr><br>
+            <h2>Emergency Contact 1 Information</h2><hr><br>
 
             <!--Name-->
             <label for="emergency_name1" required>Full Name *</label><br><br>
@@ -524,7 +526,7 @@ try {
                 value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>" required>
             <br><br><br>
 
-            <h2>Emergency Contact 2 Information</h2><br><hr><br>
+            <h2>Emergency Contact 2 Information</h2><hr><br>
 
             <!--Name-->
             <label for="emergency_name2" required>Full Name</label><br><br>
@@ -539,7 +541,7 @@ try {
             <input type="tel" id="emergency_phone2" name="emergency_phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (000) 000-0000">
             <br><br><br>
 
-            <h2>Pick-Up Information</h2><br><hr><br>
+            <h2>Pick-Up Information</h2><hr><br>
 
             <!--Persons Authorized for Pick-Up-->
             <label for="authorized_pu" required>Persons authorized to pick up child *</label><br><br>
@@ -550,7 +552,7 @@ try {
             <input type="text" id="not_authorized_pu" name="not_authorized_pu" placeholder="Enter persons names">
             <br><br><br>
 
-            <h2>Other Required Information</h2><br><hr><br>
+            <h2>Other Required Information</h2><hr><br>
             <p>This information is for Stafford Junction funding purposes only.</p><br>
 
             <!--Parent's Primary Language-->
@@ -602,7 +604,6 @@ try {
             <label for="num_employed_student" required>Number of Employed Students in Household *</label><br><br>
             <input type="number" id="num_employed_student" name="num_employed_student" required placeholder="Enter number of employed students"><br><br>
 
-
             <!--Estimated Household Income-->
             <label for="income">Estimated Household Income *</label><br><br>
             <select id="income" name="income" required>
@@ -629,20 +630,19 @@ try {
             
             <br><br><br>
 
-            <h2>Pick-Up Information</h2><br><hr><br>
+            <h2>Transportation</h2><hr><br>
             
             <!--Transportation-->
             <label for="transportation">Stafford Junction provides transportation home after the Brain Builders program. Please check one of the following:</p><br>
             
             <input type="radio" id="choice_1" name="transportation" value="needs_transportation">
-            <label for="choice_1">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label><br>
+            <label for="choice_1">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label><br><br>
 
             <input type="radio" id="choice_2" name="transportation" value="transports_themselves">
-            <label for="choice_2">I will make alternate arrangements for my child to be transported home.</label><br><br>
+            <label for="choice_2">I will make alternate arrangements for my child to be transported home.</label>
+            <br><br><br>
 
-        <br><br><br>
-
-            <h2>Code of Conduct</h2><br><hr><br>
+            <h2>Code of Conduct</h2><hr><br>
 
             <p>Stafford Junction practices four core values: Caring, Honesty, Respect, and Responsibility. We are not a daycare
             service. The program is staffed by volunteers whose sole responsibility is to provide stimulating activities to youth,
@@ -652,17 +652,19 @@ try {
             (3) dismissal from the program.</p><br>
 
             <p>Exceptions: If a student commits a serious infraction, the Youth Program Manager has the option to immediately
-            dismiss the child from the program.</p><br><br>
+            dismiss the child from the program.</p>
+            <br><br><br>
 
-            <h2>Photograph and Video Waiver</h2><br><hr><br>
+            <h2>Photograph and Video Waiver</h2><hr><br>
 
             <p>I acknowledge that Stafford Junction may utilize photographs or videos of participants that may be taken during
             involvement in Stafford Junction activities. This includes internal and external use, including but not limited to
             Stafford Junction’s website, Facebook, and publications. I consent to such uses and hereby waive all rights of
             compensation. If I do not wish the image of my child to be included in those mentioned above, it is my responsibility to
-            inform them to exclude themselves from photographs or videos taken during such activities.</p><br><br>
+            inform them to exclude themselves from photographs or videos taken during such activities.</p>
+            <br><br><br>
 
-            <h2>Other Activities & Programs</h2><br><hr><br>
+            <h2>Other Activities & Programs</h2><hr><br>
 
             <p>Stafford Junction offers additional free activities besides Brain Builders, including on-site options and field trips to places
             like the YMCA, fishing spots, and community events. Limited space is available. Please indicate interest by checking the
@@ -681,7 +683,7 @@ try {
             <input type="text" name="parent_initials" id="parent_initials" required placeholder="Parent Initials" required>
             <br><br><br>
 
-            <h2>Acknowledgment and Consent</h2><br><hr><br>
+            <h2>Acknowledgment and Consent</h2><hr><br>
 
             <p>By signing below, I acknowledge, understand, accept, and agree to all policies and waivers stated and outlined in this
             Brain Builders Enrollment Form for the current school year.</p><br>
@@ -693,10 +695,13 @@ try {
 
             <!--Date-->
             <label for="signature_date">Date *</label><br><br>
-            <input type="date" id="signature_date" name="signature_date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>">
+            <input type="date" id="signature_date" name="signature_date"  
+                placeholder="Date" max="<?php echo date('Y-m-d'); ?>" required
+                value="<?php echo date('Y-m-d'); ?>">
             <br><br><br>
 
-        <h2>PERMISSION FOR MUTUAL RELEASE OF INFORMATION</h2><br>
+            <h2>PERMISSION FOR MUTUAL RELEASE OF INFORMATION</h2><hr><br>
+
             <p>
                 Stafford County Public Schools – Department of Student Services<br>
                 31 Stafford Avenue, Stafford, Virginia 22554<br>
@@ -721,41 +726,50 @@ try {
 
             <!--Child's Full Name-->
             <label for="waiver_child_name">Child's Full Name *</label><br><br>
-            <input type="text" name="waiver_child_name" id="waiver_child_name" required placeholder="Child's Full Name" required
-                value="<?php echo isset($child_first_name) ? htmlspecialchars($child_first_name) : ''; ?>"><br><br>
+            <input type="text" style="background-color: yellow;color: black" name="waiver_child_name" id="waiver_child_name" 
+                placeholder="Child's Full Name" required disabled
+                value="<?php echo isset($child_first_name) && isset($child_last_name) ? htmlspecialchars($child_first_name . ' ' . $child_last_name) : ''; ?>"><br><br>
 
             <!--Child's Date of Birth-->
             <label for="waiver_dob">Child's Date of Birth *</label><br><br>
-            <input type="date" id="waiver_dob" name="waiver_dob" required placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>"><br><br>
+            <input type="date" id="waiver_dob" name="waiver_dob"  
+                placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>" required
+                value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
             <!--Parent/Guardian Name-->
             <label for="waiver_parent_name">Parent/Guardian Name *</label><br><br>
-            <input type="text" name="waiver_parent_name" id="waiver_parent_name" required placeholder="Parent/Guardian Name" required><br><br>
+            <input type="text" name="waiver_parent_name" id="waiver_parent_name"  
+                placeholder="Parent/Guardian Name" required><br><br>
 
             <!--Provider's Name-->
             <label for="waiver_provider_name">Provider's Name *</label><br><br>
-            <input type="text" name="waiver_provider_name" id="waiver_provider_name" required placeholder="Provider's Name" required><br><br>
+            <input type="text" name="waiver_provider_name" id="waiver_provider_name"
+                placeholder="Provider's Name" required><br><br>
 
             <!--Address-->
             <label for="waiver_provider_address">Provider's Address *</label><br><br>
-            <input type="text" name="waiver_provider_address" id="waiver_provider_address" required placeholder="Provider's Address" required><br><br>
+            <input type="text" name="waiver_provider_address" id="waiver_provider_address"
+                placeholder="Provider's Address" required><br><br>
 
             <!--Phone & Fax-->
             <label for="waiver_phone_and_fax">Provider's Phone & Fax *</label><br><br>
-            <input type="text" name="waiver_phone_and_fax" id="waiver_phone_and_fax" required placeholder="Provider's Phone & Fax" required><br><br>
+            <input type="text" name="waiver_phone_and_fax" id="waiver_phone_and_fax"
+                placeholder="Provider's Phone & Fax" required><br><br>
 
             <!--Signature-->
             <label for="waiver_signature">Parent / Legal Guardian / Surrogate/ Eligible Student Signature *</label><br>
             <p>By electronically signing, you agree that your e-signature holds the same legal validity and effect as a handwritten signature.</p><br>
-            <input type="text" name="waiver_signature" id="waiver_signature" required placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature" required><br><br>
+            <input type="text" name="waiver_signature" id="waiver_signature" 
+                placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature" required><br><br>
 
             <!--Date-->
             <label for="waiver_date" required>Date *</label><br><br>
-            <input type="date" id="waiver_date" name="waiver_date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
+            <input type="date" id="waiver_date" name="waiver_date"
+                placeholder="Date" max="<?php echo date('Y-m-d'); ?>" required
+                value="<?php echo date('Y-m-d'); ?>"><br><br>
 
             <button type="submit" id="submit">Submit</button>
-            <a class="button cancel" href="
-            fillForm.php" style="margin-top: .5rem">Cancel</a>
+            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
         
             
             <script type="text/javascript">
