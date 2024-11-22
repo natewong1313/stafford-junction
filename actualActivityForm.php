@@ -111,17 +111,18 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
             <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
             
             <input type="radio" id="choice_1" name="meal_info" value="meal_provided" required>
-            <label for="choice_1">Meal: Provided</label><br><br>
+            <label for="choice_1">Meal: Provided</label><br>
 
             <input type="radio" id="choice_2" name="meal_info" value="meal_paid" required>
-            <label for="choice_2">Meal: Paid</label><br><br>
+            <label for="choice_2">Meal: Paid</label><br>
 
             <input type="radio" id="choice_3" name="meal_info" value="no_meal" required>
-            <label for="choice_3">No meal</label><br><br><br>
+            <label for="choice_3">No meal</label><br><br>
 
             <!--Activity Costs-->
             <label for="act_costs">11. Activity costs (Please list and seperately provide PA's)*</label><br><br>
-            <textarea rows="10" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
+            <textarea rows="10" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea>
+            <br><br><br>
         
             <hr>
             <h2>Educational Benefits</h2>
