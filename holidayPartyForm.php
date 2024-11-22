@@ -13,18 +13,28 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+}else {
+    $loggedIn = false;
+    header("Location: login.php");
 }
+
+require_once("database/dbFamily.php");
+require_once("database/dbChildren.php");
+require_once("database/dbHolidayPartyForm.php");
+
+//retrieve family and children of family by userID
+$family = retrieve_family_by_id($userID);
+$children = retrieve_children_by_family_id($userID);
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
+
     $args = sanitize($_POST, null);
 
     $required = array(
         'email',
-        'child_first_name',
-        'child_last_name',
+        'name',
         'isAttending',
         'transportation',
         'neighborhood',
@@ -35,8 +45,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "Not all fields complete";
         die();
     }else {
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
+        //args['name'] will look like this ('John Doe'), exploding it on " " will create and array -> ['John', 'Doe']
+        $childName = explode(" ", $args['name']);
+        //retrieves child specified in form
+        $row = retrieve_child_by_firstName_lastName_famID($childName[0], $childName[1], $userID);
+        $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form submitted data and the child's id to link back to dbChildren
+
+        //If the child was successfully inserted into db, create success message
+        if($success){
+            $successMessage = "Form submitted successfully!";
+        }else { //otherwise, create fail message
+            $failMessage = "Failed to add child. Child Account Already enrolled";
         }
     }
 }
@@ -92,110 +111,108 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     </div>
     <br><br>
     <div id="formatted_form">
+        <form method="POST">
+            <!-- Email -->
+            <label for="email">Email - Correo Electrónico* </label>
+            <input type="text" name="email" id="email" placeholder="Email - Correo Electrónico"  value="<?php echo htmlspecialchars($family->getEmail());?>" required>
+            <br><br>
 
+            <!-- Child Name -->
+            <label for="name">Registered Brain Builder Student Name / Nombre del Estudiante*</label><br><br>
+            <select name="name" id="name" required>
+            <?php
+            foreach ($children as $c){ //cycle through each child of family account user
+                $id = $c->getID();
+                // Check if form was already completed for the child
+                if (!isHolidayPartyFormComplete($id)) {
+                    $name = $c->getFirstName() . " " . $c->getLastName(); //display name if they don't have a form filled out for them
+                    //$value = $id . "_" . $name;
+                    echo "<option>$name</option>";
+                }
+            }
+            ?>
+            </select>
 
-    <!-- Email -->
-    <label for="email">Email - Correo Electrónico* </label>
-    <input type="text" name="email" id="email" placeholder="Email - Correo Electrónico" required>
+            <br><br>
+            <!-- Attendance Section -->
+            <div>
+                <p><strong>Will your student be attending? * ¿Asistirá su estudiante?</strong></p>
 
-    <!-- Child's First Name and Last Name -->
-    <label for="child_first_name">Registered Brain Builder Student First Name - Nombre del estudiante *</label>
-    <input type="text" name="child_first_name" id="child_first_name" placeholder="First Name / Nombre" required>
+                <!-- Option for "Yes" -->
+                <label>
+                    <input type="radio" name="isAttending" value="1" required> Yes / Sí
+                </label>
+                <br><br>
 
-    <label for="child_last_name">Registered Brain Builder Student Last Name - Apellido del estudiante * </label>
-    <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" required><br><br>
+                <!-- Option for "No" -->
+                <label>
+                    <input type="radio" name="isAttending" value="0" required> No
+                </label>
+            </div>
+            <br><br>
 
-    <!-- Attendance Section -->
-    <div>
-        <p><strong>Will your student be attending? * ¿Asistirá su estudiante?</strong></p>
+            <!-- Transportation Section -->
+            <div>
+                <p><strong>Transportation * Transporte</strong></p>
 
-        <!-- Option for "Yes" -->
-        <label>
-            <input type="radio" name="isAttending" value="yes" required> Yes / Sí
-        </label>
-        <br><br>
+                <!-- Option for providing own transportation -->
+                <label>
+                    <input type="radio" name="transportation" value="provide_own" required> I will provide transportation for my
+                    student. / Proporcionaré transporte para mi estudiante.
+                </label>
+                <br><br>
 
-        <!-- Option for "No" -->
-        <label>
-            <input type="radio" name="isAttending" value="no" required> No
-        </label>
+                <!-- Option for needing Stafford Junction transportation -->
+                <label>
+                    <input type="radio" name="transportation" value="stafford_junction" required> My student will need Stafford
+                    Junction to provide transportation. / Mi estudiante necesitará Stafford Junction para proporcionar
+                    transporte.
+                </label>
+            </div>
+            <br><br>
+
+            <!-- Neighborhood Pickup Section -->
+            <div>
+                <p><strong>Which neighborhood will your student be picked up from? * ¿De qué vecindario recogerán a su
+                        estudiante?</strong></p>
+
+                <!-- Option for "Other" with text input for specifying neighborhood -->
+                <label>
+                    <input type="text" name="neighborhood" placeholder="Specify neighborhood" value="<?php echo htmlspecialchars($family->getNeighborhood());?>" required>
+                </label>
+
+            </div>
+            <br><br>
+
+            <!-- Additional Information Section -->
+            <div>
+                <p><strong>Question or Comments: Pregunta o comentarios:</strong></p>
+
+                <!-- Large text area for additional comments or information -->
+                <label>
+                    <textarea name="question_comments" rows="6" cols="50"
+                        placeholder="Enter any additional information here / Ingrese cualquier información adicional aquí"></textarea>
+                </label>
+            </div>
+            <br><br>
+
+            <!-- Submit and Cancel Buttons -->
+            <button type="submit">Submit</button>
+            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+
+            <?php //If the user is an admin or staff, the message should appear at index.php
+            if(isset($successMessage) && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }else if(isset($failMessage) && $accessLevel == 1){
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitFailure";</script>';
+            }
+            ?>
+            </div>
+        </form>
     </div>
-    <br><br>
-
-    <!-- Transportation Section -->
-    <div>
-        <p><strong>Transportation * Transporte</strong></p>
-
-        <!-- Option for providing own transportation -->
-        <label>
-            <input type="radio" name="transportation" value="provide_own" required> I will provide transportation for my
-            student. / Proporcionaré transporte para mi estudiante.
-        </label>
-        <br><br>
-
-        <!-- Option for needing Stafford Junction transportation -->
-        <label>
-            <input type="radio" name="transportation" value="stafford_junction" required> My student will need Stafford
-            Junction to provide transportation. / Mi estudiante necesitará Stafford Junction para proporcionar
-            transporte.
-        </label>
-    </div>
-    <br><br>
-
-    <!-- Neighborhood Pickup Section -->
-    <div>
-        <p><strong>Which neighborhood will your student be picked up from? * ¿De qué vecindario recogerán a su
-                estudiante?</strong></p>
-
-        <!-- Option for "Olde Forge" -->
-        <label>
-            <input type="radio" name="neighborhood" value="olde_forge" required> Olde Forge
-        </label>
-        <br><br>
-
-        <!-- Option for "Jefferson Place" -->
-        <label>
-            <input type="radio" name="neighborhood" value="jefferson_place" required> Jefferson Place
-        </label>
-        <br><br>
-
-        <!-- Option for "Foxwood" -->
-        <label>
-            <input type="radio" name="neighborhood" value="foxwood" required> Foxwood
-        </label>
-        <br><br>
-
-        <!-- Option for "England Run" -->
-        <label>
-            <input type="radio" name="neighborhood" value="england_run" required> England Run
-        </label>
-        <br><br>
-
-        <!-- Option for "Other" with text input for specifying neighborhood -->
-        <label>
-            <input type="radio" name="neighborhood" value="other" required> Other:
-            <input type="text" name="neighborhood" placeholder="Specify other neighborhood">
-        </label>
-    </div>
-    <br><br>
-
-    <!-- Additional Information Section -->
-    <div>
-        <p><strong>Question or Comments: Pregunta o comentarios:</strong></p>
-
-        <!-- Large text area for additional comments or information -->
-        <label>
-            <textarea name="question_comments" rows="6" cols="50"
-                placeholder="Enter any additional information here / Ingrese cualquier información adicional aquí"></textarea>
-        </label>
-    </div>
-    <br><br>
-
-    <!-- Submit and Cancel Buttons -->
-    <button type="submit">Submit</button>
-    <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-    </div>
-</div>
+    
 </body>
 
 </html>
