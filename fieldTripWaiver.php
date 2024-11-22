@@ -8,15 +8,25 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = null;
 
 if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+}else {
+    header("Location: login.php");
 }
 
+//necessary files
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+include_once("database/dbChildren.php");
+include_once('database/dbFieldTripWaiverForm.php');
+require('include/input-validation.php');
+include_once('domain/Children.php');
+
+//retrieve family details
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
 $family_state = $family->getState();
@@ -26,81 +36,102 @@ $guardian_name = $family->getFirstName() . " " . $family->getLastName();
 $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
+//retrieve children by family ID
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
-// include the header .php file s
+include_once('database/dbinfo.php');
+//check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    //require_once('database/dbSpringBreakForm.php');
+    //sanitize form input
     $args = sanitize($_POST, null);
-
-
     $required = array(
-            'child_first_name',
-            'child_last_name',
-            'child_gender',
-            'child_birthdate',
-            'child_neighborhood',
-            'child_school',
-            'child_address',
-            'child_city',
-            'child_state',
-            'child_zip',
-            'religious_foods',
-            "medical_issues",
-            'parent_email',
-            'emergency_contact_name_1',
-            'emergency_contact_relationship_1',
-            'emergency_contact_phone_1',
-            'emergency_contact_name_2',
-            'emergency_contact_relationship_2',
-            'emergency_contact_phone_2',
-            'insurance_company',
-            'policy_number',
-            'parent_name',
-            'parent_signature',
-            'signature_date'
+        'child_name',
+        'child_gender',
+        'child_birthdate',
+        'child_neighborhood',
+        'child_school',
+        'child_address',
+        'child_city',
+        'child_state',
+        'child_zip',
+        'religious_foods',
+        'medical_issues',
+        'parent_email',
+        'emergency_contact_name_1',
+        'emergency_contact_relationship_1',
+        'emergency_contact_phone_1',
+        'emergency_contact_name_2',
+        'emergency_contact_relationship_2',
+        'emergency_contact_phone_2',
+        'insurance_company',
+        'policy_number',
+        'parent_name',
+        'parent_signature',
+        'signature_date'
     );
     
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
-        die();
-    }else {
-        foreach($args as $key => $val){
-            echo "{$key}:" . " " . "{$val}" . "<br>";
+    } else {
+        //call the function to create the waiver form
+        $success = createFieldTripWaiverForm($args);
+        
+        if ($success) {
+            echo "Form submitted successfully!";
+        } else {
+            echo "Error submitting the form.";
         }
     }
 }
-
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stafford Junction | Field Trip Waiver Form</title>
+    <title>Stafford Junction | Field Trip Waiver Form <?php echo date("Y"); ?></title>
 </head>
 <body>
 
+    <!--Please fill out error message pop up -->
+    <?php if (!empty($errors)): ?>
+        <h3 style="color: red;">Please correct the following errors:</h3>
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?php echo $error; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
     <!-- Main heading of the page -->
-    <h1>Stafford Junction Field Trip Release Waiver 2024 / Exención de Responsabilidad para Excursiones de Stafford
-        Junction</h1>
+    <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
+    <form method="post" action="fieldTripWaiver.php">
 
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
         <p><strong>General Information / Información General</strong></p>
     </div>
 
-    <!-- Child's First Name -->
-    <label for="child_first_name">Child's First Name* / Nombre del Niño*</label><br>
-    <input type="text" name="child_first_name" id="child_first_name" placeholder="First Name / Nombre" required><br><br>
-
-    <!-- Child's Last Name -->
-    <label for="child_last_name">Child's Last Name* / Apellido del Niño*</label><br>
-    <input type="text" name="child_last_name" id="child_last_name" placeholder="Last Name / Apellido" required><br><br>
+    <!-- Child's Name -->
+    <label for="child_name">Child's Name / Nombre del Niño(a)*</label><br><br>
+    <select name="child_name" id="child_name" required>
+        <?php
+            require_once('domain/Children.php');
+            foreach ($children as $c) {
+                $id = $c->getID();
+                if (!isFieldTripWaiverFormComplete($id)) {
+                    $name = $c->getFirstName() . " " . $c->getLastName();
+                    $value = $id . "_" . $name;
+                    echo "<option value='$value'>$name</option>";
+                }
+            }
+        ?>
+    </select><br><br>
 
     <!-- Child's Gender -->
     <label for="child_gender">Gender* / Género*</label><br>
@@ -112,8 +143,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Child's Neighborhood -->
     <label for="child_neighborhood">Neighborhood* / Barrio*</label><br>
-    <input type="text" name="child_neighborhood" id="child_neighborhood" placeholder="Neighborhood / Barrio"
-        required><br><br>
+    <input type="text" name="child_neighborhood" id="child_neighborhood" placeholder="Neighborhood / Barrio" required><br><br>
 
     <!-- Child's School -->
     <label for="child_school">School* / Escuela*</label><br>
@@ -122,7 +152,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Child's Street Address -->
     <label for="child_address">Street Address* / Dirección*</label><br>
     <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección"
-        required value="<?php echo htmlspecialchars($family_address); ?>"><br><br>
+    required value="<?php echo htmlspecialchars($family_address); ?>"><br><br>
 
     <!-- Child's City -->
     <label for="child_city">City* / Ciudad*</label><br>
@@ -170,8 +200,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     <!-- Emergency Contact 1 Phone -->
     <label for="emergency_contact_phone_1">Phone* / Teléfono*</label><br>
-    <input type="tel" name="emergency_contact_phone_1" id="emergency_contact_phone_1"
+        <input type="tel" name="emergency_contact_phone_1" id="emergency_contact_phone_1"
         placeholder="Phone Number / Número de Teléfono" required value="<?php echo htmlspecialchars($guardian_phone); ?>"><br><br>
+   
 
     <!-- Emergency Contact 2 Name -->
     <label for="emergency_contact_name_2">Emergency Contact Name 2* / Nombre del Contacto de Emergencia 2*</label><br>
@@ -340,13 +371,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <label for="signature_date">Date* / Fecha*</label><br>
                     <input type="date" name="signature_date" id="signature_date" required><br><br>
                 </div>
+                <hr>
 
                 <!-- Submit and Cancel buttons -->
-                <br>
                 <button type="submit" id="submit">Submit</button>
                 <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            </form>
-        </div>
+            </div>
+           </form>
+           <?php
+           //if registration successful, create pop up notification and direct user back to login
+            if($success){
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            }  
+            ?>
     </div>
     </body>
 </html>
