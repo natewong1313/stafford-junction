@@ -421,23 +421,6 @@ function getHolidayMealBagData($family_id){
     }
 }
 
-/**
- * Function that querys the dbHolidayMealBagForm database and retrieves the corresponding row for the family 
- */
-function getBrainBuildersRegistrationData($family_id){
-    $conn = connect();
-    $query = "SELECT  dbBrainBuildersRegistrationForm.email, dbHolidayMealBagForm.household_size, dbHolidayMealBagForm.meal_bag, 
-    dbHolidayMealBagForm.name, dbHolidayMealBagForm.address, dbHolidayMealBagForm.phone, dbHolidayMealBagForm.photo_release FROM dbFamily INNER JOIN dbHolidayMealBagForm ON dbFamily.id = dbHolidayMealBagForm.family_id WHERE dbFamily.id = '" . $family_id . "';" ;
-    $res = mysqli_query($conn, $query);
-    if(mysqli_num_rows($res) < 0 || $res == null){
-        mysqli_close($conn);
-        return null;
-    }else {
-        $row = mysqli_fetch_assoc($res);
-        return $row;
-    }
-}
-
 // Sets a family to archived using thier id
 function archive_family($id) {
     $query = "UPDATE dbFamily SET isArchived='1' WHERE id='$id'";
