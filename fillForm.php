@@ -93,6 +93,14 @@ error_reporting(E_ALL);
 
                 <!--Only staff and volunteer accounts can access these forms-->
                 <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
+                <div class="dashboard-item" data-link="busMonitorAttendanceForm.php">
+                    <img src="images/school-bus-vehicle-svgrepo-com.svg">
+                    <span>Bus Monitor Attendance Form</span>
+                </div>
+                <?php endif ?>
+
+                <!--Only staff and volunteer accounts can access these forms-->
+                <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
                     <div class="dashboard-item" data-link="actualActivityForm.php">
                         <img src="images/actualActivity-svgrepo.svg">
                         <span>Actual Activity Form</span> 
