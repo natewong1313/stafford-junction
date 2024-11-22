@@ -12,17 +12,17 @@ require_once("dbFamily.php");
 function createChildCareForm($form) {
      // Establish a connection to the database
      $connection = connect();
+
+     $child_data = explode("_", $form['name']);
+    
+     // Map form data directly to variables
+     $child_id = $child_data[0];
+     $child_name = $child_data[1];
     
     // Check if form is already complete for the child, if so then return
     if (isChildCareWaiverFormComplete($child_id)) {
         return;
     }
-
-    $child_data = explode("_", $form['name']);
-    
-    // Map form data directly to variables
-    $child_id = $child_data[0];
-    $child_name = $child_data[1];
 
     // Extract form fields
     //$child_first_name = $form["child_first_name"];
@@ -33,6 +33,8 @@ function createChildCareForm($form) {
     $child_city = $form["child_city"];
     $child_state = $form["child_state"];
     $child_zip = $form["child_zip"];
+    $medical_issues = $form["medical_issues"];
+    $religious_foods = $form["religious_foods"];
 
     // parent 1 information
     $parent1_first_name = $form["parent1_first_name"];
@@ -72,7 +74,7 @@ function createChildCareForm($form) {
             parent2_email, parent2_cell_phone, parent2_home_phone, parent2_work_phone, 
             parent_guardian_signature, signature_date
         ) VALUES (
-            '$child_id', '$child_name, '$birth_date', '$gender', '$child_address', '$child_city', 
+            '$child_id', '$child_name', '$birth_date', '$gender', '$child_address', '$child_city', 
             '$child_state', '$child_zip', '$parent1_first_name', 
             '$parent1_last_name', '$parent1_address', '$parent1_city', '$parent1_state', '$parent1_zip_code', '$parent1_email', 
             '$parent1_cell_phone', '$parent1_home_phone', '$parent1_work_phone', '$parent2_first_name', 
@@ -92,9 +94,57 @@ function createChildCareForm($form) {
     $id = mysqli_insert_id($connection); // Get the inserted record's ID
     mysqli_commit($connection); // Commit transaction
     mysqli_close($connection); // Close connection
+    
+    // Establish a connection to the database
+    $connection = connect();
+
+    // Update query for dbChildren
+    $query = "
+        UPDATE dbChildren
+        SET medical_notes = '$medical_issues'
+        WHERE id = '$child_id';
+    ";  
+     echo $query;
+
+    // Execute query
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        return null; // Query failed
+    }
+
+    $id = mysqli_insert_id($connection); // Get the inserted record's ID
+    mysqli_commit($connection); // Commit transaction
+    mysqli_close($connection); // Close connection
+    
+    // Establish a connection to the database
+    $connection = connect();
+
+    $query = "
+        INSERT INTO dbUnallowedFoods (id, name)
+        VALUES ('$child_id', '$religious_foods');
+    ";
+
+    echo $query;
+
+    // Execute query
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        return null; // Query failed
+    }
+
+    $id = mysqli_insert_id($connection); // Get the inserted record's ID
+    mysqli_commit($connection); // Commit transaction
+    mysqli_close($connection); // Close connection
 
     return $id; // Return the ID of the inserted form
 }
+
+
+
+
+
 
 
 /**

@@ -25,9 +25,11 @@ include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
 require_once('database/dbChildCareForm.php');
 
+
 // Retrieve family information
 if ($loggedIn) {
-    $family = retrieve_family_by_id($_SESSION["_id"]);
+    $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
+    //$family = retrieve_family_by_id($_SESSION["_id"]);
     $family_email = $family->getEmail();
     //retrieve children by family ID
     $children = retrieve_children_by_family_id($_SESSION["_id"]);
@@ -60,8 +62,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $required = array(
         'name',
-        'child_first_name',
-        'child_last_name',
         'child_dob',
         'child_gender',
         'child_address',
@@ -82,21 +82,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent1_home_phone', 
         'parent1_work_phone', 
 
-        'parent2_first_name', 
-        'parent2_last_name',
-        'parent2_address',
-        'parent2_city',
-        'parent2_state',
-        'parent2_zip',
-        'parent2_email',
-        'parent2_cell_phone',
-        'parent2_home_phone',
-        'parent2_work_phone',
         'guardian_name',
         'guardian_signature',
         'signature_date'
     );
-    
+
     if(!wereRequiredFieldsSubmitted($args, $required)){
         echo "Not all fields complete";
     } else {
