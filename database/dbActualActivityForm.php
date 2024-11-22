@@ -5,20 +5,23 @@
 function createActualActivityForm($form) {
 	$connection = connect();
     
-    $activity = mysqli_real_escape_string($connection, $form["activity"]);
+    // Enable exception handling for MySQLi
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+    $activity = $form["activity"];
     $date = $form["date"];
-    $program = mysqli_real_escape_string($connection, $form["program"]);
+    $program = $form["program"];
 	$start_time = $form["start_time"];
     $end_time = $form["end_time"];
     $start_mile = $form["start_mile"];
     $end_mile = $form["end_mile"];
-    $address = mysqli_real_escape_string($connection, $form["address"]);
+    $address = $form["address"];
 	$attend_num = $form["attend_num"];
     $volstaff_num = $form["volstaff_num"];
-    $materials_used = mysqli_real_escape_string($connection, $form["materials_used"]);
+    $materials_used = $form["materials_used"];
 	$meal_info = $form["meal_info"];
-    $act_costs = mysqli_real_escape_string($connection, $form["act_costs"]);
-    $act_benefits = mysqli_real_escape_string($connection, $form["act_benefits"]);
+    $act_costs = $form["act_costs"];
+    $act_benefits = $form["act_benefits"];
     $attendance = $form["attendance"];
     
     mysqli_begin_transaction($connection);
