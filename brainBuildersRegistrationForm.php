@@ -103,11 +103,10 @@ try {
         $args = sanitize($_POST, null);
 
         $required = array(
-            "child_first_name", "child_last_name", "gender", "school_name", "grade", "birthdate", 
-            "child_address", "child_city", "child_state", "child_zip", "child_medical_allergies", "child_food_avoidances", 
-            "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email", "parent1_altPhone", 
-            "parent2_name", "parent2_phone", "parent2_address", "parent2_city", "parent2_state", "parent2_zip", "parent2_email", "parent2_altPhone", 
-            "emergency_name1", "emergency_relationship1", "emergency_phone1", "emergency_name2", "emergency_relationship2", "emergency_phone2", 
+            "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", 
+            "child_grade", "child_dob", "child_address", "child_city", "child_state", "child_zip", 
+            "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email",  
+            "emergency_name1", "emergency_relationship1", "emergency_phone1",
             "authorized_pu", "not_authorized_pu", "primary_language", "hispanic_latino_spanish", "race", 
             "num_unemployed", "num_retired", "num_unemployed_student", "num_employed_fulltime", "num_employed_parttime", "num_employed_student", 
             "income", "other_programs", "lunch", "transportation", "participation", 
@@ -116,7 +115,7 @@ try {
         );
 
         if (wereRequiredFieldsSubmitted($args, $required)) {
-            
+            throw new Exception("Error: Not all required fields were submitted");
         }
 
         $bbID = createbrainBuildersRegistrationForm($args);
@@ -215,42 +214,47 @@ try {
                 value="<?php echo isset($child_last_name) ? htmlspecialchars($child_last_name) : ''; ?>"><br><br>
 
             <!-- 3. Child Email -->
-            <label for="email">Child Email *</label><br><br>
+            <label for="child_email">Child Email *</label><br><br>
             <input type="email" name="child_email" id="child_email" 
                 placeholder="Child Email" required 
                 value="<?php echo isset($family_email1) ? htmlspecialchars($family_email1) : ''; ?>"><br><br>
 
             <!-- 4. Gender -->
-            <label for="gender">Gender *</label><br><br>
-            <select id="gender" name="gender" required>
+            <label for="child_gender">Gender *</label><br><br>
+            <select id="child_gender" name="child_gender" required>
                 <option value="" disabled <?php echo isset($child_gender) && $child_gender == '' ? 'selected' : ''; ?>>Select Gender</option>
                 <option value="male" <?php echo isset($child_gender) && $child_gender == 'male' ? 'selected' : ''; ?>>Male</option>
                 <option value="female" <?php echo isset($child_gender) && $child_gender == 'female' ? 'selected' : ''; ?>>Female</option>
             </select><br><br>
 
             <!-- 5. School Name -->
-            <label for="school_name">School Name *</label><br><br>
-            <input type="text" name="school_name" id="school_name" placeholder="School Name" required 
+            <label for="child_school_name">School Name *</label><br><br>
+            <input type="text" name="child_school_name" id="child_school_name" 
+                placeholder="School Name" required 
                 value="<?php echo isset($child_school) ? htmlspecialchars($child_school) : ''; ?>"><br><br>
 
             <!-- 6. Grade -->
-            <label for="grade">Grade *</label><br><br>
-            <input type="text" name="grade" id="grade" placeholder="Grade/Grado" required 
+            <label for="child_grade">Grade *</label><br><br>
+            <input type="text" name="child_grade" id="child_grade"
+                placeholder="Grade/Grado" required 
                 value="<?php echo isset($child_grade) ? htmlspecialchars($child_grade) : ''; ?>"><br><br>
 
             <!-- 7. Date of Birth -->
-            <label for="birthdate">Date of Birth *</label><br><br>
-            <input type="date" id="birthdate" name="birthdate" max="<?php echo date('Y-m-d'); ?>" required 
+            <label for="child_dob">Date of Birth *</label><br><br>
+            <input type="date" id="child_dob" name="child_dob" max="<?php echo date('Y-m-d'); ?>" 
+                required 
                 value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
             <!-- 8. Street Address -->
             <label for="child_address">Street Address *</label><br><br>
-            <input type="text" id="child_address" name="child_address" placeholder="Enter your street address" required 
+            <input type="text" id="child_address" name="child_address" 
+                placeholder="Enter child's street address" required 
                 value="<?php echo isset($child_address) ? htmlspecialchars($child_address) : ''; ?>"><br><br>
 
             <!-- 9. City -->
             <label for="child_city">City *</label><br><br>
-            <input type="text" id="child_city" name="child_city" placeholder="Enter your city" required 
+            <input type="text" id="child_city" name="child_city" 
+                placeholder="Enter your city" required 
                 value="<?php echo isset($child_city) ? htmlspecialchars($child_city) : ''; ?>"><br><br>
 
             <!-- 10. State -->
@@ -311,12 +315,14 @@ try {
 
             <!-- 11. Zip Code -->
             <label for="child_zip">Zip Code *</label><br><br>
-            <input type="text" id="child_zip" name="child_zip" pattern="[0-9]{5}" placeholder="Enter your 5-digit zip code" required 
+            <input type="text" id="child_zip" name="child_zip" pattern="[0-9]{5}" 
+                placeholder="Enter your 5-digit zip code" required 
                 value="<?php echo isset($child_zip) ? htmlspecialchars($child_zip) : ''; ?>"><br><br>
 
             <!-- 12. Medical issues or allergies -->
             <label for="child_medical_allergies">Medical issues or allergies</label><br><br>
-            <input type="text" id="child_medical_allergies" name="child_medical_allergies" placeholder="Medical issues or allergies" 
+            <input type="text" id="child_medical_allergies" name="child_medical_allergies" 
+                placeholder="Medical issues or allergies" 
                 value="<?php echo isset($child_medical) ? htmlspecialchars($child_medical) : ''; ?>"><br><br>
 
             <!-- 13. Foods to avoid due to religious beliefs -->
@@ -328,22 +334,26 @@ try {
 
             <!--Parent 1 Name-->
             <label for="parent1_name">Full Name *</label><br><br>
-            <input type="text" id="parent1_name" name="parent1_name" required placeholder="Parent 1 Full Name" 
+            <input type="text" id="parent1_name" name="parent1_name" 
+                placeholder="Parent 1 Full Name" required
                 value="<?php echo isset($family_name1) ? $family_name1 : ''; ?>"><br><br>
 
             <!--Cell Phone-->
             <label for="parent1_phone">Primary Phone Number *</label><br><br>
-            <input type="tel" id="parent1_phone" name="parent1_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" 
+            <input type="tel" id="parent1_phone" name="parent1_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                placeholder="Ex. (555) 555-5555" required
                 value="<?php echo isset($family_phone1) ? $family_phone1 : ''; ?>"><br><br>
 
             <!--Street Address-->
             <label for="parent1_address">Street Address *</label><br><br>
-            <input type="text" id="parent1_address" name="parent1_address" required placeholder="Enter your street address" 
+            <input type="text" id="parent1_address" name="parent1_address" 
+                placeholder="Enter your street address" required
                 value="<?php echo isset($family_address1) ? $family_address1 : ''; ?>"><br><br>
 
             <!--City-->
             <label for="parent1_city">City *</label><br><br>
-            <input type="text" id="parent1_city" name="parent1_city" required placeholder="Enter your city" 
+            <input type="text" id="parent1_city" name="parent1_city"
+                placeholder="Enter your city" required 
                 value="<?php echo isset($family_city1) ? $family_city1 : ''; ?>"><br><br>
 
             <!--State-->
@@ -404,38 +414,47 @@ try {
 
             <!--Zip-->
             <label for="parent1_zip">Zip Code *</label><br><br>
-            <input type="text" id="parent1_zip" name="parent1_zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code" 
+            <input type="text" id="parent1_zip" name="parent1_zip" pattern="[0-9]{5}" title="5-digit zip code" 
+                placeholder="Enter your 5-digit zip code" required
                 value="<?php echo isset($family_zip1) ? $family_zip1 : ''; ?>"><br><br>
 
             <!--Email-->
             <label for="parent1_email">Email *</label><br><br>
-            <input type="text" id="parent1_email" name="parent1_email" required placeholder="Enter your email" 
+            <input type="text" id="parent1_email" name="parent1_email" 
+                placeholder="Enter your email" required
                 value="<?php echo isset($family_email1) ? $family_email1 : ''; ?>"><br><br>
 
             <!--Alternate Phone-->
             <label for="parent1_altPhone">Alternate Phone Number</label><br><br>
-            <input type="tel" id="parent1_altPhone" name="parent1_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"
+            <input type="tel" id="parent1_altPhone" name="parent1_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                placeholder="Ex. (555) 555-5555"
                 value="<?php echo isset($family_altphone1) ? $family_altphone1 : ''; ?>"><br><br><br>
 
             <h2>Parent 2 Information</h2><hr><br>
 
             <!--Parent 2 Name-->
             <label for="parent2_name">Full Name</label><br><br>
-            <input type="text" id="parent2_name" name="parent2_name" placeholder="Parent 2 Full Name" 
+            <input type="text" id="parent2_name" name="parent2_name" 
+                placeholder="Parent 2 Full Name" 
                 value="<?php echo isset($family_name2) ? $family_name2 : ''; ?>"><br><br>
 
             <!--Cell Phone-->
             <label for="parent2_phone">Primary Phone Number</label><br><br>
-            <input type="tel" id="parent2_phone" name="parent2_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" 
+            <input type="tel" id="parent2_phone" name="parent2_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                placeholder="Ex. (555) 555-5555" 
                 value="<?php echo isset($family_phone2) ? $family_phone2 : ''; ?>"><br><br>
 
             <!--Street Address-->
             <label for="parent2_address">Street Address</label><br><br>
-            <input type="text" id="parent2_address" name="parent2_address" placeholder="Enter your street address" value="<?php echo isset($family_address2) ? $family_address2 : ''; ?>"><br><br>
+            <input type="text" id="parent2_address" name="parent2_address" 
+                placeholder="Enter your street address" 
+                value="<?php echo isset($family_address2) ? $family_address2 : ''; ?>"><br><br>
 
             <!--City-->
             <label for="parent2_city">City</label><br><br>
-            <input type="text" id="parent2_city" name="parent2_city" placeholder="Enter your city" value="<?php echo isset($family_city2) ? $family_city2 : ''; ?>"><br><br>
+            <input type="text" id="parent2_city" name="parent2_city" 
+                placeholder="Enter your city" 
+                value="<?php echo isset($family_city2) ? $family_city2 : ''; ?>"><br><br>
 
             <!--State-->
             <label for="parent2_state">State </label><br><br>
@@ -494,50 +513,56 @@ try {
             </select><br><br>
 
             <!--Zip-->
-            <label for="parent2_zip" required>Zip Code</label><br><br>
-            <input type="text" id="parent2_zip" name="parent2_zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code" 
+            <label for="parent2_zip">Zip Code</label><br><br>
+            <input type="text" id="parent2_zip" name="parent2_zip" pattern="[0-9]{5}" title="5-digit zip code" 
+                placeholder="Enter your 5-digit zip code" 
                 value="<?php echo isset($family_zip2) ? $family_zip2 : ''; ?>"><br><br>
 
             <!--Email-->
-            <label for="parent2_email" required>Email</label><br><br>
-            <input type="text" id="parent2_email" name="parent2_email" placeholder="Enter your email" 
+            <label for="parent2_email">Email</label><br><br>
+            <input type="text" id="parent2_email" name="parent2_email" 
+                placeholder="Enter your email" 
                 value="<?php echo isset($family_email2) ? $family_email2 : ''; ?>"><br><br>
 
             <!--Alternate Phone-->
-            <label for="parent2_altPhone" required>Alternate Phone Number</label><br><br>
-            <input type="tel" id="parent2_altPhone" name="parent2_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" 
+            <label for="parent2_altPhone">Alternate Phone Number</label><br><br>
+            <input type="tel" id="parent2_altPhone" name="parent2_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                placeholder="Ex. (555) 555-5555" 
                 value="<?php echo isset($family_altphone2) ? $family_altphone2 : ''; ?>"><br><br><br>
 
             <h2>Emergency Contact 1 Information</h2><hr><br>
 
             <!--Name-->
             <label for="emergency_name1" required>Full Name *</label><br><br>
-            <input type="text" id="emergency_name1" name="emergency_name1" required placeholder="Enter full name" 
+            <input type="text" id="emergency_name1" name="emergency_name1" 
+                placeholder="Enter full name" required
                 value="<?php echo isset($family_emergency_name1) ? $family_emergency_name1 : ''; ?>"><br><br>
 
             <!--Relationship-->
             <label for="emergency_relationship1" required>Relationship to Child *</label><br><br>
-            <input type="text" id="emergency_relationship1" name="emergency_relationship1" placeholder="Enter person's relationship to child" 
-                value="<?php echo isset($family_emergency_relation1) ? $family_emergency_relation1 : ''; ?>" required><br><br>
+            <input type="text" id="emergency_relationship1" name="emergency_relationship1"
+                placeholder="Enter person's relationship to child" required
+                value="<?php echo isset($family_emergency_relation1) ? $family_emergency_relation1 : ''; ?>"><br><br>
 
             <!--Phone-->
             <label for="emergency_phone1" required>Phone *</label><br><br>
-            <input type="tel" id="emergency_phone1" name="emergency_phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" 
-                value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>" required>
+            <input type="tel" id="emergency_phone1" name="emergency_phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                placeholder="Ex. (555) 555-5555" required
+                value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>">
             <br><br><br>
 
             <h2>Emergency Contact 2 Information</h2><hr><br>
 
             <!--Name-->
-            <label for="emergency_name2" required>Full Name</label><br><br>
+            <label for="emergency_name2">Full Name</label><br><br>
             <input type="text" id="emergency_name2" name="emergency_name2" placeholder="Enter full name" ><br><br>
 
             <!--Relationship-->
-            <label for="emergency_relationship2" required>Relationship to Child</label><br><br>
+            <label for="emergency_relationship2">Relationship to Child</label><br><br>
             <input type="text" id="emergency_relationship2" name="emergency_relationship2" placeholder="Enter person's relationship to child"><br><br>
 
             <!--Phone-->
-            <label for="emergency_phone2" required>Phone</label><br><br>
+            <label for="emergency_phone2">Phone</label><br><br>
             <input type="tel" id="emergency_phone2" name="emergency_phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (000) 000-0000">
             <br><br><br>
 
@@ -771,49 +796,6 @@ try {
             <button type="submit" id="submit">Submit</button>
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
         
-            
-            <script type="text/javascript">
-                // Create a children data object for autofill using PHP to pass the array
-                const childrenData = <?php 
-                    $childrenArray = [];
-                    foreach ($family_children as $child) {
-                        // Create an associative array for each child
-                        $childrenArray[] = [
-                            'id' => $child->getID(),
-                            'first_name' => $child->getFirstName(),
-                            'last_name' => $child->getLastName(),
-                            'gender' => $child->getGender(),
-                            'school_name' => $child->getSchool(),
-                            'grade' => $child->getGrade(),
-                            'birthdate' => $child->getBirthdate(),
-                            'address' => $child->getAddress(),
-                            'city' => $child->getCity(),
-                            'state' => $child->getState(),
-                            'zip' => $child->getZip()
-                        ];
-                    }
-                    echo json_encode($childrenArray); 
-                ?>;
-                // This function will be triggered when the user selects a child
-                function autofillForm(childID) {
-                    // Extract the child data from the selected child's ID
-                    const selectedChild = childrenData.find(child => child.id == childID);
-
-                    if (selectedChild) {
-                        // Autofill the form fields
-                        document.getElementById('child_last_name').value = selectedChild.last_name;
-                        document.getElementById('gender').value = selectedChild.gender;
-                        document.getElementById('school_name').value = selectedChild.school_name;
-                        document.getElementById('grade').value = selectedChild.grade;
-                        document.getElementById('birthdate').value = selectedChild.birthdate;
-                        document.getElementById('child_address').value = selectedChild.address;
-                        document.getElementById('child_city').value = selectedChild.city;
-                        document.getElementById('child_state').value = selectedChild.state;
-                        document.getElementById('child_zip').value = selectedChild.zip;
-                        // You can add more fields here as necessary
-                    }
-                }
-            </script>
         </form>
         </div>
         <?php
