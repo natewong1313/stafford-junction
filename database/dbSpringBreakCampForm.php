@@ -32,8 +32,8 @@ function createSpringBreakCampForm($form)
     $notes = !empty($form["questions_comments"]) ? $form["questions_comments"] : null;
 
     $query = "
-        INSERT INTO dbSpringBreakCampForm (email, school_choice, isAttending, waiver_completed, notes, child_id)
-        values ('$email', '$school_choice', '$isAttending', '$waiver_completed', '$notes', '$child_id');
+        INSERT INTO dbSpringBreakCampForm (email, student_name, school_choice, isAttending, waiver_completed, notes, child_id)
+        values ('$email', '$student_name', '$school_choice', '$isAttending', '$waiver_completed', '$notes', '$child_id');
     ";
     $result = mysqli_query($connection, $query);
     if (!$result) {
