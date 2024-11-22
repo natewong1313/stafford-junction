@@ -25,7 +25,6 @@ include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
 require_once('database/dbChildCareForm.php');
 
-
 // Retrieve family information
 if ($loggedIn) {
     $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
@@ -86,25 +85,79 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'guardian_signature',
         'signature_date'
     );
+    
+// Phone fields to check if the phones are in the right format
+$phoneFields = [
+    'parent1_cell_phone',
+    'parent1_home_phone',
+    'parent1_work_phone',
+    'parent2_cell_phone',
+    'parent2_home_phone',
+    'parent2_work_phone'
+];
 
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-    } else {
-        //call the function to create the waiver form
-        $success = createChildCareForm($args);
-        
-        if ($success) {
-            echo "Form submitted successfully!";
-        } else {
-            echo "Error submitting the form.";
+// Fields allowed to be null
+$nullableFields = [
+    'parent2_cell_phone',
+    'parent2_home_phone',
+    'parent2_work_phone'
+];
+
+// Track missing and invalid fields
+$missingFields = [];
+$invalidFields = [];
+
+// Check if all strictly required fields are provided
+foreach ($required as $field) {
+    if (empty($args[$field])) {
+        $missingFields[] = $field;
+    }
+}
+
+// Validate phone fields, allowing nullable ones
+foreach ($phoneFields as $field) {
+    if (in_array($field, $nullableFields)) {
+        // Skip validation for nullable fields if they are empty
+        if (empty($args[$field])) {
+            continue;
         }
     }
+
+    if (!empty($args[$field])) { // Validate only non-empty fields
+        $args[$field] = validateAndFilterPhoneNumber($args[$field]);
+
+        if (!$args[$field]) { // Collect invalid phone numbers
+            $invalidFields[] = $field;
+        }
+    }
+}
+
+// Provide feedback if any required fields are missing
+if (!empty($missingFields)) {
+    echo "The following required fields are missing:<br>";
+    foreach ($missingFields as $missingField) {
+        echo "$missingField<br>";
+    }
+} elseif (!empty($invalidFields)) {
+    // Provide feedback if any phone fields are invalid
+    echo "The following phone fields are invalid:<br>";
+    foreach ($invalidFields as $invalidField) {
+        echo "$invalidField<br>";
+    }
+} else {
+    // All required fields are complete and phone fields valid, proceed to form submission
+    $success = createChildCareForm($args);
+    if ($success) {
+        echo "Form submitted successfully!";
+    } else {
+        echo "Error submitting the form.";
+    }
+}
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Include universal styles, scripts, or configurations via external file -->
     <?php include_once("universal.inc") ?>
@@ -112,7 +165,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stafford Junction | Child Care Waiver Form</title>
 </head>
-
 <body>
 
     <!-- Main heading of the page -->
@@ -346,6 +398,5 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             ?>
     </div>
 </body>
-
 </html>
 
