@@ -50,10 +50,11 @@ error_reporting(E_ALL);
                     <span>Spring Break Form</span> 
                 
                 </div>
-
-                <div class="dashboard-item" data-link="angelGiftForm.php">
+                    
+                <!-- Angel Wish Gift Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "angelGiftForm.php?id=" . $_GET['id'] : "angelGiftForm.php"; ?>">
                     <img src="images/angel.svg">
-                    <span>Angel Gifts Wish Form</span> 
+                    <span>Angel Wish Gift Form</span>
                 </div>
 
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
