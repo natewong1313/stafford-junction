@@ -18,13 +18,11 @@ $loggedIn = true;
 $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
 
-require_once('database/dbBrainBuildersRegistrationForm.php');
-require_once('include/input-validation.php');
 require_once('domain/Family.php');
 require_once('database/dbFamily.php');
 
-//get required family and child information
-$family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
+//get required family and children information
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id'] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_children = getChildren($family->getId());
 
 $family_name1 = $family->getFirstName() . " " . $family->getLastName();
@@ -59,7 +57,10 @@ try {
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         require_once('include/input-validation.php');
+        require_once('database/dbBrainBuildersRegistrationForm.php');
         
+        $args = sanitize($_POST, null);
+
         $parent1_phone = validateAndFilterPhoneNumber($_POST['parent1_phone']);
         if (!$parent1_phone) {
             $errors[] = "Invalid phone number format: Parent 1 Phone Number";
@@ -99,11 +100,9 @@ try {
         if (!$emergency_phone2) {
             throw new Exception("Invalid phone number format: Emergency Contact 2 Alternate Phone Number.");
         }
-        
-        $args = sanitize($_POST, null);
 
         $required = array(
-            "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", 
+            "child_id", "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", 
             "child_grade", "child_dob", "child_address", "child_city", "child_state", "child_zip", 
             "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email",  
             "emergency_name1", "emergency_relationship1", "emergency_phone1",
@@ -114,7 +113,7 @@ try {
             "waiver_provider_name", "waiver_provider_address", "waiver_phone_and_fax", "waiver_signature", "waiver_date"
         );
 
-        if (wereRequiredFieldsSubmitted($args, $required)) {
+        if (!wereRequiredFieldsSubmitted($args, $required)) {
             throw new Exception("Error: Not all required fields were submitted");
         }
 
@@ -157,7 +156,8 @@ try {
         <form id="childSelectBrainBuilders" method="GET" action="">
             <?php require_once('domain/Children.php') ?>
             <?php require_once('database/dbChildren.php') ?>
-            <label for="childDropdown">Select a Child:</label>
+            <label for="childDropdown">Select a Child to Register:</label>
+            <p><b>If your child is not listed, your child is not added to the family account, or is already registered.</b></p><br>
             <select id="childDropdown" name="childId">
                 <option value="" disabled>Select</option>
                 <?php foreach ($family_children as $child): ?>
@@ -172,12 +172,13 @@ try {
         <br><hr><br>
 
         <?php
-        // If child ID is passed via GET, retrieve the child details
+        // If child ID is passed via GET, retrieve the child object
         if (isset($_GET['childId'])) {
             $selectedChild = retrieve_child_by_id($_GET['childId']);
 
-            // If child is found, populate the second form with their details
+            // If child is found, creeate variables to populate the BB form with their details
             if ($selectedChild) {
+                $child_id = $_GET['childId'];
                 $child_first_name = $selectedChild->getFirstName();
                 $child_last_name = $selectedChild->getLastName();
                 $child_gender = $selectedChild->getGender();
@@ -201,22 +202,25 @@ try {
             
             <h2>Student Information</h2><hr><br>
 
+            <!--Hidden field for child ID-->
+            <input type="hidden" name="child_id" value="<?php echo $child_id; ?>">
+
             <!-- 1. Child First Name -->
             <label for="child_first_name">Child First Name *</label><br><br>
             <input type="text" style="background-color: yellow;color: black" name="child_first_name" id="child_first_name" 
-                placeholder="Child First Name" disabled required 
+                placeholder="Child's first name" disabled required 
                 value="<?php echo isset($child_first_name) ? htmlspecialchars($child_first_name) : ''; ?>"><br><br>
 
             <!-- 2. Child Last Name -->
             <label for="child_last_name">Child Last Name *</label><br><br>
             <input type="text" style="background-color: yellow;color: black" name="child_last_name" id="child_last_name" 
-                placeholder="Child Last Name" disabled required 
+                placeholder="Child's last name" disabled required 
                 value="<?php echo isset($child_last_name) ? htmlspecialchars($child_last_name) : ''; ?>"><br><br>
 
             <!-- 3. Child Email -->
             <label for="child_email">Child Email *</label><br><br>
             <input type="email" name="child_email" id="child_email" 
-                placeholder="Child Email" required 
+                placeholder="Child's email" required 
                 value="<?php echo isset($family_email1) ? htmlspecialchars($family_email1) : ''; ?>"><br><br>
 
             <!-- 4. Gender -->
@@ -230,13 +234,13 @@ try {
             <!-- 5. School Name -->
             <label for="child_school_name">School Name *</label><br><br>
             <input type="text" name="child_school_name" id="child_school_name" 
-                placeholder="School Name" required 
+                placeholder="Child's school name" required 
                 value="<?php echo isset($child_school) ? htmlspecialchars($child_school) : ''; ?>"><br><br>
 
             <!-- 6. Grade -->
             <label for="child_grade">Grade *</label><br><br>
             <input type="text" name="child_grade" id="child_grade"
-                placeholder="Grade/Grado" required 
+                placeholder="Child's Grade" required 
                 value="<?php echo isset($child_grade) ? htmlspecialchars($child_grade) : ''; ?>"><br><br>
 
             <!-- 7. Date of Birth -->
@@ -248,13 +252,13 @@ try {
             <!-- 8. Street Address -->
             <label for="child_address">Street Address *</label><br><br>
             <input type="text" id="child_address" name="child_address" 
-                placeholder="Enter child's street address" required 
+                placeholder="Child's street address" required 
                 value="<?php echo isset($child_address) ? htmlspecialchars($child_address) : ''; ?>"><br><br>
 
             <!-- 9. City -->
             <label for="child_city">City *</label><br><br>
             <input type="text" id="child_city" name="child_city" 
-                placeholder="Enter your city" required 
+                placeholder="Child's city" required 
                 value="<?php echo isset($child_city) ? htmlspecialchars($child_city) : ''; ?>"><br><br>
 
             <!-- 10. State -->
@@ -316,7 +320,7 @@ try {
             <!-- 11. Zip Code -->
             <label for="child_zip">Zip Code *</label><br><br>
             <input type="text" id="child_zip" name="child_zip" pattern="[0-9]{5}" 
-                placeholder="Enter your 5-digit zip code" required 
+                placeholder="Child's 5-digit zip code" required 
                 value="<?php echo isset($child_zip) ? htmlspecialchars($child_zip) : ''; ?>"><br><br>
 
             <!-- 12. Medical issues or allergies -->
@@ -327,7 +331,8 @@ try {
 
             <!-- 13. Foods to avoid due to religious beliefs -->
             <label for="child_food_avoidances">Foods to avoid due to religious beliefs</label><br><br>
-            <input type="text" id="child_food_avoidances" name="child_food_avoidances" placeholder="Foods to avoid due to religious beliefs">
+            <input type="text" id="child_food_avoidances" name="child_food_avoidances" 
+                placeholder="Foods to avoid due to religious beliefs">
             <br><br><br>
                 
             <h2>Parent 1 Information</h2><hr><br>
@@ -335,25 +340,25 @@ try {
             <!--Parent 1 Name-->
             <label for="parent1_name">Full Name *</label><br><br>
             <input type="text" id="parent1_name" name="parent1_name" 
-                placeholder="Parent 1 Full Name" required
+                placeholder="Parent 1 full name" required
                 value="<?php echo isset($family_name1) ? $family_name1 : ''; ?>"><br><br>
 
             <!--Cell Phone-->
             <label for="parent1_phone">Primary Phone Number *</label><br><br>
             <input type="tel" id="parent1_phone" name="parent1_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
-                placeholder="Ex. (555) 555-5555" required
+                placeholder="Ex. (000) 000-0000" required
                 value="<?php echo isset($family_phone1) ? $family_phone1 : ''; ?>"><br><br>
 
             <!--Street Address-->
             <label for="parent1_address">Street Address *</label><br><br>
             <input type="text" id="parent1_address" name="parent1_address" 
-                placeholder="Enter your street address" required
+                placeholder="Parent 1 street address" required
                 value="<?php echo isset($family_address1) ? $family_address1 : ''; ?>"><br><br>
 
             <!--City-->
             <label for="parent1_city">City *</label><br><br>
             <input type="text" id="parent1_city" name="parent1_city"
-                placeholder="Enter your city" required 
+                placeholder="Parent 1 city" required 
                 value="<?php echo isset($family_city1) ? $family_city1 : ''; ?>"><br><br>
 
             <!--State-->
@@ -415,19 +420,19 @@ try {
             <!--Zip-->
             <label for="parent1_zip">Zip Code *</label><br><br>
             <input type="text" id="parent1_zip" name="parent1_zip" pattern="[0-9]{5}" title="5-digit zip code" 
-                placeholder="Enter your 5-digit zip code" required
+                placeholder="5-digit zip code" required
                 value="<?php echo isset($family_zip1) ? $family_zip1 : ''; ?>"><br><br>
 
             <!--Email-->
             <label for="parent1_email">Email *</label><br><br>
             <input type="text" id="parent1_email" name="parent1_email" 
-                placeholder="Enter your email" required
+                placeholder="Parent 1 email" required
                 value="<?php echo isset($family_email1) ? $family_email1 : ''; ?>"><br><br>
 
             <!--Alternate Phone-->
             <label for="parent1_altPhone">Alternate Phone Number</label><br><br>
             <input type="tel" id="parent1_altPhone" name="parent1_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
-                placeholder="Ex. (555) 555-5555"
+                placeholder="Ex. (000) 000-0000"
                 value="<?php echo isset($family_altphone1) ? $family_altphone1 : ''; ?>"><br><br><br>
 
             <h2>Parent 2 Information</h2><hr><br>
@@ -435,25 +440,25 @@ try {
             <!--Parent 2 Name-->
             <label for="parent2_name">Full Name</label><br><br>
             <input type="text" id="parent2_name" name="parent2_name" 
-                placeholder="Parent 2 Full Name" 
+                placeholder="Parent 2 full name" 
                 value="<?php echo isset($family_name2) ? $family_name2 : ''; ?>"><br><br>
 
             <!--Cell Phone-->
             <label for="parent2_phone">Primary Phone Number</label><br><br>
             <input type="tel" id="parent2_phone" name="parent2_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
-                placeholder="Ex. (555) 555-5555" 
+                placeholder="Ex. (000) 000-0000" 
                 value="<?php echo isset($family_phone2) ? $family_phone2 : ''; ?>"><br><br>
 
             <!--Street Address-->
             <label for="parent2_address">Street Address</label><br><br>
             <input type="text" id="parent2_address" name="parent2_address" 
-                placeholder="Enter your street address" 
+                placeholder="Parent 2 street address" 
                 value="<?php echo isset($family_address2) ? $family_address2 : ''; ?>"><br><br>
 
             <!--City-->
             <label for="parent2_city">City</label><br><br>
             <input type="text" id="parent2_city" name="parent2_city" 
-                placeholder="Enter your city" 
+                placeholder="Parent 2 city" 
                 value="<?php echo isset($family_city2) ? $family_city2 : ''; ?>"><br><br>
 
             <!--State-->
@@ -515,7 +520,7 @@ try {
             <!--Zip-->
             <label for="parent2_zip">Zip Code</label><br><br>
             <input type="text" id="parent2_zip" name="parent2_zip" pattern="[0-9]{5}" title="5-digit zip code" 
-                placeholder="Enter your 5-digit zip code" 
+                placeholder="5-digit zip code" 
                 value="<?php echo isset($family_zip2) ? $family_zip2 : ''; ?>"><br><br>
 
             <!--Email-->
@@ -527,7 +532,7 @@ try {
             <!--Alternate Phone-->
             <label for="parent2_altPhone">Alternate Phone Number</label><br><br>
             <input type="tel" id="parent2_altPhone" name="parent2_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
-                placeholder="Ex. (555) 555-5555" 
+                placeholder="Ex. (000) 000-0000" 
                 value="<?php echo isset($family_altphone2) ? $family_altphone2 : ''; ?>"><br><br><br>
 
             <h2>Emergency Contact 1 Information</h2><hr><br>
@@ -547,7 +552,7 @@ try {
             <!--Phone-->
             <label for="emergency_phone1" required>Phone *</label><br><br>
             <input type="tel" id="emergency_phone1" name="emergency_phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
-                placeholder="Ex. (555) 555-5555" required
+                placeholder="Ex. (000) 000-0000" required
                 value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>">
             <br><br><br>
 
@@ -555,15 +560,18 @@ try {
 
             <!--Name-->
             <label for="emergency_name2">Full Name</label><br><br>
-            <input type="text" id="emergency_name2" name="emergency_name2" placeholder="Enter full name" ><br><br>
+            <input type="text" id="emergency_name2" name="emergency_name2" 
+                placeholder="Enter full name" ><br><br>
 
             <!--Relationship-->
             <label for="emergency_relationship2">Relationship to Child</label><br><br>
-            <input type="text" id="emergency_relationship2" name="emergency_relationship2" placeholder="Enter person's relationship to child"><br><br>
+            <input type="text" id="emergency_relationship2" name="emergency_relationship2" 
+                placeholder="Enter person's relationship to child"><br><br>
 
             <!--Phone-->
             <label for="emergency_phone2">Phone</label><br><br>
-            <input type="tel" id="emergency_phone2" name="emergency_phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (000) 000-0000">
+            <input type="tel" id="emergency_phone2" name="emergency_phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                placeholder="Ex. (000) 000-0000">
             <br><br><br>
 
             <h2>Pick-Up Information</h2><hr><br>
@@ -779,7 +787,7 @@ try {
             <!--Phone & Fax-->
             <label for="waiver_phone_and_fax">Provider's Phone & Fax *</label><br><br>
             <input type="text" name="waiver_phone_and_fax" id="waiver_phone_and_fax"
-                placeholder="Provider's Phone & Fax" required><br><br>
+                placeholder="Ex. (000) 000-0000" required><br><br>
 
             <!--Signature-->
             <label for="waiver_signature">Parent / Legal Guardian / Surrogate/ Eligible Student Signature *</label><br>
