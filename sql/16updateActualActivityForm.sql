@@ -1,27 +1,16 @@
 -- Drop the existing `Attendees` foreign key constraints
 ALTER TABLE `Attendees` DROP FOREIGN KEY `Attendees_ibfk_1`;
 
--- Drop the existing 'dbActualActivityForm' foreign key constraints
-ALTER TABLE `dbActualActivityForm` DROP FOREIGN KEY `dbActivityAttendees_ibfk_1`;
-ALTER TABLE `dbActualActivityForm` DROP FOREIGN KEY `dbActivityAttendees_ibfk_2`;
+-- Drop `Attendees` table if it exists
+DROP TABLE IF EXISTS `Attendees`;
 
 -- Alter the `activity` column from INT to VARCHAR(256)
 ALTER TABLE `dbActualActivityForm` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `activity` VARCHAR(256) NOT NULL,
-  `date` DATE NOT NULL,
-  `program` VARCHAR(256) NOT NULL,
-  `start_time` VARCHAR(15) NOT NULL,
-  `end_time` VARCHAR(15) NOT NULL,
-  `start_mile` INT(11) NOT NULL,
-  `end_mile` INT(11) NOT NULL,
-  `address` VARCHAR(256) NOT NULL,
-  `attend_num` INT NOT NULL,
-  `volstaff_num` INT NOT NULL,
-  `materials_used` TEXT NOT NULL,
-  `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL,
-  `act_costs` TEXT NOT NULL,
-  `act_benefits` TEXT NOT NULL
+  MODIFY COLUMN `activity` VARCHAR(256) NOT NULL,
+  MODIFY COLUMN `date` DATE NOT NULL,
+  MODIFY COLUMN `start_mile` INT NOT NULL,
+  MODIFY COLUMN `end_mile` INT NOT NULL,
+  CHANGE COLUMN `mealinfo` `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
