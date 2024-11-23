@@ -1,11 +1,12 @@
--- Drop the existing `Attendees` table if it exists
-DROP TABLE IF EXISTS `dbActualActivityForm`;
+-- Drop the existing `Attendees` foreign key constraints
+ALTER TABLE `Attendees` DROP FOREIGN KEY `Attendees_ibfk_1`;
 
--- Drop the existing `Attendees` table if it exists
-DROP TABLE IF EXISTS `Attendees`;
+-- Drop the existing 'dbActualActivityForm' foreign key constraints
+ALTER TABLE `dbActualActivityForm` DROP FOREIGN KEY `dbActivityAttendees_ibfk_1`;
+ALTER TABLE `dbActualActivityForm` DROP FOREIGN KEY `dbActivityAttendees_ibfk_2`;
 
 -- Alter the `activity` column from INT to VARCHAR(256)
-CREATE TABLE `dbActualActivityForm` (
+ALTER TABLE `dbActualActivityForm` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `activity` VARCHAR(256) NOT NULL,
   `date` DATE NOT NULL,
