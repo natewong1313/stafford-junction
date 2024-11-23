@@ -3,7 +3,7 @@
 function createProgramInterestForm($form) {
     $connection = connect();
 
-    $family_id = $_SESSION['_id'];
+    $family_id = $_GET['id'] ?? $_SESSION['_id'];
     $first_name = $form["first_name"];
     $last_name = $form["last_name"];
     $address = $form["address"];
@@ -121,7 +121,7 @@ function insertAvailability($days, $form_id, $connection) {
         $specific_time = $val["specific_time"];
         // If there was no input for specific time, set as N/A
         if (strlen($specific_time) <= 0) {
-            $specific_time = "N/A";
+            $specific_time = "";
         }
         // Add values to query
         $query .= "('$form_id', '$day_name', '$morning', '$afternoon', '$evening', '$specific_time')";
@@ -137,5 +137,124 @@ function insertAvailability($days, $form_id, $connection) {
     }
     $id = mysqli_insert_id($connection);
     return $id;
+}
+
+// Function that gets the program interest form data from a family
+function getProgramInterestFormData($family_id){
+    $conn = connect();
+    $query = "SELECT dbProgramInterestForm.* FROM dbFamily INNER JOIN dbProgramInterestForm ON dbFamily.id = dbProgramInterestForm.family_id WHERE dbFamily.id = $family_id";
+    $res = mysqli_query($conn, $query);
+    mysqli_close($conn);
+    if(mysqli_num_rows($res) <= 0 || $res == null){
+        return null;
+    } else {
+        $row = mysqli_fetch_assoc($res);
+        return $row;
+    }
+}
+
+// Function that gets the program interest data from a family
+function getProgramInterestData($family_id) {
+    $conn = connect();
+    $query = "SELECT dbProgramInterests.interest FROM dbProgramInterests INNER JOIN dbProgramInterestsForm_ProgramInterests ON 
+        dbProgramInterests.id = dbProgramInterestsForm_ProgramInterests.interest_id INNER JOIN dbProgramInterestForm ON 
+        dbProgramInterestsForm_ProgramInterests.form_id = dbProgramInterestForm.id WHERE dbProgramInterestForm.family_id = $family_id";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        return null;
+    }
+    $programs = [];
+    foreach ($result as $row) {
+        $programs[] = $row['interest'];
+    }
+    mysqli_close($conn);
+    return $programs;
+}
+
+// Function that gets the topic interest data from a family
+function getTopicInterestData($family_id) {
+    $conn = connect();
+    $query = "SELECT dbTopicInterests.interest FROM dbTopicInterests INNER JOIN dbProgramInterestsForm_TopicInterests ON 
+        dbTopicInterests.id = dbProgramInterestsForm_TopicInterests.interest_id INNER JOIN dbProgramInterestForm ON 
+        dbProgramInterestsForm_TopicInterests.form_id = dbProgramInterestForm.id WHERE dbProgramInterestForm.family_id = $family_id";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        return null;
+    }
+    $topics = [];
+    foreach ($result as $row) {
+        $topics[] = $row['interest'];
+    }
+    mysqli_close($conn);
+    return $topics;
+}
+
+// Get any topics that a family entered in the other topics section as an array
+function getOtherTopicInterestData($topics) {
+    $other_topics = [];
+    $ignore_topics = ["Legal Services", "Finance", "Tenant Rights", "Health/Wellness/Nutrition", "Continuing Education", "Parenting", "Mental Health",
+            "Job/Career Guidance", "Citizenship Classes"];
+    $size = sizeof($topics);
+    for ($i = 0; $i < $size; $i++) {
+        if (!in_array($topics[$i], $ignore_topics)) {
+            $other_topics[] = $topics[$i];
+        }
+    }
+    return $other_topics;
+}
+
+// Function that gets availability data from a familt
+function getAvailabilityData($family_id) {
+    $conn = connect();
+    $query = "SELECT dbAvailability.* FROM dbAvailability INNER JOIN dbProgramInterestForm ON 
+        dbAvailability.form_id = dbProgramInterestForm.id WHERE dbProgramInterestForm.family_id = $family_id";
+    $result = mysqli_query($conn, $query);
+    if (!$result ||  mysqli_num_rows($result) <= 0) {
+        return null;
+    }
+    $availabilities = [];
+    foreach ($result as $row) {
+        $availabilities[$row['day']] = array(
+            "morning" => $row["morning"],
+            "afternoon" => $row["afternoon"],
+            "evening" => $row["evening"],
+            "specific_time" => $row["specific_time"],
+        );
+    }
+    mysqli_close($conn);
+    return $availabilities;
+}
+
+// Autofills text fields in the form, disables them if form was already filled and is being viewed
+function showProgramInterestData($data, $value) {
+    // If family hasn't filled form, set field to the value
+    if (!isset($data)) {
+        echo "value=\"$value\"";
+    } else {
+        // Else, set it to the data the user entered when filling the form and disable
+        echo "disabled style='background-color: yellow; color: black;' value=\"$data\"";
+    }
+}
+
+// Checks any checkboxes that the family pressed when filling form
+function showProgramInterestCheckbox($data, $value) {
+    if ($data != null) {
+        // If value in topic array is same as the checkbox value, set it to checked
+        if (in_array($value, $data)) {
+            echo "style='pointer-events: none;' checked";
+        } else {
+            echo "style='pointer-events: none;'";
+        }
+    }
+}
+
+// Checks any checkboxes in the availability section that the family pressed when filling form
+function showAvailabilityCheckbox($data) {
+    // If available, set it to checked
+    if ($data == 1) {
+        echo "style='pointer-events: none;' checked";
+    } else if ($data != null) {
+        echo "disabled";
+    }
 }
 ?>
