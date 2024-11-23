@@ -66,7 +66,8 @@ error_reporting(E_ALL);
                     <span>Field Trip Waiver Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="programInterestForm.php">
+                <!-- Program Interest Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "programInterestForm.php?id=" . $_GET['id'] : "programInterestForm.php"; ?>">
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> 
                 </div>
