@@ -14,20 +14,9 @@ function get_data_by_family_id($id){
 
 }
 
-function get_data_by_child_id($id){
-    $connection = connect();
-    $query = "SELECT * FROM dbHolidayMealBagForm WHERE child_id = '" . $id . "';";
-    $result = mysqli_query($connection, $query);
-
-    if (mysqli_num_rows($result) < 0 || $result == null){
-        return null;
-    } else {
-        $row = mysqli_fetch_assoc($result);
-        return $row; //return the data as an associative array;
-    }
-
-}
-
+/*
+ * Function that adds args from the html form into the database
+ */
 function createBrainBuildersRegistrationForm($form) {
     $connection = connect();
 
