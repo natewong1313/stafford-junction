@@ -12,7 +12,6 @@ function createBrainBuildersRegistrationForm($form) {
     $child_id = $form['child_id'];
     $child_first_name = $form["child_first_name"];
     $child_last_name = $form["child_last_name"];
-    $child_email = $form["child_email"];
     $child_gender = $form["child_gender"];
     $child_school_name = $form["child_school_name"];
     $child_grade = $form["child_grade"];
@@ -78,7 +77,7 @@ function createBrainBuildersRegistrationForm($form) {
     try {
         $query = "
             INSERT INTO dbBrainBuildersRegistrationForm (
-                child_id, child_first_name, child_last_name, child_email, child_gender, child_school_name, 
+                child_id, child_first_name, child_last_name, child_gender, child_school_name, 
                 child_grade, child_dob, child_address, child_city, child_state, child_zip, child_medical_allergies, child_food_avoidances, 
                 parent1_name, parent1_phone, parent1_address, parent1_city, parent1_state, parent1_zip, parent1_email, parent1_altPhone, 
                 parent2_name, parent2_phone, parent2_address, parent2_city, parent2_state, parent2_zip, parent2_email, parent2_altPhone, 
@@ -90,7 +89,7 @@ function createBrainBuildersRegistrationForm($form) {
                 waiver_provider_address, waiver_phone_and_fax, waiver_signature, waiver_date
             ) 
             VALUES (
-                '$child_id', '$child_first_name', '$child_last_name', '$child_email', '$child_gender', '$child_school_name', 
+                '$child_id', '$child_first_name', '$child_last_name', '$child_gender', '$child_school_name', 
                 '$child_grade', '$child_dob', '$child_address', '$child_city', '$child_state', '$child_zip', '$child_medical_allergies', '$child_food_avoidances', 
                 '$parent1_name', '$parent1_phone', '$parent1_address', '$parent1_city', '$parent1_state', '$parent1_zip', '$parent1_email', '$parent1_altPhone', 
                 '$parent2_name', '$parent2_phone', '$parent2_address', '$parent2_city', '$parent2_state', '$parent2_zip', '$parent2_email', '$parent2_altPhone', 
@@ -144,45 +143,6 @@ function isBrainBuildersRegistrationFormComplete($childID) {
         } else {
             $stmt->close();
             mysqli_close($connection);
-            return false;
-        }
-    } else {
-        // If the query preparation fails, handle the error
-        echo "Error preparing the query: " . $connection->error;
-        mysqli_close($connection); // Close the connection
-        return false;
-    }
-}
-
-
-function isBBComplete($childID) {
-    // Establish a connection to the database
-    $connection = connect();  // Assuming 'connect()' is a function that connects to the database
-
-    // Prepare the SQL query to avoid SQL injection
-    $query = "SELECT * FROM dbBrainBuildersRegistrationForm 
-              INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id 
-              WHERE dbChildren.id = '" . $childID . "';"; // Use ? as a placeholder for childID
-
-    // Prepare the statement
-    if ($stmt = $connection->prepare($query)) {
-        // Bind the integer $childID as a parameter
-        $stmt->bind_param('i', $childID); // 'i' is for integer type
-
-        // Execute the statement
-        $stmt->execute();
-
-        // Get the result
-        $result = $stmt->get_result();
-
-        // If the query returns any rows, that means the form is complete
-        if ($result->num_rows > 0) {
-            $stmt->close(); // Close the statement
-            mysqli_close($connection); // Close the connection
-            return true;
-        } else {
-            $stmt->close(); // Close the statement
-            mysqli_close($connection); // Close the connection
             return false;
         }
     } else {

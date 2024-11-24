@@ -3,7 +3,6 @@
 --
 ALTER TABLE `dbBrainBuildersRegistrationForm`
   ADD COLUMN `child_id` INT NOT NULL,
-  ADD COLUMN `child_email` VARCHAR(100) NOT NULL,
   CHANGE COLUMN `gender` `child_gender` VARCHAR(6) NOT NULL,
   CHANGE COLUMN `school_name` `child_school_name` VARCHAR(100) NOT NULL,
   CHANGE COLUMN `grade` `child_grade` VARCHAR(20) NOT NULL,
