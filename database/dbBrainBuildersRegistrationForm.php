@@ -1,19 +1,5 @@
 <?php
 
-function get_data_by_family_id($id){
-    $connection = connect();
-    $query = "SELECT * FROM dbHolidayMealBagForm WHERE family_id = '" . $id . "';";
-    $result = mysqli_query($connection, $query);
-
-    if(mysqli_num_rows($result) < 0 || $result == null){
-        return null;
-    }else {
-        $row = mysqli_fetch_assoc($result);
-        return $row; //return the data as an associative array;
-    }
-
-}
-
 /*
  * Function that adds args from the html form into the database
  */
@@ -140,7 +126,7 @@ function createBrainBuildersRegistrationForm($form) {
 function isBrainBuildersRegistrationFormComplete($childID) {
     $connection = connect();
 
-    $query = "SELECT * FROM dbBrainBuildersRegistrationForm INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id WHERE dbChildren.id = $childID";
+    $query = "SELECT * FROM dbBrainBuildersRegistrationForm INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id WHERE dbChildren.id = '" . $childID . "';";
     $result = mysqli_query($connection, $query);
     if (!$result->num_rows > 0) {
         mysqli_close($connection);
@@ -148,6 +134,44 @@ function isBrainBuildersRegistrationFormComplete($childID) {
     } else {
         mysqli_close($connection);
         return true;
+    }
+}
+
+function isBBComplete($childID) {
+    // Establish a connection to the database
+    $connection = connect();  // Assuming 'connect()' is a function that connects to the database
+
+    // Prepare the SQL query to avoid SQL injection
+    $query = "SELECT * FROM dbBrainBuildersRegistrationForm 
+              INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id 
+              WHERE dbChildren.id = ?"; // Use ? as a placeholder for childID
+
+    // Prepare the statement
+    if ($stmt = $connection->prepare($query)) {
+        // Bind the integer $childID as a parameter
+        $stmt->bind_param('i', $childID); // 'i' is for integer type
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // If the query returns any rows, that means the form is complete
+        if ($result->num_rows > 0) {
+            $stmt->close(); // Close the statement
+            mysqli_close($connection); // Close the connection
+            return true;
+        } else {
+            $stmt->close(); // Close the statement
+            mysqli_close($connection); // Close the connection
+            return false;
+        }
+    } else {
+        // If the query preparation fails, handle the error
+        echo "Error preparing the query: " . $connection->error;
+        mysqli_close($connection); // Close the connection
+        return false;
     }
 }
     

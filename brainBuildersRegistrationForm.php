@@ -24,7 +24,6 @@ require_once('database/dbFamily.php');
 //get family and children information
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id'] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_children = getChildren($family->getId());
-echo var_dump($family_children);
 
 $family_name1 = $family->getFirstName() . " " . $family->getLastName();
 $family_phone1 = $family->getPhone();
@@ -118,7 +117,7 @@ try {
         <div id="formatted_form">
 
         <!-- Form to obtain child autofill information -->
-        <form id="childSelectBrainBuilders" method="GET" action="brainBuildersRegistrationForm.php">
+        <form id="childSelectBrainBuilders" method="GET" action="">
             <?php require_once('domain/Children.php') ?>
             <?php require_once('database/dbChildren.php') ?>
 
@@ -131,7 +130,7 @@ try {
             <select id="childDropdown" name="childId">
                 <option value="" disabled>Select</option>
                 <?php foreach ($family_children as $child): ?>
-                    <?php if (!isBrainBuildersRegistrationFormComplete($child->getID())): // Only show children whose form is incomplete ?>
+                    <?php if (!isBBComplete($child->getID())): ?>
                         <option value="<?php echo $child->getID(); ?>"
                             <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($child->getFirstName()) . " " . htmlspecialchars($child->getLastName()); ?>
