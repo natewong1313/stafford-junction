@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `dbAngelGiftForm`;
+
 --
 -- Table structure for table `dbAngelGiftForm`
 --
@@ -7,7 +9,7 @@ CREATE TABLE `dbAngelGiftForm` (
   `child_id` int(11) NOT NULL,
   `email` varchar(256) NOT NULL,
   `parent_name` varchar(256) NOT NULL,
-  `phone` int(12) NOT NULL,
+  `phone` varchar(15) NOT NULL,
   `child_name` varchar(256) NOT NULL,
   `gender` varchar(6) NOT NULL,
   `age` int(5) NOT NULL,
