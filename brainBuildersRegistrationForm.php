@@ -24,6 +24,7 @@ require_once('database/dbFamily.php');
 //get family and children information
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id'] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_children = getChildren($family->getId());
+echo var_dump($family_children);
 
 $family_name1 = $family->getFirstName() . " " . $family->getLastName();
 $family_phone1 = $family->getPhone();
@@ -62,25 +63,6 @@ try {
         require_once('database/dbBrainBuildersRegistrationForm.php');
         
         $args = sanitize($_POST, null);
-
-        $parent1_email = validateEmail($_POST['parent1_email']);
-        if (!$parent1_email) {
-            $errors[] = "Invalid email format: Parent 1 Email.";
-        }
-
-        $parent2_email = validateEmail($_POST['parent2_email']);
-        if (!$parent2_email) {
-            $errors[] = "Invalid email format: Parent 2 Email.";
-        }
-
-        $emergency_phone1 = validateAndFilterPhoneNumber($_POST['emergency_phone1']);
-        if (!$emergency_phone1) {
-            $errors[] = "Invalid phone number format: Emergency Contact 1 Phone Number";
-        }
-        
-        if (isset($_POST['emergency_phone2']) && !(validateAndFilterPhoneNumber($_POST['emergency_phone2']))) {
-            $errors[] = "Invalid phone number format: Emergency Contact 2 Alternate Phone Number.";
-        }
 
         $required = array(
             "child_id", "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", "child_grade", 
@@ -132,38 +114,40 @@ try {
                 echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
             }
         ?>
-        <?php if (!empty($errors)): ?>
-            <div style="color: red; font-weight: bold;">
-                <?php 
-                // Loop through all error messages
-                foreach ($errors as $error) {
-                    echo $error . "<br>"; // Display each error message, separated by a line break
-                }
-                ?>
-            </div>
-        <?php endif; ?>
         
-
         <div id="formatted_form">
 
         <!-- Form to obtain child autofill information -->
-        <form id="childSelectBrainBuilders" method="GET" action="">
+        <form id="childSelectBrainBuilders" method="GET" action="brainBuildersRegistrationForm.php">
             <?php require_once('domain/Children.php') ?>
             <?php require_once('database/dbChildren.php') ?>
+
             <label for="childDropdown">Select a Child to Register:</label><br>
             <p><b>If your child is not listed, your child is not added to the family account, or is already registered.</b></p><br>
+
+            <!-- Pass the 'id' in the URL and retain it during the form submission -->
+            <input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>">
+
             <select id="childDropdown" name="childId">
                 <option value="" disabled>Select</option>
                 <?php foreach ($family_children as $child): ?>
-                    <option value="<?php echo $child->getID(); ?>"
-                        <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
-                        <?php echo $child->getFirstName() . " " . $child->getLastName(); ?>
-                    </option>
+                    <?php if (!isBrainBuildersRegistrationFormComplete($child->getID())): // Only show children whose form is incomplete ?>
+                        <option value="<?php echo $child->getID(); ?>"
+                            <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($child->getFirstName()) . " " . htmlspecialchars($child->getLastName()); ?>
+                        </option>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </select>
+
             <input type="submit" value="Submit">
         </form>
+
+        </div>
+
         <br><hr><br>
+
+        <div id="formatted_form">
 
         <?php
         // If child ID is passed via GET, retrieve the child object
