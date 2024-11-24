@@ -21,7 +21,7 @@ $userID = $_SESSION['_id'];
 require_once('domain/Family.php');
 require_once('database/dbFamily.php');
 
-//get required family and children information
+//get family and children information
 $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id'] will have the family id needed to fill form if the staff are trying to fill a form out for that family
 $family_children = getChildren($family->getId());
 
@@ -102,13 +102,13 @@ try {
         }
 
         $required = array(
-            "child_id", "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", 
-            "child_grade", "child_dob", "child_address", "child_city", "child_state", "child_zip", 
+            "child_id", "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", "child_grade", 
+            "child_dob", "child_address", "child_city", "child_state", "child_zip", "child_medical_allergies", "child_food_avoidances"
             "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email",  
             "emergency_name1", "emergency_relationship1", "emergency_phone1",
-            "authorized_pu", "not_authorized_pu", "primary_language", "hispanic_latino_spanish", "race", 
+            "authorized_pu", "primary_language", "hispanic_latino_spanish", "race", 
             "num_unemployed", "num_retired", "num_unemployed_student", "num_employed_fulltime", "num_employed_parttime", "num_employed_student", 
-            "income", "other_programs", "lunch", "transportation", "participation", 
+            "income", "lunch", "transportation", "participation", 
             "parent_initials", "signature", "signature_date", "waiver_child_name", "waiver_dob", "waiver_parent_name", 
             "waiver_provider_name", "waiver_provider_address", "waiver_phone_and_fax", "waiver_signature", "waiver_date"
         );
@@ -120,11 +120,11 @@ try {
         $bbID = createbrainBuildersRegistrationForm($args);
     
         if (empty($bbID)) {
-            throw new Exception("Error: " . $e->getMessage());
+            throw new Exception("Error: Brain Builder's Registration Form not created");
         }
     }
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+    echo $e->getMessage();
     mysqli_rollback($connection);
     mysqli_close($connection);
     return null;
@@ -208,19 +208,19 @@ try {
             <!-- 1. Child First Name -->
             <label for="child_first_name">Child First Name *</label><br><br>
             <input type="text" style="background-color: yellow;color: black" name="child_first_name" id="child_first_name" 
-                placeholder="Child's first name" disabled required 
+                disabled required placeholder="Child's first name" 
                 value="<?php echo isset($child_first_name) ? htmlspecialchars($child_first_name) : ''; ?>"><br><br>
 
             <!-- 2. Child Last Name -->
             <label for="child_last_name">Child Last Name *</label><br><br>
             <input type="text" style="background-color: yellow;color: black" name="child_last_name" id="child_last_name" 
-                placeholder="Child's last name" disabled required 
+                disabled required placeholder="Child's last name"
                 value="<?php echo isset($child_last_name) ? htmlspecialchars($child_last_name) : ''; ?>"><br><br>
 
             <!-- 3. Child Email -->
             <label for="child_email">Child Email *</label><br><br>
             <input type="email" name="child_email" id="child_email" 
-                placeholder="Child's email" required 
+                required placeholder="Child's email" 
                 value="<?php echo isset($family_email1) ? htmlspecialchars($family_email1) : ''; ?>"><br><br>
 
             <!-- 4. Gender -->
@@ -234,31 +234,31 @@ try {
             <!-- 5. School Name -->
             <label for="child_school_name">School Name *</label><br><br>
             <input type="text" name="child_school_name" id="child_school_name" 
-                placeholder="Child's school name" required 
+                required placeholder="Child's school name" 
                 value="<?php echo isset($child_school) ? htmlspecialchars($child_school) : ''; ?>"><br><br>
 
             <!-- 6. Grade -->
             <label for="child_grade">Grade *</label><br><br>
             <input type="text" name="child_grade" id="child_grade"
-                placeholder="Child's Grade" required 
+                required placeholder="Child's Grade" 
                 value="<?php echo isset($child_grade) ? htmlspecialchars($child_grade) : ''; ?>"><br><br>
 
             <!-- 7. Date of Birth -->
             <label for="child_dob">Date of Birth *</label><br><br>
             <input type="date" id="child_dob" name="child_dob" max="<?php echo date('Y-m-d'); ?>" 
-                required 
+                required placeholder="Date"
                 value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
             <!-- 8. Street Address -->
             <label for="child_address">Street Address *</label><br><br>
             <input type="text" id="child_address" name="child_address" 
-                placeholder="Child's street address" required 
+                required placeholder="Child's street address" 
                 value="<?php echo isset($child_address) ? htmlspecialchars($child_address) : ''; ?>"><br><br>
 
             <!-- 9. City -->
             <label for="child_city">City *</label><br><br>
             <input type="text" id="child_city" name="child_city" 
-                placeholder="Child's city" required 
+                required placeholder="Child's city" 
                 value="<?php echo isset($child_city) ? htmlspecialchars($child_city) : ''; ?>"><br><br>
 
             <!-- 10. State -->
@@ -320,19 +320,19 @@ try {
             <!-- 11. Zip Code -->
             <label for="child_zip">Zip Code *</label><br><br>
             <input type="text" id="child_zip" name="child_zip" pattern="[0-9]{5}" 
-                placeholder="Child's 5-digit zip code" required 
+                required placeholder="Child's 5-digit zip code" 
                 value="<?php echo isset($child_zip) ? htmlspecialchars($child_zip) : ''; ?>"><br><br>
 
             <!-- 12. Medical issues or allergies -->
-            <label for="child_medical_allergies">Medical issues or allergies</label><br><br>
+            <label for="child_medical_allergies">Medical issues or allergies * (Type N/A if neccessary)</label><br><br>
             <input type="text" id="child_medical_allergies" name="child_medical_allergies" 
-                placeholder="Medical issues or allergies" 
+                required placeholder="Medical issues or allergies" 
                 value="<?php echo isset($child_medical) ? htmlspecialchars($child_medical) : ''; ?>"><br><br>
 
             <!-- 13. Foods to avoid due to religious beliefs -->
-            <label for="child_food_avoidances">Foods to avoid due to religious beliefs</label><br><br>
+            <label for="child_food_avoidances">Foods to avoid due to religious beliefs * (Type N/A if neccessary)</label><br><br>
             <input type="text" id="child_food_avoidances" name="child_food_avoidances" 
-                placeholder="Foods to avoid due to religious beliefs">
+                required placeholder="Foods to avoid due to religious beliefs">
             <br><br><br>
                 
             <h2>Parent 1 Information</h2><hr><br>
@@ -340,25 +340,25 @@ try {
             <!--Parent 1 Name-->
             <label for="parent1_name">Full Name *</label><br><br>
             <input type="text" id="parent1_name" name="parent1_name" 
-                placeholder="Parent 1 full name" required
+                required placeholder="Parent 1 full name"
                 value="<?php echo isset($family_name1) ? $family_name1 : ''; ?>"><br><br>
 
             <!--Cell Phone-->
             <label for="parent1_phone">Primary Phone Number *</label><br><br>
             <input type="tel" id="parent1_phone" name="parent1_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
-                placeholder="Ex. (000) 000-0000" required
+                required placeholder="Ex. (000) 000-0000"
                 value="<?php echo isset($family_phone1) ? $family_phone1 : ''; ?>"><br><br>
 
             <!--Street Address-->
             <label for="parent1_address">Street Address *</label><br><br>
             <input type="text" id="parent1_address" name="parent1_address" 
-                placeholder="Parent 1 street address" required
+                required placeholder="Parent 1 street address"
                 value="<?php echo isset($family_address1) ? $family_address1 : ''; ?>"><br><br>
 
             <!--City-->
             <label for="parent1_city">City *</label><br><br>
             <input type="text" id="parent1_city" name="parent1_city"
-                placeholder="Parent 1 city" required 
+                required placeholder="Parent 1 city" 
                 value="<?php echo isset($family_city1) ? $family_city1 : ''; ?>"><br><br>
 
             <!--State-->
@@ -420,13 +420,13 @@ try {
             <!--Zip-->
             <label for="parent1_zip">Zip Code *</label><br><br>
             <input type="text" id="parent1_zip" name="parent1_zip" pattern="[0-9]{5}" title="5-digit zip code" 
-                placeholder="5-digit zip code" required
+                required placeholder="5-digit zip code"
                 value="<?php echo isset($family_zip1) ? $family_zip1 : ''; ?>"><br><br>
 
             <!--Email-->
             <label for="parent1_email">Email *</label><br><br>
             <input type="text" id="parent1_email" name="parent1_email" 
-                placeholder="Parent 1 email" required
+                required placeholder="Parent 1 email"
                 value="<?php echo isset($family_email1) ? $family_email1 : ''; ?>"><br><br>
 
             <!--Alternate Phone-->
@@ -538,21 +538,21 @@ try {
             <h2>Emergency Contact 1 Information</h2><hr><br>
 
             <!--Name-->
-            <label for="emergency_name1" required>Full Name *</label><br><br>
+            <label for="emergency_name1">Full Name *</label><br><br>
             <input type="text" id="emergency_name1" name="emergency_name1" 
-                placeholder="Enter full name" required
+                required placeholder="Enter full name"
                 value="<?php echo isset($family_emergency_name1) ? $family_emergency_name1 : ''; ?>"><br><br>
 
             <!--Relationship-->
-            <label for="emergency_relationship1" required>Relationship to Child *</label><br><br>
+            <label for="emergency_relationship1">Relationship to Child *</label><br><br>
             <input type="text" id="emergency_relationship1" name="emergency_relationship1"
-                placeholder="Enter person's relationship to child" required
+                required placeholder="Enter person's relationship to child"
                 value="<?php echo isset($family_emergency_relation1) ? $family_emergency_relation1 : ''; ?>"><br><br>
 
             <!--Phone-->
-            <label for="emergency_phone1" required>Phone *</label><br><br>
+            <label for="emergency_phone1">Phone *</label><br><br>
             <input type="tel" id="emergency_phone1" name="emergency_phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
-                placeholder="Ex. (000) 000-0000" required
+                required placeholder="Ex. (000) 000-0000"
                 value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>">
             <br><br><br>
 
@@ -577,20 +577,23 @@ try {
             <h2>Pick-Up Information</h2><hr><br>
 
             <!--Persons Authorized for Pick-Up-->
-            <label for="authorized_pu" required>Persons authorized to pick up child *</label><br><br>
-            <input type="text" id="authorized_pu" name="authorized_pu" required placeholder="Enter persons names"><br><br>
+            <label for="authorized_pu">Persons authorized to pick up child *</label><br><br>
+            <input type="text" id="authorized_pu" name="authorized_pu" 
+                required placeholder="Enter persons names"><br><br>
             
             <!--Persons NOT Authorized for Pick-Up-->
-            <label for="not_authorized_pu" required>Persons <b><u>NOT</u></b> authorized to pick up child</label><br><br>
-            <input type="text" id="not_authorized_pu" name="not_authorized_pu" placeholder="Enter persons names">
+            <label for="not_authorized_pu">Persons <b><u>NOT</u></b> authorized to pick up child</label><br><br>
+            <input type="text" id="not_authorized_pu" name="not_authorized_pu" 
+                placeholder="Enter persons names">
             <br><br><br>
 
             <h2>Other Required Information</h2><hr><br>
             <p>This information is for Stafford Junction funding purposes only.</p><br>
 
             <!--Parent's Primary Language-->
-            <label for="primary_language" required>Parent 1 Primary Language *</label><br><br>
-            <input type="text" id="primary_language" name="primary_language" required placeholder="English, Spanish, Farsi, etc."><br><br>
+            <label for="primary_language">Parent 1 Primary Language *</label><br><br>
+            <input type="text" id="primary_language" name="primary_language" 
+                required placeholder="English, Spanish, Farsi, etc."><br><br>
 
             <!--Hispanic, Latino, or Spanish Origin-->
             <label for="hispanic_latino_spanish">Parent 1 Hispanic, Latino, or Spanish Origin *</label><br><br>
@@ -601,7 +604,7 @@ try {
             </select><br><br>
 
             <!--Race-->
-            <label for="race" required>Race *</label><br><br>
+            <label for="race">Race *</label><br><br>
             <select id="race" name="race" required>
                 <option value="" disabled <?php echo isset($family_race1) && $family_race1 == '' ? 'selected' : ''; ?>>Select Race</option>
                 <option value="Caucasian" <?php echo isset($family_race1) && $family_race1 == 'Caucasian' ? 'selected' : ''; ?>>Caucasian</option>
@@ -614,28 +617,34 @@ try {
             </select><br><br>
 
             <!--Num Unemployed in Household-->
-            <label for="num_unemployed" required>Number of Unemployed in Household *</label><br><br>
-            <input type="number" id="num_unemployed" name="num_unemployed" required placeholder="Enter number of unemployed"><br><br>
+            <label for="num_unemployed">Number of Unemployed in Household *</label><br><br>
+            <input type="number" id="num_unemployed" name="num_unemployed" 
+                required placeholder="Enter number of unemployed"><br><br>
 
             <!--Num Retired in Household-->
-            <label for="num_retired" required>Number of Retired in Household *</label><br><br>
-            <input type="number" id="num_retired" name="num_retired" required placeholder="Enter number of retired"><br><br>
+            <label for="num_retired">Number of Retired in Household *</label><br><br>
+            <input type="number" id="num_retired" name="num_retired" 
+                required placeholder="Enter number of retired"><br><br>
 
             <!--Num Unemployed Student in Household-->
-            <label for="num_unemployed_student" required>Number of Unemployed Students in Household *</label><br><br>
-            <input type="number" id="num_unemployed_student" name="num_unemployed_student" required placeholder="Enter number of unemployed students"><br><br>
+            <label for="num_unemployed_student">Number of Unemployed Students in Household *</label><br><br>
+            <input type="number" id="num_unemployed_student" name="num_unemployed_student" 
+                required placeholder="Enter number of unemployed students"><br><br>
 
             <!--Num Employed Full-Time in Household-->
-            <label for="num_employed_fulltime" required>Number of Full-Time Employed in Household *</label><br><br>
-            <input type="number" id="num_employed_fulltime" name="num_employed_fulltime" required placeholder="Enter number of full-time employed"><br><br>
+            <label for="num_employed_fulltime">Number of Full-Time Employed in Household *</label><br><br>
+            <input type="number" id="num_employed_fulltime" name="num_employed_fulltime" 
+                required placeholder="Enter number of full-time employed"><br><br>
 
             <!--Num Employed Part-Time in Household-->
-            <label for="num_employed_parttime" required>Number of Part-Time Employed in Household *</label><br><br>
-            <input type="number" id="num_employed_parttime" name="num_employed_parttime" required placeholder="Enter number of part-time employed"><br><br>
+            <label for="num_employed_parttime">Number of Part-Time Employed in Household *</label><br><br>
+            <input type="number" id="num_employed_parttime" name="num_employed_parttime" 
+                required placeholder="Enter number of part-time employed"><br><br>
 
             <!--Num Employed Student in Household-->
-            <label for="num_employed_student" required>Number of Employed Students in Household *</label><br><br>
-            <input type="number" id="num_employed_student" name="num_employed_student" required placeholder="Enter number of employed students"><br><br>
+            <label for="num_employed_student">Number of Employed Students in Household *</label><br><br>
+            <input type="number" id="num_employed_student" name="num_employed_student" 
+                required placeholder="Enter number of employed students"><br><br>
 
             <!--Estimated Household Income-->
             <label for="income">Estimated Household Income *</label><br><br>
@@ -649,8 +658,9 @@ try {
             </select><br><br>
 
             <!--Other Programs-->
-            <label for="other_programs" required>Other Programs *</label><br><br>
-            <input type="text" id="other_programs" name="other_programs" required placeholder="(WIC, SNAP, SSI, SSD, etc.)"><br><br>
+            <label for="other_programs">Other Programs</label><br><br>
+            <input type="text" id="other_programs" name="other_programs" 
+                placeholder="(WIC, SNAP, SSI, SSD, etc.)"><br><br>
 
             <!--Free/Reduced Lunch-->
             <label for="lunch">Does the enrolling child receive free or reduced lunch? *</label><br><br>
@@ -666,12 +676,12 @@ try {
             <h2>Transportation</h2><hr><br>
             
             <!--Transportation-->
-            <label for="transportation">Stafford Junction provides transportation home after the Brain Builders program. Please check one of the following:</p><br>
+            <label for="transportation">Stafford Junction provides transportation home after the Brain Builders program. Please check one of the following: *</p><br>
             
-            <input type="radio" id="choice_1" name="transportation" value="needs_transportation">
+            <input type="radio" id="choice_1" name="transportation" value="needs_transportation" required>
             <label for="choice_1">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label><br><br>
 
-            <input type="radio" id="choice_2" name="transportation" value="transports_themselves">
+            <input type="radio" id="choice_2" name="transportation" value="transports_themselves" required>
             <label for="choice_2">I will make alternate arrangements for my child to be transported home.</label>
             <br><br><br>
 
@@ -703,7 +713,7 @@ try {
             like the YMCA, fishing spots, and community events. Limited space is available. Please indicate interest by checking the
             appropriate box and initialing below. We'll inform you of the activity details and provide early sign-up opportunities.</p><br>
 
-            <label for="participation">I would like my child to participate:</label><br><br>
+            <label for="participation">I would like my child to participate: *</label><br><br>
             <select id="participation" name="participation" required>
                 <option value="" disabled selected>Select Yes or No</option>
                 <option value="yes">Yes</option>
@@ -713,7 +723,8 @@ try {
 
             <!--Parent Initials-->
             <label for="parent_initials">Parent Initials *</label><br><br>
-            <input type="text" name="parent_initials" id="parent_initials" required placeholder="Parent Initials" required>
+            <input type="text" name="parent_initials" id="parent_initials" 
+                required placeholder="Parent Initials">
             <br><br><br>
 
             <h2>Acknowledgment and Consent</h2><hr><br>
@@ -724,12 +735,13 @@ try {
 
             <!--Parent/Guardian Electronic Signature-->
             <label for="signature">Parent/Guardian Signature *</label><br><br>
-            <input type="text" name="signature" id="signature" required placeholder="Parent/Guardian Signature" required><br><br>
+            <input type="text" name="signature" id="signature" 
+                required placeholder="Parent/Guardian Signature"><br><br>
 
             <!--Date-->
             <label for="signature_date">Date *</label><br><br>
             <input type="date" id="signature_date" name="signature_date"  
-                placeholder="Date" max="<?php echo date('Y-m-d'); ?>" required
+                required placeholder="Date" max="<?php echo date('Y-m-d'); ?>" 
                 value="<?php echo date('Y-m-d'); ?>">
             <br><br><br>
 
@@ -760,45 +772,45 @@ try {
             <!--Child's Full Name-->
             <label for="waiver_child_name">Child's Full Name *</label><br><br>
             <input type="text" style="background-color: yellow;color: black" name="waiver_child_name" id="waiver_child_name" 
-                placeholder="Child's Full Name" required disabled
+                required disabled placeholder="Child's Full Name" 
                 value="<?php echo isset($child_first_name) && isset($child_last_name) ? htmlspecialchars($child_first_name . ' ' . $child_last_name) : ''; ?>"><br><br>
 
             <!--Child's Date of Birth-->
             <label for="waiver_dob">Child's Date of Birth *</label><br><br>
             <input type="date" id="waiver_dob" name="waiver_dob"  
-                placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>" required
+                required placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>"
                 value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
             <!--Parent/Guardian Name-->
             <label for="waiver_parent_name">Parent/Guardian Name *</label><br><br>
             <input type="text" name="waiver_parent_name" id="waiver_parent_name"  
-                placeholder="Parent/Guardian Name" required><br><br>
+                required placeholder="Parent/Guardian Name"><br><br>
 
             <!--Provider's Name-->
             <label for="waiver_provider_name">Provider's Name *</label><br><br>
             <input type="text" name="waiver_provider_name" id="waiver_provider_name"
-                placeholder="Provider's Name" required><br><br>
+                required placeholder="Provider's Name"><br><br>
 
             <!--Address-->
             <label for="waiver_provider_address">Provider's Address *</label><br><br>
             <input type="text" name="waiver_provider_address" id="waiver_provider_address"
-                placeholder="Provider's Address" required><br><br>
+                required placeholder="Provider's Address"><br><br>
 
             <!--Phone & Fax-->
             <label for="waiver_phone_and_fax">Provider's Phone & Fax *</label><br><br>
             <input type="text" name="waiver_phone_and_fax" id="waiver_phone_and_fax"
-                placeholder="Ex. (000) 000-0000" required><br><br>
+                required placeholder="Ex. (000) 000-0000"><br><br>
 
             <!--Signature-->
             <label for="waiver_signature">Parent / Legal Guardian / Surrogate/ Eligible Student Signature *</label><br>
             <p>By electronically signing, you agree that your e-signature holds the same legal validity and effect as a handwritten signature.</p><br>
             <input type="text" name="waiver_signature" id="waiver_signature" 
-                placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature" required><br><br>
+                required placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature"><br><br>
 
             <!--Date-->
             <label for="waiver_date" required>Date *</label><br><br>
             <input type="date" id="waiver_date" name="waiver_date"
-                placeholder="Date" max="<?php echo date('Y-m-d'); ?>" required
+                required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"
                 value="<?php echo date('Y-m-d'); ?>"><br><br>
 
             <button type="submit" id="submit">Submit</button>
