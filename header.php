@@ -75,6 +75,7 @@
         $permission_array['completedforms.php'] = 1;
         $permission_array['holidaymealbagcomplete.php'] = 1;
         $permission_array['addchild.php'] = 1;
+        $permission_array['forgotpassword.php'] = 1;
         //pages only staff can view
         $permission_array['personsearch.php'] = 2;
         $permission_array['personedit.php'] = 0; // changed to 0 so that applicants can apply

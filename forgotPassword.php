@@ -11,9 +11,11 @@
     $accessLevel = 0;
     $userID = null;
 
-    // If familyEmail and familyVerified session variables are set, get email and continue
-    if (isset($_SESSION['familyEmail']) && isset($_SESSION['familyVerified'])) {
-        $userID = $_SESSION['familyEmail'];
+    // If familyID and familyVerified session variables are set, get id and continue
+    if (isset($_SESSION['familyID']) && isset($_SESSION['familyVerified'])) {
+        $userID = $_SESSION['familyID'];
+    } else if (isset($_GET['id']) && (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2)) {
+        $userID = $_GET['id'];
     } else {
         // Else go back to login page
         header('Location: login.php');
@@ -28,9 +30,17 @@
 
         $newPassword = $_POST['new-password'];
         $hash = password_hash($newPassword, PASSWORD_BCRYPT);
+        echo $userID;
         change_family_password($userID, $hash);
-        header('Location: index.php?pcSuccess');
-        die();
+        // If logged in as staff, go to family view page
+        if (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2) {
+            header('Location: familyView.php?pcSuccess&id=' . $_GET['id']);
+            die();
+        } else {
+            // Else, go to index page
+            header('Location: index.php?pcSuccess');
+            die();
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -50,6 +60,12 @@
                 <input type="password" id="new-password-reenter" placeholder="Re-enter new password" required>
                 <p id="password-match-error" class="error hidden">Passwords must match!</p>
                 <input type="submit" id="submit" name="submit" value="Change Password">
+                <?php
+                    // Show an extra button that takes the user to the family view page if they are logged in as staff
+                    if (isset($_GET['id']) && (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2)) {
+                        echo '<a class="button cancel button_stlye" href="familyView.php?id=' . $_GET['id'] . '"  style="margin-top: 1rem;">Return to Family View</a>';
+                    }
+                ?>
             </form>
         </main>
     </body>
