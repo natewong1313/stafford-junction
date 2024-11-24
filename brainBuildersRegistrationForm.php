@@ -121,21 +121,32 @@ try {
             <?php require_once('domain/Children.php') ?>
             <?php require_once('database/dbChildren.php') ?>
 
-            <label for="childDropdown">Select a Child to Register:</label><br>
+            <label for="childDropdown">Select a Child to Register:</label><br><br>
             <p><b>If your child is not listed, your child is not added to the family account, or is already registered.</b></p><br>
 
             <!-- Pass the 'id' in the URL and retain it during the form submission -->
             <input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>">
 
+            <!-- Looping through children to display the ones who have not completed the form -->
+            <?php 
+            $childrenNotRegistered = []; // Correctly initializing the array
+            foreach ($family_children as $child): 
+                require_once('database/dbBrainBuildersRegistrationForm.php');
+                if (!isBrainBuildersRegistrationFormComplete($child->getID())):
+                    // Add child to the array if they have not completed the form
+                    $childrenNotRegistered[] = $child;
+                endif;
+            endforeach;
+            ?>
+
+            <!--Child selection for children who have not yet completed a form-->
             <select id="childDropdown" name="childId">
                 <option value="" disabled>Select</option>
-                <?php foreach ($family_children as $child): ?>
-                    <?php if (!isBBComplete($child->getID())): ?>
-                        <option value="<?php echo $child->getID(); ?>"
-                            <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($child->getFirstName()) . " " . htmlspecialchars($child->getLastName()); ?>
-                        </option>
-                    <?php endif; ?>
+                <?php foreach ($childrenNotRegistered as $child): ?>
+                    <option value="<?php echo $child->getID(); ?>"
+                        <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($child->getFirstName()) . " " . htmlspecialchars($child->getLastName()); ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
 

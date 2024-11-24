@@ -126,16 +126,34 @@ function createBrainBuildersRegistrationForm($form) {
 function isBrainBuildersRegistrationFormComplete($childID) {
     $connection = connect();
 
-    $query = "SELECT * FROM dbBrainBuildersRegistrationForm INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id WHERE dbChildren.id = '" . $childID . "';";
-    $result = mysqli_query($connection, $query);
-    if (!$result->num_rows > 0) {
-        mysqli_close($connection);
-        return false;
+    $query = "SELECT * FROM dbBrainBuildersRegistrationForm 
+              INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id 
+              WHERE dbChildren.id = ?";
+
+    // Prepare the statement
+    if ($stmt = $connection->prepare($query)) {
+        $stmt->bind_param('i', $childID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Check if any rows are returned, meaning the form is complete
+        if ($result->num_rows > 0) {
+            $stmt->close(); 
+            mysqli_close($connection); 
+            return true;
+        } else {
+            $stmt->close();
+            mysqli_close($connection);
+            return false;
+        }
     } else {
-        mysqli_close($connection);
-        return true;
+        // If the query preparation fails, handle the error
+        echo "Error preparing the query: " . $connection->error;
+        mysqli_close($connection); // Close the connection
+        return false;
     }
 }
+
 
 function isBBComplete($childID) {
     // Establish a connection to the database
@@ -144,7 +162,7 @@ function isBBComplete($childID) {
     // Prepare the SQL query to avoid SQL injection
     $query = "SELECT * FROM dbBrainBuildersRegistrationForm 
               INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id 
-              WHERE dbChildren.id = ?"; // Use ? as a placeholder for childID
+              WHERE dbChildren.id = '" . $childID . "';"; // Use ? as a placeholder for childID
 
     // Prepare the statement
     if ($stmt = $connection->prepare($query)) {
