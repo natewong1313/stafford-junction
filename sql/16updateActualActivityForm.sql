@@ -5,13 +5,24 @@ ALTER TABLE `Attendees` DROP FOREIGN KEY `Attendees_ibfk_1`;
 DROP TABLE IF EXISTS `Attendees`;
 
 -- Alter the `activity` column from INT to VARCHAR(256)
-ALTER TABLE `dbActualActivityForm` (
-  MODIFY COLUMN `activity` VARCHAR(256) NOT NULL,
-  MODIFY COLUMN `date` DATE NOT NULL,
-  MODIFY COLUMN `start_mile` INT NOT NULL,
-  MODIFY COLUMN `end_mile` INT NOT NULL,
-  CHANGE COLUMN `mealinfo` `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER TABLE `dbActualActivityForm`
+MODIFY COLUMN `activity` VARCHAR(256) NOT NULL;
+
+-- Modify `date` column type
+ALTER TABLE `dbActualActivityForm`
+MODIFY COLUMN `date` DATE NOT NULL;
+
+-- Modify `start_mile` column type
+ALTER TABLE `dbActualActivityForm`
+MODIFY COLUMN `start_mile` INT NOT NULL;
+
+-- Modify `end_mile` column type
+ALTER TABLE `dbActualActivityForm`
+MODIFY COLUMN `end_mile` INT NOT NULL;
+
+-- Change the column name `mealinfo` to `meal_info` and modify its type
+ALTER TABLE `dbActualActivityForm`
+CHANGE COLUMN `mealinfo` `meal_info` ENUM('meal_provided', 'meal_paid', 'no_meal') NOT NULL;
 
 --
 -- Table structure for table `dbActualActivityAttendees`
