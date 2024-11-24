@@ -39,59 +39,75 @@ error_reporting(E_ALL);
                 <?php endif?>
 
                 <!--School Supplies Form -->
-
                 <div class="dashboard-item" data-link="schoolSuppliesForm.php">
                     <img src="images/school-supplies-svgrepo-com.svg">
                     <span>School Supplies Form</span> 
                 </div>
 
+                <!--Spring Break Form-->
                 <div class="dashboard-item" data-link="springBreakForm.php">
                     <img src="images/tent-svgrepo-com.svg">
                     <span>Spring Break Form</span> 
-                
                 </div>
 
+                <!--Angel Gifts Wish Form-->
                 <div class="dashboard-item" data-link="angelGiftForm.php">
                     <img src="images/angel.svg">
                     <span>Angel Gifts Wish Form</span> 
                 </div>
 
+                <!--Child Care Waiver Form-->
                 <div class="dashboard-item" data-link="childCareWaiverForm.php">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
                 </div>
 
+                <!--Field Trip Waiver Form-->
                 <div class="dashboard-item" data-link="fieldTripWaiver.php">
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> 
                 </div>
 
+                <!--Program Interest Form-->
                 <div class="dashboard-item" data-link="programInterestForm.php">
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> 
                 </div>
 
+                <!--Brain Builders Student Registration Form-->
+                <?php if(isset($_GET['id'])): ?>
+                <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php?id=<?php echo $_GET['id']?>">
+                    <img src="images/brainBuilders.svg">
+                    <span>Brain Builders Student Registration Form</span> 
+                </div>
+                <?php else: ?>
                 <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
                     <img src="images/brainBuilders.svg">
                     <span>Brain Builders Student Registration Form</span> 
                 </div>
-
+                <?php endif?>
+     
+                <!--Brain Builders Review Form-->
                 <div class="dashboard-item" data-link="BrainBuilderReviewForm.php">
                     <img src="images/brainBuilderReviewIcon.svg.svg">
                     <span>Brain Builder Review Form</span> 
                 </div>
 
+                <!--Brain Builders Holiday Party Form-->
                 <div class="dashboard-item" data-link="holidayPartyForm.php">
                     <img src="images/party-flyer-svgrepo-com.svg">
                     <span>Brain Builders Holiday Party Form</span> 
                 </div>
 
+                <!--Summer Junction Registration Form-->
                 <div class="dashboard-item" data-link="summerJunctionRegistrationForm.php">
                     <img src="images/summerJunction.svg">
                     <span>Summer Junction Registration Form</span>
                 </div>
 
                 <!--Only staff and volunteer accounts can access these forms-->
+
+                <!--Actual Activity Form-->
                 <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
                     <div class="dashboard-item" data-link="actualActivityForm.php">
                         <img src="images/actualActivity-svgrepo.svg">
