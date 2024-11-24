@@ -616,6 +616,11 @@ if (!$data) {
                     echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
                 }
             } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
         
