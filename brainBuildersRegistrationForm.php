@@ -52,6 +52,8 @@ $family_race1 = $family->getRace();
 
 $family_income = $family->getIncome();
 
+$errors[] = "";
+
 try {
     $connection = connect();
 
@@ -61,29 +63,9 @@ try {
         
         $args = sanitize($_POST, null);
 
-        $parent1_phone = validateAndFilterPhoneNumber($_POST['parent1_phone']);
-        if (!$parent1_phone) {
-            $errors[] = "Invalid phone number format: Parent 1 Phone Number";
-        }
-
-        $parent1_altPhone = validateAndFilterPhoneNumber($_POST['parent1_altPhone']);
-        if (!$parent1_altPhone) {
-            $errors[] = "Invalid phone number format: Parent 1 Alternate Phone Number.";
-        }
-
         $parent1_email = validateEmail($_POST['parent1_email']);
         if (!$parent1_email) {
             $errors[] = "Invalid email format: Parent 1 Email.";
-        }
-
-        $parent2_phone = validateAndFilterPhoneNumber($_POST['parent1_phone']);
-        if (!$parent2_phone) {
-            $errors[] = "Invalid phone number format: Parent 2 Phone Number";
-        }
-
-        $parent2_altPhone = validateAndFilterPhoneNumber($_POST['parent1_altPhone']);
-        if (!$parent2_altPhone) {
-            $errors[] = "Invalid phone number format: Parent 2 Alternate Phone Number.";
         }
 
         $parent2_email = validateEmail($_POST['parent2_email']);
@@ -95,15 +77,14 @@ try {
         if (!$emergency_phone1) {
             $errors[] = "Invalid phone number format: Emergency Contact 1 Phone Number";
         }
-
-        $emergency_phone2 = validateAndFilterPhoneNumber($_POST['emergency_phone2']);
-        if (!$emergency_phone2) {
-            throw new Exception("Invalid phone number format: Emergency Contact 2 Alternate Phone Number.");
+        
+        if (isset($_POST['emergency_phone2']) && !(validateAndFilterPhoneNumber($_POST['emergency_phone2']))) {
+            $errors[] = "Invalid phone number format: Emergency Contact 2 Alternate Phone Number.";
         }
 
         $required = array(
             "child_id", "child_first_name", "child_last_name", "child_email", "child_gender", "child_school_name", "child_grade", 
-            "child_dob", "child_address", "child_city", "child_state", "child_zip", "child_medical_allergies", "child_food_avoidances"
+            "child_dob", "child_address", "child_city", "child_state", "child_zip", "child_medical_allergies", "child_food_avoidances",
             "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email",  
             "emergency_name1", "emergency_relationship1", "emergency_phone1",
             "authorized_pu", "primary_language", "hispanic_latino_spanish", "race", 
@@ -144,11 +125,24 @@ try {
     </head>
     <body>
         <h1>Brain Builders Registration Form 2024-2025</h1>
+        
+        <!-- Display the error message if it exists -->
         <?php 
             if (isset($_GET['formSubmitFail'])) {
                 echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
             }
-        ?>   
+        ?>
+        <?php if (!empty($errors)): ?>
+            <div style="color: red; font-weight: bold;">
+                <?php 
+                // Loop through all error messages
+                foreach ($errors as $error) {
+                    echo $error . "<br>"; // Display each error message, separated by a line break
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+        
 
         <div id="formatted_form">
 
@@ -156,7 +150,7 @@ try {
         <form id="childSelectBrainBuilders" method="GET" action="">
             <?php require_once('domain/Children.php') ?>
             <?php require_once('database/dbChildren.php') ?>
-            <label for="childDropdown">Select a Child to Register:</label>
+            <label for="childDropdown">Select a Child to Register:</label><br>
             <p><b>If your child is not listed, your child is not added to the family account, or is already registered.</b></p><br>
             <select id="childDropdown" name="childId">
                 <option value="" disabled>Select</option>
