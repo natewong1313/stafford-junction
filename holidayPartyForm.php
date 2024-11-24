@@ -23,8 +23,8 @@ require_once("database/dbChildren.php");
 require_once("database/dbHolidayPartyForm.php");
 
 //retrieve family and children of family by userID
-$family = retrieve_family_by_id($userID);
-$children = retrieve_children_by_family_id($userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //If GET variable is set, that means the staff account is filling in info on behalf of the family whose id is stored in GET, othwerise userID will be the family id
+$children = retrieve_children_by_family_id($family->getId());
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -48,7 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         //args['name'] will look like this ('John Doe'), exploding it on " " will create and array -> ['John', 'Doe']
         $childName = explode(" ", $args['name']);
         //retrieves child specified in form
-        $row = retrieve_child_by_firstName_lastName_famID($childName[0], $childName[1], $userID);
+        $row = retrieve_child_by_firstName_lastName_famID($childName[0], $childName[1], $family->getId());
         $success = insert_into_dbHolidayPartyForm($args, $row['id']); //Add to database form submitted data and the child's id to link back to dbChildren
 
         //If the child was successfully inserted into db, create success message
