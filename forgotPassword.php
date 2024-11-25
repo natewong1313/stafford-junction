@@ -30,7 +30,6 @@
 
         $newPassword = $_POST['new-password'];
         $hash = password_hash($newPassword, PASSWORD_BCRYPT);
-        echo $userID;
         change_family_password($userID, $hash);
         // If logged in as staff, go to family view page
         if (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2) {
