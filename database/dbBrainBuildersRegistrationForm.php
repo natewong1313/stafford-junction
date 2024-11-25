@@ -6,7 +6,6 @@
 function createBrainBuildersRegistrationForm($form) {
     $connection = connect();
 
-    // Enable exception handling for MySQLi
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
     $child_id = $form['child_id'];
@@ -121,7 +120,9 @@ function createBrainBuildersRegistrationForm($form) {
     return $bbID;
 }
 
-
+/*
+ * Function that checks if a brain builder registration form that matches the childId exists in the database
+ */
 function isBrainBuildersRegistrationFormComplete($childID) {
     $connection = connect();
 
@@ -129,26 +130,17 @@ function isBrainBuildersRegistrationFormComplete($childID) {
               INNER JOIN dbChildren ON dbBrainBuildersRegistrationForm.child_id = dbChildren.id 
               WHERE dbChildren.id = ?";
 
-    // Prepare the statement
     if ($stmt = $connection->prepare($query)) {
         $stmt->bind_param('i', $childID);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Check if any rows are returned, meaning the form is complete
-        if ($result->num_rows > 0) {
-            $stmt->close(); 
-            mysqli_close($connection); 
-            return true;
-        } else {
-            $stmt->close();
-            mysqli_close($connection);
-            return false;
-        }
+        $stmt->close();
+        mysqli_close($connection); 
+        return $result->num_rows > 0;
     } else {
-        // If the query preparation fails, handle the error
         echo "Error preparing the query: " . $connection->error;
-        mysqli_close($connection); // Close the connection
+        mysqli_close($connection);
         return false;
     }
 }
