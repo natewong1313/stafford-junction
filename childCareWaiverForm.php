@@ -10,32 +10,23 @@ $accessLevel = 0;
 $userID = null;
 $success = false;
 
-include_once("database/dbChildren.php");
-// Check if user is logged in
-if (isset($_SESSION['_id'])) {
+if(isset($_SESSION['_id'])){
+    require_once('domain/Children.php');
+    require_once('database/dbChildren.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbChildCareForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    //$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 } else {
-    $loggedIn = false;
+    header('Location: login.php');
+    die();
 }
 
-// Include necessary files
 include_once("database/dbFamily.php");
-include_once("database/dbChildren.php");
-require_once('database/dbChildCareForm.php');
-
-// Retrieve family information
-if ($loggedIn) {
-    $family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id] will have the family id needed to fill form if the staff are trying to fill a form out for that family
-    //$family = retrieve_family_by_id($_SESSION["_id"]);
-    $family_email = $family->getEmail();
-    //retrieve children by family ID
-    $children = retrieve_children_by_family_id($_SESSION["_id"]);
-
-}
-include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $guardian_email = $family->getEmail();
 $guardian_fname = $family->getFirstName();
 $guardian_lname = $family->getLastName();
@@ -55,7 +46,7 @@ $guardian_2_phone = $family->getPhone2();
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
+    //require_once('include/input-validation.php');
     //require_once('database/dbSpringBreakForm.php');
     $args = sanitize($_POST, null);
 
@@ -145,14 +136,9 @@ if (!empty($missingFields)) {
         echo "$invalidField<br>";
     }
 } else {
-    // All required fields are complete and phone fields valid, proceed to form submission
-    $success = createChildCareForm($args);
-    if ($success) {
-        echo "Form submitted successfully!";
-    } else {
-        echo "Error submitting the form.";
+        // All required fields are complete and phone fields valid, proceed to form submission
+        $success = createChildCareForm($args);
     }
-}
 }
 ?>
 
@@ -182,7 +168,7 @@ if (!empty($missingFields)) {
                     Claridad)</strong></p>
         </div>
 
-        <form method="POST" action="childCareWaiverForm.php">
+        <form id="childCareWaiverForm" action="" method="post">
 
         <!-- Child Name -->
         <label for="name">Child Name / Nombre del Estudiante*</label><br><br>
@@ -387,16 +373,33 @@ if (!empty($missingFields)) {
 
         <!-- Submit and Cancel buttons -->
         <button type="submit" id="submit">Submit</button>
-        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-    </div>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
+        </div>
     </form>
+    </div>
     <?php
            //if registration successful, create pop up notification and direct user back to login
-            if($success){
+           if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+            } else {
                 echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
-            ?>
-    </div>
+            }
+        } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+            }
+        }
+        ?>
+    
 </body>
 </html>
 
