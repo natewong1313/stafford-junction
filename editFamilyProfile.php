@@ -37,11 +37,15 @@ $address = $family->getAddress();
 $city = $family->getCity();
 $state = $family->getState();
 $zip = $family->getZip();
+$neighborhood = $family->getNeighborhood();
 $email = $family->getEmail();
 $phone = $family->getPhone();
 $phone_type = $family->getPhoneType();
 $secondary_phone = $family->getSecondaryPhone();
 $secondary_phone_type = $family->getSecondaryPhoneType();
+$isHispanic = $family->isHispanic();
+$race = $family->getRace();
+$income = $family->getIncome();
 
 $first_name2 = $family->getFirstName2();
 $last_name2 = $family->getLastName2();
@@ -50,11 +54,14 @@ $address2 = $family->getAddress2();
 $city2 = $family->getCity2();
 $state2 = $family->getState2();
 $zip2 = $family->getZip2();
+$neighborhood2 = $family->getNeighborhood2();
 $email2 = $family->getEmail2();
 $phone2 = $family->getPhone2();
 $phone_type2 = $family->getPhoneType2();
 $secondary_phone2 = $family->getSecondaryPhone2();
 $secondary_phone_type2 = $family->getSecondaryPhoneType2();
+$isHispanic2;
+$race2;
 
 $econtact_first_name = $family->getEContactFirstName();
 $econtact_last_name = $family->getEContactLastName();
@@ -98,7 +105,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
                     <label for="birthdate" >Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($birthdate); ?>" max="<?php echo date('Y-m-d'); ?>">
-
 
                     <label for="address" >Street Address</label>
                     <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($address); ?>">
@@ -211,7 +217,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="birthdate2">Date of Birth</label>
                     <input type="date" id="birthdate2" name="birthdate2" value="<?php echo htmlspecialchars($birthdate2); ?>" max="<?php echo date('Y-m-d'); ?>">
 
-
+                    <label for="neighborhood2">Neighborhood</label>
+                    <input type="text" id="neighborhood2" name="neighborhood2" value="<?php echo htmlspecialchars($neighborhood2); ?>">
+                    
                     <label for="address2">Street Address</label>
                     <input type="text" id="address2" name="address2" value="<?php echo htmlspecialchars($address2); ?>">
 
@@ -307,6 +315,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <input type="radio" id="secondary-phone-type-work2" name="secondary-phone-type2" value="work" <?php echo ($secondary_phone_type2 === 'work') ? 'checked' : ''; ?>>
                         <label for="secondary-phone-type-work2">Work</label>
                     </div>
+
+                    <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label><br><br>
+                    <select id="isHispanic2" name="isHispanic2">
+                        <option value="" disabled selected>Select Yes or No</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                    <br><br>
+
+                    <label for="race2" required>Race</label><br><br>
+                    <select id="race2" name="race2">
+                        <option value="" disabled selected>Select Race</option>
+                        <option value="Caucasian">Caucasian</option>
+                        <option value="Black/African American">Black/African American</option>
+                        <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
+                        <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Multiracial">Multiracial</option>
+                        <option value="Other">Other</option>
+                    </select><br><br>
+
                 </fieldset>
 
                 <h3>Emergency Contact</h3>

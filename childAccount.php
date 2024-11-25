@@ -41,13 +41,12 @@ $child = retrieve_child_by_id($_GET['id']);
             require_once('header.php');
             require_once('include/output.php');
         ?>
-        <h1>Account Page for <?php echo $child->getFirstName() ?></h1>
+        <h1>Account Page for <?php echo $child->getFirstName() . " " . $child->getLastName() ?></h1>
 
         <div  id="view-family" style="margin-left: 20px; margin-right: 20px">
         <main class="general">
         <?php if(isset($child)) {
             echo '<fieldset>';
-            echo '<legend>' . $child->getFirstName() . '</legend>';
             echo '<label>Account ID</label>';
             echo '<p>' . $child->getID() . '</a></p>';
             echo '<label>Full Name</label>';
@@ -56,13 +55,26 @@ $child = retrieve_child_by_id($_GET['id']);
             echo '<p>' . $child->getBirthdate() . '</p>';
             echo '<label>Gender</label>';
             echo '<p>' . $child->getGender() . '</p>';
+            echo '<label>Full Address</label>';
+            echo '<p>' . $child->getAddress() . ", " . $child->getCity() . ", " . $child->getState() . " " . $child->getZip() . '</p>';
+            echo '<label>Neighborhood</label>';
+            echo '<p>' . $child->getNeighborhood() . '</p>';
+            echo '<label>School</label>';
+            echo '<p>' . $child->getSchool() . '</p>';
+            echo '<label>Grade</label>';
+            echo '<p>' . $child->getGrade() . '</p>';
+            echo '<label>Hispanic, Latino, or Spanish Origin</label>';
+                if ($child->isHispanic() == 1) {
+                    echo '<p>Yes</p>';
+                } else {
+                    echo '<p>No</p>';
+                }
+            echo '<label>Race</label>';
+            echo '<p>' . $child->getRace() . '</p>';
             echo '<label>Medical Notes</label>';
             echo '<p>' . $child->getMedicalNotes() . '</p>';
             echo '<label>Other Notes</label>';
             echo '<p>' . $child->getNotes() . '</p>';
-            echo '<label>Enrolled Programs</label>';
-            echo '<p>' . '</p>';
-            echo '</fieldset>';
         }
         
         ?>
@@ -71,13 +83,13 @@ $child = retrieve_child_by_id($_GET['id']);
 
 
         <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
+            <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
         <?php if($_SESSION['access_level'] > 1 && !isset($_GET['findChildren'])): ?>
-        <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
+            <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         <?php if($_SESSION['access_level'] > 1 && isset($_GET['findChildren'])): ?>
-        <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
+            <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         
 
