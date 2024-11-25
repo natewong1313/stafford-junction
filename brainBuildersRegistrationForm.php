@@ -270,6 +270,7 @@ try {
                     <option value="CO" <?php echo isset($child_state) && $child_state == 'CO' ? 'selected' : ''; ?>>Colorado</option>
                     <option value="CT" <?php echo isset($child_state) && $child_state == 'CT' ? 'selected' : ''; ?>>Connecticut</option>
                     <option value="DE" <?php echo isset($child_state) && $child_state == 'DE' ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo isset($child_state) && $child_state == 'DC' ? 'selected' : ''; ?>>District of Columbia</option>
                     <option value="FL" <?php echo isset($child_state) && $child_state == 'FL' ? 'selected' : ''; ?>>Florida</option>
                     <option value="GA" <?php echo isset($child_state) && $child_state == 'GA' ? 'selected' : ''; ?>>Georgia</option>
                     <option value="HI" <?php echo isset($child_state) && $child_state == 'HI' ? 'selected' : ''; ?>>Hawaii</option>
@@ -370,6 +371,7 @@ try {
                     <option value="CO" <?php echo (isset($family_state1) && $family_state1 == 'CO') ? 'selected' : ''; ?>>Colorado</option>
                     <option value="CT" <?php echo (isset($family_state1) && $family_state1 == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
                     <option value="DE" <?php echo (isset($family_state1) && $family_state1 == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo (isset($family_state2) && $family_state2 == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
                     <option value="FL" <?php echo (isset($family_state1) && $family_state1 == 'FL') ? 'selected' : ''; ?>>Florida</option>
                     <option value="GA" <?php echo (isset($family_state1) && $family_state1 == 'GA') ? 'selected' : ''; ?>>Georgia</option>
                     <option value="HI" <?php echo (isset($family_state1) && $family_state1 == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
@@ -470,6 +472,7 @@ try {
                     <option value="CO" <?php echo (isset($family_state2) && $family_state2 == 'CO') ? 'selected' : ''; ?>>Colorado</option>
                     <option value="CT" <?php echo (isset($family_state2) && $family_state2 == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
                     <option value="DE" <?php echo (isset($family_state2) && $family_state2 == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo (isset($family_state2) && $family_state2 == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
                     <option value="FL" <?php echo (isset($family_state2) && $family_state2 == 'FL') ? 'selected' : ''; ?>>Florida</option>
                     <option value="GA" <?php echo (isset($family_state2) && $family_state2 == 'GA') ? 'selected' : ''; ?>>Georgia</option>
                     <option value="HI" <?php echo (isset($family_state2) && $family_state2 == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
