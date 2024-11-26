@@ -87,7 +87,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                             <input type="text" id="child_address_${childCount}" name="children[${childCount}][address]" required placeholder="Enter child's street address">
 
                             <label for="city" required>Child's City</label>
-                            <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's school">
+                            <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's city">
 
                             <label for="state2">State</label>
                             <select id="child_state_${childCount}" name="children[${childCount}][state]">

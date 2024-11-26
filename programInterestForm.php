@@ -17,6 +17,7 @@ $family_phone = null;
 $family_zip = null;
 $family_city = null;
 $family_address = null;
+$family_neighborhood = null;
 $family_state = null;
 $children = null;
 $children_count = null;
@@ -39,35 +40,34 @@ if(isset($_SESSION['_id'])){
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
 
-// If logged in as a family
-if (isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1) {
-    // Get family data for autopopulating form
-    $family = retrieve_family_by_id($_SESSION["_id"]);
-    $family_email = $family->getEmail();
-    $family_first_name = $family->getFirstName();
-    $family_last_name = $family->getLastName();
-    $family_phone = $family->getPhone();
-    $family_zip = $family->getZip();
-    $family_city = $family->getCity();
-    $family_address = $family->getAddress();
-    $family_state = $family->getState();
-    $children = retrieve_children_by_family_id($userID);
-    $children_count = count($children);
-    $children_ages = getChildrenAges($children);
+// Get family data for autopopulating form
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
+$family_email = $family->getEmail();
+$family_first_name = $family->getFirstName();
+$family_last_name = $family->getLastName();
+$family_phone = $family->getPhone();
+$family_zip = $family->getZip();
+$family_city = $family->getCity();
+$family_address = $family->getAddress();
+$family_neighborhood = $family->getNeighborhood();
+$family_state = $family->getState();
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+$children_count = count($children);
+$children_ages = getChildrenAges($children);
 
-    // Get home phone number
-    if ($family->getPhoneType() == "home") {
-        $family_home_phone = $family->getPhone();
-    } else if ($family->getSecondaryPhoneType() == "home") {
-        $family_home_phone = $family->getSecondaryPhone();
-    }
-    // Get cell phone number
-    if ($family->getPhoneType() == "cellphone") {
-        $family_cell_phone = $family->getPhone();
-    } else if ($family->getSecondaryPhoneType() == "cellphone") {
-        $family_cell_phone = $family->getSecondaryPhone();
-    }
+// Get home phone number
+if ($family->getPhoneType() == "home") {
+    $family_home_phone = $family->getPhone();
+} else if ($family->getSecondaryPhoneType() == "home") {
+    $family_home_phone = $family->getSecondaryPhone();
 }
+// Get cell phone number
+if ($family->getPhoneType() == "cellphone") {
+    $family_cell_phone = $family->getPhone();
+} else if ($family->getSecondaryPhoneType() == "cellphone") {
+    $family_cell_phone = $family->getSecondaryPhone();
+}
+
 
 // Gets the ages of each child and returns them as a string
 function getChildrenAges($children) {
@@ -91,25 +91,36 @@ function getChildrenAges($children) {
 
 // program interests and topic interests both are stored in arrays called "programs" and "topics" within the POST array
 // availability data is stored in a multidimentional array called "days" 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    // Ignore days array during sanitation as it will cause an error
-    $ignoreList = array('days');
-    $args = sanitize($_POST, $ignoreList);
-    // Sanitize each day in days array individually
-    foreach ($args['days'] as $day) {
-        $day = sanitize($day, null);
+$data = getProgramInterestFormData($_GET['id'] ?? $userID);
+$programData = null;
+$topicData = null;
+$availabilityData = null;
+
+if (!$data) {
+    if($_SERVER['REQUEST_METHOD'] == "POST"){
+        require_once('include/input-validation.php');
+        // Ignore days array during sanitation as it will cause an error
+        $ignoreList = array('days');
+        $args = sanitize($_POST, $ignoreList);
+        // Sanitize each day in days array individually
+        foreach ($args['days'] as $day) {
+            $day = sanitize($day, null);
+        }
+        $required = array("first_name", "last_name", "address", "city", "neighborhood", "state", "zip", "cell_phone",
+            "home_phone", "email", "child_num", "child_ages", "adult_num");
+        $args['cell_phone'] = validateAndFilterPhoneNumber($args['cell_phone']);
+        $args['home_phone'] = validateAndFilterPhoneNumber($args['home_phone']);
+        if(!wereRequiredFieldsSubmitted($args, $required)){
+            echo "Not all fields complete";
+            die();
+        } else {
+            $success = createProgramInterestForm($args);
+        }
     }
-    $required = array("first_name", "last_name", "address", "city", "neighborhood", "state", "zip", "cell_phone",
-        "home_phone", "email", "child_num", "child_ages", "adult_num");
-    $args['cell_phone'] = validateAndFilterPhoneNumber($args['cell_phone']);
-    $args['home_phone'] = validateAndFilterPhoneNumber($args['home_phone']);
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-        die();
-    } else {
-        $success = createProgramInterestForm($args);
-    }
+} else {
+    $programData = getProgramInterestData($_GET['id'] ?? $userID);
+    $topicData = getTopicInterestData($_GET['id'] ?? $userID);
+    $availabilityData = getAvailabilityData($_GET['id'] ?? $userID);
 }
 ?>
 
@@ -148,27 +159,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!-- 1. First Name-->
                 <label for="first_name">* First Name / Nombre</label><br><br>
-                <input type="text" name="first_name" id="first_name" placeholder="First Name/Nombre" required value="<?php if ($family_first_name != null) echo htmlspecialchars($family_first_name)?>">
+                <input type="text" name="first_name" id="first_name" placeholder="First Name/Nombre" required <?php showProgramInterestData($data['first_name'] ?? null, $family_first_name)?>>
                 <br><br>
 
                 <!-- 2. Last Name-->
                 <label for="last_name">* Last Name / Apellido</label><br><br>
-                <input type="text" name="last_name" id="last_name" placeholder="Last Name/Apellido " required value="<?php if ($family_last_name != null) echo $family_last_name?>">
+                <input type="text" name="last_name" id="last_name" placeholder="Last Name/Apellido " required <?php showProgramInterestData($data['last_name'] ?? null, $family_last_name)?>>
                 <br><br>
 
                 <!-- 3. Address-->
                 <label for="address">* Address / Dirección</label><br><br>
-                <input type="text" name="address" id="address" placeholder="Address/Dirección" required value="<?php if ($family_address != null) echo $family_address?>">
+                <input type="text" name="address" id="address" placeholder="Address/Dirección" required <?php showProgramInterestData($data['address'] ?? null, $family_address)?>>
                 <br><br>
 
                 <!-- 4. Neighborhood-->
                 <label for="neighborhood">* Neighborhood / Vecindario</label><br><br>
-                <input type="text" name="neighborhood" id="neighborhood" placeholder="Neighborhood/Vecindario" required>
+                <input type="text" name="neighborhood" id="neighborhood" placeholder="Neighborhood/Vecindario" required <?php showProgramInterestData($data['neighborhood'] ?? null, $family_neighborhood)?>>
                 <br><br>
 
                 <!-- 4. City-->
                 <label for="city">* City / Ciudad</label><br><br>
-                <input type="text" name="city" id="city" placeholder="City/Ciudad" required value="<?php if ($family_city != null) echo $family_city?>">
+                <input type="text" name="city" id="city" placeholder="City/Ciudad" required <?php showProgramInterestData($data['city'] ?? null, $family_city)?>>
                 <br><br>
 
                 <!-- 4. State-->
@@ -229,47 +240,60 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </select><br><br>
 
                 <script>
-                    // Get state from family data, then select that state in the form
-                    if ('<?php echo $family_state;?>' != null) {
+                    // Get state value from dbProgramInterestForm if family already submitted the form
+                    var data_state = '<?php echo $data['state'] ?? '';?>';
+                    // Get state value from dbFamily table
+                    var family_state = '<?php echo $family_state ?? '';?>';
+                    
+                    if (data_state !== '') {
+                        // If viewing completed form, show value and disable input
                         element = document.getElementById("state");
-                        option = element.querySelector("option[value = '<?php echo $family_state;?>'");
+                        option = element.querySelector("option[value = " + data_state + "]");
+                        option.selected = true;
+                        element.disabled = true;
+                        element.style.backgroundColor = 'yellow';
+                        element.style.color = 'black';
+                    } else if (family_state !== '') {
+                        // Else, autopopulate using the state value from dbFamily
+                        element = document.getElementById("state");
+                        option = element.querySelector("option[value = " + family_state + "]");
                         option.selected = true;
                     }
                 </script>
 
                 <!-- 5. Zip Code-->
                 <label for="zip">* Zip Code / Código postal</label><br><br>
-                <input type="text" name="zip" id="zip" placeholder="Zip Code/Código postal" required value="<?php if ($family_zip != null) echo $family_zip?>">
+                <input type="text" name="zip" id="zip" placeholder="Zip Code/Código postal" required <?php showProgramInterestData($data['zip'] ?? null, $family_zip)?>>
                 <br><br>
 
                 <!-- 6. Cell Phone-->
                 <label for="cell_phone">* Cell Phone / Teléfono móvil</label><br><br>
-                <input type="text" name="cell_phone" id="cell_phone" placeholder="Cell Phone/Teléfono móvil" required value="<?php if ($family_cell_phone != null) echo $family_cell_phone?>">
+                <input type="text" name="cell_phone" id="cell_phone" placeholder="Cell Phone/Teléfono móvil" required <?php showProgramInterestData($data['cell_phone'] ?? null, $family_cell_phone)?>>
                 <br><br>
 
                 <!-- 7. Home Phone-->
                 <label for="home_phone">* Home Phone / Teléfono residencial</label><br><br>
-                <input type="text" name="home_phone" id="home_phone" placeholder="Home Phone/Teléfono residencial" required value="<?php if ($family_home_phone != null) echo $family_home_phone?>">
+                <input type="text" name="home_phone" id="home_phone" placeholder="Home Phone/Teléfono residencial" required <?php showProgramInterestData($data['home_phone'] ?? null, $family_home_phone)?>>
                 <br><br>
 
                 <!-- 8. Email-->
                 <label for="email">* Email / Correo electrónico</label><br><br>
-                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required value="<?php if ($family_cell_phone != null) echo $family_email?>">
+                <input type="email" name="email" id="email" placeholder="Email/Correo electrónico" required <?php showProgramInterestData($data['email'] ?? null, $family_email)?>>
                 <br><br>
 
                 <!-- 7. Number of Children in Household-->
                 <label for="child_num">* How Many Children in Household? / ¿Cuántos niños hay en el hogar?</label><br><br>
-                <input type="number" oninput="getChildNum()" pattern="[0-9]*" name="child_num" id="child_num" placeholder="Number of Children/Número de niños" required value="<?php if ($children_count != null) echo $children_count?>">
+                <input type="number" oninput="getChildNum()" pattern="[0-9]*" name="child_num" id="child_num" placeholder="Number of Children/Número de niños" required <?php showProgramInterestData($data['child_num'] ?? null, $children_count)?>>
                 <br><br>
 
                 <!-- 8. Ages of Children in Household-->
                 <label for="child_ages">* What ages? / ¿Cuántos años?</label><br><br>
-                <input type="text" name="child_ages" id="child_ages" placeholder="Ages/Años" required value="<?php if ($children_ages != null) echo $children_ages?>">
+                <input type="text" name="child_ages" id="child_ages" placeholder="Ages/Años" required <?php showProgramInterestData($data['child_ages'] ?? null, $children_ages)?>>
                 <br><br>
 
                 <!-- 9. Number of Adults in Household-->
                 <label for="adult_num">* How Many Adult in Household? / ¿Cuántos adultos hay en el hogar?</label><br><br>
-                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" required>
+                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" <?php showProgramInterestData($data['adult_num'] ?? null, null)?>>
                 <br><br>
 
                 <h2>Programs of Interest / Programas de interés</h2>
@@ -279,20 +303,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </p><br>
 
                 <!-- 10. Programs of Interest-->
-                <input type="checkbox" id="brain_builders" name="programs[]" value="Brain Builders">
-                <label for="brain_builders">  Brain Builders (Tutoring Program for grades K – 12)</label><br>
-                <input type="checkbox" id="camp_junction" name="programs[]" value="Camp Junction">
-                <label for="camp_junction"> Camp Junction (Camp Program for grades K – 5)</label><br>
-                <input type="checkbox" id="sports_camp" name="programs[]" value="Stafford County Sheriff’s Office Sports Camp">
-                <label for="sports_camp"> Stafford County Sheriff’s Office Sports Camp (grades K – 12)</label><br> 
-                <input type="checkbox" id="steam" name="programs[]" value="STEAM">
-                <label for="steam"> STEAM  (Science, Technology, Engineering, Arts, Math) Camp (grades 6 – 12)</label><br>
-                <input type="checkbox" id="ymca" name="programs[]" value="YMCA">
-                <label for="ymca"> YMCA (Membership, Activities) (All Ages)</label><br>
-                <input type="checkbox" id="tide" name="programs[]" value="Tide Me Over Bags">
-                <label for="tide"> Tide Me Over Bags (Shelf Stable Meal) / Produce </label><br> 
-                <input type="checkbox" id="english_classes" name="programs[]" value="English Language Conversation Classes">
-                <label for="english_classes"> English Language Conversation Classes (Adults) </label><br><br>
+                <input type="checkbox" id="brain_builders" name="programs[]" value="Brain Builders" <?php if ($data) echo showProgramInterestCheckbox($programData, "Brain Builders");?>>
+                <label>  Brain Builders (Tutoring Program for grades K – 12)</label><br>
+                <input type="checkbox" id="camp_junction" name="programs[]" value="Camp Junction" <?php showProgramInterestCheckbox($programData, "Camp Junction")?>>
+                <label> Camp Junction (Camp Program for grades K – 5)</label><br>
+                <input type="checkbox" id="sports_camp" name="programs[]" value="Stafford County Sheriff’s Office Sports Camp" <?php showProgramInterestCheckbox($programData, "Stafford County Sheriff’s Office Sports Camp")?>>
+                <label> Stafford County Sheriff’s Office Sports Camp (grades K – 12)</label><br> 
+                <input type="checkbox" id="steam" name="programs[]" value="STEAM" <?php showProgramInterestCheckbox($programData, "STEAM")?>>
+                <label> STEAM  (Science, Technology, Engineering, Arts, Math) Camp (grades 6 – 12)</label><br>
+                <input type="checkbox" id="ymca" name="programs[]" value="YMCA" <?php showProgramInterestCheckbox($programData, "YMCA")?>>
+                <label> YMCA (Membership, Activities) (All Ages)</label><br>
+                <input type="checkbox" id="tide" name="programs[]" value="Tide Me Over Bags" <?php showProgramInterestCheckbox($programData, "Tide Me Over Bags")?>>
+                <label> Tide Me Over Bags (Shelf Stable Meal) / Produce </label><br> 
+                <input type="checkbox" id="english_classes" name="programs[]" value="English Language Conversation Classes" <?php showProgramInterestCheckbox($programData, "English Language Conversation Classes")?>>
+                <label> English Language Conversation Classes (Adults) </label><br><br>
 
                 <h2>Topics of Interest / Temas de interés</h2>
                 <br>
@@ -301,31 +325,39 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </p><br>
 
                 <!-- 11. Topics of Interest-->
-                <input type="checkbox" id="legal_services" name="topics[]" value="Legal Services">
-                <label for="legal_services"> Legal Services</label><br> 
-                <input type="checkbox" id="finance" name="topics[]" value="Finance">
-                <label for="finances"> Finances</label><br>
-                <input type="checkbox" id="tenant_rights" name="topics[]" value="Tenant Rights">
-                <label for="tenant_rights"> Tenant Rights</label><br>
-                <input type="checkbox" id="health" name="topics[]" value="Health/Wellness/Nutrition">
-                <label for="health"> Health/Wellness/Nutrition </label><br> 
-                <input type="checkbox" id="continuing_education" name="topics[]" value="Continuing Education">
-                <label for="continuing_education"> Continuing Education  </label><br>
-                <input type="checkbox" id="parenting" name="topics[]" value="Parenting">
-                <label for="parenting"> Parenting</label><br>
-                <input type="checkbox" id="mental_health" name="topics[]" value="Mental Health">
-                <label for="mental_health"> Mental Health</label><br>
-                <input type="checkbox" id="job_guidance" name="topics[]" value="Job/Career Guidance">
-                <label for="job_guidance"> Job/Career Guidance </label><br> 
-                <input type="checkbox" id="citizenship_classes" name="topics[]" value="Citizenship Classes">
-                <label for="citizenship_classes"> Citizenship Classes  </label><br><br>
+                <input type="checkbox" id="legal_services" name="topics[]" value="Legal Services" <?php showProgramInterestCheckbox($topicData, "Legal Services")?>>
+                <label> Legal Services</label><br> 
+                <input type="checkbox" id="finance" name="topics[]" value="Finance" <?php showProgramInterestCheckbox($topicData, "Brain Finance")?>>
+                <label> Finances</label><br>
+                <input type="checkbox" id="tenant_rights" name="topics[]" value="Tenant Rights" <?php showProgramInterestCheckbox($topicData, "Tenant Rights")?>>
+                <label> Tenant Rights</label><br>
+                <input type="checkbox" id="health" name="topics[]" value="Health/Wellness/Nutrition" <?php showProgramInterestCheckbox($topicData, "Health/Wellness/Nutrition")?>>
+                <label> Health/Wellness/Nutrition </label><br> 
+                <input type="checkbox" id="continuing_education" name="topics[]" value="Continuing Education" <?php showProgramInterestCheckbox($topicData, "Continuing Education")?>>
+                <label> Continuing Education  </label><br>
+                <input type="checkbox" id="parenting" name="topics[]" value="Parenting" <?php showProgramInterestCheckbox($topicData, "Parenting")?>>
+                <label> Parenting</label><br>
+                <input type="checkbox" id="mental_health" name="topics[]" value="Mental Health" <?php showProgramInterestCheckbox($topicData, "Mental Health")?>>
+                <label> Mental Health</label><br>
+                <input type="checkbox" id="job_guidance" name="topics[]" value="Job/Career Guidance" <?php showProgramInterestCheckbox($topicData, "Job/Career Guidance")?>>
+                <label> Job/Career Guidance </label><br> 
+                <input type="checkbox" id="citizenship_classes" name="topics[]" value="Citizenship Classes" <?php showProgramInterestCheckbox($topicData, "Citizenship Classes")?>>
+                <label> Citizenship Classes  </label><br><br>
 
                 <label for="other_topics">Are there any other topics not listed you might be interested in?</label><br><br>
 
                 <!-- Repurposed add child code from familyAccount.php -->
                 <fieldset style="border: none;">
                     <div id="topic-container" ></div>
-                    <button type="button" onclick="addTopicForm()" style="width: 35.12rem;">+ Add Topic</button>
+                    <!-- Check if form is being viewed, if so, display other topic interests in text box instead of showing javascript code below -->
+                    <?php if (!$data) {
+                        echo '<button type="button" onclick="addTopicForm()" style="width: 35.12rem;">+ Add Topic</button>';
+                    } else {
+                        $other_topics = implode(', ', getOtherTopicInterestData($topicData));
+                        echo '<input type="text" disabled style="background-color: yellow; color: black;" value="' . $other_topics . '">';
+                    }
+                    ?>
+                    
                 </fieldset>
                 <script>
                     let topicCount = 0;
@@ -370,24 +402,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Monday][morning]' value='0'>
-                    <input type="checkbox" id="monday_morning" name='days[Monday][morning]' value='1'>
+                    <input type="checkbox" id="monday_morning" name='days[Monday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Monday']['morning'] ?? null)?>>
                     <label for="monday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Monday][afternoon]' value='no'>
-                    <input type="checkbox" id="monday_afternoon" name='days[Monday][afternoon]' value='1'>
+                    <input type="checkbox" id="monday_afternoon" name='days[Monday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Monday']['afternoon'] ?? null)?>>
                     <label for="monday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Monday][evening]' value='no'>
-                    <input type="checkbox" id="monday_evening" name='days[Monday][evening]' value='1'>
+                    <input type="checkbox" id="monday_evening" name='days[Monday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Monday']['evening'] ?? null)?>>
                     <label for="monday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Monday][specific_time]' id="monday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Monday][specific_time]' id="monday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Monday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br>
@@ -398,24 +430,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Tuesday][morning]' value='0'>
-                    <input type="checkbox" id="tuesday_morning" name='days[Tuesday][morning]' value='1'>
+                    <input type="checkbox" id="tuesday_morning" name='days[Tuesday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Tuesday']['morning'] ?? null)?>>
                     <label for="tuesday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Tuesday][afternoon]' value='no'>
-                    <input type="checkbox" id="tuesday_afternoon" name='days[Tuesday][afternoon]' value='1'>
+                    <input type="checkbox" id="tuesday_afternoon" name='days[Tuesday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Tuesday']['afternoon'] ?? null)?>>
                     <label for="tuesday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Tuesday][evening]' value='no'>
-                    <input type="checkbox" id="tuesday_evening" name='days[Tuesday][evening]' value='1'>
+                    <input type="checkbox" id="tuesday_evening" name='days[Tuesday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Tuesday']['evening'] ?? null)?>>
                     <label for="tuesday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Tuesday][specific_time]' id="tuesday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Tuesday][specific_time]' id="tuesday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Tuesday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br>
@@ -426,24 +458,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Wednesday][morning]' value='0'>
-                    <input type="checkbox" id="wednesday_morning" name='days[Wednesday][morning]' value='1'>
+                    <input type="checkbox" id="wednesday_morning" name='days[Wednesday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Wednesday']['morning'] ?? null)?>>
                     <label for="wednesday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Wednesday][afternoon]' value='no'>
-                    <input type="checkbox" id="wednesday_afternoon" name='days[Wednesday][afternoon]' value='1'>
+                    <input type="checkbox" id="wednesday_afternoon" name='days[Wednesday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Wednesday']['afternoon'] ?? null)?>>
                     <label for="wednesday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Wednesday][evening]' value='no'>
-                    <input type="checkbox" id="wednesday_evening" name='days[Wednesday][evening]' value='1'>
+                    <input type="checkbox" id="wednesday_evening" name='days[Wednesday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Wednesday']['evening'] ?? null)?>>
                     <label for="wednesday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Wednesday][specific_time]' id="wednesday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Wednesday][specific_time]' id="wednesday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Wednesday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br>
@@ -454,24 +486,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Thursday][morning]' value='0'>
-                    <input type="checkbox" id="thursday_morning" name='days[Thursday][morning]' value='1'>
+                    <input type="checkbox" id="thursday_morning" name='days[Thursday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Thursday']['morning'] ?? null)?>>
                     <label for="thursday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Thursday][afternoon]' value='no'>
-                    <input type="checkbox" id="thursday_afternoon" name='days[Thursday][afternoon]' value='1'>
+                    <input type="checkbox" id="thursday_afternoon" name='days[Thursday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Thursday']['afternoon'] ?? null)?>>
                     <label for="thursday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Thursday][evening]' value='no'>
-                    <input type="checkbox" id="thursday_evening" name='days[Thursday][evening]' value='1'>
+                    <input type="checkbox" id="thursday_evening" name='days[Thursday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Thursday']['evening'] ?? null)?>>
                     <label for="thursday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Thursday][specific_time]' id="thursday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Thursday][specific_time]' id="thursday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Thursday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br><br><br>
@@ -484,24 +516,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Friday][morning]' value='0'>
-                    <input type="checkbox" id="friday_morning" name='days[Friday][morning]' value='1'>
+                    <input type="checkbox" id="friday_morning" name='days[Friday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Friday']['morning'] ?? null)?>>
                     <label for="friday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Friday][afternoon]' value='no'>
-                    <input type="checkbox" id="friday_afternoon" name='days[Friday][afternoon]' value='1'>
+                    <input type="checkbox" id="friday_afternoon" name='days[Friday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Friday']['afternoon'] ?? null)?>>
                     <label for="friday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Friday][evening]' value='no'>
-                    <input type="checkbox" id="friday_evening" name='days[Friday][evening]' value='1'>
+                    <input type="checkbox" id="friday_evening" name='days[Friday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Friday']['evening'] ?? null)?>>
                     <label for="friday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Friday][specific_time]' id="friday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Friday][specific_time]' id="friday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Friday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br>
@@ -512,24 +544,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Saturday][morning]' value='0'>
-                    <input type="checkbox" id="saturday_morning" name='days[Saturday][morning]' value='1'>
+                    <input type="checkbox" id="saturday_morning" name='days[Saturday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Saturday']['morning'] ?? null)?>>
                     <label for="saturday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Saturday][afternoon]' value='no'>
-                    <input type="checkbox" id="saturday_afternoon" name='days[Saturday][afternoon]' value='1'>
+                    <input type="checkbox" id="saturday_afternoon" name='days[Saturday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Saturday']['afternoon'] ?? null)?>>
                     <label for="saturday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Saturday][evening]' value='no'>
-                    <input type="checkbox" id="saturday_evening" name='days[Saturday][evening]' value='1'>
+                    <input type="checkbox" id="saturday_evening" name='days[Saturday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Saturday']['evening'] ?? null)?>>
                     <label for="saturday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Saturday][specific_time]' id="saturday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Saturday][specific_time]' id="saturday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Saturday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
                 <br>
@@ -540,39 +572,55 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </div>
                     <div>
                     <input type='hidden'name='days[Sunday][morning]' value='0'>
-                    <input type="checkbox" id="sunday_morning" name='days[Sunday][morning]' value='1'>
+                    <input type="checkbox" id="sunday_morning" name='days[Sunday][morning]' value='1' <?php showAvailabilityCheckbox($availabilityData['Sunday']['morning'] ?? null)?>>
                     <label for="sunday_morning"> Morning</label><br> 
                     </div>
                     <div>
                     <input type='hidden'name='days[Sunday][afternoon]' value='no'>
-                    <input type="checkbox" id="sunday_afternoon" name='days[Sunday][afternoon]' value='1'>
+                    <input type="checkbox" id="sunday_afternoon" name='days[Sunday][afternoon]' value='1' <?php showAvailabilityCheckbox($availabilityData['Sunday']['afternoon'] ?? null)?>>
                     <label for="sunday_afternoon"> Afternoon</label><br>
                     </div>
                     <div>
                     <input type='hidden'name='days[Sunday][evening]' value='no'>
-                    <input type="checkbox" id="sunday_evening" name='days[Sunday][evening]' value='1'>
+                    <input type="checkbox" id="sunday_evening" name='days[Sunday][evening]' value='1' <?php showAvailabilityCheckbox($availabilityData['Sunday']['evening'] ?? null)?>>
                     <label for="sunday_evening"> Evening</label><br>
                     </div>
                     <div>
                     <label>Only Specific Times:</label><br>
                     </div>
                     <div>
-                    <input type="text" name='days[Sunday][specific_time]' id="sunday_times" placeholder="Time/Horas" >
+                    <input type="text" name='days[Sunday][specific_time]' id="sunday_times" placeholder="Time/Horas" <?php showProgramInterestData($availabilityData['Sunday']['specific_time'] ?? null, null)?>>
                     </div>
                 </div>
-                <br>
+                <br><br>
 
                 <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+                
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
+                <br><br><br>
             </form>
         </div>
         <?php
             // if submission successful, create pop up notification and direct user back to fill form page
             // if fail, notify user on program interest form page
             if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
             } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
-                echo '<script>document.location = "programInterestForm.php?formSubmitFail";</script>';
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
         
