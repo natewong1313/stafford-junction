@@ -289,4 +289,18 @@ function find_children($last_name, $address, $city, $neighborhood, $school, $gra
     mysqli_close($connection);
     return $children;
 }
+
+//Function that retrieves a child from dbChildren based on first name, last name, and family id
+function retrieve_child_by_firstName_lastName_famID($fn, $ln, $famID){
+    $conn = connect();
+    $query = "SELECT * FROM dbChildren WHERE first_name = '$fn' AND last_name = '$ln' AND family_id = '$famID';";
+    $res = mysqli_query($conn, $query);
+    if(mysqli_num_rows($res) < 0 || $res == null){
+        mysqli_close($conn);
+        return null;
+    }else{
+        $row = mysqli_fetch_assoc($res);
+        return $row;
+    } 
+}
 ?>

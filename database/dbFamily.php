@@ -334,7 +334,7 @@ function getChildren($family_id){
 
 function change_family_password($id, $newPass) {
         $con=connect();
-        $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE email = "' . $id . '"';
+        $query = 'UPDATE dbFamily SET password = "' . $newPass . '" WHERE id = "' . $id . '"';
         $result = mysqli_query($con, $query);
         mysqli_close($con);
         return $result;

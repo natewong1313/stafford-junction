@@ -9,8 +9,8 @@
 
     // Get user security question
     $question = null;
-    if (isset($_SESSION['familyEmail'])) {
-        $user = retrieve_family_by_email($_SESSION['familyEmail']);
+    if (isset($_SESSION['familyID'])) {
+        $user = retrieve_family_by_id($_SESSION['familyID']);
         // Variable to hold security question
         $question = $user->getSecurityQuestion();
     } else {

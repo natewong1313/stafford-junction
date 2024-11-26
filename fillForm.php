@@ -49,11 +49,11 @@ error_reporting(E_ALL);
                     <img src="images/tent-svgrepo-com.svg">
                     <span>Spring Break Form</span> 
                 </div>
-
-                <!--Angel Gifts Wish Form-->
-                <div class="dashboard-item" data-link="angelGiftForm.php">
+                    
+                <!-- Angel Wish Gift Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "angelGiftForm.php?id=" . $_GET['id'] : "angelGiftForm.php"; ?>">
                     <img src="images/angel.svg">
-                    <span>Angel Gifts Wish Form</span> 
+                    <span>Angel Gifts Wish Form</span>
                 </div>
 
                 <!--Child Care Waiver Form-->
@@ -68,8 +68,8 @@ error_reporting(E_ALL);
                     <span>Field Trip Waiver Form</span> 
                 </div>
 
-                <!--Program Interest Form-->
-                <div class="dashboard-item" data-link="programInterestForm.php">
+                <!-- Program Interest Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "programInterestForm.php?id=" . $_GET['id'] : "programInterestForm.php"; ?>">
                     <img src="images/interest.svg">
                     <span>Program Interest Form</span> 
                 </div>
@@ -92,9 +92,9 @@ error_reporting(E_ALL);
                     <img src="images/brainBuilderReviewIcon.svg.svg">
                     <span>Brain Builder Review Form</span> 
                 </div>
-
-                <!--Brain Builders Holiday Party Form-->
-                <div class="dashboard-item" data-link="holidayPartyForm.php">
+                
+                <!--If the active account is a staff filling out this form, send the family id in with GET variable, otherwise just go to normal holidayPartyForm-->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "holidayPartyForm.php?id=" . $_GET['id'] : "holidayPartyForm.php"; ?>">
                     <img src="images/party-flyer-svgrepo-com.svg">
                     <span>Brain Builders Holiday Party Form</span> 
                 </div>
@@ -108,6 +108,14 @@ error_reporting(E_ALL);
                 <!--Only staff and volunteer accounts can access these forms-->
 
                 <!--Actual Activity Form-->
+                <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
+                <div class="dashboard-item" data-link="busMonitorAttendanceForm.php">
+                    <img src="images/school-bus-vehicle-svgrepo-com.svg">
+                    <span>Bus Monitor Attendance Form</span>
+                </div>
+                <?php endif ?>
+
+                <!--Only staff and volunteer accounts can access these forms-->
                 <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
                     <div class="dashboard-item" data-link="actualActivityForm.php">
                         <img src="images/actualActivity-svgrepo.svg">

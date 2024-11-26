@@ -58,6 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         <div id="view-family" style="margin-left: 20px; margin-right: 20px">
         <main class="general">
+            <?php
+                if (isset($_GET['pcSuccess'])) {
+                    echo '<div class="happy-toast" style="text-align: center;">Password changed successfully!</div>';
+                }
+            ?>
             <fieldset>
                     <legend>General Information</legend>
                     <label>Account ID</label>
@@ -164,6 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <?php endif?>
         <?php if($accessLevel > 1): ?> <!--Option for staff to fill a form out for family-->
         <a class="button edit" href="fillForm.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Fill Form</a>   
+        <?php endif?>
+        <?php if($accessLevel > 1): ?> <!--Option for staff to fill a form out for family-->
+        <a class="button edit" href="forgotPassword.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Change Password</a>   
         <?php endif?>
         <!-- Cancel Buttons -->
         <?php if($_SESSION['access_level'] == 1): ?>

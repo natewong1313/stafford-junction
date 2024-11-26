@@ -18,14 +18,14 @@ if(isset($_SESSION['_id'])){
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-    $children = retrieve_children_by_family_id($userID);
+    $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 } else {
     header('Location: login.php');
     die();
 }
 
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_phone = $family->getPhone();
@@ -53,7 +53,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <title>Angel Gifts Wish Form</title>
     </head>
     <body>
-
         
         <h1>Angel Gifts Wish Form / Formulario de deseos de regalos de ángeles</h1>
         <div id="formatted_form">
@@ -94,7 +93,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     require_once('domain/Children.php');
                     foreach ($children as $c){
                         $id = $c->getID();
-                        var_dump($c);
                         // Check if form was already completed for the child
                         if (!isAngelGiftFormComplete($id)) {
                             $name = $c->getFirstName() . " " . $c->getLastName();
@@ -272,14 +270,30 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <label for="release_no">No / No</label><br><br>
 
                 <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
             </form>
         </div>
         <?php
            //if registration successful, create pop up notification and direct user back to login
-            if($success){
+           if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+            } else {
                 echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
+            }
+        } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+            }
+        }
         ?>
         
     </body>
