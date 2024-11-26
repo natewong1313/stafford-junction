@@ -24,8 +24,8 @@ error_reporting(E_ALL);
         <main class='dashboard'>
             <div id="dashboard">
                 <!--Holiday Meal Bag -->
-                <!--will display this dashboard item if viewing the page from staff pov. This one has the GET superglobal, w
-                hich will be needed so that the id of the family is saved and able to be used when a staff memeber fills a form out on behalf of family-->
+                <!--will display this dashboard item if viewing the page from staff pov. This one has the GET superglobal, 
+                which will be needed so that the id of the family is saved and able to be used when a staff member fills a form out on behalf of family-->
                 <?php if(isset($_GET['id'])): ?>
                     <div class="dashboard-item" data-link="holidayMealBagForm.php?id=<?php echo $_GET['id']?>">
                     <img src="images/holdiayMealBagIcon.svg">

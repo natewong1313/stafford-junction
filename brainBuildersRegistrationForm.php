@@ -54,8 +54,6 @@ $family_race1 = $family->getRace();
 
 $family_income = $family->getIncome();
 
-$errors[] = "";
-
 try {
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -128,11 +126,11 @@ try {
 
                 <!-- Looping through children to display the ones who have not completed the form -->
                 <?php 
-                $childrenNotRegistered = []; // Correctly initializing the array
+                $childrenNotRegistered = [];
                 foreach ($family_children as $child): 
                     require_once('database/dbBrainBuildersRegistrationForm.php');
+                    // Add child to the array if they have not completed the form
                     if (!isBrainBuildersRegistrationFormComplete($child->getID())):
-                        // Add child to the array if they have not completed the form
                         $childrenNotRegistered[] = $child;
                     endif;
                 endforeach;
