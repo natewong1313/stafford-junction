@@ -33,6 +33,7 @@ if (isset($_SESSION['_id'])) {
 $first_name = $family->getFirstName();
 $last_name = $family->getLastName();
 $birthdate = $family->getBirthDate();
+$neighborhood = $family->getNeighborhood();
 $address = $family->getAddress();
 $city = $family->getCity();
 $state = $family->getState();
@@ -42,10 +43,14 @@ $phone = $family->getPhone();
 $phone_type = $family->getPhoneType();
 $secondary_phone = $family->getSecondaryPhone();
 $secondary_phone_type = $family->getSecondaryPhoneType();
+$isHispanic = $family->isHispanic();
+$race = $family->getRace();
+$income = $family->getIncome();
 
 $first_name2 = $family->getFirstName2();
 $last_name2 = $family->getLastName2();
 $birthdate2 = $family->getBirthDate2();
+$neighborhood2 = $family->getNeighborhood2();
 $address2 = $family->getAddress2();
 $city2 = $family->getCity2();
 $state2 = $family->getState2();
@@ -55,6 +60,8 @@ $phone2 = $family->getPhone2();
 $phone_type2 = $family->getPhoneType2();
 $secondary_phone2 = $family->getSecondaryPhone2();
 $secondary_phone_type2 = $family->getSecondaryPhoneType2();
+$isHispanic2 = $family->isHispanic2();
+$race2 = $family->getRace2();
 
 $econtact_first_name = $family->getEContactFirstName();
 $econtact_last_name = $family->getEContactLastName();
@@ -85,8 +92,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         <h1>Edit Profile</h1>
         <main class="signup-form">
             <form class="signup-form" method="post">
-                <h2>Edit Profile</h2>
-
                 <h3>Primary Parent / Guardian</h3>
                 <fieldset>
                     <legend>Personal Information</legend>
@@ -99,6 +104,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="birthdate" >Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($birthdate); ?>" max="<?php echo date('Y-m-d'); ?>">
 
+                    <label for="neighborhood" >Neighborhood</label>
+                    <input type="text" id="neighborhood" name="neighborhood" value="<?php echo htmlspecialchars($neighborhood); ?>">
 
                     <label for="address" >Street Address</label>
                     <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($address); ?>">
@@ -106,65 +113,94 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="city" >City</label>
                     <input type="text" id="city" name="city" value="<?php echo htmlspecialchars($city); ?>">
 
-                    <label for="state" >State</label>
-                    <select id="state" name="state" value="<?php echo htmlspecialchars($state); ?>">
-                        <option value="AL">Alabama</option>
-                        <option value="AK">Alaska</option>
-                        <option value="AZ">Arizona</option>
-                        <option value="AR">Arkansas</option>
-                        <option value="CA">California</option>
-                        <option value="CO">Colorado</option>
-                        <option value="CT">Connecticut</option>
-                        <option value="DE">Delaware</option>
-                        <option value="DC">District Of Columbia</option>
-                        <option value="FL">Florida</option>
-                        <option value="GA">Georgia</option>
-                        <option value="HI">Hawaii</option>
-                        <option value="ID">Idaho</option>
-                        <option value="IL">Illinois</option>
-                        <option value="IN">Indiana</option>
-                        <option value="IA">Iowa</option>
-                        <option value="KS">Kansas</option>
-                        <option value="KY">Kentucky</option>
-                        <option value="LA">Louisiana</option>
-                        <option value="ME">Maine</option>
-                        <option value="MD">Maryland</option>
-                        <option value="MA">Massachusetts</option>
-                        <option value="MI">Michigan</option>
-                        <option value="MN">Minnesota</option>
-                        <option value="MS">Mississippi</option>
-                        <option value="MO">Missouri</option>
-                        <option value="MT">Montana</option>
-                        <option value="NE">Nebraska</option>
-                        <option value="NV">Nevada</option>
-                        <option value="NH">New Hampshire</option>
-                        <option value="NJ">New Jersey</option>
-                        <option value="NM">New Mexico</option>
-                        <option value="NY">New York</option>
-                        <option value="NC">North Carolina</option>
-                        <option value="ND">North Dakota</option>
-                        <option value="OH">Ohio</option>
-                        <option value="OK">Oklahoma</option>
-                        <option value="OR">Oregon</option>
-                        <option value="PA">Pennsylvania</option>
-                        <option value="RI">Rhode Island</option>
-                        <option value="SC">South Carolina</option>
-                        <option value="SD">South Dakota</option>
-                        <option value="TN">Tennessee</option>
-                        <option value="TX">Texas</option>
-                        <option value="UT">Utah</option>
-                        <option value="VT">Vermont</option>
-                        <option value="VA" selected>Virginia</option>
-                        <option value="WA">Washington</option>
-                        <option value="WV">West Virginia</option>
-                        <option value="WI">Wisconsin</option>
-                        <option value="WY">Wyoming</option>
+                    <label for="state">State </label>
+                    <select name="state" id="state">
+                        <option value="" disabled>Select State</option>
+                        <option value="AL" <?php echo (isset($state) && $state == 'AL') ? 'selected' : ''; ?>>Alabama</option>
+                        <option value="AK" <?php echo (isset($state) && $state == 'AK') ? 'selected' : ''; ?>>Alaska</option>
+                        <option value="AZ" <?php echo (isset($state) && $state == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
+                        <option value="AR" <?php echo (isset($state) && $state == 'AR') ? 'selected' : ''; ?>>Arkansas</option>
+                        <option value="CA" <?php echo (isset($state) && $state == 'CA') ? 'selected' : ''; ?>>California</option>
+                        <option value="CO" <?php echo (isset($state) && $state == 'CO') ? 'selected' : ''; ?>>Colorado</option>
+                        <option value="CT" <?php echo (isset($state) && $state == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
+                        <option value="DE" <?php echo (isset($state) && $state == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                        <option value="DC" <?php echo (isset($state) && $state == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
+                        <option value="FL" <?php echo (isset($state) && $state == 'FL') ? 'selected' : ''; ?>>Florida</option>
+                        <option value="GA" <?php echo (isset($state) && $state == 'GA') ? 'selected' : ''; ?>>Georgia</option>
+                        <option value="HI" <?php echo (isset($state) && $state == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
+                        <option value="ID" <?php echo (isset($state) && $state == 'ID') ? 'selected' : ''; ?>>Idaho</option>
+                        <option value="IL" <?php echo (isset($state) && $state == 'IL') ? 'selected' : ''; ?>>Illinois</option>
+                        <option value="IN" <?php echo (isset($state) && $state == 'IN') ? 'selected' : ''; ?>>Indiana</option>
+                        <option value="IA" <?php echo (isset($state) && $state == 'IA') ? 'selected' : ''; ?>>Iowa</option>
+                        <option value="KS" <?php echo (isset($state) && $state == 'KS') ? 'selected' : ''; ?>>Kansas</option>
+                        <option value="KY" <?php echo (isset($state) && $state == 'KY') ? 'selected' : ''; ?>>Kentucky</option>
+                        <option value="LA" <?php echo (isset($state) && $state == 'LA') ? 'selected' : ''; ?>>Louisiana</option>
+                        <option value="ME" <?php echo (isset($state) && $state == 'ME') ? 'selected' : ''; ?>>Maine</option>
+                        <option value="MD" <?php echo (isset($state) && $state == 'MD') ? 'selected' : ''; ?>>Maryland</option>
+                        <option value="MA" <?php echo (isset($state) && $state == 'MA') ? 'selected' : ''; ?>>Massachusetts</option>
+                        <option value="MI" <?php echo (isset($state) && $state == 'MI') ? 'selected' : ''; ?>>Michigan</option>
+                        <option value="MN" <?php echo (isset($state) && $state == 'MN') ? 'selected' : ''; ?>>Minnesota</option>
+                        <option value="MS" <?php echo (isset($state) && $state == 'MS') ? 'selected' : ''; ?>>Mississippi</option>
+                        <option value="MO" <?php echo (isset($state) && $state == 'MO') ? 'selected' : ''; ?>>Missouri</option>
+                        <option value="MT" <?php echo (isset($state) && $state == 'MT') ? 'selected' : ''; ?>>Montana</option>
+                        <option value="NE" <?php echo (isset($state) && $state == 'NE') ? 'selected' : ''; ?>>Nebraska</option>
+                        <option value="NV" <?php echo (isset($state) && $state == 'NV') ? 'selected' : ''; ?>>Nevada</option>
+                        <option value="NH" <?php echo (isset($state) && $state == 'NH') ? 'selected' : ''; ?>>New Hampshire</option>
+                        <option value="NJ" <?php echo (isset($state) && $state == 'NJ') ? 'selected' : ''; ?>>New Jersey</option>
+                        <option value="NM" <?php echo (isset($state) && $state == 'NM') ? 'selected' : ''; ?>>New Mexico</option>
+                        <option value="NY" <?php echo (isset($state) && $state == 'NY') ? 'selected' : ''; ?>>New York</option>
+                        <option value="NC" <?php echo (isset($state) && $state == 'NC') ? 'selected' : ''; ?>>North Carolina</option>
+                        <option value="ND" <?php echo (isset($state) && $state == 'ND') ? 'selected' : ''; ?>>North Dakota</option>
+                        <option value="OH" <?php echo (isset($state) && $state == 'OH') ? 'selected' : ''; ?>>Ohio</option>
+                        <option value="OK" <?php echo (isset($state) && $state == 'OK') ? 'selected' : ''; ?>>Oklahoma</option>
+                        <option value="OR" <?php echo (isset($state) && $state == 'OR') ? 'selected' : ''; ?>>Oregon</option>
+                        <option value="PA" <?php echo (isset($state) && $state == 'PA') ? 'selected' : ''; ?>>Pennsylvania</option>
+                        <option value="RI" <?php echo (isset($state) && $state == 'RI') ? 'selected' : ''; ?>>Rhode Island</option>
+                        <option value="SC" <?php echo (isset($state) && $state == 'SC') ? 'selected' : ''; ?>>South Carolina</option>
+                        <option value="SD" <?php echo (isset($state) && $state == 'SD') ? 'selected' : ''; ?>>South Dakota</option>
+                        <option value="TN" <?php echo (isset($state) && $state == 'TN') ? 'selected' : ''; ?>>Tennessee</option>
+                        <option value="TX" <?php echo (isset($state) && $state == 'TX') ? 'selected' : ''; ?>>Texas</option>
+                        <option value="UT" <?php echo (isset($state) && $state == 'UT') ? 'selected' : ''; ?>>Utah</option>
+                        <option value="VT" <?php echo (isset($state) && $state == 'VT') ? 'selected' : ''; ?>>Vermont</option>
+                        <option value="VA" <?php echo (isset($state) && $state == 'VA') ? 'selected' : ''; ?>>Virginia</option>
+                        <option value="WA" <?php echo (isset($state) && $state == 'WA') ? 'selected' : ''; ?>>Washington</option>
+                        <option value="WV" <?php echo (isset($state) && $state == 'WV') ? 'selected' : ''; ?>>West Virginia</option>
+                        <option value="WI" <?php echo (isset($state) && $state == 'WI') ? 'selected' : ''; ?>>Wisconsin</option>
+                        <option value="WY" <?php echo (isset($state) && $state == 'WY') ? 'selected' : ''; ?>>Wyoming</option>
                     </select>
 
                     <label for="zip" >Zip Code</label>
                     <input type="number" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" value="<?php echo htmlspecialchars($zip); ?>">
-                </fieldset>
+                
+                    <label for="isHispanic">Hispanic, Latino, or Spanish Origin</label>
+                    <select id="isHispanic" name="isHispanic" value="<?php echo htmlspecialchars($isHispanic); ?>">>
+                        <option value="" disabled <?php echo isset($isHispanic) && $isHispanic == '' ? 'selected' : ''; ?>>Select Yes or No</option>
+                        <option value="yes" <?php echo isset($isHispanic) && $isHispanic == '1' ? 'selected' : ''; ?>>Yes</option>
+                        <option value="no" <?php echo isset($isHispanic) && $isHispanic == '0' ? 'selected' : ''; ?>>No</option>
+                    </select>
 
+                    <label for="race">Race</label>
+                    <select id="race" name="race">
+                        <option value="" disabled <?php echo isset($race) && $race == '' ? 'selected' : ''; ?>>Select Race</option>
+                        <option value="Caucasian" <?php echo isset($race) && $race == 'Caucasian' ? 'selected' : ''; ?>>Caucasian</option>
+                        <option value="Black/African American" <?php echo isset($race) && $race == 'Black/African American' ? 'selected' : ''; ?>>Black/African American</option>
+                        <option value="Native Indian/Alaska Native" <?php echo isset($race) && $race == 'Native Indian/Alaska Native' ? 'selected' : ''; ?>>Native Indian/Alaska Native</option>
+                        <option value="Native Hawaiian/Pacific Islander" <?php echo isset($race) && $race == 'Native Hawaiian/Pacific Islander' ? 'selected' : ''; ?>>Native Hawaiian/Pacific Islander</option>
+                        <option value="Asian" <?php echo isset($race) && $race == 'Asian' ? 'selected' : ''; ?>>Asian</option>
+                        <option value="Multiracial" <?php echo isset($race) && $race == 'Multiracial' ? 'selected' : ''; ?>>Multiracial</option>
+                        <option value="Other" <?php echo isset($race) && $race == 'Other' ? 'selected' : ''; ?>>Other</option>
+                    </select>
+
+                    <label for="income">Estimated Household Income *</label>
+                    <select name="income" id="income">
+                        <option value="" disabled <?php echo isset($income) && $income == '' ? 'selected' : ''; ?>>Select Estimated Income</option>
+                        <option value="Under 20,000" <?php echo isset($income) && $income == 'Under $15,0000' ? 'selected' : ''; ?>>Under 20,000</option>
+                        <option value="20,000-40,000n" <?php echo isset($income) && $income == '$15,000 - $24,999' ? 'selected' : ''; ?>>20,000-40,000</option>
+                        <option value="40,001-60,000" <?php echo isset($income) && $income == '$25,000 - $34,999' ? 'selected' : ''; ?>>40,001-60,000</option>
+                        <option value="60,001-80,000" <?php echo isset($income) && $incomee == '$35,000 - $49,999' ? 'selected' : ''; ?>>60,001-80,000</option>
+                        <option value="Over 80,000" <?php echo isset($income) && $income == '$100,000 and above' ? 'selected' : ''; ?>>Over 80,000</option>
+                    </select>
+                </fieldset>
                 <fieldset>
                     <legend>Primary Contact Information</legend>
 
@@ -211,6 +247,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="birthdate2">Date of Birth</label>
                     <input type="date" id="birthdate2" name="birthdate2" value="<?php echo htmlspecialchars($birthdate2); ?>" max="<?php echo date('Y-m-d'); ?>">
 
+                    <label for="neighborhood2" >Neighborhood</label>
+                    <input type="text" id="neighborhood2" name="neighborhood2" value="<?php echo htmlspecialchars($neighborhood2); ?>">
 
                     <label for="address2">Street Address</label>
                     <input type="text" id="address2" name="address2" value="<?php echo htmlspecialchars($address2); ?>">
@@ -219,63 +257,82 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <input type="text" id="city2" name="city2" value="<?php echo htmlspecialchars($city2); ?>">
 
                     <label for="state2">State</label>
-                    <select id="state2" name="state2" value="<?php echo htmlspecialchars($state2); ?>">
-                        <option value="--">--</option>
-                        <option value="AL">Alabama</option>
-                        <option value="AK">Alaska</option>
-                        <option value="AZ">Arizona</option>
-                        <option value="AR">Arkansas</option>
-                        <option value="CA">California</option>
-                        <option value="CO">Colorado</option>
-                        <option value="CT">Connecticut</option>
-                        <option value="DE">Delaware</option>
-                        <option value="DC">District Of Columbia</option>
-                        <option value="FL">Florida</option>
-                        <option value="GA">Georgia</option>
-                        <option value="HI">Hawaii</option>
-                        <option value="ID">Idaho</option>
-                        <option value="IL">Illinois</option>
-                        <option value="IN">Indiana</option>
-                        <option value="IA">Iowa</option>
-                        <option value="KS">Kansas</option>
-                        <option value="KY">Kentucky</option>
-                        <option value="LA">Louisiana</option>
-                        <option value="ME">Maine</option>
-                        <option value="MD">Maryland</option>
-                        <option value="MA">Massachusetts</option>
-                        <option value="MI">Michigan</option>
-                        <option value="MN">Minnesota</option>
-                        <option value="MS">Mississippi</option>
-                        <option value="MO">Missouri</option>
-                        <option value="MT">Montana</option>
-                        <option value="NE">Nebraska</option>
-                        <option value="NV">Nevada</option>
-                        <option value="NH">New Hampshire</option>
-                        <option value="NJ">New Jersey</option>
-                        <option value="NM">New Mexico</option>
-                        <option value="NY">New York</option>
-                        <option value="NC">North Carolina</option>
-                        <option value="ND">North Dakota</option>
-                        <option value="OH">Ohio</option>
-                        <option value="OK">Oklahoma</option>
-                        <option value="OR">Oregon</option>
-                        <option value="PA">Pennsylvania</option>
-                        <option value="RI">Rhode Island</option>
-                        <option value="SC">South Carolina</option>
-                        <option value="SD">South Dakota</option>
-                        <option value="TN">Tennessee</option>
-                        <option value="TX">Texas</option>
-                        <option value="UT">Utah</option>
-                        <option value="VT">Vermont</option>
-                        <option value="VA">Virginia</option>
-                        <option value="WA">Washington</option>
-                        <option value="WV">West Virginia</option>
-                        <option value="WI">Wisconsin</option>
-                        <option value="WY">Wyoming</option>
+                    <select id="state2" name="state2">
+                        <option value="" disabled>Select State</option>
+                        <option value="AL" <?php echo (isset($state2) && $state2 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
+                        <option value="AK" <?php echo (isset($state2) && $state2 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
+                        <option value="AZ" <?php echo (isset($state2) && $state2 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
+                        <option value="AR" <?php echo (isset($state2) && $state2 == 'AR') ? 'selected' : ''; ?>>Arkansas</option>
+                        <option value="CA" <?php echo (isset($state2) && $state2 == 'CA') ? 'selected' : ''; ?>>California</option>
+                        <option value="CO" <?php echo (isset($state2) && $state2 == 'CO') ? 'selected' : ''; ?>>Colorado</option>
+                        <option value="CT" <?php echo (isset($state2) && $state2 == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
+                        <option value="DE" <?php echo (isset($state2) && $state2 == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                        <option value="DC" <?php echo (isset($state2) && $state2 == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
+                        <option value="FL" <?php echo (isset($state2) && $state2 == 'FL') ? 'selected' : ''; ?>>Florida</option>
+                        <option value="GA" <?php echo (isset($state2) && $state2 == 'GA') ? 'selected' : ''; ?>>Georgia</option>
+                        <option value="HI" <?php echo (isset($state2) && $state2 == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
+                        <option value="ID" <?php echo (isset($state2) && $state2 == 'ID') ? 'selected' : ''; ?>>Idaho</option>
+                        <option value="IL" <?php echo (isset($state2) && $state2 == 'IL') ? 'selected' : ''; ?>>Illinois</option>
+                        <option value="IN" <?php echo (isset($state2) && $state2 == 'IN') ? 'selected' : ''; ?>>Indiana</option>
+                        <option value="IA" <?php echo (isset($state2) && $state2 == 'IA') ? 'selected' : ''; ?>>Iowa</option>
+                        <option value="KS" <?php echo (isset($state2) && $state2 == 'KS') ? 'selected' : ''; ?>>Kansas</option>
+                        <option value="KY" <?php echo (isset($state2) && $state2 == 'KY') ? 'selected' : ''; ?>>Kentucky</option>
+                        <option value="LA" <?php echo (isset($state2) && $state2 == 'LA') ? 'selected' : ''; ?>>Louisiana</option>
+                        <option value="ME" <?php echo (isset($state2) && $state2 == 'ME') ? 'selected' : ''; ?>>Maine</option>
+                        <option value="MD" <?php echo (isset($state2) && $state2 == 'MD') ? 'selected' : ''; ?>>Maryland</option>
+                        <option value="MA" <?php echo (isset($state2) && $state2 == 'MA') ? 'selected' : ''; ?>>Massachusetts</option>
+                        <option value="MI" <?php echo (isset($state2) && $state2 == 'MI') ? 'selected' : ''; ?>>Michigan</option>
+                        <option value="MN" <?php echo (isset($state2) && $state2 == 'MN') ? 'selected' : ''; ?>>Minnesota</option>
+                        <option value="MS" <?php echo (isset($state2) && $state2 == 'MS') ? 'selected' : ''; ?>>Mississippi</option>
+                        <option value="MO" <?php echo (isset($state2) && $state2 == 'MO') ? 'selected' : ''; ?>>Missouri</option>
+                        <option value="MT" <?php echo (isset($state2) && $state2 == 'MT') ? 'selected' : ''; ?>>Montana</option>
+                        <option value="NE" <?php echo (isset($state2) && $state2 == 'NE') ? 'selected' : ''; ?>>Nebraska</option>
+                        <option value="NV" <?php echo (isset($state2) && $state2 == 'NV') ? 'selected' : ''; ?>>Nevada</option>
+                        <option value="NH" <?php echo (isset($state2) && $state2 == 'NH') ? 'selected' : ''; ?>>New Hampshire</option>
+                        <option value="NJ" <?php echo (isset($state2) && $state2 == 'NJ') ? 'selected' : ''; ?>>New Jersey</option>
+                        <option value="NM" <?php echo (isset($state2) && $state2 == 'NM') ? 'selected' : ''; ?>>New Mexico</option>
+                        <option value="NY" <?php echo (isset($state2) && $state2 == 'NY') ? 'selected' : ''; ?>>New York</option>
+                        <option value="NC" <?php echo (isset($state2) && $state2 == 'NC') ? 'selected' : ''; ?>>North Carolina</option>
+                        <option value="ND" <?php echo (isset($state2) && $state2 == 'ND') ? 'selected' : ''; ?>>North Dakota</option>
+                        <option value="OH" <?php echo (isset($state2) && $state2 == 'OH') ? 'selected' : ''; ?>>Ohio</option>
+                        <option value="OK" <?php echo (isset($state2) && $state2 == 'OK') ? 'selected' : ''; ?>>Oklahoma</option>
+                        <option value="OR" <?php echo (isset($state2) && $state2 == 'OR') ? 'selected' : ''; ?>>Oregon</option>
+                        <option value="PA" <?php echo (isset($state2) && $state2 == 'PA') ? 'selected' : ''; ?>>Pennsylvania</option>
+                        <option value="RI" <?php echo (isset($state2) && $state2 == 'RI') ? 'selected' : ''; ?>>Rhode Island</option>
+                        <option value="SC" <?php echo (isset($state2) && $state2 == 'SC') ? 'selected' : ''; ?>>South Carolina</option>
+                        <option value="SD" <?php echo (isset($state2) && $state2 == 'SD') ? 'selected' : ''; ?>>South Dakota</option>
+                        <option value="TN" <?php echo (isset($state2) && $state2 == 'TN') ? 'selected' : ''; ?>>Tennessee</option>
+                        <option value="TX" <?php echo (isset($state2) && $state2 == 'TX') ? 'selected' : ''; ?>>Texas</option>
+                        <option value="UT" <?php echo (isset($state2) && $state2 == 'UT') ? 'selected' : ''; ?>>Utah</option>
+                        <option value="VT" <?php echo (isset($state2) && $state2 == 'VT') ? 'selected' : ''; ?>>Vermont</option>
+                        <option value="VA" <?php echo (isset($state2) && $state2 == 'VA') ? 'selected' : ''; ?>>Virginia</option>
+                        <option value="WA" <?php echo (isset($state2) && $state2 == 'WA') ? 'selected' : ''; ?>>Washington</option>
+                        <option value="WV" <?php echo (isset($state2) && $state2 == 'WV') ? 'selected' : ''; ?>>West Virginia</option>
+                        <option value="WI" <?php echo (isset($state2) && $state2 == 'WI') ? 'selected' : ''; ?>>Wisconsin</option>
+                        <option value="WY" <?php echo (isset($state2) && $state2 == 'WY') ? 'selected' : ''; ?>>Wyoming</option>
                     </select>
 
                     <label for="zip2">Zip Code</label>
                     <input type="number" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" value="<?php echo htmlspecialchars($zip2); ?>">
+                
+                    <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label>
+                    <select id="isHispanic2" name="isHispanic2">
+                        <option value="" disabled <?php echo isset($isHispanic2) && $isHispanic2 == '' ? 'selected' : ''; ?>>Select Yes or No</option>
+                        <option value="yes" <?php echo isset($isHispanic2) && $isHispanic2 == '1' ? 'selected' : ''; ?>>Yes</option>
+                        <option value="no" <?php echo isset($isHispanic2) && $isHispanic2 == '0' ? 'selected' : ''; ?>>No</option>
+                    </select>
+
+                    <label for="race2">Race</label>
+                    <select id="race2" name="race2">
+                        <option value="" disabled <?php echo isset($race2) && $race2 == '' ? 'selected' : ''; ?>>Select Race</option>
+                        <option value="Caucasian" <?php echo isset($race2) && $race2 == 'Caucasian' ? 'selected' : ''; ?>>Caucasian</option>
+                        <option value="Black/African American" <?php echo isset($race2) && $race2 == 'Black/African American' ? 'selected' : ''; ?>>Black/African American</option>
+                        <option value="Native Indian/Alaska Native" <?php echo isset($race2) && $race2 == 'Native Indian/Alaska Native' ? 'selected' : ''; ?>>Native Indian/Alaska Native</option>
+                        <option value="Native Hawaiian/Pacific Islander" <?php echo isset($race2) && $race2 == 'Native Hawaiian/Pacific Islander' ? 'selected' : ''; ?>>Native Hawaiian/Pacific Islander</option>
+                        <option value="Asian" <?php echo isset($race2) && $race2 == 'Asian' ? 'selected' : ''; ?>>Asian</option>
+                        <option value="Multiracial" <?php echo isset($race2) && $race2 == 'Multiracial' ? 'selected' : ''; ?>>Multiracial</option>
+                        <option value="Other" <?php echo isset($race2) && $race2 == 'Other' ? 'selected' : ''; ?>>Other</option>
+                    </select>
                 </fieldset>
                 <fieldset>
                     <legend>Secondary Contact Information</legend>
@@ -320,7 +377,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="econtact-phone" >Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" value="<?php echo htmlspecialchars($econtact_phone); ?>">
 
-                    <label for="econtact-name" >Contact Relation to You</label>
+                    <label for="econtact-relation" >Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" value="<?php echo htmlspecialchars($econtact_relation); ?>">
                 </fieldset>
 

@@ -350,9 +350,10 @@ function update_profile($form, $id) {
     $sql = "
         UPDATE `dbFamily` 
         SET 
-            firstName = ?, lastName = ?, birthdate = ?, address = ?, city = ?, state = ?, zip = ?, email = ?, phone = ?, phoneType = ?, 
-            secondaryPhone = ?, secondaryPhoneType = ?, firstName2 = ?, lastName2 = ?, birthdate2 = ?, address2 = ?, city2 = ?, 
-            state2 = ?, zip2 = ?, email2 = ?, phone2 = ?, phoneType2 = ?, secondaryPhone2 = ?, secondaryPhoneType2 = ?, 
+            firstName = ?, lastName = ?, birthdate = ?, neighborhood = ?, address = ?, city = ?, state = ?, zip = ?, 
+            isHispanic = ?, race = ?, income = ?, email = ?, phone = ?, phoneType = ?, secondaryPhone = ?, secondaryPhoneType = ?, 
+            firstName2 = ?, lastName2 = ?, birthdate2 = ?, neighborhood2 = ?, address2 = ?, city2 = ?, state2 = ? zip2 = ?, 
+            isHispanic = ?, race = ?, email2 = ?, phone2 = ?, phoneType2 = ?, secondaryPhone2 = ?, secondaryPhoneType2 = ?, 
             econtactFirstName = ?, econtactLastName = ?, econtactPhone = ?, econtactRelation = ?
         WHERE id = ?";
 
@@ -362,10 +363,14 @@ function update_profile($form, $id) {
     $firstName = $form['first-name'] ?? '';
     $lastName = $form['last-name'] ?? '';
     $birthdate = $form['birthdate'] ?? '';
+    $neighborhood = $form['neighborhood'] ?? '';
     $address = $form['address'] ?? '';
     $city = $form['city'] ?? '';
     $state = $form['state'] ?? '';
     $zip = $form['zip'] ?? '';
+    $isHispanic = $form['isHispanic'] ?? '';
+    $race = $form['race'] ?? '';
+    $income = $form['income'] ?? '';
     $email = $form['email'] ?? '';
     $phone = $form['phone'] ?? '';
     $phoneType = $form['phone-type'] ?? '';
@@ -374,10 +379,13 @@ function update_profile($form, $id) {
     $firstName2 = $form['first-name2'] ?? '';
     $lastName2 = $form['last-name2'] ?? '';
     $birthdate2 = $form['birthdate2'] ?? '';
+    $neighborhood2 =  $form['neighborhood2'] ?? '';
     $address2 = $form['address2'] ?? '';
     $city2 = $form['city2'] ?? '';
     $state2 = $form['state2'] ?? '';
     $zip2 = $form['zip2'] ?? '';
+    $isHispanic2 = $form['isHispanic2'] ?? '';
+    $race2 = $form['race2'] ?? '';
     $email2 = $form['email2'] ?? '';
     $phone2 = $form['phone2'] ?? '';
     $phoneType2 = $form['phone-type2'] ?? '';
@@ -390,10 +398,15 @@ function update_profile($form, $id) {
 
     // Bind parameters to the statement
     $stmt->bind_param(
-        "ssssssssssssssssssssssssssssi",
-        $firstName, $lastName, $birthdate, $address, $city, $state, $zip, $email, $phone, $phoneType, 
-        $secondaryPhone, $secondaryPhoneType, $firstName2, $lastName2, $birthdate2, $address2, $city2, 
-        $state2, $zip2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, 
+        "ssssssss
+        isssssss
+        ssssssss
+        issssss
+        ssssi",
+        $firstName, $lastName, $birthdate, $neighborhood, $address, $city, $state, $zip, 
+        $isHispanic, $race, $income, $email, $phone, $phoneType, $secondaryPhone, $secondaryPhoneType, 
+        $firstName2, $lastName2, $birthdate2, $neighborhood2, $address2, $city2, $state2, $zip2, 
+        $isHispanic2, $race2, $email2, $phone2, $phoneType2, $secondaryPhone2, $secondaryPhoneType2, 
         $econtactFirstName, $econtactLastName, $econtactPhone, $econtactRelation, $id
     );
 
