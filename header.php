@@ -52,7 +52,6 @@
         $permission_array['apply.php'] = 0;
         $permission_array['logout.php'] = 0;
         $permission_array['register.php'] = 0;
-        $permission_array['findanimal.php'] = 0;
         //pages family can view
         $permission_array['help.php'] = 1;
         $permission_array['dashboard.php'] = 1;
