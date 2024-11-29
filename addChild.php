@@ -238,6 +238,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             </script>
 
             <button style="margin-top: 10px" type="input" name="add">Submit</button>
+            <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
             <?php
                 if($success){
                     echo '<script>document.location = "familyAccountDashboard.php?addChildSuccess";</script>';
