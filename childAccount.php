@@ -51,7 +51,7 @@ $child = retrieve_child_by_id($_GET['id']);
             echo '<label>Full Name</label>';
             echo '<p>' . $child->getFirstName() . " " . $child->getLastName() . '</p>';
             echo '<label>Address</label>';
-            echo '<p>' . $child->getAddress() . ", " . $child->getNeighborhood() . ", " . $child->getCity() . ", " . $child->getState() . ", " . $child->getZip() . '</p>';
+            echo '<p>' . $child->getAddress() . " " . $child->getNeighborhood() . " " . $child->getCity() . " " . $child->getState() . " " . $child->getZip() . '</p>';
             echo '<label>Date of Birth</label>';
             echo '<p>' . $child->getBirthdate() . '</p>';
             echo '<label>Gender</label>';
