@@ -291,7 +291,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label><br><br>
                     <select id="isHispanic2" name="isHispanic2">
-                        <option value="" disabled selected>Select Yes or No</option>
+                        <!--<option value="" disabled selected></option>-->
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
