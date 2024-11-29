@@ -53,7 +53,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <fieldset>
                 <p>Add child details below. Click "+ Add Child" to add more children.</p>
                 <div id="children-container"></div>
-                <button type="button" onclick="addChildForm()">+ Add Child</button>
+                <button type="button" style="background-color: #006400;" onclick="addChildForm()">+ Add Child</button>
             </fieldset>
 
             <script>
@@ -201,7 +201,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         <label for="child_additional_notes_${childCount}">Additional Notes</label>
                         <input type="text" id="child_additional_notes_${childCount}" name="children[${childCount}][child_additional_notes_-name]" required placeholder="Anything else we should know?">
 
-                        <button type="button" onclick="removeChildForm(${childCount})">Remove Child</button>
+                        <button type="button" style="background-color: red"; onclick="removeChildForm(${childCount})">Remove Child</button>
 
                         <hr>
                     `;
