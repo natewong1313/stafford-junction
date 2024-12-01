@@ -5,28 +5,22 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
-$loggedIn = false;
-$accessLevel = 0;
-$userID = null;
-$success = false;
-
-if(isset($_SESSION['_id'])){
-    require_once('domain/Children.php');
-    require_once('database/dbChildren.php');
-    require_once('include/input-validation.php');
-    require_once('database/dbSpringBreakCampForm.php');
-    
-    $loggedIn = true;
-    $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['_id'];
-    $children = retrieve_children_by_family_id($userID);
-} else {
+if (!isset($_SESSION['_id'])) {
     header('Location: login.php');
     die();
 }
 
+require_once('domain/Children.php');
+require_once('database/dbChildren.php');
+require_once('include/input-validation.php');
+require_once('database/dbSpringBreakCampForm.php');
+
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_email = $family->getEmail();
 
 // include the header .php file s
