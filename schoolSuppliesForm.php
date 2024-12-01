@@ -48,9 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $success = createBackToSchoolForm($args);
         
         if ($success) {
-            echo "Form submitted successfully!";
-        } else {
-            echo "There was an error submitting the form.";
+            $successMessage = "Form submitted successfully";
         }
     }
 }
@@ -155,6 +153,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <button type="submit" id="submit">Submit</button>
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+
+            <?php //If the user is an admin or staff, the message should appear at index.php
+            if(isset($successMessage) && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }
+            ?>
         </form>
     </div>
 
