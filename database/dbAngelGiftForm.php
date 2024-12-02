@@ -73,9 +73,32 @@ function isAngelGiftFormComplete($childID) {
         return true;
     }
 }
-function getSubmissions() {
+function getAngelGiftSubmissions() {
     $conn = connect();
-    $query = "SELECT * FROM dbAngelGiftForm;";
+    $query = "SELECT * FROM dbAngelGiftForm INNER JOIN dbChildren ON dbAngelGiftForm.child_id = dbChildren.id;";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
+
+function getAngelGiftSubmissionsFromFamily($familyId) {
+    require_once("dbChildren.php");
+    $children = retrieve_children_by_family_id($familyId);
+    if (!$children){
+        return [];
+    }
+    $childrenIds = array_map(function($child) {
+        return $child->getId();
+    }, $children);
+    $joinedIds = join(",",$childrenIds);
+
+    $conn = connect();
+    $query = "SELECT * FROM dbAngelGiftForm INNER JOIN dbChildren ON dbAngelGiftForm.child_id = dbChildren.id WHERE dbAngelGiftForm.child_id IN ($joinedIds);";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) > 0){
