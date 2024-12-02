@@ -21,39 +21,8 @@
     require_once("domain/Family.php");
     $families = find_all_families();
 
-    $searchableForms = array("Holiday Meal Bag", "School Supplies", "Spring Break", 
-        "Angel Gifts Wish List", "Child Care Waiver", "Field Trip Waiver",
-        "Program Interest", "Brain Builders Student Registration", "Brain Builders Holiday Party",
-        "Summer Junction Registration", "Bus Monitor Attendance", "Actual Activity"
-    );
-
-    $hasSearched = isset($_GET['searchByForm']);
-    $selectedFormName = $hasSearched ? $_GET['formName'] : "";
-
-    if(isset($_GET['searchByForm'])){
-        require_once("database/dbForms.php");
-        $submissions = getFormSubmissions($_GET['formName']);
-        $noResults = count($submissions) == 0;
-        if(!$noResults){
-            $columnNames = array_keys( reset($submissions));
-            // header('Content-Type: text/plain');
-            // // header('Content-Disposition: attachment; filename="sample.csv"');
-            // $data = array(
-            //         'aaa,bbb,ccc,dddd',
-            //         '123,456,789',
-            //         '"aaa","bbb"'
-            // );
-
-            // $fp = fopen('php://output', 'wb');
-            // foreach ( $data as $line ) {
-            //     $val = explode(",", $line);
-            //     fputcsv($fp, $val);
-            // }
-            // fclose($fp);
-        }
-    }
-
-
+    require_once("database/dbForms.php");
+    // SEARCHABLE_FORMS
 ?>
 <!DOCTYPE html>
 <html>
@@ -70,7 +39,7 @@
                 <label for="searchByForm"><input type="checkbox" autocomplete="off" id="searchByForm" name="searchByForm" value="searchByForm"> Form Name</label>
                 <select id="formName" name="formName" disabled>
                     <?php
-                        foreach($searchableForms as $form){
+                        foreach(SEARCHABLE_FORMS as $form){
                             if($selectedFormName == $form){
                                 echo '<option value="'.$form.'" selected>'.$form.'</option>';
                             }else{
@@ -93,7 +62,6 @@
                 <a class="button cancel" href="index.php">Return to Dashboard</a>
             </form>
             <script>
-                const isSearchingByForm = <?php echo isset($_GET['searchByForm']) ? 'true' : 'false'; ?>;
                 document.getElementById("searchByForm").addEventListener("change", (e) => {
                     const selectBox = document.getElementById("formName");
                     if (e.currentTarget.checked){
@@ -103,10 +71,6 @@
                         selectBox.setAttribute("disabled", "disabled");
                     }
                 })
-                if(isSearchingByForm) {
-                    document.getElementById("searchByForm").click();
-                }
-                const isSearchingByName = <?php echo isset($_GET['searchByFamily']) ? 'true' : 'false'; ?>;
                 document.getElementById("searchByFamily").addEventListener("change", (e) => {
                     const selectBox = document.getElementById("familyAccount");
                     if (e.currentTarget.checked){
@@ -116,9 +80,6 @@
                         selectBox.setAttribute("disabled", "disabled");
                     }
                 })
-                if(isSearchingByName) {
-                    document.getElementById("searchByFamily").click();
-                }
             </script>
         </div>
     </body>
