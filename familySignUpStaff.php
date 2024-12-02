@@ -157,15 +157,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="zip" required>* Zip Code</label>
                     <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
 
-                    <label for="isHispanic">* Hispanic, Latino, or Spanish Origin</label><br>
+                    <label for="isHispanic">* Hispanic, Latino, or Spanish Origin</label>
                     <select id="isHispanic" name="isHispanic" required>
                         <option value="" disabled selected>Select Yes or No</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
-                    <br>
+                
 
-                    <label for="race" required>* Race</label><br>
+                    <label for="race" required>* Race</label>
                     <select id="race" name="race" required>
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -175,7 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="Asian">Asian</option>
                         <option value="Multiracial">Multiracial</option>
                         <option value="Other">Other</option>
-                    </select><br>
+                    </select>
                 </fieldset>
                     
 
@@ -288,15 +288,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="zip2">Zip Code</label>
                     <input type="text" id="zip2" name="zip2" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code">
 
-                    <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label><br><br>
+                    <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label>
                     <select id="isHispanic2" name="isHispanic2">
                         <!--<option value="" disabled selected></option>-->
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
-                    <br><br>
+                  
 
-                    <label for="race2" required>Race</label><br><br>
+                    <label for="race2" required>Race</label>
                     <select id="race2" name="race2">
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -306,7 +306,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="Asian">Asian</option>
                         <option value="Multiracial">Multiracial</option>
                         <option value="Other">Other</option>
-                    </select><br><br>
+                    </select>
 
                 </fieldset>
                 <fieldset>
