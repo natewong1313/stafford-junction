@@ -23,7 +23,10 @@ function getSubmissions() {
     $query = "SELECT * FROM dbHolidayMealBagForm;";
     $result = mysqli_query($conn, $query);
 
-    $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    mysqli_close($conn);
-    return $submissions;
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
 }

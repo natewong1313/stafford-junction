@@ -28,6 +28,7 @@
     );
 
     $hasSearched = isset($_GET['searchByForm']);
+    $selectedFormName = $hasSearched ? $_GET['formName'] : "";
 
     if(isset($_GET['searchByForm'])){
         require_once("database/dbForms.php");
@@ -57,7 +58,11 @@
                     <select id="formName" name="formName" disabled>
                         <?php
                             foreach($searchableForms as $form){
-                                echo '<option value="'.$form.'">'.$form.'</option>';
+                                if($selectedFormName == $form){
+                                    echo '<option value="'.$form.'" selected>'.$form.'</option>';
+                                }else{
+                                    echo '<option value="'.$form.'">'.$form.'</option>';
+                                }
                             }
                         ?>
                     </select>
@@ -104,6 +109,7 @@
                 </script>
             </div>
             <div class="formSearchResults" style="display: <?php echo $hasSearched ? 'block' : 'none'; ?>;">
+                <?php if(!$noResults): ?>
                 <table class="general">
                     <thead>
                         <tr>
@@ -126,6 +132,9 @@
                         ?>
                     </tbody>
                 </table>
+                <?php else: ?>
+                    <p style="text-align: center;">No results found.</p>
+                <?php endif; ?>
             </div>
         </main>
     </body>

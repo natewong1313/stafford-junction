@@ -257,4 +257,17 @@ function showAvailabilityCheckbox($data) {
         echo "disabled";
     }
 }
+
+function getSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbProgramInterestForm;";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
 ?>

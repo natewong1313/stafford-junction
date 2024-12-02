@@ -73,4 +73,16 @@ function isAngelGiftFormComplete($childID) {
         return true;
     }
 }
+function getSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbAngelGiftForm;";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
 ?>
