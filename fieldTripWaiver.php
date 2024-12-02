@@ -25,7 +25,7 @@ if(isset($_SESSION['_id'])){
 
 //necessary files
 include_once("database/dbFamily.php");
-//retrieve family details
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 $family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
@@ -36,10 +36,8 @@ $guardian_name = $family->getFirstName() . " " . $family->getLastName();
 $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
-//retrieve children by family ID
-$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
-include_once('database/dbinfo.php');
+//include_once('database/dbinfo.php');
 //check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     //sanitize form input
@@ -69,18 +67,54 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent_signature',
         'signature_date'
     );
+
+// Phone fields to check if the phones are in the right format
+$phoneFields = [
+    'emergency_contact_phone_1',
+    'emergency_contact_phone_2',
+
+];
     
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-    } else {
-        //call the function to create the waiver form
-        $success = createFieldTripWaiverForm($args);
-        
-        if ($success) {
-            echo "Form submitted successfully!";
-        } else {
-            echo "Error submitting the form.";
+   // Track missing and invalid fields
+$missingFields = [];
+$invalidFields = [];
+
+// Check if all strictly required fields are provided
+foreach ($required as $field) {
+    if (empty($args[$field])) {
+        $missingFields[] = $field;
+    }
+}
+
+// Validate all phone fields
+foreach ($phoneFields as $field) {
+    // Check if the field has a value
+    if (!empty($args[$field])) {
+        // Validate and filter the phone number
+        $args[$field] = validateAndFilterPhoneNumber($args[$field]);
+
+        // Collect invalid phone numbers
+        if (!$args[$field]) {
+            $invalidFields[] = $field;
         }
+    }
+}
+
+// Provide feedback if any required fields are missing
+if (!empty($missingFields)) {
+    echo "The following required fields are missing:<br>";
+    foreach ($missingFields as $missingField) {
+        echo "$missingField<br>";
+    }
+} elseif (!empty($invalidFields)) {
+    // Provide feedback if any phone fields are invalid
+    echo "The following phone fields are invalid:<br>";
+    foreach ($invalidFields as $invalidField) {
+        echo "$invalidField<br>";
+    }
+} else {
+        // All required fields are complete and phone fields valid, proceed to form submission
+        $success = createChildCareForm($args);
     }
 }
 ?>
@@ -392,6 +426,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
             }
         ?>
-    </div>
-    </body>
+    
+</body>
 </html>
