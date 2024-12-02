@@ -1217,16 +1217,14 @@ input[type="checkbox"]:checked {
 
 .formSubmissions {
   display: flex;
-  /* flex-direction: column; */
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
 .formSearch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 20px;
+  padding-bottom: 16px;
 }
 
 .formSearch >form {

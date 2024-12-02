@@ -27,6 +27,17 @@
         "Summer Junction Registration", "Bus Monitor Attendance", "Actual Activity"
     );
 
+    $hasSearched = isset($_GET['searchByForm']);
+
+    if(isset($_GET['searchByForm'])){
+        require_once("database/dbForms.php");
+        $submissions = getFormSubmissions($_GET['formName']);
+        $noResults = count($submissions) == 0;
+        if(!$noResults){
+            $columnNames = array_keys( reset($submissions));
+        }
+    }
+
 
 ?>
 <!DOCTYPE html>
@@ -41,7 +52,7 @@
         <main class="formSubmissions">
             <div class="formSearch">
                 <p>Search for a specific form, a specific family, or both</p>
-                <form id="password-change" method="get">
+                <form id="formSearch" method="get">
                     <label for="searchByForm"><input type="checkbox" id="searchByForm" name="searchByForm" value="searchByForm"> Form Name</label>
                     <select id="formName" name="formName" disabled>
                         <?php
@@ -92,21 +103,28 @@
                     }
                 </script>
             </div>
-            <div class="formSearchResults" style="display: none;">
+            <div class="formSearchResults" style="display: <?php echo $hasSearched ? 'block' : 'none'; ?>;">
                 <table class="general">
                     <thead>
                         <tr>
-                            <th>Account ID</th>
-                            <th>Name</th>
-                            <th>Date of Birth</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>Zip</th>
-                            <th>Email</th>
-                            <th>Phone</th>
+                            <?php
+                                foreach($columnNames as $columnName){
+                                    echo '<th>' . $columnName . '</th>';
+                                }
+                            ?>
                         </tr>
                     </thead>
+                    <tbody class="standout">
+                        <?php
+                            foreach($submissions as $submission){
+                                echo '<tr>';
+                                foreach($submission as $column){
+                                    echo "<td>" . $column . "</td>";
+                                }
+                                echo '<tr>';
+                        }
+                        ?>
+                    </tbody>
                 </table>
             </div>
         </main>

@@ -17,3 +17,13 @@ function get_data_by_family_id($id){
     }
 
 }
+
+function getSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbHolidayMealBagForm;";
+    $result = mysqli_query($conn, $query);
+
+    $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_close($conn);
+    return $submissions;
+}
