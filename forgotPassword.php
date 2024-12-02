@@ -55,7 +55,7 @@
         <main class="login">
             <form id="password-change" method="post">
                 <label for="new-password">New Password</label>
-                <input type="password" id="new-password" name="new-password" placeholder="Enter new password" required>
+                <input type="password" id="new-password" name="new-password" pattern="^(?=.*[^a-zA-Z0-9].*).{8,}$" title="Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)" placeholder="Enter new password" required>
                 <label for="reenter-new-password">New Password</label>
                 <input type="password" id="new-password-reenter" placeholder="Re-enter new password" required>
                 <p id="password-match-error" class="error hidden">Passwords must match!</p>

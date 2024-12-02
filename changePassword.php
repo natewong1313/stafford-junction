@@ -82,7 +82,23 @@
                 $error2 = true;
             } else {
                 $hash = password_hash($newPassword, PASSWORD_BCRYPT);
-                change_password($userID, $hash);
+                // Change password of volunteer, family, or staff based on the access level
+                switch ($accessLevel) {
+                    case 0:
+                        change_volunteer_password($userID, $hash);
+                        break;
+                    case 1:
+                        change_family_password($userID, $hash);
+                        header('Location: familyAccountDashboard.php?pcSuccess');
+                        die();
+                        break;
+                    case 2:
+                        change_staff_password($userID, $hash);
+                        break;
+                    case 3:
+                        change_password($userID, $hash);
+                        break;
+                }
                 header('Location: index.php?pcSuccess');
                 die();
             }
@@ -93,7 +109,7 @@
 <html>
     <head>
         <?php require_once('universal.inc') ?>
-        <title>ODHS Medicine Tracker | Change Password</title>
+        <title>Stafford Junction | Change Password</title>
     </head>
     <body>
         <?php require_once('header.php') ?>
@@ -112,7 +128,7 @@
                     <p>You must change your password before continuing.</p>
                 <?php endif ?>
                 <label for="new-password">New Password</label>
-                <input type="password" id="new-password" name="new-password" placeholder="Enter new password" required>
+                <input type="password" id="new-password" name="new-password" pattern="^(?=.*[^a-zA-Z0-9].*).{8,}$" title="Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)" placeholder="Enter new password" required>
                 <label for="reenter-new-password">New Password</label>
                 <input type="password" id="new-password-reenter" placeholder="Re-enter new password" required>
                 <p id="password-match-error" class="error hidden">Passwords must match!</p>
