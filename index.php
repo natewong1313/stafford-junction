@@ -58,16 +58,6 @@
                 <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form submitted successfully!</div>';?>
             <?php elseif (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
-            <?php elseif (isset($_GET['deleteService'])): ?>
-                <div class="happy-toast">Service successfully removed!</div>
-            <?php elseif (isset($_GET['serviceAdded'])): ?>
-                <div class="happy-toast">Service successfully added!</div>
-            <?php elseif (isset($_GET['animalRemoved'])): ?>
-                <div class="happy-toast">Animal successfully removed!</div>
-            <?php elseif (isset($_GET['locationAdded'])): ?>
-                <div class="happy-toast">Location successfully added!</div>
-            <?php elseif (isset($_GET['deleteLocation'])): ?>
-                <div class="happy-toast">Location successfully removed!</div>
             <?php elseif (isset($_GET['registerSuccess'])): ?>
                 <div class="happy-toast">Volunteer registered successfully!</div>
             <?php endif ?>
@@ -105,6 +95,13 @@
                 <div class="dashboard-item" data-link="createStaffAccount.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Create Staff Account</span>
+                </div>
+                <?php endif ?>
+
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="">
+                    <img src="images/family-svgrepo-com.svg">
+                    <span>Create Family Account</span>
                 </div>
                 <?php endif ?>
 
