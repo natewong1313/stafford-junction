@@ -85,6 +85,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
+            .general a {
+                        color: #fcdd2b;
+                        text-decoration: none;
+                    }
+
             .general tbody tr:hover {
                 background-color: #cccccc; /* Light grey color */
             }
@@ -171,18 +176,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <button type="submit" class="button_style">Search</button>
 
             <?php
-            // Determine sorting parameters
-            $sortColumn = $_GET['sort'] ?? 'firstName'; // Default sorting by first name
-            $sortOrder = $_GET['order'] ?? 'asc'; // Default sorting order
-
-            // Sort the $family array based on the selected column
-            usort($family, function ($a, $b) use ($sortColumn, $sortOrder) {
-                $valueA = strtolower($a->{"get" . ucfirst($sortColumn)}());
-                $valueB = strtolower($b->{"get" . ucfirst($sortColumn)}());
-                if ($valueA == $valueB) return 0;
-                return ($sortOrder === 'asc' ? $valueA > $valueB : $valueA < $valueB) ? 1 : -1;
-            });
-
             if (isset($family)) {
                 // Sorting parameters
                 $sortColumn = $_GET['sort'] ?? 'firstName';
