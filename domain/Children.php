@@ -1,6 +1,6 @@
 <?php
 
-class Child {
+class Child implements JsonSerializable {
     private $id;
     private $firstName;
     private $lastName;
@@ -101,5 +101,9 @@ class Child {
 
     public function getNotes(){
         return $this->notes;
+    }
+
+    public function jsonSerialize(): mixed {
+        return get_object_vars($this);
     }
 }
