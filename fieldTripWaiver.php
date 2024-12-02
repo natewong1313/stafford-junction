@@ -120,6 +120,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Child's Name -->
     <label for="child_name">Child's Name / Nombre del Niño(a)*</label><br><br>
     <select name="child_name" id="child_name" required>
+        <option disabled selected>Select a child</option>
         <?php
             require_once('domain/Children.php');
             foreach ($children as $c) {
@@ -131,7 +132,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 }
             }
         ?>
-    </select><br><br>
+    </select>
+    <script>
+        const children = <?php echo json_encode($children); ?>;
+        document.getElementById("child_name").addEventListener("change", (e) => {
+            const childId = e.target.value.split("_")[0];
+            const childData = children.find(child => child.id === childId);
+            document.getElementById("child_gender").value = childData.gender;
+            document.getElementById("child_birthdate").valueAsDate = new Date(childData.birthdate);
+            document.getElementById("child_neighborhood").value = childData.neighborhood;
+            document.getElementById("child_school").value = childData.school;
+            document.getElementById("child_address").value = childData.address;
+            document.getElementById("child_city").value = childData.city;
+            document.getElementById("child_zip").value = childData.zip;
+            document.getElementById("child_city").value = childData.city;
+            document.getElementById("medical_issues").value = childData.medicalNotes;
+        })
+    </script>
+    <br><br>
 
     <!-- Child's Gender -->
     <label for="child_gender">Gender* / Género*</label><br>

@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <!-- Child Name -->
             <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
             <select name="name" id="name" required>
+                <option disabled selected>Select a child</option>
                 <?php
                     require_once('domain/Children.php'); 
                     foreach ($children as $c){
@@ -110,6 +111,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <!-- School -->
             <label for="school">4. School / Escuela*</label><br><br>
             <input type="text" name="school" id="school" placeholder="School/Escuela" required><br><br>
+
+            <script>
+                const children = <?php echo json_encode($children); ?>;
+                document.getElementById("name").addEventListener("change", (e) => {
+                    const childId = e.target.value.split("_")[0];
+                    const childData = children.find(child => child.id === childId);
+                    document.getElementById("grade").value = childData.grade;
+                    document.getElementById("school").value = childData.school;
+                })
+            </script>
 
             <!-- Community Bag Info -->
             <label>5. Will you pick up the bag during Community Day or need it brought to you? / ¿Recogerás la bolsa durante el Día de la Comunidad o necesitarás que te la traigan?</label><br><br>

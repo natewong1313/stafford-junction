@@ -52,7 +52,6 @@
         $permission_array['apply.php'] = 0;
         $permission_array['logout.php'] = 0;
         $permission_array['register.php'] = 0;
-        $permission_array['findanimal.php'] = 0;
         //pages family can view
         $permission_array['help.php'] = 1;
         $permission_array['dashboard.php'] = 1;
@@ -92,14 +91,9 @@
         $permission_array['reportspage.php'] = 2;
         $permission_array['resetpassword.php'] = 2;
         $permission_array['addappointment.php'] = 2;
-        $permission_array['addanimal.php'] = 2;
-        $permission_array['addservice.php'] = 2;
         $permission_array['addlocation.php'] = 2;
         $permission_array['viewservice.php'] = 2;
         $permission_array['viewlocation.php'] = 2;
-        $permission_array['viewarchived.php'] = 2;
-        $permission_array['animal.php'] = 2;
-        $permission_array['editanimal.php'] = 2;
         $permission_array['findfamily.php'] = 2;
         $permission_array['findchildren.php'] = 2;
         $permission_array['formsearch.php'] = 2;
