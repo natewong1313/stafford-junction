@@ -390,7 +390,7 @@ if (!empty($missingFields)) {
                 echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
             }
         ?>
-    
+
 </body>
 </html>
 
