@@ -62,8 +62,8 @@ error_reporting(E_ALL);
                     <span>Child Care Waiver Form</span> 
                 </div>
 
-                <!--Field Trip Waiver Form-->
-                <div class="dashboard-item" data-link="fieldTripWaiver.php">
+                <!--Field Trip Waiver Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "fieldTripWaiver.php?id=" . $_GET['id'] : "fieldTripWaiver.php"; ?>
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> 
                 </div>

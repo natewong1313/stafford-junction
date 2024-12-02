@@ -5,21 +5,73 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
-$loggedIn = false;
-$accessLevel = 0;
-$userID = null;
-
-if(isset($_SESSION['_id'])){
-    $loggedIn = true;
-    $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['_id'];
+if(!isset($_SESSION['_id'])){
+    header('Location: login.php');
+    die();
 }
+
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
+
+require_once('database/dbChildren.php');
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+include_once("database/dbSummerJunctionForm.php");
 
 // include the header .php files
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
     //require_once('database/dbSummerJunctionRegistrationForm.php');
     $args = sanitize($_POST, null);
+    $required = array(
+        'child-first-name',
+        'child-last-name',
+        'birthdate',
+        'grade',
+        'gender',
+        'shirt-size',
+        'child-address',
+        'child-city',
+        'neighborhood',
+        'child-state',
+        'child-zip',
+        'parent1-first-name',
+        'parent1-last-name',
+        'parent1-address',
+        'parent1-city',
+        'parent1-state',
+        'parent1-zip',
+        'parent1-email',
+        'parent1-cell-phone',
+        'emergency-name1',
+        'emergency-relationship1',
+        'emergency-phone1',
+        'authorized-pu',
+        'primary-language',
+        'hispanic-latino-spanish',
+        'income',
+        'other-programs',
+        'insurance',
+        'policy-num',
+        'signature',
+        'signature-date'
+    );
+    $missingFields = [];
+    foreach ($required as $field) {
+        if (empty($args[$field])) {
+            $missingFields[] = $field;
+        }
+    }
+    if (!empty($missingFields)) {
+        echo "The following required fields are missing:<br>";
+        foreach ($missingFields as $missingField) {
+            echo "$missingField<br>";
+        }
+    }else{
+        $success = createSummerJunctionForm($args);
+        if ($success) {
+            $successMessage = "Form submitted successfully";
+        }
+    }
 }
 ?>
 
@@ -30,6 +82,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <title>Stafford Junction | Summer Junction Registration Form</title>
 </head>
     <body>
+    <?php //If the user is an admin or staff, the message should appear at index.php
+        if(isset($successMessage) && $accessLevel > 1){
+            echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+        }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+            echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+        }
+    ?>
     <h1>Summer Junction Registration Form</h1>
         <div id="formatted_form">
             
@@ -43,7 +102,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <p><b>* Indicates a required field / Indica un campo obligatorio</b></p><br>
 
-            <h2>Camp Selection / Selección de Campamentos</h2><br>
+            <form id="brainBuildersStudentRegistrationForm" action="" method="post">      
+                <h2>Camp Selection / Selección de Campamentos</h2><br>
                 <p><b>Summer Junction Camps, Dates, and Times (Please Check All Camps Your Child Will Attend and Circle
                 the Correct Session According to Grade Completed as of May 2024)</b></p><br>
 
@@ -68,15 +128,48 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <br><br>
 
-            <h2>Student Information / Información general del niño</h2><br>
-            <form id="brainBuildersStudentRegistrationForm" action="" method="post">             
+                <h2>Student Information / Información general del niño</h2><br>      
+                <label for="child-name">Child Name / Nombre del Estudiante*</label><br><br>
+                <select name="child-name" id="child-name" required>
+                    <option disabled selected>Select a child</option>
+                    <?php
+                        require_once('domain/Children.php'); 
+                        foreach ($children as $c){
+                            $id = $c->getID();
+                            if (!isSummerJunctionFormComplete($id)) {
+                                $name = $c->getFirstName() . " " . $c->getLastName();
+                                $value = $id . "_" . $name;
+                                echo "<option value='$value'>$name</option>";
+                            }
+                        }
+                    ?>
+                </select>
+                 <script>
+                    const children = <?php echo json_encode($children); ?>;
+                    document.getElementById("child-name").addEventListener("change", (e) => {
+                        const childId = e.target.value.split("_")[0];
+                        const childData = children.find(child => child.id === childId);
+                        document.getElementById("child-first-name").value = childData.firstName;
+                        document.getElementById("child-last-name").value = childData.lastName;
+                        document.getElementById("birthdate").value = childData.birthdate;
+                        document.getElementById("grade").value = childData.grade;
+                        document.getElementById("gender").value = childData.gender;
+                        document.getElementById("neighborhood").value = childData.neighborhood;
+                        document.getElementById("child-address").value = childData.address;
+                        document.getElementById("child-city").value = childData.city;
+                        document.getElementById("child-state").value = childData.state;
+                        document.getElementById("child-zip").value = childData.zip;
+                        document.getElementById("child-medical-allergies").value = childData.medicalNotes;
+                    })
+                </script>
+                <br><br> 
                 <!--Child First Name-->
                 <label for="child-first-name">Child First Name / Nombre *</label><br><br>
                 <input type="text" name="child-first-name" id="child-first-name" required placeholder="Child First Name" required><br><br>
 
                 <!--Child Last Name-->
                 <label for="child-last-name">Child Last Name / Apellido *</label><br><br>
-                <input type="text" name="child-last-namee" id="child-last-name" required placeholder="Child Last Name" required><br><br>
+                <input type="text" name="child-last-name" id="child-last-name" required placeholder="Child Last Name" required><br><br>
 
                 <!--Date of Birth-->
                 <label for="birthdate">Date of Birth / Fecha de nacimiento *</label><br><br>
@@ -295,8 +388,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="text" id="parent2-first-name" name="parent2-first-name" placeholder="Parent 2 First Name"><br><br>
 
                 <!--Parent 2 Last Name-->
-                <label for="parent1-last-name">Last Name/ Apellido</label><br><br>
-                <input type="text" id="parent1-last-name" name="parent1-last-name" placeholder="Parent 1 Last Name"><br><br>
+                <label for="parent2-last-name">Last Name/ Apellido</label><br><br>
+                <input type="text" id="parent2-last-name" name="parent2-last-name" placeholder="Parent 1 Last Name"><br><br>
 
                 <!--Street Address-->
                 <label for0="parent2-address">Street Address / Dirección</label><br><br>
@@ -427,12 +520,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             aplicación de becas.</p><br>
 
                 <!--Parent's Primary Language-->
-                <label for="primary-language" required>Primary Language / Idioma principal de los padres</label><br><br>
-                <input type="text" id="primary-language" name="primary-language" placeholder="English, Spanish, Farsi, etc."><br><br>
+                <label for="primary-language" required>Primary Language / Idioma principal de los padres *</label><br><br>
+                <input type="text" id="primary-language" name="primary-language" placeholder="English, Spanish, Farsi, etc." required><br><br>
 
                 <!--Hispanic, Latino, or Spanish Origin-->
-                <label for="hispanic-latino-spanish">Hispanic, Latino, or Spanish Origin / Origen hispano, latino o español</label><br><br>
-                <select id="hispanic-latino-spanish" name="hispanic-latino-spanish">
+                <label for="hispanic-latino-spanish" required>Hispanic, Latino, or Spanish Origin / Origen hispano, latino o español *</label><br><br>
+                <select id="hispanic-latino-spanish" name="hispanic-latino-spanish" required>
                     <option value="" disabled selected>Select Yes or No</option>
                     <option value="yes">Yes / Sí</option>
                     <option value="no">No</option>
@@ -440,8 +533,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <br><br>
 
                 <!--Race-->
-                <label for="race">Race / Raza</label><br><br>
-                <select id="race" name="race">
+                <label for="race" required>Race / Raza</label><br><br>
+                <select id="race" name="race" required>
                     <option value="" disabled selected>Select Race</option>
                     <option value="Caucasian">Caucasian / Blanca</option>
                     <option value="Black/African American">Black/African American / Negra o afroamericana</option>
@@ -477,8 +570,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="number" id="num-employed-student" name="num-employed-student" placeholder="Enter number of employed students"><br><br>
 
                 <!--Estimated Household Income-->
-                <label for="income">Estimated Household Income / Ingresos familiares estimados</label><br><br>
-                <select id="income" name="income">
+                <label for="income">Estimated Household Income / Ingresos familiares estimados *</label><br><br>
+                <select id="income" name="income" required>
                     <option value="" disabled selected>Select Estimated Income</option>
                     <option value="Under 20,000">Under/Bajo 20,000</option>
                     <option value="20,000-40,000n">20,000-40,000</option>
@@ -488,12 +581,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </select><br><br>
 
                 <!--Other Programs-->
-                <label for="other-programs">Other Programs / Otro ingresos</label><br><br>
+                <label for="other-programs">Other Programs / Otro ingresos *</label><br><br>
                 <input type="text" id="other-programs" name="other-programs" required placeholder="(WIC, SNAP, SSI, SSD, etc.)"><br><br>
 
                 <!--Free/Reduced Lunch-->
-                <label for="lunch">Does the enrolling child receive free or reduced lunch? / ¿El niño/a inscrito recibe almuerzo gratis o reducido?</label><br><br>
-                <select id="lunch" name="lunch">
+                <label for="lunch">Does the enrolling child receive free or reduced lunch? / ¿El niño/a inscrito recibe almuerzo gratis o reducido? *</label><br><br>
+                <select id="lunch" name="lunch" required>
                     <option value="" disabled selected>Select</option>
                     <option value="free">Free</option>
                     <option value="reduced">Reduced / Gratis</option>
