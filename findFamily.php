@@ -84,6 +84,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <title>Stafford Junction | Find Family Account</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .general tbody tr:hover {
+                background-color: #cccccc; /* Light grey color */
+            }
+        </style>
     </head>
     <body>
         <?php require_once('header.php') ?>
@@ -166,48 +171,67 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <button type="submit" class="button_style">Search</button>
 
             <?php
-            if(isset($family)){
+            // Determine sorting parameters
+            $sortColumn = $_GET['sort'] ?? 'firstName'; // Default sorting by first name
+            $sortOrder = $_GET['order'] ?? 'asc'; // Default sorting order
+
+            // Sort the $family array based on the selected column
+            usort($family, function ($a, $b) use ($sortColumn, $sortOrder) {
+                $valueA = strtolower($a->{"get" . ucfirst($sortColumn)}());
+                $valueB = strtolower($b->{"get" . ucfirst($sortColumn)}());
+                if ($valueA == $valueB) return 0;
+                return ($sortOrder === 'asc' ? $valueA > $valueB : $valueA < $valueB) ? 1 : -1;
+            });
+
+            if (isset($family)) {
+                // Sorting parameters
+                $sortColumn = $_GET['sort'] ?? 'firstName';
+                $sortOrder = $_GET['order'] ?? 'asc';
+
+                // Sorting logic
+                usort($family, function ($a, $b) use ($sortColumn, $sortOrder) {
+                    $valueA = strtolower($a->{"get" . ucfirst($sortColumn)}());
+                    $valueB = strtolower($b->{"get" . ucfirst($sortColumn)}());
+                    if ($valueA == $valueB) return 0;
+                    return ($sortOrder === 'asc' ? $valueA > $valueB : $valueA < $valueB) ? 1 : -1;
+                });
+
                 echo '<h3>Account Summary</h3>';
-                echo '<p>Click on an Account ID to view or edit that family\'s account.</p>';
+                echo '<p>Click on a row to view or edit that family\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Account ID</th>
-                                <th>Name</th>
+                                <th><a href="?sort=firstName&order=' . ($sortColumn === 'firstName' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Name</a></th>
                                 <th>Date of Birth</th>
                                 <th>Address</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Zip</th>
+                                <th><a href="?sort=city&order=' . ($sortColumn === 'city' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">City</a></th>
+                                <th><a href="?sort=state&order=' . ($sortColumn === 'state' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">State</a></th>
+                                <th><a href="?sort=zip&order=' . ($sortColumn === 'zip' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Zip</a></th>
                                 <th>Email</th>
-                                <th>Phone</th>';
-                                //a href=familyView.php?id=' . $id . 
-                            echo '</tr>
+                                <th>Phone</th>
+                            </tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($family as $acct){
-                            echo '<tr>';
-                            echo '<td><a href=familyView.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
-                            echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
-                            echo '<td>' . $acct->getBirthDate() . '</td>';
-                            echo '<td>' . $acct->getAddress() . '</td>';
-                            echo '<td>' . $acct->getCity() . '</td>';
-                            echo '<td>' . $acct->getState() . '</td>';
-                            echo '<td>' . $acct->getZip() . '</td>';
-                            echo '<td>' . $acct->getEmail() . '</td>';
-                            echo '<td>' . $acct->getPhone() . '</td>';
-                            echo '<tr>';
-                            
-                        }
-                        
+                foreach ($family as $acct) {
+                    $id = $acct->getID();
+                    echo "<tr onclick=\"window.location.href='familyView.php?id=$id'\" style='cursor: pointer;'>";
+                    echo '<td>' . $acct->getFirstName() . " " . $acct->getLastName() . '</td>';
+                    echo '<td>' . $acct->getBirthDate() . '</td>';
+                    echo '<td>' . $acct->getAddress() . '</td>';
+                    echo '<td>' . $acct->getCity() . '</td>';
+                    echo '<td>' . $acct->getState() . '</td>';
+                    echo '<td>' . $acct->getZip() . '</td>';
+                    echo '<td>' . $acct->getEmail() . '</td>';
+                    echo '<td>' . $acct->getPhone() . '</td>';
+                    echo '</tr>';
+                }
                 echo '
                         </tbody>
                     </table>
                 </div>';
             }
-
             ?>
         </form>
      
