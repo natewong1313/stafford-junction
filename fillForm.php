@@ -56,8 +56,8 @@ error_reporting(E_ALL);
                     <span>Angel Gifts Wish Form</span>
                 </div>
 
-                <!--Child Care Waiver Form-->
-                <div class="dashboard-item" data-link="childCareWaiverForm.php">
+                <!--Child Care Waiver Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "childCareWaiverForm.php?id=" . $_GET['id'] : "childCareWaiverForm.php"; ?>">
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
                 </div>
