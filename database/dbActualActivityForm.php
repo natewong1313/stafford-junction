@@ -116,7 +116,7 @@ function createActivityAttendees($activityID, $attendeeIDs, $connection) {
     return true;  // Return success as true
 }
 
-function getSubmissions() {
+function getActualActivitySubmissions() {
     $conn = connect();
     $query = "SELECT * FROM dbActualActivityForm;";
     $result = mysqli_query($conn, $query);
