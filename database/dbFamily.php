@@ -441,6 +441,28 @@ function unarchive_family($id) {
     return $result;
 }
 
+function find_all_families(){
+    $query = "SELECT * FROM dbFamily ORDER BY lastName";
+    $connection = connect();
+    // Execute query
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        mysqli_close($connection);
+        return [];
+    }
+    // Get family data
+    $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $families = [];
+    foreach ($raw as $row) {
+        if ($row['id'] == 'vmsroot') {
+            continue;
+        }
+        $families []= make_a_family2($row);
+    }
+    mysqli_close($connection);
+    return $families;
+}
+
 // Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
 // More criteria can be added later
 // Find family gets families based in criteria in parameters, it builds the query based on what is in it and what isn't 
