@@ -157,15 +157,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="zip" required>* Zip Code</label>
                     <input type="text" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code">
 
-                    <label for="isHispanic">* Hispanic, Latino, or Spanish Origin</label><br><br>
+                    <label for="isHispanic">* Hispanic, Latino, or Spanish Origin</label><br>
                     <select id="isHispanic" name="isHispanic" required>
                         <option value="" disabled selected>Select Yes or No</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
-                    <br><br>
+                    <br>
 
-                    <label for="race" required>* Race</label><br><br>
+                    <label for="race" required>* Race</label><br>
                     <select id="race" name="race" required>
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -175,7 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="Asian">Asian</option>
                         <option value="Multiracial">Multiracial</option>
                         <option value="Other">Other</option>
-                    </select><br><br>
+                    </select><br>
                 </fieldset>
                     
 
