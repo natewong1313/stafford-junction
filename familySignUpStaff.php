@@ -1,18 +1,18 @@
 <?php
 
+session_cache_expire(30);
+session_start();
+
+$loggedIn = false;
+$accessLevel = 0;
+$userID = null;
 $success = false;
 
-/**
- * function that just prints the content of var_dump in a more readable way
- */
-function dd($val){
-    echo "<pre>";
-    var_dump($val);
-    echo "</pre>";
-
-    die();
+if(isset($_SESSION['_id'])){
+    $loggedIn = true;
+    $accessLevel = $_SESSION['access_level'];
+    $userID = $_SESSION['_id'];
 }
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('include/input-validation.php');
@@ -59,9 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 }
+
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -655,7 +654,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 //if registration successful, create pop up notification and direct user back to login
                 if($success){
-                    echo '<script>document.location = "login.php?registerSuccess";</script>';
+                    echo '<script>document.location = "index.php?familyRegisterSuccess";</script>';
                 }
                 ?>
             </form>
@@ -663,3 +662,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
     </body>
 </html>
+

@@ -60,6 +60,8 @@
                 <div class="happy-toast">Password changed successfully!</div>
             <?php elseif (isset($_GET['registerSuccess'])): ?>
                 <div class="happy-toast">Volunteer registered successfully!</div>
+            <?php elseif (isset($_GET['familyRegisterSuccess'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Account Registration Successful!</div>
             <?php endif ?>
             
             <?php if(isset($staff)): ?>
@@ -99,7 +101,7 @@
                 <?php endif ?>
 
                 <?php if($_SESSION['access_level'] >= 2): ?>
-                <div class="dashboard-item" data-link="">
+                <div class="dashboard-item" data-link="familySignUpStaff.php">
                     <img src="images/family-svgrepo-com.svg">
                     <span>Create Family Account</span>
                 </div>
