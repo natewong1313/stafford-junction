@@ -71,8 +71,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 // Phone fields to check if the phones are in the right format
 $phoneFields = [
     'emergency_contact_phone_1',
-    'emergency_contact_phone_2',
-
+    'emergency_contact_phone_2'
 ];
     
    // Track missing and invalid fields
@@ -114,7 +113,7 @@ if (!empty($missingFields)) {
     }
 } else {
         // All required fields are complete and phone fields valid, proceed to form submission
-        $success = createChildCareForm($args);
+        $success = createFieldTripWaiverForm($args);
     }
 }
 ?>
@@ -144,7 +143,7 @@ if (!empty($missingFields)) {
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
-    <form method="post" action="fieldTripWaiver.php">
+    <form id="fieldTripWaiverForm" action="" method="post">
 
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
