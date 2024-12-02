@@ -85,7 +85,7 @@
                 // Change password of volunteer, family, or staff based on the access level
                 switch ($accessLevel) {
                     case 0:
-                        change_volunteer_password($userID, $hash);
+                        change_password($userID, $hash);
                         break;
                     case 1:
                         change_family_password($userID, $hash);
@@ -96,7 +96,7 @@
                         change_staff_password($userID, $hash);
                         break;
                     case 3:
-                        change_password($userID, $hash);
+                        change_volunteer_password($userID, $hash);
                         break;
                 }
                 header('Location: index.php?pcSuccess');
