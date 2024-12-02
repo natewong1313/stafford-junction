@@ -11,20 +11,20 @@ $userID = null;
 $success = null;
 
 if(isset($_SESSION['_id'])){
+    require_once('domain/Children.php');
+    require_once('database/dbChildren.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbFieldTripWaiverForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
 }else {
     header("Location: login.php");
+    die();
 }
 
 //necessary files
 include_once("database/dbFamily.php");
-include_once("database/dbChildren.php");
-include_once('database/dbFieldTripWaiverForm.php');
-require('include/input-validation.php');
-include_once('domain/Children.php');
-
 //retrieve family details
 $family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_address = $family->getAddress();
@@ -373,17 +373,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
                 <hr>
 
-                <!-- Submit and Cancel buttons -->
-                <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            </div>
-           </form>
-           <?php
-           //if registration successful, create pop up notification and direct user back to login
-            if($success){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
-            ?>
+               <!-- Submit and Cancel buttons -->
+        <button type="submit" id="submit">Submit</button>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
+        </div>
+    </form>
+    </div>
+    <?php //If the user is an admin or staff, the message should appear at index.php
+            if($success && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }
+        ?>
     </div>
     </body>
 </html>
