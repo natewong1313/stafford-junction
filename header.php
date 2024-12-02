@@ -97,6 +97,7 @@
         $permission_array['findfamily.php'] = 2;
         $permission_array['findchildren.php'] = 2;
         $permission_array['formsearch.php'] = 2;
+        $permission_array['formsearchresult.php'] = 2;
         //pages only admin can view
         $permission_array['createstaffaccount.php'] = 3;
 

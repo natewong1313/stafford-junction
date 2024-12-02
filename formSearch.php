@@ -36,6 +36,20 @@
         $noResults = count($submissions) == 0;
         if(!$noResults){
             $columnNames = array_keys( reset($submissions));
+            // header('Content-Type: text/plain');
+            // // header('Content-Disposition: attachment; filename="sample.csv"');
+            // $data = array(
+            //         'aaa,bbb,ccc,dddd',
+            //         '123,456,789',
+            //         '"aaa","bbb"'
+            // );
+
+            // $fp = fopen('php://output', 'wb');
+            // foreach ( $data as $line ) {
+            //     $val = explode(",", $line);
+            //     fputcsv($fp, $val);
+            // }
+            // fclose($fp);
         }
     }
 
@@ -50,92 +64,62 @@
     <body>
         <?php require_once('header.php') ?>
         <h1>View Form Submissions</h1>
-        <main class="formSubmissions">
-            <div class="formSearch">
-                <p>Search for a specific form, a specific family, or both</p>
-                <form id="formSearch" method="get">
-                    <label for="searchByForm"><input type="checkbox" id="searchByForm" name="searchByForm" value="searchByForm"> Form Name</label>
-                    <select id="formName" name="formName" disabled>
-                        <?php
-                            foreach($searchableForms as $form){
-                                if($selectedFormName == $form){
-                                    echo '<option value="'.$form.'" selected>'.$form.'</option>';
-                                }else{
-                                    echo '<option value="'.$form.'">'.$form.'</option>';
-                                }
+        <div class="formSearch">
+            <p>Search for a specific form, a specific family, or both</p>
+            <form id="formSearch" method="get" action="formSearchResult.php">
+                <label for="searchByForm"><input type="checkbox" autocomplete="off" id="searchByForm" name="searchByForm" value="searchByForm"> Form Name</label>
+                <select id="formName" name="formName" disabled>
+                    <?php
+                        foreach($searchableForms as $form){
+                            if($selectedFormName == $form){
+                                echo '<option value="'.$form.'" selected>'.$form.'</option>';
+                            }else{
+                                echo '<option value="'.$form.'">'.$form.'</option>';
                             }
-                        ?>
-                    </select>
-                    <label for="searchByFamily"><input type="checkbox" id="searchByFamily" name="searchByFamily" value="searchByFamily"> Family Account</label>
-                    <select id="familyAccount" name="familyAccount" disabled>
-                        <?php
-                            foreach($families as $fam){
-                                $name = $fam->getFirstName() . " " . $fam->getLastName();
-                                echo '<option value="'.$fam->getId().'">'.$name.'</option>';
-                            }
-                        ?>
-                    </select>
-                    <p id="password-match-error" class="error hidden">Passwords must match!</p>
-                    <input type="submit" value="Search">
-                    <a class="button cancel" href="index.php">Return to Dashboard</a>
-                </form>
-                <script>
-                    const isSearchingByForm = <?php echo isset($_GET['searchByForm']) ? 'true' : 'false'; ?>;
-                    document.getElementById("searchByForm").addEventListener("change", (e) => {
-                        const selectBox = document.getElementById("formName");
-                        if (e.currentTarget.checked){
-                            selectBox.removeAttribute("disabled");
-                        }else{
-                            selectBox.selectedIndex = 0;
-                            selectBox.setAttribute("disabled", "disabled");
                         }
-                    })
-                    if(isSearchingByForm) {
-                        document.getElementById("searchByForm").click();
+                    ?>
+                </select>
+                <label for="searchByFamily"><input type="checkbox" autocomplete="off" id="searchByFamily" name="searchByFamily" value="searchByFamily"> Family Account</label>
+                <select id="familyAccount" name="familyAccount" disabled>
+                    <?php
+                        foreach($families as $fam){
+                            $name = $fam->getFirstName() . " " . $fam->getLastName();
+                            echo '<option value="'.$fam->getId().'">'.$name.'</option>';
+                        }
+                    ?>
+                </select>
+                <p id="password-match-error" class="error hidden">Passwords must match!</p>
+                <input type="submit" value="Search">
+                <a class="button cancel" href="index.php">Return to Dashboard</a>
+            </form>
+            <script>
+                const isSearchingByForm = <?php echo isset($_GET['searchByForm']) ? 'true' : 'false'; ?>;
+                document.getElementById("searchByForm").addEventListener("change", (e) => {
+                    const selectBox = document.getElementById("formName");
+                    if (e.currentTarget.checked){
+                        selectBox.removeAttribute("disabled");
+                    }else{
+                        selectBox.selectedIndex = 0;
+                        selectBox.setAttribute("disabled", "disabled");
                     }
-                    const isSearchingByName = <?php echo isset($_GET['searchByFamily']) ? 'true' : 'false'; ?>;
-                    document.getElementById("searchByFamily").addEventListener("change", (e) => {
-                        const selectBox = document.getElementById("familyAccount");
-                        if (e.currentTarget.checked){
-                            selectBox.removeAttribute("disabled")
-                        }else{
-                            selectBox.selectedIndex = 0;
-                            selectBox.setAttribute("disabled", "disabled");
-                        }
-                    })
-                    if(isSearchingByName) {
-                        document.getElementById("searchByFamily").click();
+                })
+                if(isSearchingByForm) {
+                    document.getElementById("searchByForm").click();
+                }
+                const isSearchingByName = <?php echo isset($_GET['searchByFamily']) ? 'true' : 'false'; ?>;
+                document.getElementById("searchByFamily").addEventListener("change", (e) => {
+                    const selectBox = document.getElementById("familyAccount");
+                    if (e.currentTarget.checked){
+                        selectBox.removeAttribute("disabled")
+                    }else{
+                        selectBox.selectedIndex = 0;
+                        selectBox.setAttribute("disabled", "disabled");
                     }
-                </script>
-            </div>
-            <div class="formSearchResults" style="display: <?php echo $hasSearched ? 'block' : 'none'; ?>;">
-                <?php if(!$noResults): ?>
-                <table class="general">
-                    <thead>
-                        <tr>
-                            <?php
-                                foreach($columnNames as $columnName){
-                                    echo '<th>' . $columnName . '</th>';
-                                }
-                            ?>
-                        </tr>
-                    </thead>
-                    <tbody class="standout">
-                        <?php
-                            foreach($submissions as $submission){
-                                echo '<tr>';
-                                foreach($submission as $column){
-                                    echo "<td>" . $column . "</td>";
-                                }
-                                echo '<tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <?php else: ?>
-                    <p style="text-align: center;">No results found.</p>
-                <?php endif; ?>
-            </div>
-        </main>
+                })
+                if(isSearchingByName) {
+                    document.getElementById("searchByFamily").click();
+                }
+            </script>
+        </div>
     </body>
 </html>

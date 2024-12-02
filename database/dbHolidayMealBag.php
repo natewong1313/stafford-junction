@@ -20,7 +20,7 @@ function get_data_by_family_id($id){
 
 function getSubmissions() {
     $conn = connect();
-    $query = "SELECT * FROM dbHolidayMealBagForm;";
+    $query = "SELECT * FROM dbHolidayMealBagForm JOIN dbFamily USING(id);";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) > 0){
