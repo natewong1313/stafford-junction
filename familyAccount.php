@@ -297,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
                     <br><br>
 
-                    <label for="race2" required>Race</label><br><br>
+                    <label for="race2">Race</label><br><br>
                     <select id="race2" name="race2">
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -536,7 +536,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="econtact-phone" required>* Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Enter emergency contact phone number. Ex. (555) 555-5555">
 
-                    <label for="econtact-name" required> Contact Relation to You</label>
+                    <label for="econtact-relation" required> Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
                 </fieldset>
 
