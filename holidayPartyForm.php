@@ -198,8 +198,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <!-- Submit and Cancel Buttons -->
             <button type="submit">Submit</button>
+            <?php if($_SESSION['access_level'] > 1): ?>
+            <a class="button cancel" href="index.php" style="margin-top: .5rem">Cancel</a>
+            <?php else: ?>
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-
+            <?php endif?>
+            
             <?php //If the user is an admin or staff, the message should appear at index.php
             if(isset($successMessage) && $accessLevel > 1){
                 echo '<script>document.location = "index.php?formSubmitSuccess";</script>';

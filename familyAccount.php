@@ -291,7 +291,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <label for="isHispanic2">Hispanic, Latino, or Spanish Origin</label><br><br>
                     <select id="isHispanic2" name="isHispanic2">
-                        <option value="" disabled selected>Select Yes or No</option>
+                        <!--<option value="" disabled selected></option>-->
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
@@ -378,7 +378,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's school">
 
                             <label for="state2">State</label>
-                            <select id="child_state_${childCount}" name="children[${childCount}][state]">
+                            <select id="child_state_${childCount}" name="children[${childCount}][state]" required>
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
@@ -488,7 +488,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="child_additional_notes_${childCount}">Additional Notes</label>
                             <input type="text" id="child_additional_notes_${childCount}" name="children[${childCount}][child_additional_notes_-name]" required placeholder="Anything else we should know?">
 
-                            <button type="button" onclick="removeChildForm(${childCount})">Remove Child</button>
+                            <button type="button" style="background-color: red" onclick="removeChildForm(${childCount})">Remove Child</button>
 
                             <hr>
                         `;

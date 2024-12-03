@@ -48,6 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/base.css">
+        <style>
+            .general tbody tr:hover {
+                background-color: #cccccc; /* Light grey color */
+            }
+        </style>
     </head>
     <body>
         <?php 
@@ -215,15 +220,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         
             <!--If staff account, displays summarries of children in table format with links to their own account pages-->
             <?php if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
+                echo '<h3>Children Summary</h3>';
                 echo '<fieldset>';
-                echo '<legend>Children Summary</legend>';
+<<<<<<< HEAD
                 echo '<p>Click on an Account ID to view or edit that child\'s account.</p>';
+=======
+                echo '<legend>Children Summary</legend>';
+                echo '<p>Click on a row to view or edit that child\'s account.</p>';
+>>>>>>> 7e3f7285f207136cf4c79ad469db175e7dbbaca3
                 echo '
                 <div class="table-wrapper">
                     <table class="general">';
                     echo '<thead>';
                         echo '<tr>';
-                            echo '<th>Account ID</th>';
                             echo '<th>Full Name</th>';
                             echo '<th>Date of Birth</th>';
                             echo '<th>Gender</th>';
@@ -233,8 +242,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     echo '</thead>';
                     echo '<tbody class="standout">';
                     foreach ($children as $acct) {
-                        echo '<tr>';
-                        echo '<td><a href=childAccount.php?id=' . $acct->getID() . '>' . $acct->getID() . '</a></td>';
+                        $id = $acct->getID();
+                        echo "<tr onclick=\"window.location.href='childAccount.php?id=$id'\" style='cursor: pointer;'>";
                         echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
                         echo '<td>' . $acct->getBirthdate() . '</td>';
                         echo '<td>' . $acct->getGender() . '</td>';
