@@ -64,9 +64,6 @@ error_reporting(E_ALL);
                 </div>
 
 
-
-                <div class="dashboard-item" data-link="fieldTripWaiver.php">
-
                 <!--Field Trip Waiver Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "fieldTripWaiver.php?id=" . $_GET['id'] : "fieldTripWaiver.php"; ?>">
 
