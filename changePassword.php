@@ -15,7 +15,6 @@
         $loggedIn = true;
         // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
         $accessLevel = $_SESSION['access_level'];
-        echo $accessLevel;
         $userID = $_SESSION['_id'];
     }
     $forced = false;
