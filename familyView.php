@@ -63,11 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     echo '<div class="happy-toast" style="text-align: center;">Password changed successfully!</div>';
                 }
             ?>
-            <fieldset>
-                <legend>General Information</legend>
-                <label>Account ID</label>
-                <p><?php echo $family->getId() ?></p>
-            </fieldset>
 
             <h3>Primary Parent / Guardian</h3>
             <fieldset>
@@ -97,51 +92,110 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <label>Phone</label>
                 <p><?php echo $family->getPhone() ?></p>
                 <label>Phone type</label>
-                <p><?php echo $family->getPhoneType() ?></p>
+                <p><?php 
+                if ($family->getPhoneType() == 'cellphone') {
+                    echo 'Cell';
+                } elseif ($family->getPhoneType() == 'home') {
+                    echo 'Home';
+                } elseif ($family->getPhoneType() == 'work') {
+                    echo 'Work';
+                }
+                ?></p>
                 <label>Secondary phone</label>
                 <p><?php echo $family->getSecondaryPhone() ?></p>
                 <label>Secondary phone type</label>
-                <p><?php echo $family->getSecondaryPhoneType() ?></p>
+                <p><?php 
+                if ($family->getSecondaryPhoneType() == 'cellphone') {
+                    echo 'Cell';
+                } elseif ($family->getSecondaryPhoneType() == 'home') {
+                    echo 'Home';
+                } elseif ($family->getSecondaryPhoneType() == 'work') {
+                    echo 'Work';
+                }
+                ?></p>
             </fieldset>
 
             <h3>Secondary Parent / Guardian</h3>
             <fieldset>
             <legend>General Information</legend>
-                <label>Name</label>
-                <p><?php echo $family->getFirstName2() . " " . $family->getLastName2() ?></p>
-                <label>Birthdate</label>
-                <p><?php echo $family->getBirthDate2() ?></p>
-                <label>Neighborhood</label>
-                <p><?php echo $family->getNeighborhood2() ?></p>
-                <label>Address</label>
-                <p><?php echo $family->getAddress2() . ", " . $family->getCity2() . ", " . $family->getState2() . " " . $family->getZip2() ?></p>
-                <label>Hispanic, Latino, or Spanish Origin</label>
-                    <?php if ($family->isHispanic2() == 1) {
-                        echo '<p>Yes</p>';
-                    } else {
-                        echo '<p>No</p>';
-                    }
-                    ?>
-                <label>Race</label>
-                <p><?php echo $family->getRace2() ?></p>
+                <?php if (!empty($family->getFirstName2()) || !empty($family->getLastName2())): ?>
+                    <label>Name</label>
+                    <p><?php echo (!empty($family->getFirstName2()) ? $family->getFirstName2() : '') . " " . 
+                        (!empty($family->getLastName2()) ? $family->getLastName2() : ''); ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getBirthDate2())): ?>
+                    <label>Birthdate</label>
+                    <p><?php echo $family->getBirthDate2() ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getNeighborhood2())): ?>
+                    <label>Neighborhood</label>
+                    <p><?php echo $family->getNeighborhood2() ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getAddress2()) || !empty($family->getCity2()) || !empty($family->getState2()) || !empty($family->getZip2())): ?>
+                    <label>Address</label>
+                    <p><?php echo $family->getAddress2() . ", " . $family->getCity2() . ", " . $family->getState2() . " " . $family->getZip2() ?></p>
+                <?php endif; ?>
+                
+                <?php if ($family->isHispanic2() !== null): ?>
+                    <label>Hispanic, Latino, or Spanish Origin</label>
+                    <p><?php echo ($family->isHispanic2() == 1) ? 'Yes' : 'No'; ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getRace2())): ?>
+                    <label>Race</label>
+                    <p><?php echo $family->getRace2() ?></p>
+                <?php endif; ?>
             </fieldset>
+
             <fieldset>
-            <legend> Contact Information</legend>
-                <label>Email</label>
-                <p><?php echo $family->getEmail2() ?></p>
-                <label>Phone</label>
-                <p><?php echo $family->getPhone2() ?></p>
-                <label>Phone type</label>
-                <p><?php echo $family->getPhoneType2() ?></p>
-                <label>Secondary phone</label>
-                <p><?php echo $family->getSecondaryPhone2() ?></p>
-                <label>Secondary phone type</label>
-                <p><?php echo $family->getSecondaryPhoneType2() ?></p>
+                <legend>Contact Information</legend>
+                <?php if (!empty($family->getEmail2())): ?>
+                    <label>Email</label>
+                    <p><?php echo $family->getEmail2() ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getPhone2())): ?>
+                    <label>Phone</label>
+                    <p><?php echo $family->getPhone2() ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getPhoneType2())): ?>
+                    <label>Phone type</label>
+                    <p><?php 
+                    if ($family->getPhoneType2() == 'cellphone') {
+                        echo 'Cell';
+                    } elseif ($family->getPhoneType2() == 'home') {
+                        echo 'Home';
+                    } elseif ($family->getPhoneType2() == 'work') {
+                        echo 'Work';
+                    }
+                    ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getSecondaryPhone2())): ?>
+                    <label>Secondary phone</label>
+                    <p><?php echo $family->getSecondaryPhone2() ?></p>
+                <?php endif; ?>
+                
+                <?php if (!empty($family->getSecondaryPhoneType2())): ?>
+                    <label>Secondary phone type</label>
+                    <p><?php 
+                    if ($family->getSecondaryPhoneType2() == 'cellphone') {
+                        echo 'Cell';
+                    } elseif ($family->getSecondaryPhoneType2() == 'home') {
+                        echo 'Home';
+                    } elseif ($family->getSecondaryPhoneType2() == 'work') {
+                        echo 'Work';
+                    }
+                    ?></p>
+                <?php endif; ?>
             </fieldset>
 
             <h3>Emergency Contact</h3>
             <fieldset>
-            <legend>Emergency Contact</legend>
                 <label>Name</label>
                 <p><?php echo $family->getEContactFirstName() . " " . $family->getEContactLastName() ?></p>
                 <label>Phone</label>
@@ -150,13 +204,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p><?php echo $family->getEContactRelation() ?></p>
             </fieldset>
 
+            <h3>Household Information</h3>
             <fieldset>
-            <legend>Household Information</legend>
                 <label>Income</label>
                 <p><?php echo $family->getIncome() ?></p>
                 <!--Household Languages-->
                 <!--Current Assistance-->
                 <!--Add once there are get() for these atttributes-->
+            </fieldset>
         
             <!--If staff account, displays summarries of children in table format with links to their own account pages-->
             <?php if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
