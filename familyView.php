@@ -81,12 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <label>Address</label>
                 <p><?php echo $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . " " . $family->getZip() ?></p>
                 <label>Hispanic, Latino, or Spanish Origin</label>
-                    <?php if ($family->isHispanic() == 1) {
-                        echo '<p>Yes</p>';
-                    } else {
-                        echo '<p>No</p>';
+                <p><?php 
+                    if ($family->isHispanic() == 1) {
+                        echo 'Yes';
+                    } elseif ($family->isHispanic() == 0) {
+                        echo 'No';
                     }
-                    ?>
+                    ?></p>
                 <label>Race</label>
                 <p><?php echo $family->getRace() ?></p>
             </fieldset>
@@ -166,7 +167,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     
                     <?php if ($family->isHispanic2() !== null): ?>
                         <label>Hispanic, Latino, or Spanish Origin</label>
-                        <p><?php echo ($family->isHispanic2() == 1) ? 'Yes' : 'No'; ?></p>
+                        <p><?php 
+                        if ($family->isHispanic2() == 1) {
+                            echo 'Yes';
+                        } elseif ($family->isHispanic2() == 0) {
+                            echo 'No';
+                        }
+                        ?></p>
                     <?php endif; ?>
                     
                     <?php if (!empty($family->getRace2())): ?>
