@@ -100,6 +100,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <p><b>Your username is the primary email address entered above.</b></p>
 
                     <label for="password" required>* Password</label>
+                    <p style="margin-bottom: 0;">Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)</p>
                     <input type="password" id="password" name="password" pattern="^(?=.*[^a-zA-Z0-9].*).{8,}$" title="Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)" placeholder="Enter a strong password" required>
 
                     <label for="password-reenter" required>* Re-enter Password</label>

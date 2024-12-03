@@ -115,6 +115,7 @@
         <?php require_once('header.php') ?>
         <h1>Change Password</h1>
         <main class="login">
+            <p>New password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)</p>
             <?php if (isset($error1)): ?>
                 <p class="error-toast">Your entry for Current Password was incorrect.</p>
             <?php elseif (isset($error2)): ?>
