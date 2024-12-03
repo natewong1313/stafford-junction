@@ -377,7 +377,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="city" required>Child's City</label>
                             <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's school">
 
-                            <label for="state2">State</label>
+                            <label for="state">State</label>
                             <select id="child_state_${childCount}" name="children[${childCount}][state]" required>
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
