@@ -62,11 +62,7 @@ $child = retrieve_child_by_id($_GET['id']);
             echo '<label>Grade</label>';
             echo '<p>' . $child->getGrade() . '</p>';
             echo '<label>Hispanic, Latino, or Spanish Origin</label>';
-                if ($child->isHispanic() == 1) {
-                    echo '<p>Yes</p>';
-                } else {
-                    echo '<p>No</p>';
-                }
+            echo '<p>' . ($child->isHispanic() == 1 ? 'Yes' : 'No') . '</p>';
             echo '<label>Race</label>';
             echo '<p>' . $child->getRace() . '</p>';
             echo '<label>Medical Notes</label>';
