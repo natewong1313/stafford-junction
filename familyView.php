@@ -136,8 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p><?php echo $family->getEContactFirstName() . " " . $family->getEContactLastName() ?></p>
                 <label>Phone</label>
                 <p><?php echo $family->getEContactPhone() ?></p>
-                <label>Relation</label>
-                <p><?php echo $family->getEContactRelation() ?></p>
+                <?php if(isset($family->getEContactRelation()) && !empty($family->getEContactRelation())) {
+                echo '<label>Relation</label>';
+                echo '<p>' . $family->getEContactRelation() . '</p>';
+                ?>
             </fieldset>
         
             <!--If staff account, displays summarries of children in table format with links to their own account pages-->

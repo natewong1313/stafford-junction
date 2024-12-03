@@ -31,7 +31,7 @@ $child = retrieve_child_by_id($_GET['id']);
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php require_once('universal.inc') ?>
-        <title>Stafford Junction | Child Account</title>
+        <title>Stafford Junction | Child Account Information</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/base.css">
@@ -47,8 +47,6 @@ $child = retrieve_child_by_id($_GET['id']);
         <main class="general">
         <?php if(isset($child)) {
             echo '<fieldset>';
-            echo '<label>Account ID</label>';
-            echo '<p>' . $child->getID() . '</a></p>';
             echo '<label>Full Name</label>';
             echo '<p>' . $child->getFirstName() . " " . $child->getLastName() . '</p>';
             echo '<label>Date of Birth</label>';
@@ -87,10 +85,10 @@ $child = retrieve_child_by_id($_GET['id']);
         <?php if($_SESSION['access_level'] == 1): ?>
             <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
-        <?php if($_SESSION['access_level'] > 1 && !isset($_GET['findChildren'])): ?>
+        <?php if($_SESSION['access_level'] >= 2 && !isset($_GET['findChildren'])): ?>
             <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
-        <?php if($_SESSION['access_level'] > 1 && isset($_GET['findChildren'])): ?>
+        <?php if($_SESSION['access_level'] >= 2 && isset($_GET['findChildren'])): ?>
             <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         

@@ -97,22 +97,22 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                 <h3>Primary Parent / Guardian</h3>
                 <fieldset>
                     <legend>Personal Information</legend>
-                    <label for="first-name" >First Name</label>
+                    <label for="first-name">First Name</label>
                     <input type="text" id="first-name" name="first-name" value="<?php echo htmlspecialchars($first_name); ?>">
 
-                    <label for="last-name" >Last Name</label>
+                    <label for="last-name">Last Name</label>
                     <input type="text" id="last-name" name="last-name" value="<?php echo htmlspecialchars($last_name); ?>">
 
-                    <label for="birthdate" >Date of Birth</label>
+                    <label for="birthdate">Date of Birth</label>
                     <input type="date" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($birthdate); ?>" max="<?php echo date('Y-m-d'); ?>">
 
-                    <label for="address" >Street Address</label>
+                    <label for="address">Street Address</label>
                     <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($address); ?>">
 
-                    <label for="city" >City</label>
+                    <label for="city">City</label>
                     <input type="text" id="city" name="city" value="<?php echo htmlspecialchars($city); ?>">
 
-                    <label for="state" >State</label>
+                    <label for="state">State</label>
                     <select id="state" name="state" value="<?php echo htmlspecialchars($state); ?>">
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -167,21 +167,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <option value="WY">Wyoming</option>
                     </select>
 
-                    <label for="zip" >Zip Code</label>
+                    <label for="zip">Zip Code</label>
                     <input type="number" id="zip" name="zip" pattern="[0-9]{5}" title="5-digit zip code" value="<?php echo htmlspecialchars($zip); ?>">
                 </fieldset>
 
                 <fieldset>
                     <legend>Primary Contact Information</legend>
 
-                    <label for="email" >E-mail</label>
+                    <label for="email">E-mail</label>
                     <p><b><i>*Changing this email will also change your login username/email.*</i></b></p>
                     <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
 
-                    <label for="phone" >Primary Phone Number</label>
+                    <label for="phone">Primary Phone Number</label>
                     <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" value="<?php echo htmlspecialchars($phone); ?>">
 
-                    <label >Primary Phone Type</label>
+                    <label>Primary Phone Type</label>
                     <div class="radio-group" value="<?php echo htmlspecialchars($phone_type); ?>">
                         <input type="radio" id="phone-type-cellphone" name="phone-type" value="cellphone" <?php echo ($phone_type === 'cellphone') ? 'checked' : ''; ?>>
                         <label for="phone-type-cellphone">Cell</label>
