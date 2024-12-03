@@ -15,6 +15,7 @@
         $loggedIn = true;
         // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
         $accessLevel = $_SESSION['access_level'];
+        echo $accessLevel;
         $userID = $_SESSION['_id'];
     }
     $forced = false;
@@ -59,10 +60,6 @@
             $user = null;
             $passwordToVerify = "";
             switch ($accessLevel) {
-                case 0:
-                    $user = retrieve_person($userID);
-                    $passwordToVerify = $user->get_password();
-                    break;
                 case 1:
                     $user = retrieve_family_by_id($userID);
                     $passwordToVerify = $user->getPassword();
@@ -72,7 +69,7 @@
                     $passwordToVerify = $user->getPassword();
                     break;
                 case 3:
-                    $user = retrieve_volunteer_by_id($userID);
+                    $user = retrieve_person($userID);
                     $passwordToVerify = $user->getPassword();
                     break;
             }
@@ -84,9 +81,6 @@
                 $hash = password_hash($newPassword, PASSWORD_BCRYPT);
                 // Change password of volunteer, family, or staff based on the access level
                 switch ($accessLevel) {
-                    case 0:
-                        change_password($userID, $hash);
-                        break;
                     case 1:
                         change_family_password($userID, $hash);
                         header('Location: familyAccountDashboard.php?pcSuccess');
@@ -96,7 +90,7 @@
                         change_staff_password($userID, $hash);
                         break;
                     case 3:
-                        change_volunteer_password($userID, $hash);
+                        change_password($userID, $hash);
                         break;
                 }
                 header('Location: index.php?pcSuccess');
@@ -134,8 +128,10 @@
                 <input type="password" id="new-password-reenter" placeholder="Re-enter new password" required>
                 <p id="password-match-error" class="error hidden">Passwords must match!</p>
                 <input type="submit" id="submit" name="submit" value="Change Password">
-                <?php if (!$forced): ?>
+                <?php if (!$forced && $accessLevel == 2 || $accessLevel == 3): ?>
                     <a class="button cancel" href="index.php">Cancel</a>
+                <?php elseif (!$forced && $accessLevel == 1): ?>
+                    <a class="button cancel" href="familyAccountDashboard.php">Cancel</a>
                 <?php endif ?>
             </form>
         </main>
