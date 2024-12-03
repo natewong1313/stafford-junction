@@ -222,12 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <?php if($_SESSION['access_level'] > 1 && isset($children) && !empty($children)) {
                 echo '<h3>Children Summary</h3>';
                 echo '<fieldset>';
-<<<<<<< HEAD
-                echo '<p>Click on an Account ID to view or edit that child\'s account.</p>';
-=======
                 echo '<legend>Children Summary</legend>';
-                echo '<p>Click on a row to view or edit that child\'s account.</p>';
->>>>>>> 7e3f7285f207136cf4c79ad469db175e7dbbaca3
+                echo '<p>Click on an Account ID to view or edit that child\'s account.</p>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">';
