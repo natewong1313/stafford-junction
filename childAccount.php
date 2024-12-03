@@ -75,6 +75,8 @@ $child = retrieve_child_by_id($_GET['id']);
             echo '<p>' . $child->getMedicalNotes() . '</p>';
             echo '<label>Other Notes</label>';
             echo '<p>' . $child->getNotes() . '</p>';
+            echo '<label>Enrolled Programs</label>';
+            echo '<p> . </p>';
         }
         
         ?>
