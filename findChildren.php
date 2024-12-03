@@ -83,6 +83,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <title>Stafford Junction | Find Family Account</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .general a {
+                color: #fcdd2b;
+                text-decoration: none;
+            }
+            .general tbody tr:hover {
+                background-color: #cccccc; /* Light grey color */
+            }
+        </style>
     </head>
     <body>
         <?php require_once('header.php') ?>
@@ -174,50 +183,60 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <button type="submit" class="button_style">Search</button>
 
             <?php
-            if(isset($children)){
+            if (isset($children)) {
+                // Sorting parameters
+                $sortColumn = $_GET['sort'] ?? 'firstName';
+                $sortOrder = $_GET['order'] ?? 'asc';
+
+                // Sorting logic for children
+                usort($children, function ($a, $b) use ($sortColumn, $sortOrder) {
+                    $valueA = strtolower($a->{"get" . ucfirst($sortColumn)}());
+                    $valueB = strtolower($b->{"get" . ucfirst($sortColumn)}());
+                    if ($valueA == $valueB) return 0;
+                    return ($sortOrder === 'asc' ? $valueA > $valueB : $valueA < $valueB) ? 1 : -1;
+                });
+
                 echo '<h3>Account Summary</h3>';
                 echo '
                 <div class="table-wrapper">
                     <table class="general">
                         <thead>
                             <tr>
-                                <th>Acct ID</th>
-                                <th>Name</th>
+                                <th><a href="?sort=firstName&order=' . ($sortColumn === 'firstName' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Name' . '</a></th>
                                 <th>Birthdate</th>
-                                <th>Neighborhood</th>
+                                <th><a href="?sort=neighborhood&order=' . ($sortColumn === 'neighborhood' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Neighborhood' . '</a></th>
                                 <th>Address</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Zip</th>
-                                <th>School</th>
-                                <th>Grade</th>';
-                                //a href=familyView.php?id=' . $id . 
-                            echo '</tr>
+                                <th><a href="?sort=city&order=' . ($sortColumn === 'city' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">City' . '</a></th>
+                                <th><a href="?sort=state&order=' . ($sortColumn === 'state' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">State' . '</a></th>
+                                <th><a href="?sort=zip&order=' . ($sortColumn === 'zip' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Zip' . '</a></th>
+                                <th><a href="?sort=school&order=' . ($sortColumn === 'school' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">School' . '</a></th>
+                                <th><a href="?sort=grade&order=' . ($sortColumn === 'grade' && $sortOrder === 'asc' ? 'desc' : 'asc') . '">Grade' . '</a></th>
+                            </tr>
                         </thead>
                         <tbody class="standout">';
-                        foreach($children as $c){
-                            echo '<tr>';
-                            echo '<td><a href=childAccount.php?findChildren=true&id=' . $c->getID() . '>' . $c->getID() . '</a></td>';
-                            echo '<td>' . $c->getFirstName() . " " . $c->getLastName() . '</td>';
-                            echo '<td>' . $c->getBirthDate() . '</td>';
-                            echo '<td>' . $c->getNeighborhood() . '</td>';
-                            echo '<td>' . $c->getAddress() . '</td>';
-                            echo '<td>' . $c->getCity() . '</td>';
-                            echo '<td>' . $c->getState() . '</td>';
-                            echo '<td>' . $c->getZip() . '</td>';
-                            echo '<td>' . $c->getSchool() . '</td>';
-                            echo '<td>' . $c->getGrade() . '</td>';
-                            echo '<tr>';
-                            
-                        }
-                        
+
+                foreach ($children as $c) {
+                    $id = $c->getID();
+                    echo "<tr onclick=\"window.location.href='childAccount.php?findChildren=true&id=$id'\" style='cursor: pointer;'>";
+                    echo '<td>' . htmlspecialchars($c->getFirstName() . " " . $c->getLastName()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getBirthDate()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getNeighborhood()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getAddress()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getCity()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getState()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getZip()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getSchool()) . '</td>';
+                    echo '<td>' . htmlspecialchars($c->getGrade()) . '</td>';
+                    echo '</tr>';
+                }
+
                 echo '
                         </tbody>
                     </table>
                 </div>';
             }
-
             ?>
+
         </form>
      
         <a class="button cancel button_style"  href="index.php">Return to Dashboard</a>      

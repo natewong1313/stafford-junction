@@ -89,6 +89,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <!--4. Child Name-->
                 <label for="child_name">4. Name of Child / Nombre del niño\a*</label><br><br>
                 <select name="child_name" id="child_name" required>
+                    <option disabled selected>Select a child</option>
                 <?php
                     require_once('domain/Children.php');
                     foreach ($children as $c){
@@ -102,6 +103,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     }
                 ?>
                 </select>
+                <script>
+                    const children = <?php echo json_encode($children); ?>;
+                    document.getElementById("child_name").addEventListener("change", (e) => {
+                        const childId = e.target.value.split("_")[0];
+                        const childData = children.find(child => child.id === childId);
+                        if(childData.gender === "male"){
+                            document.getElementById("choice_1").click();
+                        }else if (childData.gender === "female"){
+                            document.getElementById("choice_2").click();
+                        }
+                        // https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
+                        const today = new Date();
+                        const birthDate = new Date(childData.birthdate);
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const month = today.getMonth() - birthDate.getMonth();
+                        if(month < 0 || (month === 0 && today.getDate() < birthDate.getDate())){
+                            age--;
+                        }
+                        document.getElementById("age").value = age;
+                    })
+                </script>
                 <br><br>
 
                 <!--5. Boy or Girl--->

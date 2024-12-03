@@ -11,21 +11,21 @@ $userID = null;
 $success = null;
 
 if(isset($_SESSION['_id'])){
+    require_once('domain/Children.php');
+    require_once('database/dbChildren.php');
+    require_once('include/input-validation.php');
+    require_once('database/dbFieldTripWaiverForm.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
 }else {
     header("Location: login.php");
+    die();
 }
 
 //necessary files
 include_once("database/dbFamily.php");
-include_once("database/dbChildren.php");
-include_once('database/dbFieldTripWaiverForm.php');
-require('include/input-validation.php');
-include_once('domain/Children.php');
-
-//retrieve family details
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 $family = retrieve_family_by_id($_GET['id'] ?? $userID);
 $family_address = $family->getAddress();
 $family_city = $family->getCity();
@@ -36,10 +36,8 @@ $guardian_name = $family->getFirstName() . " " . $family->getLastName();
 $guardian_phone = $family->getPhone();
 $guardian_2_name = $family->getFirstName2() . " " . $family->getLastName2();
 $guardian_2_phone = $family->getPhone2();
-//retrieve children by family ID
-$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
-include_once('database/dbinfo.php');
+//include_once('database/dbinfo.php');
 //check if the form is submitted
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     //sanitize form input
@@ -69,18 +67,53 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent_signature',
         'signature_date'
     );
+
+// Phone fields to check if the phones are in the right format
+$phoneFields = [
+    'emergency_contact_phone_1',
+    'emergency_contact_phone_2'
+];
     
-    if(!wereRequiredFieldsSubmitted($args, $required)){
-        echo "Not all fields complete";
-    } else {
-        //call the function to create the waiver form
-        $success = createFieldTripWaiverForm($args);
-        
-        if ($success) {
-            echo "Form submitted successfully!";
-        } else {
-            echo "Error submitting the form.";
+   // Track missing and invalid fields
+$missingFields = [];
+$invalidFields = [];
+
+// Check if all strictly required fields are provided
+foreach ($required as $field) {
+    if (empty($args[$field])) {
+        $missingFields[] = $field;
+    }
+}
+
+// Validate all phone fields
+foreach ($phoneFields as $field) {
+    // Check if the field has a value
+    if (!empty($args[$field])) {
+        // Validate and filter the phone number
+        $args[$field] = validateAndFilterPhoneNumber($args[$field]);
+
+        // Collect invalid phone numbers
+        if (!$args[$field]) {
+            $invalidFields[] = $field;
         }
+    }
+}
+
+// Provide feedback if any required fields are missing
+if (!empty($missingFields)) {
+    echo "The following required fields are missing:<br>";
+    foreach ($missingFields as $missingField) {
+        echo "$missingField<br>";
+    }
+} elseif (!empty($invalidFields)) {
+    // Provide feedback if any phone fields are invalid
+    echo "The following phone fields are invalid:<br>";
+    foreach ($invalidFields as $invalidField) {
+        echo "$invalidField<br>";
+    }
+} else {
+        // All required fields are complete and phone fields valid, proceed to form submission
+        $success = createFieldTripWaiverForm($args);
     }
 }
 ?>
@@ -110,7 +143,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <h1>Stafford Junction Field Trip Release Waiver <?php echo date("Y"); ?> / Exención de Responsabilidad para Excursiones de Stafford Junction <?php echo date("Y"); ?></h1>
         <div id="formatted_form">
 
-    <form method="post" action="fieldTripWaiver.php">
+    <form id="fieldTripWaiverForm" action="" method="post">
 
     <!-- General Information Title in a Black Box -->
     <div class="info-box-rect">
@@ -120,6 +153,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <!-- Child's Name -->
     <label for="child_name">Child's Name / Nombre del Niño(a)*</label><br><br>
     <select name="child_name" id="child_name" required>
+        <option disabled selected>Select a child</option>
         <?php
             require_once('domain/Children.php');
             foreach ($children as $c) {
@@ -131,7 +165,24 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 }
             }
         ?>
-    </select><br><br>
+    </select>
+    <script>
+        const children = <?php echo json_encode($children); ?>;
+        document.getElementById("child_name").addEventListener("change", (e) => {
+            const childId = e.target.value.split("_")[0];
+            const childData = children.find(child => child.id === childId);
+            document.getElementById("child_gender").value = childData.gender;
+            document.getElementById("child_birthdate").valueAsDate = new Date(childData.birthdate);
+            document.getElementById("child_neighborhood").value = childData.neighborhood;
+            document.getElementById("child_school").value = childData.school;
+            document.getElementById("child_address").value = childData.address;
+            document.getElementById("child_city").value = childData.city;
+            document.getElementById("child_zip").value = childData.zip;
+            document.getElementById("child_city").value = childData.city;
+            document.getElementById("medical_issues").value = childData.medicalNotes;
+        })
+    </script>
+    <br><br>
 
     <!-- Child's Gender -->
     <label for="child_gender">Gender* / Género*</label><br>
@@ -373,17 +424,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
                 <hr>
 
-                <!-- Submit and Cancel buttons -->
-                <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-            </div>
-           </form>
-           <?php
-           //if registration successful, create pop up notification and direct user back to login
-            if($success){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
-            ?>
+               <!-- Submit and Cancel buttons -->
+        <button type="submit" id="submit">Submit</button>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
+        </div>
+    </form>
     </div>
-    </body>
+    <?php //If the user is an admin or staff, the message should appear at index.php
+            if($success && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }
+        ?>
+    
+</body>
 </html>
