@@ -1,18 +1,18 @@
 <?php
 
+session_cache_expire(30);
+session_start();
+
+$loggedIn = false;
+$accessLevel = 0;
+$userID = null;
 $success = false;
 
-/**
- * function that just prints the content of var_dump in a more readable way
- */
-function dd($val){
-    echo "<pre>";
-    var_dump($val);
-    echo "</pre>";
-
-    die();
+if(isset($_SESSION['_id'])){
+    $loggedIn = true;
+    $accessLevel = $_SESSION['access_level'];
+    $userID = $_SESSION['_id'];
 }
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('include/input-validation.php');
@@ -59,9 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 }
+
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -164,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
-                    
+                
 
                     <label for="race" required>* Race</label>
                     <select id="race" name="race" required>
@@ -295,9 +294,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
-                 
-                    <label for="race2">Race</label><br><br>
+                  
 
+                    <label for="race2" required>Race</label>
                     <select id="race2" name="race2">
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -377,8 +376,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="city" required>Child's City</label>
                             <input type="text" id="child_city_${childCount}" name="children[${childCount}][city]" required placeholder="Enter child's school">
 
-                            <label for="state">State</label>
-                            <select id="child_state_${childCount}" name="children[${childCount}][state]" required>
+                            <label for="state2">State</label>
+                            <select id="child_state_${childCount}" name="children[${childCount}][state]">
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
@@ -536,7 +535,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="econtact-phone" required>* Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Enter emergency contact phone number. Ex. (555) 555-5555">
 
-                    <label for="econtact-relation" required> Contact Relation to You</label>
+                    <label for="econtact-name" required> Contact Relation to You</label>
                     <input type="text" id="econtact-relation" name="econtact-relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
                 </fieldset>
 
@@ -637,8 +636,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p><b>Your username is the primary email address entered above.</b></p>
 
                     <label for="password" required>* Password</label>
-                    <p style="margin-bottom: 0;">Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)</p>
-                    <input type="password" id="password" name="password" pattern="^(?=.*[^a-zA-Z0-9].*).{8,}$" title="Password must be eight or more characters in length and include least one special character (e.g., ?, !, @, #, $, &, %)" placeholder="Enter a strong password" required>
+                    <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
 
                     <label for="password-reenter" required>* Re-enter Password</label>
                     <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
@@ -656,7 +654,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 //if registration successful, create pop up notification and direct user back to login
                 if($success){
-                    echo '<script>document.location = "login.php?registerSuccess";</script>';
+                    echo '<script>document.location = "index.php?familyRegisterSuccess";</script>';
                 }
                 ?>
             </form>
@@ -664,3 +662,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
     </body>
 </html>
+

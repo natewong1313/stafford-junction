@@ -211,7 +211,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
             <br><hr>
 
                 <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+                <a class="button cancel" href="fillFormStaff.php" style="margin-top: .5rem">Cancel</a>
         
             </form>
         </div>
@@ -219,7 +219,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
             // if submission successful, create pop up notification and direct user back to fill form page
             // if fail, notify user on program interest form page
             if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($activityID)){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                echo '<script>document.location = "fillFormStaff.php?formSubmitSuccess";</script>';
             } else if ($_SERVER['REQUEST_METHOD'] == "POST" && empty($activityID)) {
                 echo '<script>document.location = "actualActivityForm.php?formSubmitFail";</script>';
             }
