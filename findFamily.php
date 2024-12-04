@@ -162,6 +162,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     </select>
                 </div>
             </div>
+            <div class="search-container">
+                <div class="search-label">
+                <label>Archived:</label>
+                </div>
+                <div>
+                <input type="checkbox" id="is-archived" name='is-archived' value=1>
+                </div>
+            </div>
             
             <button type="submit" class="button_style">Search</button>
 
