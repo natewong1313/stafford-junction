@@ -73,24 +73,24 @@
                 <!--New Dashboard items-->
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="findFamily.php">
-                        <img src="images/person-search.svg">
-                        <span>Find Family Account</span>
+                    <img src="images/person-search.svg">
+                    <span>Find Family Account</span>
                 </div>
                 <?php endif ?>
 
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="findChildren.php">
-                        <img src="images/person-search.svg">
-                        <span>Find Children</span>
+                    <img src="images/person-search.svg">
+                    <span>Find Children</span>
                 </div>
                 <?php endif ?>
 
-                <!--Dashboard button that directs the user to the forms page
-                <div class="dashboard-item" data-link="fillForm.php">
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="fillFormStaff.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
-                    <span>Fill Out Form</span>
+                    <span>Fill Out Attendance Forms</span>
                 </div>
-                -->
+                <?php endif ?>
 
                 <!--Dashboard button that directs the admin user to staff account create page-->
                 <?php if($_SESSION['account_type'] == 'admin'): ?>
