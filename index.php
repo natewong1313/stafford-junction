@@ -95,7 +95,7 @@
                 <!--Dashboard button that directs the admin user to staff account create page-->
                 <?php if($_SESSION['account_type'] == 'admin'): ?>
                 <div class="dashboard-item" data-link="createStaffAccount.php">
-                    <img src="images/form-dropdown-svgrepo-com.svg">
+                    <img src="images/staffUsers.svg">
                     <span>Create Staff Account</span>
                 </div>
                 <?php endif ?>
