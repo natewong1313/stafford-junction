@@ -36,12 +36,11 @@ error_reporting(E_ALL);
                     <img src="images/school-supplies-svgrepo-com.svg">
                     <span>School Supplies Form</span>
                 </div>
-                
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "springBreakForm.php?id=" . $_GET['id'] : "springBreakForm.php"; ?>">
                     <img src="images/tent-svgrepo-com.svg">
-                    <span>Spring Break Form</span>
+                    <span>Spring Break Form</span> 
                 </div>
-                    
+    
                 <!-- Angel Wish Gift Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "angelGiftForm.php?id=" . $_GET['id'] : "angelGiftForm.php"; ?>">
                     <img src="images/angel.svg">
@@ -53,7 +52,7 @@ error_reporting(E_ALL);
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
                 </div>
-
+                <!--Field Trip Waiver Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "fieldTripWaiver.php?id=" . $_GET['id'] : "fieldTripWaiver.php"; ?>">
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> 
@@ -85,22 +84,6 @@ error_reporting(E_ALL);
                     <img src="images/summerJunction.svg">
                     <span>Summer Junction Registration Form</span>
                 </div>
-
-                <!--Only staff and volunteer accounts can access these forms-->
-                <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
-                <div class="dashboard-item" data-link="busMonitorAttendanceForm.php">
-                    <img src="images/school-bus-vehicle-svgrepo-com.svg">
-                    <span>Bus Monitor Attendance Form</span>
-                </div>
-                <?php endif ?>
-
-                <!--Only staff and volunteer accounts can access these forms-->
-                <?php if ($_SESSION['access_level'] < 1 || $_SESSION['access_level'] > 1): ?>
-                    <div class="dashboard-item" data-link="actualActivityForm.php">
-                        <img src="images/actualActivity-svgrepo.svg">
-                        <span>Actual Activity Form</span> 
-                    </div>
-                <?php endif ?>
 
                 </div>
             </div>

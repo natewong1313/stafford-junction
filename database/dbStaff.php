@@ -108,3 +108,10 @@ function retrieve_staff_by_id($id){
     }
 }
 
+function change_staff_password($id, $newPass) {
+    $con=connect();
+    $query = 'UPDATE dbStaff SET password = "' . $newPass . '" WHERE id = "' . $id . '"';
+    $result = mysqli_query($con, $query);
+    mysqli_close($con);
+    return $result;
+}

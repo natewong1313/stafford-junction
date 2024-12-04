@@ -38,9 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $success = createBackToSchoolForm($args);
         
         if ($success) {
-            echo "Form submitted successfully!";
-        } else {
-            echo "There was an error submitting the form.";
+            $successMessage = "Form submitted successfully";
         }
     }
 }
@@ -80,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <!-- Child Name -->
             <label for="name">2. Child Name / Nombre del Estudiante*</label><br><br>
             <select name="name" id="name" required>
+                <option disabled selected>Select a child</option>
                 <?php
                     require_once('domain/Children.php'); 
                     foreach ($children as $c){
@@ -102,6 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <!-- School -->
             <label for="school">4. School / Escuela*</label><br><br>
             <input type="text" name="school" id="school" placeholder="School/Escuela" required><br><br>
+
+            <script>
+                const children = <?php echo json_encode($children); ?>;
+                document.getElementById("name").addEventListener("change", (e) => {
+                    const childId = e.target.value.split("_")[0];
+                    const childData = children.find(child => child.id === childId);
+                    document.getElementById("grade").value = childData.grade;
+                    document.getElementById("school").value = childData.school;
+                })
+            </script>
 
             <!-- Community Bag Info -->
             <label>5. Will you pick up the bag during Community Day or need it brought to you? / ¿Recogerás la bolsa durante el Día de la Comunidad o necesitarás que te la traigan?</label><br><br>
@@ -145,6 +154,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <button type="submit" id="submit">Submit</button>
             <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+
+            <?php //If the user is an admin or staff, the message should appear at index.php
+            if(isset($successMessage) && $accessLevel > 1){
+                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
+                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            }
+            ?>
         </form>
     </div>
 
