@@ -8,7 +8,6 @@ if (!isset($_SESSION["_id"])) {
     die();
 }
 
-$loggedIn = true;
 $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
 $successMessage = "";
@@ -18,6 +17,9 @@ $family_email = $family->getEmail();
 $family_full_name = $family->getFirstName() . " " . $family->getLastName();
 $family_full_addr = $family->getAddress() . ", " . $family->getCity() . ", " . $family->getState() . ", " . $family->getZip();
 $family_phone = $family->getPhone();
+
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+$children_count = count($children);
 
 function validateAndFilterPhoneNumber($phone) {
     $filteredPhone = preg_replace('/\D/', '', $phone);  // Remove non-digits
@@ -127,7 +129,7 @@ try {
         <?php if($data): ?>
             <input type="number" style="background-color: yellow; color: black;" id="household" name="household" disabled value="<?php echo htmlspecialchars($data['household_size']); ?>"><br><br>
         <?php elseif (!$data): ?>
-            <input type="number" id="household" name="household" required><br><br>
+            <input type="number" id="household" name="household" required value="<?php echo htmlspecialchars($children_count); ?>"><br><br>
         <?php endif ?>
 
         <!-- 3. Would you like a Holiday Meal Bag? -->

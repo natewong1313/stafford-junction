@@ -172,21 +172,36 @@ if (!empty($missingFields)) {
 
         <!-- Child Name -->
         <label for="name">Child Name / Nombre del Estudiante*</label><br><br>
-            <select name="name" id="name" required>
-                <?php
-                    require_once('domain/Children.php'); 
-                    foreach ($children as $c){
-                        $id = $c->getID();
-                        // Check if form was already completed for the child
-                        if (!isChildCareWaiverFormComplete($id)) {
-                            $name = $c->getFirstName() . " " . $c->getLastName();
-                            $value = $id . "_" . $name;
-                            echo "<option value='$value'>$name</option>";
-                        }
+        <select name="name" id="name" required>
+            <option disabled selected>Select a child</option>
+            <?php
+                require_once('domain/Children.php'); 
+                foreach ($children as $c){
+                    $id = $c->getID();
+                    // Check if form was already completed for the child
+                    if (!isChildCareWaiverFormComplete($id)) {
+                        $name = $c->getFirstName() . " " . $c->getLastName();
+                        $value = $id . "_" . $name;
+                        echo "<option value='$value'>$name</option>";
                     }
-                ?>
-                </select>
-                <br><br>
+                }
+            ?>
+        </select>
+        <script>
+        const children = <?php echo json_encode($children); ?>;
+        document.getElementById("name").addEventListener("change", (e) => {
+            const childId = e.target.value.split("_")[0];
+            const childData = children.find(child => child.id === childId);
+            document.getElementById("child_dob").valueAsDate = new Date(childData.birthdate);
+            document.getElementById("child_gender").value = childData.gender;
+            document.getElementById("child_address").value = childData.address;
+            document.getElementById("child_city").value = childData.city;
+            document.getElementById("child_state").value = childData.state;
+            document.getElementById("child_zip").value = childData.zip;
+            document.getElementById("medical_issues").value = childData.medicalNotes;
+        })
+    </script>
+        <br><br>
 
         <!-- Child's Date of Birth -->
         <label for="child_dob">Date of Birth* / Fecha de Nacimiento*</label>
@@ -390,7 +405,7 @@ if (!empty($missingFields)) {
                 echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
             }
         ?>
-    
+
 </body>
 </html>
 

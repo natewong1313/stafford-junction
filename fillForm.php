@@ -45,12 +45,12 @@ error_reporting(E_ALL);
                     <span>School Supplies Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="springBreakForm.php">
+                <!--Spring Break Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "springBreakForm.php?id=" . $_GET['id'] : "springBreakForm.php"; ?>">
                     <img src="images/tent-svgrepo-com.svg">
                     <span>Spring Break Form</span> 
-                
                 </div>
-                    
+    
                 <!-- Angel Wish Gift Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "angelGiftForm.php?id=" . $_GET['id'] : "angelGiftForm.php"; ?>">
                     <img src="images/angel.svg">
@@ -63,7 +63,10 @@ error_reporting(E_ALL);
                     <span>Child Care Waiver Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="fieldTripWaiver.php">
+
+                <!--Field Trip Waiver Form -->
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "fieldTripWaiver.php?id=" . $_GET['id'] : "fieldTripWaiver.php"; ?>">
+
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> 
                 </div>

@@ -155,3 +155,11 @@ function retrieve_volunteer_by_id($id)
         return $volunteer;
     }
 }
+
+function change_volunteer_password($id, $newPass) {
+    $con=connect();
+    $query = 'UPDATE dbVolunteers SET password = "' . $newPass . '" WHERE id = "' . $id . '"';
+    $result = mysqli_query($con, $query);
+    mysqli_close($con);
+    return $result;
+}
