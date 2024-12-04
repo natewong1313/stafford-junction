@@ -58,18 +58,10 @@
                 <?php echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form submitted successfully!</div>';?>
             <?php elseif (isset($_GET['pcSuccess'])): ?>
                 <div class="happy-toast">Password changed successfully!</div>
-            <?php elseif (isset($_GET['deleteService'])): ?>
-                <div class="happy-toast">Service successfully removed!</div>
-            <?php elseif (isset($_GET['serviceAdded'])): ?>
-                <div class="happy-toast">Service successfully added!</div>
-            <?php elseif (isset($_GET['animalRemoved'])): ?>
-                <div class="happy-toast">Animal successfully removed!</div>
-            <?php elseif (isset($_GET['locationAdded'])): ?>
-                <div class="happy-toast">Location successfully added!</div>
-            <?php elseif (isset($_GET['deleteLocation'])): ?>
-                <div class="happy-toast">Location successfully removed!</div>
             <?php elseif (isset($_GET['registerSuccess'])): ?>
                 <div class="happy-toast">Volunteer registered successfully!</div>
+            <?php elseif (isset($_GET['familyRegisterSuccess'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Account Registration Successful!</div>
             <?php endif ?>
             
             <?php if(isset($staff)): ?>
@@ -81,30 +73,37 @@
                 <!--New Dashboard items-->
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="findFamily.php">
-                        <img src="images/person-search.svg">
-                        <span>Find Family Account</span>
+                    <img src="images/person-search.svg">
+                    <span>Find Family Account</span>
                 </div>
                 <?php endif ?>
 
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="findChildren.php">
-                        <img src="images/person-search.svg">
-                        <span>Find Children</span>
+                    <img src="images/person-search.svg">
+                    <span>Find Children</span>
                 </div>
                 <?php endif ?>
 
-                <!--Dashboard button that directs the user to the forms page
-                <div class="dashboard-item" data-link="fillForm.php">
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="fillFormStaff.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
-                    <span>Fill Out Form</span>
+                    <span>Fill Out Attendance Forms</span>
                 </div>
-                -->
+                <?php endif ?>
 
                 <!--Dashboard button that directs the admin user to staff account create page-->
                 <?php if($_SESSION['account_type'] == 'admin'): ?>
                 <div class="dashboard-item" data-link="createStaffAccount.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
                     <span>Create Staff Account</span>
+                </div>
+                <?php endif ?>
+
+                <?php if($_SESSION['access_level'] >= 2): ?>
+                <div class="dashboard-item" data-link="familySignUpStaff.php">
+                    <img src="images/family-svgrepo-com.svg">
+                    <span>Create Family Account</span>
                 </div>
                 <?php endif ?>
 

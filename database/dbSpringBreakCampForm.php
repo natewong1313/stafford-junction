@@ -22,10 +22,13 @@ function createSpringBreakCampForm($form)
 
 	$child_id = $child_data[0];
 
+    // parse the child name so that the id is not 
+    // stored in the database for the child name
+    $child_name = $child_data[1];
     $connection = connect();
 
     $email = $form["email"];
-    $student_name = $form["child_name"];
+    $student_name = $child_name;
     $school_choice = $form["school_date"];
     $isAttending = $form["isAttending"] ? 1 : 0;
     $waiver_completed = $form["hasWaiver"] ? 1 : 0;

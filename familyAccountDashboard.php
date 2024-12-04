@@ -35,6 +35,9 @@ if($_SESSION['logged_in'] == false){
         }
         ?>
         <main class='dashboard'>
+        <?php if (isset($_GET['pcSuccess'])): ?>
+            <div class="happy-toast">Password changed successfully!</div>
+        <?php endif ?>
         <?php echo "<p>Hello " . ucfirst($_SESSION['f_name']) . "!</p>"; ?>
 
             <p>Today is <?php echo date('l, F j, Y'); ?>.</p>
@@ -67,6 +70,12 @@ if($_SESSION['logged_in'] == false){
                 <div class="dashboard-item" data-link="addChild.php">
                     <img src="images/add-square-svgrepo-com.svg">
                     <span>Add Child</span>
+                </div>
+
+                <!--Dashboard button that directs user to change password page-->
+                <div class="dashboard-item" data-link="changePassword.php">
+                    <img src="images/change-password.svg">
+                    <span>Change Password</span>
                 </div>
 
                 <!--Dashboard button that directs the user to logout-->
