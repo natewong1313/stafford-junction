@@ -259,7 +259,7 @@ try {
                 <!--State -->
                 <label for="child_state">State *</label><br><br>
                 <select name="child_state" id="child_state" required>
-                    <option value="" disabled>Select State</option>
+                    <option value="" disabled <?php echo isset($child_state) && $child_state == '' ? 'selected' : ''; ?>>Select State</option>
                     <option value="AL" <?php echo isset($child_state) && $child_state == 'AL' ? 'selected' : ''; ?>>Alabama</option>
                     <option value="AK" <?php echo isset($child_state) && $child_state == 'AK' ? 'selected' : ''; ?>>Alaska</option>
                     <option value="AZ" <?php echo isset($child_state) && $child_state == 'AZ' ? 'selected' : ''; ?>>Arizona</option>
@@ -360,7 +360,7 @@ try {
                 <!--State-->
                 <label for="parent1_state">State *</label><br><br>
                 <select name="parent1_state" id="parent1_state" required>
-                    <option value="" disabled>Select State</option>
+                    <option value="" disabled <?php echo isset($family_state1) && $family_state1 == '' ? 'selected' : ''; ?>>Select State</option>
                     <option value="AL" <?php echo (isset($family_state1) && $family_state1 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
                     <option value="AK" <?php echo (isset($family_state1) && $family_state1 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
                     <option value="AZ" <?php echo (isset($family_state1) && $family_state1 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
@@ -461,7 +461,7 @@ try {
                 <!--State-->
                 <label for="parent2_state">State </label><br><br>
                 <select name="parent2_state" id="parent2_state">
-                    <option value="" disabled>Select State</option>
+                    <option value="" disabled <?php echo isset($family_state2) && $family_state2 == '' ? 'selected' : ''; ?>>Select State</option>
                     <option value="AL" <?php echo (isset($family_state2) && $family_state2 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
                     <option value="AK" <?php echo (isset($family_state2) && $family_state2 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
                     <option value="AZ" <?php echo (isset($family_state2) && $family_state2 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
