@@ -20,7 +20,7 @@ function get_data_by_family_id($id){
 
 function getHolidayMealBagSubmissions() {
     $conn = connect();
-    $query = "SELECT * FROM dbHolidayMealBagForm JOIN dbFamily USING(id);";
+    $query = "SELECT * FROM dbHolidayMealBagForm INNER JOIN dbFamily ON dbFamily.id = dbHolidayMealBagForm.faily_id;";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) > 0){
@@ -34,7 +34,7 @@ function getHolidayMealBagSubmissions() {
 
 function getHolidayMealBagSubmissionsById($familyId) {
     $conn = connect();
-    $query = "SELECT * FROM dbHolidayMealBagForm JOIN dbFamily USING(id) WHERE family_id='" . $familyId . "';";
+    $query = "SELECT * FROM dbHolidayMealBagForm INNER JOIN dbFamily ON dbFamily.id = dbHolidayMealBagForm.faily_id WHERE dbHolidayMealBagForm.family_id='" . $familyId . "';";
     $result = mysqli_query($conn, $query);
 
     if(mysqli_num_rows($result) > 0){
