@@ -26,26 +26,16 @@ error_reporting(E_ALL);
                 <!--Holiday Meal Bag -->
                 <!--will display this dashboard item if viewing the page from staff pov. This one has the GET superglobal, w
                 hich will be needed so that the id of the family is saved and able to be used when a staff memeber fills a form out on behalf of family-->
-                <?php if(isset($_GET['id'])): ?>
-                    <div class="dashboard-item" data-link="holidayMealBagForm.php?id=<?php echo $_GET['id']?>">
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "holidayMealBagForm.php?id=" . $_GET['id'] : "holidayMealBagForm.php"; ?>">
                     <img src="images/holdiayMealBagIcon.svg">
                     <span>Holiday Meal Bag Form</span>
                 </div>
-                <?php else: ?> <!--Otherwise, display this one-->
-                <div class="dashboard-item" data-link="holidayMealBagForm.php">
-                    <img src="images/holdiayMealBagIcon.svg">
-                    <span>Holiday Meal Bag Form</span>
-                </div>
-                <?php endif?>
 
                 <!--School Supplies Form -->
-
-                <div class="dashboard-item" data-link="schoolSuppliesForm.php">
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "schoolSuppliesForm.php?id=" . $_GET['id'] : "schoolSuppliesForm.php"; ?>">
                     <img src="images/school-supplies-svgrepo-com.svg">
-                    <span>School Supplies Form</span> 
+                    <span>School Supplies Form</span>
                 </div>
-
-                <!--Spring Break Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "springBreakForm.php?id=" . $_GET['id'] : "springBreakForm.php"; ?>">
                     <img src="images/tent-svgrepo-com.svg">
                     <span>Spring Break Form</span> 
@@ -62,11 +52,8 @@ error_reporting(E_ALL);
                     <img src="images/signature.svg">
                     <span>Child Care Waiver Form</span> 
                 </div>
-
-
                 <!--Field Trip Waiver Form -->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "fieldTripWaiver.php?id=" . $_GET['id'] : "fieldTripWaiver.php"; ?>">
-
                     <img src="images/location.svg">
                     <span>Field Trip Waiver Form</span> 
                 </div>
@@ -77,12 +64,12 @@ error_reporting(E_ALL);
                     <span>Program Interest Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="brainBuildersRegistrationForm.php">
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "brainBuildersRegistrationForm.php?id=" . $_GET['id'] : "brainBuildersRegistrationForm.php"; ?>">
                     <img src="images/brainBuilders.svg">
                     <span>Brain Builders Student Registration Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="BrainBuilderReviewForm.php">
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "BrainBuilderReviewForm.php?id=" . $_GET['id'] : "BrainBuilderReviewForm.php"; ?>">
                     <img src="images/brainBuilderReviewIcon.svg.svg">
                     <span>Brain Builder Review Form</span> 
                 </div>
@@ -93,7 +80,7 @@ error_reporting(E_ALL);
                     <span>Brain Builders Holiday Party Form</span> 
                 </div>
 
-                <div class="dashboard-item" data-link="summerJunctionRegistrationForm.php">
+                <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "summerJunctionRegistrationForm.php?id=" . $_GET['id'] : "summerJunctionRegistrationForm.php"; ?>">
                     <img src="images/summerJunction.svg">
                     <span>Summer Junction Registration Form</span>
                 </div>
