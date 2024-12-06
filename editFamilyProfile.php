@@ -73,10 +73,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     $args = sanitize($_POST);
     $success = update_profile($args, $familyId);
     
-    if ($accessLevel > 1) {
-        header("Location: index.php");
-    } else {
-        header("Location: familyAccountDashboard.php");
+    if ($accessLevel > 1 && $success) {
+        //header("Location: index.php");
+        echo '<script>document.location = "index.php?updateSuccess";</script>';
+    }elseif($accessLevel == 1 && $success ) {
+        //header("Location: familyAccountDashboard.php");
+        echo '<script>document.location = "familyAccountDashboard.php?updateSuccess";</script>';
     }
 }
 
