@@ -263,4 +263,65 @@ function getVolunteers() {
     mysqli_close($conn); // Close the database connection
     return $volunteers;
 }
+
+function getRoutesWithVolunteers() {
+    $conn = connect();
+
+    // Query to get routes with at least one volunteer assigned
+    $query = "
+        SELECT DISTINCT r.route_id, CONCAT(r.route_direction, ' - ', r.route_name) AS route_full
+        FROM dbRoute r
+        JOIN dbRouteVolunteers rv ON r.route_id = rv.route_id
+    ";
+
+    $result = $conn->query($query);
+
+    $routes = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $routes[] = $row;
+        }
+    }
+
+    $conn->close();
+    return $routes; // Array of routes with assigned volunteers
+}
+
+function deleteVolunteerFromRoute($route_id, $volunteer_id) {
+    $conn = connect(); // Establish the database connection
+
+    // Prepare the SQL statement to delete only the specific volunteer from the specific route
+    $query = "DELETE FROM dbRouteVolunteers WHERE route_id = ? AND volunteer_id = ?";
+    $stmt = $conn->prepare($query);
+
+    if (!$stmt) {
+        error_log("SQL Error (prepare): " . $conn->error); // Log preparation errors
+        return ['success' => false, 'error' => "SQL Error: " . $conn->error];
+    }
+
+    // Bind the route_id and volunteer_id to the query
+    $stmt->bind_param("ii", $route_id, $volunteer_id);
+    error_log("Executing Query: DELETE FROM dbRouteVolunteers WHERE route_id = $route_id AND volunteer_id = $volunteer_id"); // Debugging log
+
+    // Execute the query
+    if ($stmt->execute()) {
+        // Check the number of rows affected to confirm deletion
+        if ($stmt->affected_rows > 0) {
+            error_log("Successfully deleted Volunteer ID: $volunteer_id from Route ID: $route_id.");
+            $stmt->close();
+            $conn->close();
+            return ['success' => true, 'message' => "Volunteer successfully removed from the route."];
+        } else {
+            error_log("No matching record found for Volunteer ID: $volunteer_id on Route ID: $route_id.");
+            $stmt->close();
+            $conn->close();
+            return ['success' => false, 'error' => "No matching record found to delete."];
+        }
+    } else {
+        error_log("SQL Error (execute): " . $stmt->error); // Log execution errors
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'error' => "SQL Error: " . $stmt->error];
+    }
+}
 ?>
