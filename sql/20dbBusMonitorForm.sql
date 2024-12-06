@@ -1,7 +1,10 @@
 -- Drop the tables if they already exist to avoid conflicts
 DROP TABLE IF EXISTS `dbBusMonitorAttendanceForm`;
+DROP TABLE IF EXISTS `dbRouteVolunteers`;
 DROP TABLE IF EXISTS `dbRoute`;
 DROP TABLE IF EXISTS `dbAttendees`;
+DROP TABLE IF EXISTS `dbAttendance`;
+
 
 -- Create the dbAttendees table
 CREATE TABLE `dbAttendees` (
@@ -11,18 +14,35 @@ CREATE TABLE `dbAttendees` (
     PRIMARY KEY (`attendee_id`)               -- Primary key constraint
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Create the dbAttendance table
+CREATE TABLE `dbAttendance` (
+    `id` INT NOT NULL AUTO_INCREMENT,          -- Primary key for the attendance table
+    `route_id` INT NOT NULL,                   -- Foreign key referencing route_id from dbRoute
+    `volunteer_id` INT NOT NULL,               -- Foreign key referencing id from dbVolunteers
+    `attendance_date` DATE NOT NULL,           -- The date of attendance
+    `isPresent` BOOLEAN NOT NULL DEFAULT 0,    -- Indicates if the volunteer was present (1 = Yes, 0 = No)
+    PRIMARY KEY (`id`),                        -- Primary key constraint
+    UNIQUE (`route_id`, `volunteer_id`, `attendance_date`), -- Prevent duplicate records for the same day
+    FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`volunteer_id`) REFERENCES `dbVolunteers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Create the dbRoute table
 CREATE TABLE `dbRoute` (
     `route_id` INT NOT NULL AUTO_INCREMENT,   -- Primary key for routes
-    `volunteer_id` INT NOT NULL,              -- Foreign key referencing volunteer_id
-    `attendee_id` INT NOT NULL,               -- Foreign key referencing attendee_id
-    `route_direction` VARCHAR(25) NOT NULL,  -- Direction of the route
+    `route_direction` VARCHAR(25) NOT NULL,  -- Direction of the route (e.g., North/South)
     `route_name` VARCHAR(25) NOT NULL,       -- Name of the route
-    PRIMARY KEY (`route_id`),                -- Primary key constraint
-    -- Constraints for table `dbRoute`
-    CONSTRAINT `FK_route_attendee_id`
-        FOREIGN KEY (`attendee_id`) REFERENCES `dbAttendees` (`attendee_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY (`route_id`)                 -- Primary key constraint
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Create the dbRouteVolunteers table (Associative Table for Route and Volunteers)
+CREATE TABLE `dbRouteVolunteers` (
+    `id` INT NOT NULL AUTO_INCREMENT,         -- Primary key for the associative table
+    `route_id` INT NOT NULL,                  -- Foreign key referencing dbRoute
+    `volunteer_id` INT NOT NULL,              -- Foreign key referencing dbVolunteers
+    PRIMARY KEY (`id`),                       -- Primary key constraint
+    FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`volunteer_id`) REFERENCES `dbVolunteers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Create the dbBusMonitorAttendanceForm table
@@ -30,8 +50,5 @@ CREATE TABLE `dbBusMonitorAttendanceForm` (
     `id` INT NOT NULL AUTO_INCREMENT,         -- Primary key for attendance forms
     `route_id` INT NOT NULL,                  -- Foreign key referencing route_id
     PRIMARY KEY (`id`),                       -- Primary key constraint
-    -- Constraints for table `dbBusMonitorAttendanceForm`
-    CONSTRAINT `FK_bus_monitor_route_id`
-        FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -2,120 +2,165 @@
 
 session_cache_expire(30);
 session_start();
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
 
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
-$success = null;
+$success = false;
 
-if(isset($_SESSION['_id'])){
+// Ensure user is logged in
+if (isset($_SESSION['_id'])) {
+    require_once('database/dbBusMonitorForm.php'); // Include your form logic
+    require_once('include/input-validation.php'); // Include validation functions if necessary
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-    $successMessage = "";
-
 } else {
     header('Location: login.php');
     die();
 }
 
-//necessary files
-
-//Retrive and initialize volunteer data
-
-//check if form is submitted
-if($_SERVER['REQUEST_METHOD'] == "POST"){
-    //sanitize form input
-    $args = sanitize($_POST, null);
-    $required = array();
-    }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php include_once("universal.inc")?>
+    <?php include_once("universal.inc"); ?>
     <title>Bus Monitor Attendance Form</title>
-    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="base.css"><style>
+        .location-section {
+            display: none; /* Hide sections by default */
+        }
+    </style>
 </head>
 
 <body>
     <h1>Bus Monitor Attendance Form</h1>
-    <?php 
-        if (isset($_GET['formSubmitFail'])) {
-            echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
-        }
-    ?>
 
-    <div id="formatted_form">
+    <!-- Edit Bus Monitor Data Button -->
+<div id="editButtonSection" style="display: none; text-align: center; margin-top: 2rem;">
+    <button style="padding: 10px 20px; font-size: 16px;">Edit Bus Monitor Data</button>
+</div>
 
-    <form id="busMonitorForm" action="busMonitorAttendanceForm.php" method="post">
+<br>
 
+    <!-- Main Form -->
+    <form action="database/dbBusMonitorForm.php" method="post">
         <!-- Route Selection -->
-        <h2>Which route?</h2>
+        <h2>1. Which route?</h2>
+        <label>
+            <input type="radio" name="route" value="north" required onclick="showLocations('north')"> North
+        </label><br>
+        <label>
+            <input type="radio" name="route" value="south" onclick="showLocations('south')"> South
+        </label><br><br>
 
-            <label><input type="radio" name="route" value="north" required> North</label><br>
-            <label><input type="radio" name="route" value="south"> South</label><br><br>
-
-<hr>
-
-        <!-- Monday/Wednesday North -->
-        <h2>Monday/Wednesday North</h2><br>
-
-            <h3>1. Volunteers Present</h3>
-            <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
-
+        <!-- North Locations -->
+        <div id="northLocations" class="location-section">
             <h3>2. Foxwood</h3>
             <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
+            <?php
+            $location = 'Foxwood';
+            $volunteers = getVolunteersForLocation($location);
+            if (!empty($volunteers)) {
+                foreach ($volunteers as $volunteer) {
+                    echo "<label><input type='checkbox' name='foxwood[]' value='{$volunteer['id']}'> {$volunteer['fullName']}</label><br>";
+                }
+            } else {
+                echo "<p>No volunteers found for $location.</p>";
+            }
+            ?>
+        </div>
 
-<hr>
+        <!-- South Locations -->
+        <div id="southLocations" class="location-section">
+            <h3>3. Meadows</h3>
+            <p>Check all that apply:</p>
+            <?php
+            $location = 'Meadows';
+            $volunteers = getVolunteersForLocation($location);
+            if (!empty($volunteers)) {
+                foreach ($volunteers as $volunteer) {
+                    echo "<label><input type='checkbox' name='meadows[]' value='{$volunteer['id']}'> {$volunteer['fullName']}</label><br>";
+                }
+            } else {
+                echo "<p>No volunteers found for $location.</p>";
+            }
+            ?>
 
-        <!-- Monday/Wednesday South -->
-            <h2>Monday/Wednesday South</h2><br>
+            <h3>4. Jefferson Place</h3>
+            <p>Check all that apply:</p>
+            <?php
+            $location = 'Jefferson Place';
+            $volunteers = getVolunteersForLocation($location);
+            if (!empty($volunteers)) {
+                foreach ($volunteers as $volunteer) {
+                    echo "<label><input type='checkbox' name='jefferson[]' value='{$volunteer['id']}'> {$volunteer['fullName']}</label><br>";
+                }
+            } else {
+                echo "<p>No volunteers found for $location.</p>";
+            }
+            ?>
 
-                <h3>1. Volunteers Present</h3>
-                <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
+            <h3>5. Olde Forge</h3>
+            <p>Check all that apply:</p>
+            <?php
+            $location = 'Olde Forge';
+            $volunteers = getVolunteersForLocation($location);
+            if (!empty($volunteers)) {
+                foreach ($volunteers as $volunteer) {
+                    echo "<label><input type='checkbox' name='olde_forge[]' value='{$volunteer['id']}'> {$volunteer['fullName']}</label><br>";
+                }
+            } else {
+                echo "<p>No volunteers found for $location.</p>";
+            }
+            ?>
 
-                <h3>2. Meadows</h3>
-                <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
+            <h3>6. England Run</h3>
+            <p>Check all that apply:</p>
+            <?php
+            $location = 'England Run';
+            $volunteers = getVolunteersForLocation($location);
+            if (!empty($volunteers)) {
+                foreach ($volunteers as $volunteer) {
+                    echo "<label><input type='checkbox' name='england_run[]' value='{$volunteer['id']}'> {$volunteer['fullName']}</label><br>";
+                }
+            } else {
+                echo "<p>No volunteers found for $location.</p>";
+            }
+            ?>
+        </div>
 
-                <h3>3. Jefferson Place</h3>
-                <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
+        <br>
 
-                <h3>4. Olde Forge</h3>
-                <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
+       <!-- Submit Section -->
+        <div id="submitSection" style="display: none; text-align: center;">
+            <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit All Data</button>
+        </div>
 
-                <h3>5. England Run</h3>
-                <p>Check all that apply:</p>
-                    <label><input type="checkbox" name="england_run[]" value="add_attendees_here"> Add attendees here as needed</label><br>
-                    <label><input type="checkbox" name="volunteers_south[    ]" value="other"> Other: <input type="text" name="volunteers_south_other"    ></label><br><br>
-
-        <!-- Submit and Cancel buttons -->
-        <button type="submit" id="submit">Submit</button>
-        <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-    </form>
-        <?php
-//if registration successful, create pop up notification and direct user back to login
-            if($success){
-                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
-        ?>
-    </div>
+        <script>
+            function showLocations(route) {
+                // Hide all sections initially
+                document.getElementById('northLocations').style.display = 'none';
+                document.getElementById('southLocations').style.display = 'none';
+                document.getElementById('submitSection').style.display = 'none';
+                document.getElementById('editButtonSection').style.display = 'none';
+            
+                // Show the selected route's locations
+                if (route === 'north') {
+                    document.getElementById('northLocations').style.display = 'block';
+                } else if (route === 'south') {
+                    document.getElementById('southLocations').style.display = 'block';
+                }
+            
+                // Show the Submit and Edit Buttons
+                document.getElementById('submitSection').style.display = 'block';
+                document.getElementById('editButtonSection').style.display = 'block';
+            }
+    </script>
     </body>
 </html>
-
