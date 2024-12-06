@@ -2,40 +2,88 @@
 require_once("dbinfo.php");
 
 /**
- * Assign a volunteer to a route.
+ * Assign a volunteer to a route and neighborhood.
  *
- * @param string $route The route name ('north' or 'south').
+ * @param string $route The route direction (e.g., 'north' or 'south').
+ * @param string $neighborhood The name of the neighborhood.
  * @param int $volunteer_id The ID of the volunteer.
- * @return bool True if successful, false otherwise.
+ * @return array Result of the operation with success and message/error keys.
  */
-function assignVolunteerToRoute($route, $volunteer_id) {
-    $conn = connect();
+function assignVolunteerToRouteAndNeighborhood($route, $neighborhood, $volunteer_id) {
+    if (empty($route) || empty($neighborhood) || empty($volunteer_id)) {
+        return ['success' => false, 'error' => 'All fields (route, neighborhood, and volunteer) are required.'];
+    }
 
-    // Get the route_id for the given route
-    $query = "SELECT route_id FROM dbRoute WHERE route_direction = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $route);
+    $connection = connect();
+
+    // Fetch route_id and route_name
+    $query = "SELECT route_id, route_name FROM dbRoute WHERE route_direction = ? AND route_name = ?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("ss", $route, $neighborhood);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if (!$result || $result->num_rows === 0) {
+    if ($result->num_rows === 0) {
         $stmt->close();
-        $conn->close();
-        return false; // Route not found
+        $connection->close();
+        return ['success' => false, 'error' => 'The selected route and neighborhood combination is invalid.'];
     }
 
     $row = $result->fetch_assoc();
     $route_id = $row['route_id'];
+    $route_name = $row['route_name'];
+    $stmt->close();
+
+    // Check for existing assignment
+    error_log("Checking for duplicate assignment: Route ID = $route_id, Volunteer ID = $volunteer_id");
+
+    $checkQuery = "SELECT v.fullName FROM dbRouteVolunteers rv 
+               JOIN dbVolunteers v ON rv.volunteer_id = v.id
+               WHERE rv.route_id = ? AND rv.volunteer_id = ?";
+$stmt = $connection->prepare($checkQuery);
+$stmt->bind_param("ii", $route_id, $volunteer_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $volunteer = $result->fetch_assoc();
+    $volunteer_name = $volunteer['fullName'];
+    $stmt->close();
+    $connection->close();
+    return [
+        'success' => false,
+        'error' => "{$volunteer_name} is already assigned to the route {$route_name}."
+    ]; // Prevents insertion if duplicate is found
+}
+$stmt->close();
 
     // Insert into dbRouteVolunteers
-    $query = "INSERT INTO dbRouteVolunteers (route_id, volunteer_id) VALUES (?, ?)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ii", $route_id, $volunteer_id);
+    try {
+        $insertQuery = "INSERT INTO dbRouteVolunteers (route_id, volunteer_id) VALUES (?, ?)";
+        $stmt = $connection->prepare($insertQuery);
+        $stmt->bind_param("ii", $route_id, $volunteer_id);
 
-    $success = $stmt->execute();
-    $stmt->close();
-    $conn->close();
-    return $success;
+        if ($stmt->execute()) {
+            $stmt->close();
+            $connection->close();
+            return [
+                'success' => true,
+                'message' => "{$volunteer_name} was successfully assigned to the route {$route_name}."
+            ];
+        }
+    } catch (mysqli_sql_exception $e) {
+        if ($e->getCode() == 1062) { // Duplicate entry error code
+            return [
+                'success' => false,
+                'error' => "{$volunteer_name} is already assigned to the route {$route_name}."
+            ];
+        } else {
+            return [
+                'success' => false,
+                'error' => "Database error: " . $e->getMessage()
+            ];
+        }
+    }
 }
 
 /**
@@ -154,8 +202,6 @@ function getVolunteersForLocation($location) {
     return $volunteers; // Return the array of volunteers for the location
 }
 
-
-
 function getVolunteersForRoute($route) {
     // Connect to the database
     $conn = connect();
@@ -189,8 +235,6 @@ function getVolunteersForRoute($route) {
 
     return $volunteers; // Return the array of volunteers
 }
-
-
 
 function getVolunteers() {
     $conn = connect(); // Ensure this function connects to your database correctly

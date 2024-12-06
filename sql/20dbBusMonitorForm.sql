@@ -35,6 +35,14 @@ CREATE TABLE `dbRoute` (
     PRIMARY KEY (`route_id`)                 -- Primary key constraint
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- These are the route directions/names from the form
+INSERT INTO dbRoute (route_direction, route_name) VALUES 
+('North', 'Foxwood'),
+('South', 'Meadows'),
+('South', 'Jefferson Place'),
+('South', 'Olde Forge'),
+('South', 'England Run');
+
 -- Create the dbRouteVolunteers table (Associative Table for Route and Volunteers)
 CREATE TABLE `dbRouteVolunteers` (
     `id` INT NOT NULL AUTO_INCREMENT,         -- Primary key for the associative table
