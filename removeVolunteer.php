@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeSelected'])) {
     <!-- Display Messages -->
     <?php
     if (isset($_GET['message'])) {
-        echo "<p style='color: green; font-weight: bold;'>" . htmlspecialchars($_GET['message']) . "</p>";
+        echo "<p style='color: red; font-weight: bold;'>" . htmlspecialchars($_GET['message']) . "</p>";
     }
     if (isset($_GET['error'])) {
         echo "<p style='color: red; font-weight: bold;'>" . htmlspecialchars($_GET['error']) . "</p>";
@@ -126,12 +126,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeSelected'])) {
         <button type="submit" name="removeSelected" style="padding: 10px 20px; font-size: 16px;">Remove Selected Volunteers</button>
     </div>
 </form>
-
 <br>
 <a href="editBusMonitorData.php" style="text-decoration: none;">
     <button style="padding: 10px 20px; font-size: 16px;">Cancel</button>
 </a>
-
 <script>
     function showLocations(route) {
         // Hide all sections initially
@@ -165,7 +163,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeSelected'])) {
         });
     });
 </script>
-
 </body>
-
 </html>

@@ -9,9 +9,10 @@ DROP TABLE IF EXISTS `dbAttendance`;
 -- Create the dbAttendees table
 CREATE TABLE `dbAttendees` (
     `attendee_id` INT NOT NULL AUTO_INCREMENT, -- Primary key for attendees
-    `name` VARCHAR(256) NOT NULL,             -- Name of the attendee
-    `isPresent` BOOLEAN NOT NULL,             -- Indicates if the attendee is present
-    PRIMARY KEY (`attendee_id`)               -- Primary key constraint
+    `name` VARCHAR(256) NOT NULL,              -- Name of the attendee
+    `route_id` INT NOT NULL,                   -- Foreign key referencing dbRoute
+    PRIMARY KEY (`attendee_id`),               -- Primary key constraint
+    FOREIGN KEY (`route_id`) REFERENCES `dbRoute`(`route_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Create the dbAttendance table

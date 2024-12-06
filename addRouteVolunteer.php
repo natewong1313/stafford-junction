@@ -157,7 +157,8 @@ require_once('database/dbBusMonitorForm.php'); // Include database connection an
             <button type="submit" name="addRouteVolunteer">Assign Volunteer</button>
         </form>
         <br>
-        <!-- Back to Main Menu -->
-        <a href="editBusMonitorData.php">Cancel</a>
+        <a href="editBusMonitorData.php" style="text-decoration: none;">
+        <button style="padding: 10px 20px; font-size: 16px;">Cancel</button>
+    </a>
 </body>
 </html>

@@ -44,9 +44,9 @@ if (isset($_SESSION['_id'])) {
     <h1>Bus Monitor Attendance Form</h1>
     <div id="formatted_form">
 
-        <div id="editButtonSection" style="display: none; text-align: center; margin-top: 2rem;">
-            <button type="button" onclick="location.href='editBusMonitorData.php'">Edit Bus Monitor Data</button>
-        </div>
+    <div id="editButtonSection" style="text-align: center; margin-top: 2rem;">
+    <button type="button" onclick="location.href='editBusMonitorData.php'">Edit Bus Monitor Data</button>
+</div>
         <br>
         <!-- Main Form -->
         <form action="database/dbBusMonitorForm.php" method="post">
@@ -135,14 +135,13 @@ if (isset($_SESSION['_id'])) {
             }
             ?>
             </div>
-
             <br>
-
             <!-- Submit Section -->
             <div id="submitSection" style="display: none; text-align: center;">
                 <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit All
                     Data</button>
             </div>
+            <br>
 
             <script>
             function showLocations(route) {
@@ -164,6 +163,7 @@ if (isset($_SESSION['_id'])) {
                 document.getElementById('editButtonSection').style.display = 'block';
             }
             </script>
-</body>
 
+<button type="button" style="padding: 10px 20px; font-size: 16px;" onclick="location.href='fillFormStaff.php'">Cancel</button>
+</body>
 </html>
