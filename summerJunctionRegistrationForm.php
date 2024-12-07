@@ -699,7 +699,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="date" id="signature-date" name="signature-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit / Enviar</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel / Cancelar</a>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
+                <!--<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel / Cancelar</a>-->
             </form>
         </div>
 
