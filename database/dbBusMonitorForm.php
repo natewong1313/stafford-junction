@@ -324,4 +324,47 @@ function deleteVolunteerFromRoute($route_id, $volunteer_id) {
         return ['success' => false, 'error' => "SQL Error: " . $stmt->error];
     }
 }
+
+function getAttendeesForLocation($location) {
+    $connection = connect();
+    $query = "
+        SELECT a.attendee_id, a.name
+        FROM dbAttendees a
+        JOIN dbRoute r ON a.route_id = r.route_id
+        WHERE r.route_name = ?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("s", $location);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $attendees = [];
+    while ($row = $result->fetch_assoc()) {
+        $attendees[] = $row;
+    }
+
+    $stmt->close();
+    $connection->close();
+
+    return $attendees;
+}
+
+/**
+ * Helper function to get route_id by location name.
+ */
+function getRouteId($location, $connection) {
+    $query = "SELECT route_id FROM dbRoute WHERE route_name = ?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("s", $location);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $route_id = null;
+
+    if ($row = $result->fetch_assoc()) {
+        $route_id = $row['route_id'];
+    }
+
+    $stmt->close();
+    return $route_id;
+}
+
 ?>
