@@ -13,7 +13,7 @@ $success = false;
 
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
-    require_once('include/input-validation.php'); // Include validation functions if necessary
+    require_once('include/input-validation.php'); 
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addRouteVolunteer']))
     $volunteer_id = intval($_POST['volunteer_id']); // Volunteer ID (from the dropdown)
 
     // Connect to the database
-    $connection = connect(); // Ensure the connect() function is correctly defined
+    $connection = connect(); 
 
     // Fetch route_id based on route_direction and neighborhood
     $query = "SELECT route_id FROM dbRoute WHERE route_direction = ? AND route_name = ?";
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addRouteVolunteer']))
     }
 }
 
-require_once('database/dbBusMonitorForm.php'); // Include database connection and logic
+require_once('database/dbBusMonitorForm.php'); 
 ?>
 <!DOCTYPE html>
 <html lang="en">

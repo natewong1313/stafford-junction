@@ -5,8 +5,6 @@ session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
-error_log(print_r($_POST, true)); // Log all submitted form data
-
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
@@ -14,7 +12,7 @@ $success = false;
 
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
-    require_once('database/dbBusMonitorForm.php'); // Include your form logic
+    require_once('database/dbBusMonitorForm.php');
     require_once('include/input-validation.php'); // Include validation functions if necessary
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
@@ -132,9 +130,7 @@ if (isset($_GET['message'])) {
 if (isset($_GET['error'])) {
     echo "<p style='color: red;'>" . htmlspecialchars($_GET['error']) . "</p>";
 }
-
 ?>
-
 
 
 <!DOCTYPE html>
@@ -153,32 +149,33 @@ if (isset($_GET['error'])) {
     }
     </style>
 </head>
+
 <body>
     <h1>Bus Monitor Attendance Form</h1>
     <div id="formatted_form">
-    <!-- Edit Button Section -->
-    <div id="editButtonSection" style="text-align: center; margin-top: 2rem;">
-        <button type="button" onclick="location.href='editBusMonitorData.php'">Edit Bus Monitor Data</button>
-    </div>
-    <br>
+        <!-- Edit Button Section -->
+        <div id="editButtonSection" style="text-align: center; margin-top: 2rem;">
+            <button type="button" onclick="location.href='editBusMonitorData.php'">Edit Bus Monitor Data</button>
+        </div>
+        <br>
 
-    <!-- Main Attendance Form -->
-    <form action="busMonitorAttendanceForm.php" method="post">
-        <!-- Route Selection -->
-        <h2>1. Which route?</h2>
-        <label>
-            <input type="radio" name="route" value="north" required onclick="showLocations('north')"> North
-        </label><br>
-        <label>
-            <input type="radio" name="route" value="south" onclick="showLocations('south')"> South
-        </label><br><br>
+        <!-- Main Attendance Form -->
+        <form action="busMonitorAttendanceForm.php" method="post">
+            <!-- Route Selection -->
+            <h2>1. Which route?</h2>
+            <label>
+                <input type="radio" name="route" value="north" required onclick="showLocations('north')"> North
+            </label><br>
+            <label>
+                <input type="radio" name="route" value="south" onclick="showLocations('south')"> South
+            </label><br><br>
 
-        <!-- North Locations -->
-        <div id="northLocations" class="location-section">
-            <hr>
-            <h3>Foxwood</h3>
-            <p>Check all volunteers:</p>
-            <?php
+            <!-- North Locations -->
+            <div id="northLocations" class="location-section">
+                <hr>
+                <h3>Foxwood</h3>
+                <p>Check all volunteers:</p>
+                <?php
             $location = 'Foxwood';
             $volunteers = getVolunteersForLocation($location);
             if (!empty($volunteers)) {
@@ -201,12 +198,12 @@ if (isset($_GET['error'])) {
                 echo "<p>No attendees found for $location.</p>";
             }
             ?>
-            <hr>
-        </div>
+                <hr>
+            </div>
 
-        <!-- South Locations -->
-        <div id="southLocations" class="location-section">
-            <?php
+            <!-- South Locations -->
+            <div id="southLocations" class="location-section">
+                <?php
             $southLocations = ['Meadows', 'Jefferson Place', 'Olde Forge', 'England Run'];
             foreach ($southLocations as $location) {
                 echo "<h3>$location</h3>";
@@ -234,21 +231,23 @@ if (isset($_GET['error'])) {
                 echo '<hr>';
             }
             ?>
-        </div>
+            </div>
+            <br>
+
+            <!-- Submit Section -->
+            <div id="submitSection" style="display: none; text-align: center;">
+                <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit All
+                    Data</button>
+            </div>
+        </form>
+
+        <!-- Cancel Button -->
         <br>
+        <button type="button" style="padding: 10px 20px; font-size: 16px;"
+            onclick="location.href='fillFormStaff.php'">Cancel</button>
+    </div>
 
-        <!-- Submit Section -->
-        <div id="submitSection" style="display: none; text-align: center;">
-            <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit All Data</button>
-        </div>
-    </form>
-
-    <!-- Cancel Button -->
-    <br>
-    <button type="button" style="padding: 10px 20px; font-size: 16px;" onclick="location.href='fillFormStaff.php'">Cancel</button>
-</div>
-
-<script>
+    <script>
     function showLocations(route) {
         // Hide all sections initially
         document.getElementById('northLocations').style.display = 'none';
@@ -267,7 +266,7 @@ if (isset($_GET['error'])) {
         document.getElementById('submitSection').style.display = 'block';
         document.getElementById('editButtonSection').style.display = 'block';
     }
-</script>
-
+    </script>
 </body>
+
 </html>

@@ -168,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// get volunteers for every location
 function getVolunteersForLocation($location) {
     // Establish database connection
     $conn = connect();
@@ -202,6 +203,7 @@ function getVolunteersForLocation($location) {
     return $volunteers; // Return the array of volunteers for the location
 }
 
+// get volunteers for every route
 function getVolunteersForRoute($route) {
     // Connect to the database
     $conn = connect();
@@ -236,6 +238,7 @@ function getVolunteersForRoute($route) {
     return $volunteers; // Return the array of volunteers
 }
 
+// get volunteers
 function getVolunteers() {
     $conn = connect(); // Ensure this function connects to your database correctly
 
@@ -264,6 +267,7 @@ function getVolunteers() {
     return $volunteers;
 }
 
+// get routes the have volunteers
 function getRoutesWithVolunteers() {
     $conn = connect();
 
@@ -287,6 +291,7 @@ function getRoutesWithVolunteers() {
     return $routes; // Array of routes with assigned volunteers
 }
 
+// delete a volunteer from a route
 function deleteVolunteerFromRoute($route_id, $volunteer_id) {
     $conn = connect(); // Establish the database connection
 
@@ -325,6 +330,7 @@ function deleteVolunteerFromRoute($route_id, $volunteer_id) {
     }
 }
 
+// get attendees for location
 function getAttendeesForLocation($location) {
     $connection = connect();
     $query = "

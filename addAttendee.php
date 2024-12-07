@@ -4,7 +4,7 @@ session_cache_expire(30);
 session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
-require_once('database/dbBusMonitorForm.php'); // Ensure this includes database connection functions
+require_once('database/dbBusMonitorForm.php'); 
 
 $loggedIn = false;
 $accessLevel = 0;
@@ -12,7 +12,7 @@ $userID = null;
 
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
-    require_once('include/input-validation.php'); // Include validation functions if necessary
+    require_once('include/input-validation.php'); 
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
     }
 
     // Insert attendee into the database
-    $connection = connect(); // Ensure this function connects to your database
+    $connection = connect(); 
 
     $insertQuery = "INSERT INTO dbAttendees (name, route_id) VALUES (?, ?)";
     $stmt = $connection->prepare($insertQuery);
@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,13 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
             echo "<p style='color: red;'>{$_GET['error']}</p>";
         }
         ?>
-
         <!-- Form to Add Attendee -->
         <form action="addAttendee.php" method="post">
             <label for="name">Attendee Name:</label>
             <input type="text" name="name" id="name" required>
             <br><br>
-
             <label for="route_id">Select Route:</label>
             <select name="route_id" id="route_id" required>
                 <option value="" disabled selected>Select a Route</option>
@@ -91,19 +88,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
                 $connection = connect();
                 $query = "SELECT route_id, route_name FROM dbRoute";
                 $result = $connection->query($query);
-
                 while ($row = $result->fetch_assoc()) {
                     echo "<option value='{$row['route_id']}'>{$row['route_name']}</option>";
                 }
-
                 $connection->close();
                 ?>
             </select>
             <br><br>
-
             <button type="submit" name="addAttendee">Add Attendee</button>
         </form>
-
         <br>
         <a href="editBusMonitorData.php" style="text-decoration: none;">
             <button style="padding: 10px 20px; font-size: 16px;">Cancel</button>
