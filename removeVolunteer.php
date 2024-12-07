@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('database/dbBusMonitorForm.php'); // Include the file with database functions
+require_once('database/dbBusMonitorForm.php'); 
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 

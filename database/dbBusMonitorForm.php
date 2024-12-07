@@ -240,7 +240,7 @@ function getVolunteersForRoute($route) {
 
 // get volunteers
 function getVolunteers() {
-    $conn = connect(); // Ensure this function connects to your database correctly
+    $conn = connect(); 
 
     // SQL query to fetch all volunteers
     $query = "SELECT id, CONCAT(lastName, ', ', firstName) AS fullName FROM dbVolunteers";

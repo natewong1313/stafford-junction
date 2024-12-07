@@ -4,7 +4,7 @@ session_cache_expire(30);
 session_start();
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
-require_once('database/dbBusMonitorForm.php'); // Ensure this includes database connection functions
+require_once('database/dbBusMonitorForm.php'); 
 
 $loggedIn = false;
 $accessLevel = 0;
@@ -12,7 +12,7 @@ $userID = null;
 
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
-    require_once('include/input-validation.php'); // Include validation functions if necessary
+    require_once('include/input-validation.php'); 
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];

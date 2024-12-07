@@ -12,7 +12,7 @@ $success = false;
 
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
-    require_once('include/input-validation.php'); // Include validation functions if necessary
+    require_once('include/input-validation.php'); 
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
