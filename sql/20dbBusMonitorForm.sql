@@ -1,5 +1,4 @@
 -- Drop the tables if they already exist to avoid conflicts
-DROP TABLE IF EXISTS `dbBusMonitorAttendanceForm`;
 DROP TABLE IF EXISTS `dbRouteVolunteers`;
 DROP TABLE IF EXISTS `dbRoute`;
 DROP TABLE IF EXISTS `dbAttendees`;
@@ -52,10 +51,3 @@ CREATE TABLE `dbRouteVolunteers` (
     FOREIGN KEY (`volunteer_id`) REFERENCES `dbVolunteers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Create the dbBusMonitorAttendanceForm table
-CREATE TABLE `dbBusMonitorAttendanceForm` (
-    `id` INT NOT NULL AUTO_INCREMENT,         -- Primary key for attendance forms
-    `route_id` INT NOT NULL,                  -- Foreign key referencing route_id
-    PRIMARY KEY (`id`),                       -- Primary key constraint
-    FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
