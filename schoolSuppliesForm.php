@@ -4,32 +4,22 @@ session_start(); // Start the session
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
-$loggedIn = false;
-$accessLevel = 0;
-$userID = null;
-
-// Check if user is logged in
-if (isset($_SESSION['_id'])) {
-    $loggedIn = true;
-    $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['_id'];
-} else {
-    $loggedIn = false;
+if (!isset($_SESSION['_id'])) {
+    header('Location: login.php');
+    die();
 }
 
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
 // Include necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
 require_once('database/dbSchoolSuppliesForm.php');
 
 // Retrieve family information
-if ($loggedIn) {
-    $family = retrieve_family_by_id($_SESSION["_id"]);
-    $family_email = $family->getEmail();
-    //retrieve children by family ID
-    $children = retrieve_children_by_family_id($_SESSION["_id"]);
-
-}
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
+$family_email = $family->getEmail();
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
