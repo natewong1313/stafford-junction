@@ -64,6 +64,10 @@
                 <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Account Registration Successful!</div>
             <?php elseif (isset($_GET['updateSuccess'])): ?>
                 <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Profile Updated!</div>
+            <?php elseif (isset($_GET['failedAccountCreate'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">
+                    Unable to create account, account already in system!
+                </div>
             <?php endif ?>
             
             <?php if(isset($staff)): ?>

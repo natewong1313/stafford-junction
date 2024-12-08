@@ -163,6 +163,10 @@
                 <div class="happy-toast">
                     Your registration was successful! Please log in below.
                 </div>
+            <?php elseif (isset($_GET['failedAccountCreate'])): ?>
+                <div class="happy-toast">
+                    Unable to create account, account already in system
+                </div>
             <?php else: ?>
             <p>Welcome! Please log in below.</p>
             <?php endif ?>
