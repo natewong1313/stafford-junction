@@ -153,7 +153,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <br><br>
 
             <button type="submit" id="submit">Submit</button>
-            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+            <!--<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>-->
+
+            <?php 
+            if (isset($_GET['id'])) {
+                echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+            } else {
+                echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+            }
+            ?>
 
             <?php //If the user is an admin or staff, the message should appear at index.php
             if(isset($successMessage) && $accessLevel > 1){

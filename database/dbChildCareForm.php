@@ -82,7 +82,7 @@ function createChildCareForm($form) {
             '$parent2_cell_phone', '$parent2_home_phone', '$parent2_work_phone', '$guardian_signature', '$signature_date'
         );
     ";
-    echo $query;
+    //echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
