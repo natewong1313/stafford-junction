@@ -73,4 +73,33 @@ function isAngelGiftFormComplete($childID) {
         return true;
     }
 }
+
+
+// Function to retrieve completed Angel Gift Forms by family ID
+function get_angel_gift_forms_by_family_id($familyID) {
+    $connection = connect();
+
+    // Query to join dbAngelGiftForm and dbChildren tables to filter by family_id
+    $query = "
+        SELECT agf.*
+        FROM dbAngelGiftForm agf
+        INNER JOIN dbChildren c ON agf.child_id = c.id
+        WHERE c.family_id = $familyID
+    ";
+
+    $result = mysqli_query($connection, $query);
+    $forms = [];
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $forms[] = $row;
+        }
+    }
+
+    mysqli_close($connection);
+
+    return $forms; // Return an array of completed forms
+}
+
 ?>
+
