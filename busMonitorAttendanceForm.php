@@ -13,7 +13,7 @@ $success = false;
 // Ensure user is logged in
 if (isset($_SESSION['_id'])) {
     require_once('database/dbBusMonitorForm.php');
-    require_once('include/input-validation.php'); // Include validation functions if necessary
+    require_once('include/input-validation.php'); 
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
@@ -236,8 +236,7 @@ if (isset($_GET['error'])) {
 
             <!-- Submit Section -->
             <div id="submitSection" style="display: none; text-align: center;">
-                <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit All
-                    Data</button>
+                <button type="submit" name="submitAll" style="padding: 10px 20px; font-size: 16px;">Submit</button>
             </div>
         </form>
 

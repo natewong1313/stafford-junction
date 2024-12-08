@@ -9,8 +9,10 @@ CREATE TABLE `dbAttendees` (
     `attendee_id` INT NOT NULL AUTO_INCREMENT, 
     `name` VARCHAR(256) NOT NULL,              
     `route_id` INT NOT NULL,                   
+    `child_id` INT NOT NULL,                   
     PRIMARY KEY (`attendee_id`),               
-    FOREIGN KEY (`route_id`) REFERENCES `dbRoute`(`route_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`route_id`) REFERENCES `dbRoute`(`route_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`child_id`) REFERENCES `dbChildren`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Create the dbAttendance table

@@ -21,37 +21,52 @@ if (isset($_SESSION['_id'])) {
     die();
 }
 
+// Initialize database connection
+$connection = connect();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
-    // Retrieve data from the form
-    $name = trim($_POST['name']); // Attendee's name
+    $child_id = intval($_POST['child_id']); // Selected child ID
     $route_id = intval($_POST['route_id']); // Selected route ID
 
-    if (empty($name) || empty($route_id)) {
-        header("Location: addAttendee.php?error=" . urlencode("Both name and route must be selected."));
+    if (empty($child_id) || empty($route_id)) {
+        header("Location: addAttendee.php?error=" . urlencode("Both child and route must be selected."));
         exit();
     }
 
-    // Insert attendee into the database
-    $connection = connect(); 
+    // Fetch the child's name
+    $childQuery = "SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM dbChildren WHERE id = ?";
+    $stmt = $connection->prepare($childQuery);
+    $stmt->bind_param("i", $child_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $child = $result->fetch_assoc();
 
-    $insertQuery = "INSERT INTO dbAttendees (name, route_id) VALUES (?, ?)";
+    if (!$child) {
+        header("Location: addAttendee.php?error=" . urlencode("Invalid child selected."));
+        exit();
+    }
+
+    $child_name = $child['full_name'];
+    $stmt->close();
+
+    // Insert attendee into the database
+    $insertQuery = "INSERT INTO dbAttendees (name, child_id, route_id) VALUES (?, ?, ?)";
     $stmt = $connection->prepare($insertQuery);
-    $stmt->bind_param("si", $name, $route_id);
+    $stmt->bind_param("sii", $child_name, $child_id, $route_id);
 
     if ($stmt->execute()) {
-        // Success
         $stmt->close();
         $connection->close();
-        header("Location: addAttendee.php?message=" . urlencode("Attendee $name was successfully added to the route!"));
+        header("Location: addAttendee.php?message=" . urlencode("Attendee $child_name was successfully added to the route!"));
         exit();
     } else {
-        // Error
         $error_message = $stmt->error;
         $stmt->close();
         $connection->close();
         die("Error: Failed to add attendee. " . $error_message);
     }
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -77,8 +92,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addAttendee'])) {
         ?>
         <!-- Form to Add Attendee -->
         <form action="addAttendee.php" method="post">
-            <label for="name">Attendee Name:</label>
-            <input type="text" name="name" id="name" required>
+            <label for="child_id">Select Child:</label>
+            <select name="child_id" id="child_id" required>
+                <option value="" disabled selected>Select a Child</option>
+                <?php
+                // Fetch all children from the database
+                $connection = connect();
+                $query = "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name FROM dbChildren";
+                $result = $connection->query($query);
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='{$row['id']}'>{$row['full_name']}</option>";
+                }
+                $connection->close();
+                ?>
+            </select>
             <br><br>
             <label for="route_id">Select Route:</label>
             <select name="route_id" id="route_id" required>
