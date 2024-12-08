@@ -56,6 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 add_child($child_obj, $fam->getID());
             }
         }
+    }else {
+        echo '<script>document.location = "index.php?failedAccountCreate";</script>';
     }
 
 }
