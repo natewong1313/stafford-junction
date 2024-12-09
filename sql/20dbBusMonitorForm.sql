@@ -4,6 +4,14 @@ DROP TABLE IF EXISTS `dbRoute`;
 DROP TABLE IF EXISTS `dbAttendees`;
 DROP TABLE IF EXISTS `dbAttendance`;
 
+-- Create the dbRoute table
+CREATE TABLE `dbRoute` (
+    `route_id` INT NOT NULL AUTO_INCREMENT,   
+    `route_direction` VARCHAR(25) NOT NULL,  
+    `route_name` VARCHAR(25) NOT NULL,       
+    PRIMARY KEY (`route_id`)                 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Create the dbAttendees table
 CREATE TABLE `dbAttendees` (
     `attendee_id` INT NOT NULL AUTO_INCREMENT, 
@@ -25,14 +33,6 @@ CREATE TABLE `dbAttendance` (
     `is_present` BOOLEAN NOT NULL DEFAULT 1,  
     PRIMARY KEY (`id`),                       
     FOREIGN KEY (`route_id`) REFERENCES `dbRoute` (`route_id`) ON DELETE CASCADE ON UPDATE CASCADE 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Create the dbRoute table
-CREATE TABLE `dbRoute` (
-    `route_id` INT NOT NULL AUTO_INCREMENT,   
-    `route_direction` VARCHAR(25) NOT NULL,  
-    `route_name` VARCHAR(25) NOT NULL,       
-    PRIMARY KEY (`route_id`)                 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- These are the route directions/names from the form
