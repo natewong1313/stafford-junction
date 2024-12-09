@@ -64,11 +64,13 @@ error_reporting(E_ALL);
                     <span>Program Interest Form</span> 
                 </div>
 
+                <!--Brain Builders Student Registration Form-->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "brainBuildersRegistrationForm.php?id=" . $_GET['id'] : "brainBuildersRegistrationForm.php"; ?>">
                     <img src="images/brainBuilders.svg">
                     <span>Brain Builders Student Registration Form</span> 
                 </div>
 
+                <!--Brain Builders Review Form-->
                 <div class="dashboard-item" data-link="<?php echo isset($_GET['id']) ? "BrainBuilderReviewForm.php?id=" . $_GET['id'] : "BrainBuilderReviewForm.php"; ?>">
                     <img src="images/brainBuilderReviewIcon.svg.svg">
                     <span>Brain Builder Review Form</span> 
