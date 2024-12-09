@@ -20,7 +20,7 @@ require_once("database/dbFamily.php");
 require_once("database/dbHolidayMealBag.php");
 require_once("database/dbSchoolSuppliesForm.php");
 require_once("database/dbAngelGiftForm.php");
-
+require_once('database/dbProgramInterestForm.php');
 
 /**
  * Below is where all of the forms for family accounts are retrieved
@@ -30,6 +30,7 @@ require_once("database/dbAngelGiftForm.php");
 $holiday_meal_bag_form = get_data_by_family_id($userID);
 $school_supplies_forms = get_school_supplies_form_by_family_id($userID);
 $angel_gift_forms = get_angel_gift_forms_by_family_id($userID);
+$programInterestForm = getProgramInterestFormData($userID);
 
 ?>
 
@@ -52,6 +53,12 @@ $angel_gift_forms = get_angel_gift_forms_by_family_id($userID);
         <?php if($holiday_meal_bag_form != null): ?>
             <h2 style="margin-left: 20px; display: inline;">Holiday Meal Bag</h2>
             <a href="holidayMealBagForm.php" class="inline-button">View</a><br>
+        <?php endif ?>
+
+        <!-- Program Interest Forms -->
+        <?php if($programInterestForm != null): ?>
+            <h2 style="margin-left: 20px; display: inline;">Program Interest Form</h2>
+            <a href="programInterestForm.php" class="inline-button">View</a><br>
         <?php endif ?>
 
         <!--Print out the school supplies form for each child in the family-->
