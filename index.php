@@ -62,6 +62,8 @@
                 <div class="happy-toast">Volunteer registered successfully!</div>
             <?php elseif (isset($_GET['familyRegisterSuccess'])): ?>
                 <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Account Registration Successful!</div>
+            <?php elseif (isset($_GET['updateSuccess'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Profile Updated!</div>
             <?php endif ?>
             
             <?php if(isset($staff)): ?>

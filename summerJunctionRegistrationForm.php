@@ -699,7 +699,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="date" id="signature-date" name="signature-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit / Enviar</button>
-                
 
             <?php 
                 if (isset($_GET['id'])) {

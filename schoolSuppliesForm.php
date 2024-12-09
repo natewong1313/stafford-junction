@@ -156,6 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <br><br>
 
             <button type="submit" id="submit">Submit</button>
+
             <?php 
                 if (isset($_GET['id'])) {
                     echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';

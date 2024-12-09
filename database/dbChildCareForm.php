@@ -84,6 +84,7 @@ function createChildCareForm($form) {
     ";
     
 
+
     // Execute query
     $result = mysqli_query($connection, $query);
 
