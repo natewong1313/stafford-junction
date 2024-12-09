@@ -278,8 +278,8 @@ if (!empty($missingFields)) {
         <input type="tel" name="parent1_cell_phone" id="parent1_cell_phone" placeholder="Cell Phone / Teléfono Celular"
             required value="<?php echo htmlspecialchars($guardian_phone); ?>">
 
-        <label for="parent1_home_phone">Home Phone* / Teléfono de Casa* </label>
-        <input type="tel" name="parent1_home_phone" id="parent1_home_phone" placeholder="Home Phone / Teléfono de Casa" required>
+        <label for="parent1_home_phone">Home Phone / Teléfono de Casa </label>
+        <input type="tel" name="parent1_home_phone" id="parent1_home_phone" placeholder="Home Phone / Teléfono de Casa">
 
         <label for="parent1_work_phone">Work Phone* / Teléfono del Trabajo* </label>
         <input type="tel" name="parent1_work_phone" id="parent1_work_phone"
