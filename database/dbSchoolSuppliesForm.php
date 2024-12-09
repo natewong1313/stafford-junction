@@ -43,5 +43,32 @@ function isBackToSchoolFormComplete($childID) {
     return $complete;
 }
 
+// Function to retrieve completed School Supplies forms by family ID
+function get_school_supplies_form_by_family_id($familyID) {
+    $connection = connect();
+
+    // Query to join children table and retrieve forms based on family ID
+    $query = "
+        SELECT ssf.*
+        FROM dbSchoolSuppliesForm ssf
+        INNER JOIN dbChildren c ON ssf.child_id = c.id
+        WHERE c.family_id = $familyID
+    ";
+
+    $result = mysqli_query($connection, $query);
+    $forms = [];
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $forms[] = $row;
+        }
+    }
+
+    mysqli_close($connection);
+
+    return $forms; // Return an array of forms or an empty array if none found
+}
+
+
 ?>
 
