@@ -59,33 +59,6 @@ $programInterestForm = getProgramInterestFormData($userID);
         <?php if($programInterestForm != null): ?>
             <h2 style="margin-left: 20px; display: inline;">Program Interest Form</h2>
             <a href="programInterestForm.php" class="inline-button">View</a><br>
-
-            <!-- Add Delete Option -->
-            <form action="completedForms.php" method="POST" style="display: inline;">
-                <input type="hidden" name="deleteProgramInterestForm" value="1">
-                <input type="hidden" name="form_id" value="<?php echo $programInterestForm['id']; ?>">
-                <button class="inline-button" onclick="return confirm('Are you sure you want to delete this form?');">Delete</button>
-            </form>
-
-            <?php
-            // Handle the deletion of the Program Interest Form
-            if (isset($_POST['deleteProgramInterestForm']) && $_POST['deleteProgramInterestForm'] == '1') {
-                // Get the form_id from POST request
-                $form_id = $_POST['form_id'];
-
-                // Call the delete function from dbProgramInterestForm.php
-                $result = deleteProgramInterestForm($form_id);
-
-                if ($result === true) {
-                    // If the form is deleted successfully, you can display a message or redirect
-                    echo "Form deleted successfully.";
-                    header("Location: completedForms.php");  // Redirect to refresh the page
-                    exit();
-                } else {
-                    // If there's an error, display it
-                    echo $result;
-                }
-            }?>
         <?php endif ?>
 
         <!--Print out the school supplies form for each child in the family-->

@@ -3,6 +3,57 @@
 require_once("dbinfo.php");
 require_once("dbFamily.php");
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    session_start();
+    $family_id = $_SESSION['_id'];
+    if (deleteProgramInterestForm($family_id)) {
+        header("Location: ../programInterestForm.php?status=deleted");
+        exit;
+    } else {
+        header("Location: ../programInterestForm.php?status=error");
+        exit;
+    }
+}
+
+function deleteProgramInterestForm($family_id) {
+    $connection = connect();
+    mysqli_begin_transaction($connection);
+
+    try {
+        // Get the form ID for the family
+        $formQuery = "SELECT id FROM dbProgramInterestForm WHERE family_id = $family_id";
+        $formResult = mysqli_query($connection, $formQuery);
+        if (!$formResult || mysqli_num_rows($formResult) <= 0) {
+            throw new Exception("Form not found for family ID: $family_id");
+        }
+        $formRow = mysqli_fetch_assoc($formResult);
+        $form_id = $formRow['id'];
+
+        // Delete from related tables
+        $deleteProgramInterests = "DELETE FROM dbProgramInterestsForm_ProgramInterests WHERE form_id = $form_id";
+        $deleteTopicInterests = "DELETE FROM dbProgramInterestsForm_TopicInterests WHERE form_id = $form_id";
+        $deleteAvailability = "DELETE FROM dbAvailability WHERE form_id = $form_id";
+
+        mysqli_query($connection, $deleteProgramInterests);
+        mysqli_query($connection, $deleteTopicInterests);
+        mysqli_query($connection, $deleteAvailability);
+
+        // Delete the main form record
+        $deleteForm = "DELETE FROM dbProgramInterestForm WHERE id = $form_id";
+        mysqli_query($connection, $deleteForm);
+
+        // Commit the transaction
+        mysqli_commit($connection);
+        return true;
+    } catch (Exception $e) {
+        // Rollback if any query fails
+        mysqli_rollback($connection);
+        return false;
+    } finally {
+        mysqli_close($connection);
+    }
+}
+
 function createProgramInterestForm($form) {
     $connection = connect();
 
@@ -259,30 +310,6 @@ function showAvailabilityCheckbox($data) {
     } else if ($data != null) {
         echo "disabled";
     }
-}
-
-// Function to delete Program Interest Form by ID
-function deleteProgramInterestForm($form_id) {
-    // Connect to the database
-    $conn = connect();
-
-    // Sanitize the form ID to prevent SQL injection
-    $form_id = mysqli_real_escape_string($conn, $form_id);
-
-    // SQL query to delete the program interest form
-    $query = "DELETE FROM dbProgramInterestForm WHERE id = $form_id";
-
-    // Execute the query
-    if (mysqli_query($conn, $query)) {
-        // If the query is successful, return true
-        return true;
-    } else {
-        // If the query fails, return false and the error message
-        return "Error deleting form: " . mysqli_error($conn);
-    }
-
-    // Close the database connection
-    mysqli_close($conn);
 }
 
 ?>

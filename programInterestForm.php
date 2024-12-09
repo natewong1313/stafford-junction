@@ -623,6 +623,17 @@ if (!$data) {
                 }
             }
         ?>
+
+        <?php
+        // If program data exists, it means the form has been submitted.
+        if ($programData && $topicData && $availabilityData) {
+            // Display the "Delete" button if the form is already submitted
+            echo '<form method="POST" action="database/dbProgramInterestForm.php">
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit" name="deleteForm" value="delete">Delete</button>
+                </form>';
+}
+?>
         
     </body>
 </html>
