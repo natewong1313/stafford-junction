@@ -281,7 +281,7 @@ if (!empty($missingFields)) {
 
         <label for="parent1_work_phone">Work Phone / Teléfono del Trabajo </label>
         <input type="tel" name="parent1_work_phone" id="parent1_work_phone"
-            placeholder="Work Phone / Teléfono del Trabajo"><br><br>
+            placeholder="Work Phone / Teléfono del Trabajo" required><br><br>
 
         <!-- Parent 2 Information -->
         <label for="parent2_first_name">(Parent 2) First Name / Nombre </label>
@@ -397,10 +397,18 @@ if (!empty($missingFields)) {
     </form>
     </div>
     <?php //If the user is an admin or staff, the message should appear at index.php
-            if($success && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
 
