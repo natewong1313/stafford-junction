@@ -71,7 +71,6 @@ function createFieldTripWaiverForm($form) {
             '$medical_insurance_company', '$policy_number', '$photo_waiver_signature', '$photo_waiver_date'
         );
     ";
-    echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);

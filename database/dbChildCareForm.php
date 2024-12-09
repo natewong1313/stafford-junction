@@ -82,7 +82,7 @@ function createChildCareForm($form) {
             '$parent2_cell_phone', '$parent2_home_phone', '$parent2_work_phone', '$guardian_signature', '$signature_date'
         );
     ";
-    echo $query;
+    
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -104,7 +104,6 @@ function createChildCareForm($form) {
         SET medical_notes = '$medical_issues'
         WHERE id = '$child_id';
     ";  
-     echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -124,8 +123,6 @@ function createChildCareForm($form) {
         INSERT INTO dbUnallowedFoods (id, name)
         VALUES ('$child_id', '$religious_foods');
     ";
-
-    echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);

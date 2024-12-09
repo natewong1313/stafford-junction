@@ -11,6 +11,8 @@ if (!isset($_SESSION['_id'])) {
 
 $accessLevel = $_SESSION['access_level'];
 $userID = $_SESSION['_id'];
+$success = false;
+
 // Include necessary files
 include_once("database/dbFamily.php");
 include_once("database/dbChildren.php");
@@ -24,6 +26,7 @@ $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     require_once('include/input-validation.php');
+    echo $success;
     
     // Sanitize the form input
     $args = sanitize($_POST, null);
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         <span>* Indicates required</span><br><br>
 
-        <form method="POST" action="schoolSuppliesForm.php">
+        <form method="POST" action="">
             <!-- Email field (pre-filled from session) -->
             <label for="email">1. Email*</label><br><br>
             <input type="text" name="email" id="email" placeholder="Email" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
@@ -153,14 +156,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <br><br>
 
             <button type="submit" id="submit">Submit</button>
-            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+            <?php 
+                if (isset($_GET['id'])) {
+                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                } else {
+                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                }
+            ?>
 
-            <?php //If the user is an admin or staff, the message should appear at index.php
-            if(isset($successMessage) && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
-            }
+            <?php 
+                if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                    if (isset($_GET['id'])) {
+                        echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                    } else {
+                        echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                    }
+                } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                    if (isset($_GET['id'])) {
+                        echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                    } else {
+                        echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                    }  
+                }
             ?>
         </form>
     </div>
