@@ -21,6 +21,20 @@ $family_phone = $family->getPhone();
 $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 $children_count = count($children);
 
+// Handle form deletion request
+include_once("database/dbHolidayMealBag.php");
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete'])) {
+    // Call the delete function and handle errors or success messages
+    $result = deleteHolidayMealBagForm($family->getId());
+    if ($result) {
+        $successMessage = "Form deleted successfully!";
+        echo '<script>document.location = "fillForm.php?formDeleteSuccess&id=' . $_GET['id'] . '";</script>';
+        exit; // Ensure the script stops here after redirection
+    } else {
+        $errors[] = "Error deleting the form.";
+    }
+}
+
 function validateAndFilterPhoneNumber($phone) {
     $filteredPhone = preg_replace('/\D/', '', $phone);  // Remove non-digits
     return (strlen($filteredPhone) === 10) ? $filteredPhone : false;
@@ -185,6 +199,11 @@ try {
         <?php endif ?>
 
         <?php if($data): ?>
+            <!-- Add a Delete button if the form has been submitted -->
+            <form method="POST" action="holidayMealBagForm.php">
+                <button type="submit" name="delete">Delete</button>
+            </form>
+
             <?php if($accessLevel > 1):?> <!--If staff or admin, return back to index.php-->
                 <a class="button cancel" href="index.php">Return to Dashboard</a>
             <?php else: ?> <!--If family, return back to family home page-->

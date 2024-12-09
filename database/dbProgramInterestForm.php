@@ -1,5 +1,8 @@
 <?php
 
+require_once("dbinfo.php");
+require_once("dbFamily.php");
+
 function createProgramInterestForm($form) {
     $connection = connect();
 
@@ -257,4 +260,30 @@ function showAvailabilityCheckbox($data) {
         echo "disabled";
     }
 }
+
+// Function to delete Program Interest Form by ID
+function deleteProgramInterestForm($form_id) {
+    // Connect to the database
+    $conn = connect();
+
+    // Sanitize the form ID to prevent SQL injection
+    $form_id = mysqli_real_escape_string($conn, $form_id);
+
+    // SQL query to delete the program interest form
+    $query = "DELETE FROM dbProgramInterestForm WHERE id = $form_id";
+
+    // Execute the query
+    if (mysqli_query($conn, $query)) {
+        // If the query is successful, return true
+        return true;
+    } else {
+        // If the query fails, return false and the error message
+        return "Error deleting form: " . mysqli_error($conn);
+    }
+
+    // Close the database connection
+    mysqli_close($conn);
+}
+
 ?>
+

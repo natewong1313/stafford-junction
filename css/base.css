@@ -347,22 +347,18 @@ button:hover,
   font-family: inherit;
   font-weight: bold;
   text-decoration: none;
-  color: var(--secondary-accent-color); /* White text */
+  color: var(--button-font-color); /* White text */
   background-color: var(--main-color); /* Stafford Junction primary color */
   border: none;
-  border-radius: 3px; /* Rounded corners */
+  border-radius: 5px; /* Rounded corners */
   cursor: pointer;
   text-align: center;
   transition: background-color 0.3s ease;
-  line-height: 1; /* Keep the button compact */
+  line-height: 2; /* Keep the button compact */
 }
 
 .inline-button:hover {
   background-color: var(--accent-color); /* Accent color for hover */
-}
-
-.inline-button:active {
-  background-color: var(--main-color); /* Retain main color on click */
 }
 
 label {
