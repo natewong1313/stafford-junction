@@ -23,6 +23,16 @@ if(isset($_SESSION['_id'])){
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
     $family = retrieve_family_by_id($_GET['id'] ?? $userID);
+    $address = $family->getAddress();
+    $city = $family->getCity();
+    $phone = $family->getPhone();
+    $zip = $family->getZip();
+    $email = $family->getEmail();
+    $emergency_contact_name = $family->getEContactFirstName() . " " . $family->getEContactLastName();
+    $econtactRelation = $family->getEContactRelation();
+    $econtactPhone = $family->getEContactPhone();
+    
+    $parent2Name = null;
 }
 
 // include the header .php files
@@ -165,15 +175,15 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Cell Phone-->
                 <label for="parent1-phone">Primary Phone Number *</label><br><br>
-                <input type="tel" id="parent1-phone" name="parent1-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="parent1-phone" name="parent1-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($phone); ?>"><br><br>
 
                 <!--Street Address-->
                 <label for0="parent1-address">Street Address *</label><br><br>
-                <input type="text" id="parent1-address" name="parent1-address" required placeholder="Enter your street address"><br><br>
+                <input type="text" id="parent1-address" name="parent1-address" required placeholder="Enter your street address" value="<?php echo htmlspecialchars($address); ?>"><br><br>
 
                 <!--City-->
                 <label for="parent1-city">City *</label><br><br>
-                <input type="text" id="parent1-city" name="parent1-city" required placeholder="Enter your city"><br><br>
+                <input type="text" id="parent1-city" name="parent1-city" required placeholder="Enter your city" value="<?php echo htmlspecialchars($city); ?>"><br><br>
 
                 <!--State-->
                 <label for="parent1-state">State *</label><br><br>
@@ -233,11 +243,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Zip-->
                 <label for="parent1-zip">Zip Code *</label><br><br>
-                <input type="text" id="parent1-zip" name="parent1-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code"><br><br>
+                <input type="text" id="parent1-zip" name="parent1-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($zip); ?>"><br><br>
 
                 <!--Email-->
                 <label for="parent1-email">Email *</label><br><br>
-                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email"><br><br>
+                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email" value="<?php echo htmlspecialchars($email); ?>"><br><br>
 
                 <!--Alternate Phone-->
                 <label for="parent1-altPhone" required>Alternate Phone Number</label><br><br>
@@ -247,19 +257,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <br>
                 <!--Parent 2 Name-->
                 <label for="parent2-name">Full Name</label><br><br>
-                <input type="text" id="parent2-name" name="parent2-name" placeholder="Parent 1 Full Name"><br><br>
+                <input type="text" id="parent2-name" name="parent2-name" placeholder="Parent 2 Full Name" value="<?php echo htmlspecialchars($family->getFirstName2() . " " . $family->getLastName2() ?? ""); ?>"><br><br>
 
                 <!--Cell Phone-->
                 <label for="parent2-phone">Primary Phone Number</label><br><br>
-                <input type="tel" id="parent2-phone" name="parent2-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="parent2-phone" name="parent2-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($family->getPhone2() ?? ""); ?>"><br><br>
 
                 <!--Street Address-->
                 <label for0="parent2-address">Street Address</label><br><br>
-                <input type="text" id="parent2-address" name="parent2-address" placeholder="Enter your street address"><br><br>
+                <input type="text" id="parent2-address" name="parent2-address" placeholder="Enter your street address" value="<?php echo htmlspecialchars($family->getAddress2() ?? ""); ?>"><br><br>
 
                 <!--City-->
                 <label for="parent2-city">City</label><br><br>
-                <input type="text" id="parent2-city" name="parent2-city" placeholder="Enter your city"><br><br>
+                <input type="text" id="parent2-city" name="parent2-city" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getCity2()); ?>"><br><br>
 
                 <!--State-->
                 <label for="parent2-state">State</label><br><br>
@@ -319,11 +329,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Zip-->
                 <label for="parent2-zip" required>Zip Code</label><br><br>
-                <input type="text" id="parent2-zip" name="parent2-zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code"><br><br>
+                <input type="text" id="parent2-zip" name="parent2-zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($family->getZip2()); ?>"><br><br>
 
                 <!--Email-->
                 <label for="parent2-email" required>Email</label><br><br>
-                <input type="text" id="parent2-email" name="parent2-email" placeholder="Enter your city"><br><br>
+                <input type="text" id="parent2-email" name="parent2-email" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getEmail2()); ?>"><br><br>
 
                 <!--Alternate Phone-->
                 <label for="parent2-altPhone" required>Alternate Phone Number</label><br><br>
@@ -335,7 +345,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Name-->
                 <label for="emergency-name1" required>Full Name *</label><br><br>
-                <input type="text" id="emergency-name1" name="emergency-name1" required placeholder="Enter full name"><br><br>
+                <input type="text" id="emergency-name1" name="emergency-name1" required placeholder="Enter full name" value="<?php echo htmlspecialchars($emergency_contact_name); ?>"><br><br>
 
                 <!--Relationship-->
                 <label for="emergency-relationship1" required>Relationship to Child *</label><br><br>
@@ -343,7 +353,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Phone-->
                 <label for="emergency-phone1" required>Phone *</label><br><br>
-                <input type="tel" id="emergency-phone1" name="emergency-phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="emergency-phone1" name="emergency-phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($econtactPhone); ?>"><br><br>
 
                 <h3>Emergency Contact 2</h3><br>
 
@@ -539,7 +549,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Parent/Guardian Name-->
                 <label for="waiver-parent-name">Parent/Guardian Name *</label><br><br>
-                <input type="text" name="waiver-parent-name" id="waiver-parent-name" required placeholder="Parent/Guardian Name" required><br><br>
+                <input type="text" name="waiver-parent-name" id="waiver-parent-name" required placeholder="Parent/Guardian Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>" required><br><br>
 
                 <!--Provider's Name-->
                 <label for="waiver-provider-name">Provider's Name *</label><br><br>
