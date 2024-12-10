@@ -453,7 +453,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 
                 <div class="radio-group">
                     <input type="radio" id="needs-transportation" name="needs-transportation" value="needs-transportation"><label for="phone-type-cellphone">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label>
-                    <input type="radio" id="transports-themselves" name="needs-transportationwq" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
+                    <input type="radio" id="transports-themselves" name="needs-transportation" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
                 </div>
 
             <br><br>
