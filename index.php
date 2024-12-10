@@ -91,6 +91,13 @@
                 </div>
                 <?php endif ?>
 
+                <?php if($_SESSION['access_level'] >= 2 || $_SESSION['account_type'] == 'admin'): ?>
+                <div class="dashboard-item" data-link="formSearch.php">
+                    <img src="images/form-dropdown-svgrepo-com.svg">
+                    <span>View Form Submissions</span>
+                </div>
+                <?php endif ?>
+              
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="fillFormStaff.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">
