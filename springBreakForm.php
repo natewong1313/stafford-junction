@@ -15,19 +15,19 @@ if(isset($_SESSION['_id'])){
     require_once('database/dbChildren.php');
     require_once('include/input-validation.php');
     require_once('database/dbSpringBreakCampForm.php');
-    
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
-    $children = retrieve_children_by_family_id($userID);
+    //$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
 } else {
     header('Location: login.php');
     die();
 }
 
 include_once("database/dbFamily.php");
-$family = retrieve_family_by_id($_SESSION["_id"]);
-$family_email = $family->getEmail();
+$children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+$family = retrieve_family_by_id($_GET['id'] ?? $userID);
+$guardian_email = $family->getEmail();
 
 // include the header .php file s
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -115,7 +115,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             <!-- Question 1: Email input field (required) -->
             <label for="email">1. Email*</label><br><br>
-            <input type="text" name="email" id="email" placeholder="Email/Electrónico" required value="<?php echo htmlspecialchars($family_email); ?>"><br><br>
+            <input type="text" name="email" id="email" placeholder="Email/Electrónico" required value="<?php echo htmlspecialchars($guardian_email); ?>"><br><br>
             <!-- Additional space before next question -->
             <br><br><br>
 
@@ -126,7 +126,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         require_once('domain/Children.php');
                         foreach ($children as $c){
                             $id = $c->getID();
-                            var_dump($c);
                             // Check if form was already completed for the child
                             if (!isSpringBreakCampFormComplete($id)) {
                                 $name = $c->getFirstName() . " " . $c->getLastName();
@@ -192,20 +191,33 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <textarea id="questions_comments" name="questions_comments" rows="6" cols="50"
                 placeholder="Type your questions or comments here... / Escriba sus preguntas o comentarios aquí..."></textarea><br><br>
 
-            <!-- Submit button for the form -->
-            <button type="submit" id="submit">Submit</button>
-            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-        </form>
-
+             <!-- Submit and Cancel buttons -->
+        <button type="submit" id="submit">Submit</button>
+                <?php 
+                    if (isset($_GET['id'])) {
+                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                    } else {
+                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                    }
+                ?>
         </div>
-        </div>
-
-        <?php
-            //if registration successful, create pop up notification and direct user back to login
-                if($success){
-                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-            }  
-        ?>
+    </form>
+    </div>
+    <?php //If the user is an admin or staff, the message should appear at index.php
+        if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+            }
+        } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+            }
+        }
+    ?>
 
     </body>
 </html>

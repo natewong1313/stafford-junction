@@ -68,9 +68,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         'parent1_state',
         'parent1_zip',
         'parent1_email',
-        'parent1_cell_phone',
-        'parent1_home_phone', 
-        'parent1_work_phone', 
+        'parent1_cell_phone', 
 
         'guardian_name',
         'guardian_signature',
@@ -205,39 +203,39 @@ if (!empty($missingFields)) {
 
         <!-- Child's Date of Birth -->
         <label for="child_dob">Date of Birth* / Fecha de Nacimiento*</label>
-        <input type="date" name="child_dob" id="child_dob" placeholder="Date of Birth / Fecha de Nacimiento" <br><br>
+        <input type="date" name="child_dob" id="child_dob" placeholder="Date of Birth / Fecha de Nacimiento" required><br>
         
         <!-- Child's Gender -->
         <label for="child_gender">Gender* / Género*</label>
-        <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" <br><br>
+        <input type="text" name="child_gender" id="child_gender" placeholder="Gender / Género" required><br>
 
         <!-- Address -->
         <label for="child_address">Address* / Dirección*</label>
-        <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección" <br><br>
+        <input type="text" name="child_address" id="child_address" placeholder="Street Address / Dirección" required><br>
 
         <!-- City -->
         <label for="child_city">City* / Ciudad*</label>
-        <input type="text" name="child_city" id="child_city" placeholder="City / Ciudad" <br><br>
+        <input type="text" name="child_city" id="child_city" placeholder="City / Ciudad" required><br>
 
         <!-- State -->
         <label for="child_state">State* / Estado*</label>
-        <input type="text" name="child_state" id="child_state" placeholder="State / Estado" <br><br>
+        <input type="text" name="child_state" id="child_state" placeholder="State / Estado" required><br>
 
         <!-- Zip Code -->
         <label for="child_zip">Zip Code* / Código Postal*</label>
-        <input type="text" name="child_zip" id="child_zip" placeholder="Zip Code / Código Postal" <br><br>
+        <input type="text" name="child_zip" id="child_zip" placeholder="Zip Code / Código Postal" required><br>
 
         <!-- Medical Issues or Allergies -->
-        <label for="medical_issues">Medical Issues or Allergies / Problemas Médicos o Alergias: </label><br>
+        <label for="medical_issues">Medical Issues or Allergies* / Problemas Médicos o Alergias*: </label><br>
         <textarea name="medical_issues" id="medical_issues" rows="2"
-            placeholder="Medical issues or allergies / Problemas médicos o alergias"></textarea><br><br>
+            placeholder="Medical issues or allergies / Problemas médicos o alergias" required></textarea><br><br>
 
         <!-- Foods to Avoid Due to Religious Beliefs -->
-        <label for="religious_foods">Foods to Avoid Due to Religious Beliefs / Alimentos a Evitar por Creencias
-            Religiosas:
+        <label for="religious_foods">Foods to Avoid Due to Religious Beliefs* / Alimentos a Evitar por Creencias
+            Religiosas*:
         </label><br>
         <textarea name="religious_foods" id="religious_foods" rows="2"
-            placeholder="Foods to avoid / Alimentos a evitar"></textarea><br><br>
+            placeholder="Foods to avoid / Alimentos a evitar" required></textarea><br><br>
 
         <!-- Parents or Guardians Section -->
         <h3>Parents or Guardians / Padres o Tutores:</h3>
@@ -278,53 +276,53 @@ if (!empty($missingFields)) {
         <input type="tel" name="parent1_cell_phone" id="parent1_cell_phone" placeholder="Cell Phone / Teléfono Celular"
             required value="<?php echo htmlspecialchars($guardian_phone); ?>">
 
-        <label for="parent1_home_phone">Home Phone* / Teléfono de Casa* </label>
+        <label for="parent1_home_phone">Home Phone / Teléfono de Casa </label>
         <input type="tel" name="parent1_home_phone" id="parent1_home_phone" placeholder="Home Phone / Teléfono de Casa">
 
-        <label for="parent1_work_phone">Work Phone* / Teléfono del Trabajo* </label>
+        <label for="parent1_work_phone">Work Phone / Teléfono del Trabajo </label>
         <input type="tel" name="parent1_work_phone" id="parent1_work_phone"
-            placeholder="Work Phone / Teléfono del Trabajo"><br><br>
+            placeholder="Work Phone / Teléfono del Trabajo" required><br><br>
 
         <!-- Parent 2 Information -->
-        <label for="parent2_first_name">(Parent 2) First Name* / Nombre* </label>
+        <label for="parent2_first_name">(Parent 2) First Name / Nombre </label>
         <input type="text" name="parent2_first_name" id="parent2_first_name" placeholder="First Name / Nombre"
             value="<?php echo htmlspecialchars($guardian_2_fname); ?>">
 
-        <label for="parent2_last_name">(Parent 2) Last Name* / Apellido* </label>
+        <label for="parent2_last_name">(Parent 2) Last Name / Apellido </label>
         <input type="text" name="parent2_last_name" id="parent2_last_name" placeholder="Last Name / Apellido"
             value="<?php echo htmlspecialchars($guardian_2_lname); ?>"><br><br>
 
         <!-- Parent 2 Address -->
-        <label for="parent2_address">(Parent 2) Address* / Dirección* </label>
+        <label for="parent2_address">(Parent 2) Address / Dirección </label>
         <input type="text" name="parent2_address" id="parent2_address" placeholder="Street Address / Dirección"
             value="<?php echo htmlspecialchars($guardian_2_address); ?>"><br><br>
 
         <!-- Parent 2 City, State, Zip -->
-        <label for="parent2_city">(Parent 2) City* / Ciudad* </label>
+        <label for="parent2_city">(Parent 2) City / Ciudad </label>
         <input type="text" name="parent2_city" id="parent2_city" placeholder="City / Ciudad"
             value="<?php echo htmlspecialchars($guardian_2_city); ?>">
 
-        <label for="parent2_state">(Parent 2) State* / Estado* </label>
+        <label for="parent2_state">(Parent 2) State / Estado </label>
         <input type="text" name="parent2_state" id="parent2_state" placeholder="State / Estado"
             value="<?php echo htmlspecialchars($guardian_2_state); ?>">
 
-        <label for="parent2_zip">(Parent 2) Zip Code* / Código Postal* </label>
+        <label for="parent2_zip">(Parent 2) Zip Code / Código Postal </label>
         <input type="text" name="parent2_zip" id="parent2_zip" placeholder="Zip Code / Código Postal"
             value="<?php echo htmlspecialchars($guardian_2_zip); ?>"><br><br>
 
         <!-- Parent 2 Contact Info -->
-        <label for="parent2_email">(Parent 2) Email* / Correo Electrónico* </label>
+        <label for="parent2_email">(Parent 2) Email / Correo Electrónico </label>
         <input type="email" name="parent2_email" id="parent2_email" placeholder="Email / Correo Electrónico"
             value="<?php echo htmlspecialchars($guardian_2_email); ?>"><br><br>
 
-        <label for="parent2_cell_phone">(Parent 2) Cell Phone* / Teléfono Celular*</label>
+        <label for="parent2_cell_phone">(Parent 2) Cell Phone / Teléfono Celular</label>
         <input type="tel" name="parent2_cell_phone" id="parent2_cell_phone" placeholder="Cell Phone / Teléfono Celular"
             value="<?php echo htmlspecialchars($guardian_2_phone); ?>">
 
-        <label for="parent2_home_phone">(Parent 2) Home Phone* / Teléfono de Casa* </label>
+        <label for="parent2_home_phone">(Parent 2) Home Phone / Teléfono de Casa </label>
         <input type="tel" name="parent2_home_phone" id="parent2_home_phone" placeholder="Home Phone / Teléfono de Casa">
 
-        <label for="parent2_work_phone">(Parent 2) Work Phone* / Teléfono del Trabajo* </label>
+        <label for="parent2_work_phone">(Parent 2) Work Phone / Teléfono del Trabajo </label>
         <input type="tel" name="parent2_work_phone" id="parent2_work_phone"
             placeholder="Work Phone / Teléfono del Trabajo"><br><br>
 
@@ -399,13 +397,21 @@ if (!empty($missingFields)) {
     </form>
     </div>
     <?php //If the user is an admin or staff, the message should appear at index.php
-            if($success && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
-    
+
 </body>
 </html>
 

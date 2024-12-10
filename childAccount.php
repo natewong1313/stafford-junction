@@ -31,7 +31,7 @@ $child = retrieve_child_by_id($_GET['id']);
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php require_once('universal.inc') ?>
-        <title>Stafford Junction | Child Account</title>
+        <title>Stafford Junction | Child Account Information</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/base.css">
@@ -41,32 +41,36 @@ $child = retrieve_child_by_id($_GET['id']);
             require_once('header.php');
             require_once('include/output.php');
         ?>
-        <h1>Account Page for <?php echo $child->getFirstName() ?></h1>
+        <h1>Account Page for <?php echo $child->getFirstName() . " " . $child->getLastName() ?></h1>
 
         <div  id="view-family" style="margin-left: 20px; margin-right: 20px">
         <main class="general">
         <?php if(isset($child)) {
             echo '<fieldset>';
-            echo '<legend>' . $child->getFirstName() . '</legend>';
             echo '<label>Full Name</label>';
             echo '<p>' . $child->getFirstName() . " " . $child->getLastName() . '</p>';
-            echo '<label>Address</label>';
-            echo '<p>' . $child->getAddress() . " " . $child->getNeighborhood() . " " . $child->getCity() . " " . $child->getState() . " " . $child->getZip() . '</p>';
             echo '<label>Date of Birth</label>';
             echo '<p>' . $child->getBirthdate() . '</p>';
+            echo '<label>Neighborhood</label>';
+            echo '<p>' . $child->getNeighborhood() . '</p>';
+            echo '<label>Address</label>';
+            echo '<p>' . $child->getAddress() . " " . $child->getNeighborhood() . " " . $child->getCity() . " " . $child->getState() . " " . $child->getZip() . '</p>';
             echo '<label>Gender</label>';
-            echo '<p>' . $child->getGender() . '</p>';
+            echo '<p>' . ucfirst($child->getGender()) . '</p>';
             echo '<label>School</label>';
             echo '<p>' . $child->getSchool() . '</p>';
             echo '<label>Grade</label>';
             echo '<p>' . $child->getGrade() . '</p>';
+            echo '<label>Hispanic, Latino, or Spanish Origin</label>';
+            echo '<p>' . ($child->isHispanic() == 1 ? 'Yes' : 'No') . '</p>';
+            echo '<label>Race</label>';
+            echo '<p>' . $child->getRace() . '</p>';
             echo '<label>Medical Notes</label>';
             echo '<p>' . $child->getMedicalNotes() . '</p>';
             echo '<label>Other Notes</label>';
             echo '<p>' . $child->getNotes() . '</p>';
             echo '<label>Enrolled Programs</label>';
-            echo '<p>' . '</p>';
-            echo '</fieldset>';
+            echo '<p> . </p>';
         }
         
         ?>
@@ -74,14 +78,14 @@ $child = retrieve_child_by_id($_GET['id']);
         </div>
 
 
-        <?php if($_SESSION['access_level'] == 1): ?>
-        <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1): ?>
+            <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
-        <?php if($_SESSION['access_level'] > 1 && !isset($_GET['findChildren'])): ?>
-        <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2 && !isset($_GET['findChildren'])): ?>
+            <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
-        <?php if($_SESSION['access_level'] > 1 && isset($_GET['findChildren'])): ?>
-        <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2 && isset($_GET['findChildren'])): ?>
+            <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         
 
