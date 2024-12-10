@@ -20,7 +20,18 @@ error_reporting(E_ALL);
             if (isset($_GET['formSubmitSuccess'])) {
                 echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Successfully Submitted!</div>';
             }
+   
+            // Display success message for form deletion
+            if (isset($_GET['status']) && $_GET['status'] === 'deleted') {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Form Successfully Deleted!</div>';
+            }
+    
+            // Display error message for form deletion
+            if (isset($_GET['status']) && $_GET['status'] === 'error') {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">An error occurred while deleting the form. Please try again.</div>';
+            }
         ?>
+
         <main class='dashboard'>
             <div id="dashboard">
                 <!--Holiday Meal Bag -->

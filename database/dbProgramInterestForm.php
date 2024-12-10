@@ -7,10 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     session_start();
     $family_id = $_SESSION['_id'];
     if (deleteProgramInterestForm($family_id)) {
-        header("Location: ../programInterestForm.php?status=deleted");
+        //redirect to fillForm after successful deletion
+        header("Location: ../fillForm.php?status=deleted");
         exit;
     } else {
-        header("Location: ../programInterestForm.php?status=error");
+        header("Location: ../fillForm.php?status=error");
         exit;
     }
 }

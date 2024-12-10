@@ -616,10 +616,12 @@ if (!$data) {
         <button type="submit" name="deleteForm" value="delete">Delete</button>
     </form>
 
-    <!-- Return to Completed Forms Button -->
-    <form method="GET" action="completedForms.php">
-        <button type="submit" class="button cancel">Completed Forms</button>
-    </form>
+    <!-- Return to Dashboard Button -->
+        <?php if($accessLevel > 1):?> <!--If staff or admin, return back to index.php-->
+                <a class="button cancel" href="index.php">Return to Dashboard</a>
+            <?php else: ?> <!--If family, return back to family home page-->
+                <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+        <?php endif ?>    
 <?php endif; ?>
 
     </body>
