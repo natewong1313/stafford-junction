@@ -8,6 +8,14 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = null;
+
+function data_dump($val){
+    echo "<pre>";
+    var_dump($val);
+    echo "</pre>";
+    die();
+}
 
 if(isset($_SESSION['_id'])){
     $loggedIn = true;
@@ -18,8 +26,11 @@ if(isset($_SESSION['_id'])){
 // include the header .php files
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbBrainBuildersRegistrationForm.php');
+    require_once('database/dbChildren.php');
+    require_once('database/dbBrainBuildersRegistration.php');
     $args = sanitize($_POST, null);
+    $childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $userID);
+    $success = register($args, $childToRegister['id']);
 }
 ?>
 
@@ -43,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Child Last Name-->
                 <label for="child-last-name">Child Last Name *</label><br><br>
-                <input type="text" name="child-last-namee" id="child-last-name" required placeholder="Child Last Name" required><br><br>
+                <input type="text" name="child-last-name" id="child-last-name" required placeholder="Child Last Name" required><br><br>
 
                 <!--Gender-->
                 <label for="gender">Gender *</label><br><br>
@@ -440,7 +451,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 
                 <div class="radio-group">
                     <input type="radio" id="needs-transportation" name="needs-transportation" value="needs-transportation"><label for="phone-type-cellphone">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label>
-                    <input type="radio" id="transports-themselves" name="transports-themselves" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
+                    <input type="radio" id="transports-themselves" name="needs-transportationwq" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
                 </div>
 
             <br><br>
