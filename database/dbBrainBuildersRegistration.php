@@ -7,6 +7,9 @@ function register($args, $childID){
     $query = "SELECT * FROM dbBrainBuildersRegistrationForm where child_id = '$childID'";
     $res = mysqli_query($conn, $query);
     if($res == null || mysqli_num_rows($res) == 0){
+        $nameOfChild = explode(" ", $args['name']);
+        $fn = $nameOfChild[0];
+        $ln = $nameOfChild[1];
         mysqli_query($conn, 'INSERT INTO dbBrainBuildersRegistrationForm (child_id, child_first_name, child_last_name, gender, school_name, grade, 
         birthdate, child_address, child_city, child_state, child_zip, child_medical_allergies, child_food_avoidances, parent1_name, parent1_phone,
         parent1_address, parent1_city, parent1_state, parent1_zip, parent1_email, parent1_altPhone, parent2_name, parent2_phone,
@@ -16,8 +19,8 @@ function register($args, $childID){
         lunch, needs_transportation, participation, parent_initials, signature, signature_date, waiver_child_name, waiver_dob, waiver_parent_name, waiver_provider_name,
         waiver_provider_address, waiver_phone_and_fax, waiver_signature, waiver_date) VALUES (" ' . 
         $childID . '","' .
-        $args['child-first-name'] . '","' .
-        $args['child-last-name'] . '","' .
+        $fn . '","' .
+        $ln . '","' .
         $args['gender'] . '","' .
         $args['school-name'] . '","' .
         $args['grade'] . '","' .
@@ -85,4 +88,14 @@ function register($args, $childID){
     }
     mysqli_close($conn);
     return false;
+}
+
+function isBrainBuildersRegistrationComplete($childId){
+    $conn = connect();
+    $query = "SELECT * FROM dbBrainBuildersRegistrationForm where child_id = $childId";
+    $res = mysqli_query($conn, $query);
+
+    $complete = $res && mysqli_num_rows($res) > 0;
+    mysqli_close($conn);
+    return $complete;
 }

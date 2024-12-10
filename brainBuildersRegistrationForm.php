@@ -19,10 +19,14 @@ function data_dump($val){
 
 if(isset($_SESSION['_id'])){
     require_once("database/dbFamily.php");
+    require_once("database/dbChildren.php");
+    require_once('database/dbBrainBuildersRegistration.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
     $family = retrieve_family_by_id($_GET['id'] ?? $userID);
+    $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+    //data_dump($children);
     $address = $family->getAddress();
     $city = $family->getCity();
     $phone = $family->getPhone();
@@ -41,7 +45,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('database/dbChildren.php');
     require_once('database/dbBrainBuildersRegistration.php');
     $args = sanitize($_POST, null);
-    $childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $_GET['id'] ?? $userID);
+    $n = explode(" ", $args['name']);
+    //data_dump($n);
+    //$childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $_GET['id'] ?? $userID);
+    $childToRegister = retrieve_child_by_firstName_lastName_famID($n[0], $n[1], $_GET['id'] ?? $userID);
     $success = register($args, $childToRegister['id']);
 }
 ?>
@@ -61,12 +68,32 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <h2>Student Information</h2><br>
             <form id="brainBuildersStudentRegistrationForm" action="" method="post">             
                 <!--Child First Name-->
+                <!--
                 <label for="child-first-name">Child First Name *</label><br><br>
                 <input type="text" name="child-first-name" id="child-first-name" required placeholder="Child First Name" required><br><br>
-
+                -->
                 <!--Child Last Name-->
+                <!--
                 <label for="child-last-name">Child Last Name *</label><br><br>
                 <input type="text" name="child-last-name" id="child-last-name" required placeholder="Child Last Name" required><br><br>
+                -->
+
+                <!-- Child Name -->
+                <label for="name">Child Name / Nombre del Hijo*</label><br><br>
+                <select name="name" id="name" required>
+                <?php
+                foreach ($children as $c){ //cycle through each child of family account user
+                    $id = $c->getID();
+                    // Check if form was already completed for the child
+                    if (!isBrainBuildersRegistrationComplete($id)) {
+                        $name = $c->getFirstName() . " " . $c->getLastName(); //display name if they don't have a form filled out for them
+                        //$value = $id . "_" . $name;
+                        echo "<option>$name</option>";
+                    }
+                }
+                ?>
+                </select>
+
 
                 <!--Gender-->
                 <label for="gender">Gender *</label><br><br>
@@ -250,7 +277,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email" value="<?php echo htmlspecialchars($email); ?>"><br><br>
 
                 <!--Alternate Phone-->
-                <label for="parent1-altPhone" required>Alternate Phone Number</label><br><br>
+                <label for="parent1-altPhone">Alternate Phone Number</label><br><br>
                 <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
 
             <h3>Parent 2</h3>
