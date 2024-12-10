@@ -594,46 +594,33 @@ if (!$data) {
                 </div>
                 <br><br>
 
-                <button type="submit" id="submit">Submit</button>
-                
-                <?php 
-                    if (isset($_GET['id'])) {
-                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
-                    } else {
-                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
-                    }
-                ?>
-                <br><br><br>
-            </form>
-        </div>
-        <?php
-            // if submission successful, create pop up notification and direct user back to fill form page
-            // if fail, notify user on program interest form page
-            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
-                if (isset($_GET['id'])) {
-                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
-                } else {
-                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                }
-            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
-                if (isset($_GET['id'])) {
-                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
-                } else {
-                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
-                }
-            }
-        ?>
+<!-- Submit and Cancel Buttons (displayed only when form is not submitted) -->
+<?php if (!$programData): ?>
+    <button type="submit" id="submit">Submit</button>
 
-        <?php
-        // If program data exists, it means the form has been submitted.
-        if ($programData && $topicData && $availabilityData) {
-            // Display the "Delete" button if the form is already submitted
-            echo '<form method="POST" action="database/dbProgramInterestForm.php">
-                    <input type="hidden" name="action" value="delete">
-                    <button type="submit" name="deleteForm" value="delete">Delete</button>
-                </form>';
-}
-?>
-        
+    <?php
+        // Cancel button redirects appropriately based on the presence of an ID in the URL
+        if (isset($_GET['id'])) {
+            echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+        } else {
+            echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+        }
+    ?>
+<?php endif; ?>
+
+<!-- Buttons for submitted form -->
+<?php if ($programData): ?>
+    <!-- Delete Button -->
+    <form method="POST" action="database/dbProgramInterestForm.php">
+        <input type="hidden" name="action" value="delete">
+        <button type="submit" name="deleteForm" value="delete">Delete</button>
+    </form>
+
+    <!-- Return to Completed Forms Button -->
+    <form method="GET" action="completedForms.php">
+        <button type="submit" class="button cancel">Completed Forms</button>
+    </form>
+<?php endif; ?>
+
     </body>
 </html>
