@@ -8,18 +8,48 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = null;
+
+function data_dump($val){
+    echo "<pre>";
+    var_dump($val);
+    echo "</pre>";
+    die();
+}
 
 if(isset($_SESSION['_id'])){
+    require_once("database/dbFamily.php");
+    require_once("database/dbChildren.php");
+    require_once('database/dbBrainBuildersRegistration.php');
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $family = retrieve_family_by_id($_GET['id'] ?? $userID);
+    $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
+    //data_dump($children);
+    $address = $family->getAddress();
+    $city = $family->getCity();
+    $phone = $family->getPhone();
+    $zip = $family->getZip();
+    $email = $family->getEmail();
+    $emergency_contact_name = $family->getEContactFirstName() . " " . $family->getEContactLastName();
+    $econtactRelation = $family->getEContactRelation();
+    $econtactPhone = $family->getEContactPhone();
+    
+    $parent2Name = null;
 }
 
 // include the header .php files
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('include/input-validation.php');
-    //require_once('database/dbBrainBuildersRegistrationForm.php');
+    require_once('database/dbChildren.php');
+    require_once('database/dbBrainBuildersRegistration.php');
     $args = sanitize($_POST, null);
+    $n = explode(" ", $args['name']);
+    //data_dump($n);
+    //$childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $_GET['id'] ?? $userID);
+    $childToRegister = retrieve_child_by_firstName_lastName_famID($n[0], $n[1], $_GET['id'] ?? $userID);
+    $success = register($args, $childToRegister['id']);
 }
 ?>
 
@@ -38,12 +68,32 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <h2>Student Information</h2><br>
             <form id="brainBuildersStudentRegistrationForm" action="" method="post">             
                 <!--Child First Name-->
+                <!--
                 <label for="child-first-name">Child First Name *</label><br><br>
                 <input type="text" name="child-first-name" id="child-first-name" required placeholder="Child First Name" required><br><br>
-
+                -->
                 <!--Child Last Name-->
+                <!--
                 <label for="child-last-name">Child Last Name *</label><br><br>
-                <input type="text" name="child-last-namee" id="child-last-name" required placeholder="Child Last Name" required><br><br>
+                <input type="text" name="child-last-name" id="child-last-name" required placeholder="Child Last Name" required><br><br>
+                -->
+
+                <!-- Child Name -->
+                <label for="name">Child Name / Nombre del Hijo*</label><br><br>
+                <select name="name" id="name" required>
+                <?php
+                foreach ($children as $c){ //cycle through each child of family account user
+                    $id = $c->getID();
+                    // Check if form was already completed for the child
+                    if (!isBrainBuildersRegistrationComplete($id)) {
+                        $name = $c->getFirstName() . " " . $c->getLastName(); //display name if they don't have a form filled out for them
+                        //$value = $id . "_" . $name;
+                        echo "<option>$name</option>";
+                    }
+                }
+                ?>
+                </select>
+
 
                 <!--Gender-->
                 <label for="gender">Gender *</label><br><br>
@@ -148,19 +198,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <br>
                 <!--Parent 1 Name-->
                 <label for="parent1-name">Full Name *</label><br><br>
-                <input type="text" id="parent1-name" name="parent1-name" required placeholder="Parent 1 Full Name"><br><br>
+                <input type="text" id="parent1-name" name="parent1-name" required placeholder="Parent 1 Full Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>"><br><br>
 
                 <!--Cell Phone-->
                 <label for="parent1-phone">Primary Phone Number *</label><br><br>
-                <input type="tel" id="parent1-phone" name="parent1-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="parent1-phone" name="parent1-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($phone); ?>"><br><br>
 
                 <!--Street Address-->
                 <label for0="parent1-address">Street Address *</label><br><br>
-                <input type="text" id="parent1-address" name="parent1-address" required placeholder="Enter your street address"><br><br>
+                <input type="text" id="parent1-address" name="parent1-address" required placeholder="Enter your street address" value="<?php echo htmlspecialchars($address); ?>"><br><br>
 
                 <!--City-->
                 <label for="parent1-city">City *</label><br><br>
-                <input type="text" id="parent1-city" name="parent1-city" required placeholder="Enter your city"><br><br>
+                <input type="text" id="parent1-city" name="parent1-city" required placeholder="Enter your city" value="<?php echo htmlspecialchars($city); ?>"><br><br>
 
                 <!--State-->
                 <label for="parent1-state">State *</label><br><br>
@@ -220,33 +270,33 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Zip-->
                 <label for="parent1-zip">Zip Code *</label><br><br>
-                <input type="text" id="parent1-zip" name="parent1-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code"><br><br>
+                <input type="text" id="parent1-zip" name="parent1-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($zip); ?>"><br><br>
 
                 <!--Email-->
                 <label for="parent1-email">Email *</label><br><br>
-                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter your city"><br><br>
+                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email" value="<?php echo htmlspecialchars($email); ?>"><br><br>
 
                 <!--Alternate Phone-->
-                <label for="parent1-altPhone" required>Alternate Phone Number</label><br><br>
-                <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <label for="parent1-altPhone">Alternate Phone Number</label><br><br>
+                <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
 
             <h3>Parent 2</h3>
             <br>
                 <!--Parent 2 Name-->
                 <label for="parent2-name">Full Name</label><br><br>
-                <input type="text" id="parent2-name" name="parent2-name" placeholder="Parent 1 Full Name"><br><br>
+                <input type="text" id="parent2-name" name="parent2-name" placeholder="Parent 2 Full Name" value="<?php echo htmlspecialchars($family->getFirstName2() . " " . $family->getLastName2() ?? ""); ?>"><br><br>
 
                 <!--Cell Phone-->
                 <label for="parent2-phone">Primary Phone Number</label><br><br>
-                <input type="tel" id="parent2-phone" name="parent2-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="parent2-phone" name="parent2-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($family->getPhone2() ?? ""); ?>"><br><br>
 
                 <!--Street Address-->
                 <label for0="parent2-address">Street Address</label><br><br>
-                <input type="text" id="parent2-address" name="parent2-address" placeholder="Enter your street address"><br><br>
+                <input type="text" id="parent2-address" name="parent2-address" placeholder="Enter your street address" value="<?php echo htmlspecialchars($family->getAddress2() ?? ""); ?>"><br><br>
 
                 <!--City-->
                 <label for="parent2-city">City</label><br><br>
-                <input type="text" id="parent2-city" name="parent2-city" placeholder="Enter your city"><br><br>
+                <input type="text" id="parent2-city" name="parent2-city" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getCity2()); ?>"><br><br>
 
                 <!--State-->
                 <label for="parent2-state">State</label><br><br>
@@ -306,11 +356,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Zip-->
                 <label for="parent2-zip" required>Zip Code</label><br><br>
-                <input type="text" id="parent2-zip" name="parent2-zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code"><br><br>
+                <input type="text" id="parent2-zip" name="parent2-zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($family->getZip2()); ?>"><br><br>
 
                 <!--Email-->
                 <label for="parent2-email" required>Email</label><br><br>
-                <input type="text" id="parent2-email" name="parent2-email" placeholder="Enter your city"><br><br>
+                <input type="text" id="parent2-email" name="parent2-email" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getEmail2()); ?>"><br><br>
 
                 <!--Alternate Phone-->
                 <label for="parent2-altPhone" required>Alternate Phone Number</label><br><br>
@@ -322,7 +372,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Name-->
                 <label for="emergency-name1" required>Full Name *</label><br><br>
-                <input type="text" id="emergency-name1" name="emergency-name1" required placeholder="Enter full name"><br><br>
+                <input type="text" id="emergency-name1" name="emergency-name1" required placeholder="Enter full name" value="<?php echo htmlspecialchars($emergency_contact_name); ?>"><br><br>
 
                 <!--Relationship-->
                 <label for="emergency-relationship1" required>Relationship to Child *</label><br><br>
@@ -330,7 +380,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Phone-->
                 <label for="emergency-phone1" required>Phone *</label><br><br>
-                <input type="tel" id="emergency-phone1" name="emergency-phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="emergency-phone1" name="emergency-phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($econtactPhone); ?>"><br><br>
 
                 <h3>Emergency Contact 2</h3><br>
 
@@ -440,7 +490,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 
                 <div class="radio-group">
                     <input type="radio" id="needs-transportation" name="needs-transportation" value="needs-transportation"><label for="phone-type-cellphone">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label>
-                    <input type="radio" id="transports-themselves" name="transports-themselves" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
+                    <input type="radio" id="transports-themselves" name="needs-transportation" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
                 </div>
 
             <br><br>
@@ -526,7 +576,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Parent/Guardian Name-->
                 <label for="waiver-parent-name">Parent/Guardian Name *</label><br><br>
-                <input type="text" name="waiver-parent-name" id="waiver-parent-name" required placeholder="Parent/Guardian Name" required><br><br>
+                <input type="text" name="waiver-parent-name" id="waiver-parent-name" required placeholder="Parent/Guardian Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>" required><br><br>
 
                 <!--Provider's Name-->
                 <label for="waiver-provider-name">Provider's Name *</label><br><br>
@@ -550,7 +600,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="date" id="waiver-date" name="waiver-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+
+                <?php
+                    if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                        if (isset($_GET['id'])) {
+                            echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                        } else {
+                            echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                        }
+                    } 
+                ?>
+
+                <?php 
+                if (isset($_GET['id'])) {
+                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                } else {
+                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                }
+                ?>
+                <!--<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>-->
             </form>
         </div>
 
