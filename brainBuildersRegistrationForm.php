@@ -18,9 +18,11 @@ function data_dump($val){
 }
 
 if(isset($_SESSION['_id'])){
+    require_once("database/dbFamily.php");
     $loggedIn = true;
     $accessLevel = $_SESSION['access_level'];
     $userID = $_SESSION['_id'];
+    $family = retrieve_family_by_id($_GET['id'] ?? $userID);
 }
 
 // include the header .php files
@@ -29,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     require_once('database/dbChildren.php');
     require_once('database/dbBrainBuildersRegistration.php');
     $args = sanitize($_POST, null);
-    $childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $userID);
+    $childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $_GET['id'] ?? $userID);
     $success = register($args, $childToRegister['id']);
 }
 ?>
@@ -159,7 +161,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <br>
                 <!--Parent 1 Name-->
                 <label for="parent1-name">Full Name *</label><br><br>
-                <input type="text" id="parent1-name" name="parent1-name" required placeholder="Parent 1 Full Name"><br><br>
+                <input type="text" id="parent1-name" name="parent1-name" required placeholder="Parent 1 Full Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>"><br><br>
 
                 <!--Cell Phone-->
                 <label for="parent1-phone">Primary Phone Number *</label><br><br>
