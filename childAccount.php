@@ -78,13 +78,13 @@ $child = retrieve_child_by_id($_GET['id']);
         </div>
 
 
-        <?php if($_SESSION['access_level'] == 1): ?>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1): ?>
             <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 3rem;">Return to Dashboard</a>
         <?php endif ?>
-        <?php if($_SESSION['access_level'] >= 2 && !isset($_GET['findChildren'])): ?>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2 && !isset($_GET['findChildren'])): ?>
             <a class="button cancel button_style" href="findFamily.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
-        <?php if($_SESSION['access_level'] >= 2 && isset($_GET['findChildren'])): ?>
+        <?php if(isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2 && isset($_GET['findChildren'])): ?>
             <a class="button cancel button_style" href="findChildren.php" style="margin-top: 3rem;">Return to Search</a>
         <?php endif?>
         

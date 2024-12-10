@@ -84,9 +84,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <body>
     <?php //If the user is an admin or staff, the message should appear at index.php
         if(isset($successMessage) && $accessLevel > 1){
-            echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
+            echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
         }else if(isset($successMessage) && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-            echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
         }
     ?>
     <h1>Summer Junction Registration Form</h1>
@@ -699,7 +699,30 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="date" id="signature-date" name="signature-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit / Enviar</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel / Cancelar</a>
+
+            <?php 
+                if (isset($_GET['id'])) {
+                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel / Cancelar</a>';
+                } else {
+                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel / Cancelar</a>';
+                }
+            ?>
+
+            <?php //If the user is an admin or staff, the message should appear at index.php
+                if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                    if (isset($_GET['id'])) {
+                        echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                    } else {
+                        echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                    }
+                } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                    if (isset($_GET['id'])) {
+                        echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                    } else {
+                        echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                    }  
+                }
+            ?>
             </form>
         </div>
 

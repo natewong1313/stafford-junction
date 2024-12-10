@@ -71,7 +71,6 @@ function createFieldTripWaiverForm($form) {
             '$medical_insurance_company', '$policy_number', '$photo_waiver_signature', '$photo_waiver_date'
         );
     ";
-    echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -119,6 +118,40 @@ function getFielTripWaiverData($id){
         $row = mysqli_fetch_assoc($res);
         return $row; //return the data as an associative array;
     }
+}
+
+function getFieldTripWaiverSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbFieldTripWaiverForm INNER JOIN dbChildren ON dbChildren.id =  dbFieldTripWaiverForm.child_id;";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
+
+function getFieldTripWaiverSubmissionsFromFamily($familyId) {
+    require_once("dbChildren.php");
+    $children = retrieve_children_by_family_id($familyId);
+    if (!$children){
+        return [];
+    }
+    $childrenIds = array_map(function($child) {
+        return $child->getId();
+    }, $children);
+    $joinedIds = join(",",$childrenIds);
+    $conn = connect();
+    $query = "SELECT * FROM dbFieldTripWaiverForm JOIN dbChildren ON dbFieldTripWaiverForm.child_id = dbChildren.id WHERE dbFieldTripWaiverForm.child_id IN ($joinedIds)";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
 }
 ?>
 

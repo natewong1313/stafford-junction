@@ -84,7 +84,10 @@ def should_ignore_upload(dir):
 
 
 if __name__ == "__main__":
-    run_new_sql_files()
+    try:
+        run_new_sql_files()
+    except:
+        print("Sql failed")
     do_connection()
     do_upload()
     ssh_client.close()

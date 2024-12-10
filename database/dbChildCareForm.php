@@ -82,7 +82,8 @@ function createChildCareForm($form) {
             '$parent2_cell_phone', '$parent2_home_phone', '$parent2_work_phone', '$guardian_signature', '$signature_date'
         );
     ";
-    echo $query;
+    
+
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -104,7 +105,6 @@ function createChildCareForm($form) {
         SET medical_notes = '$medical_issues'
         WHERE id = '$child_id';
     ";  
-     echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -124,8 +124,6 @@ function createChildCareForm($form) {
         INSERT INTO dbUnallowedFoods (id, name)
         VALUES ('$child_id', '$religious_foods');
     ";
-
-    echo $query;
 
     // Execute query
     $result = mysqli_query($connection, $query);
@@ -185,6 +183,40 @@ function getChildCareWaiverData($id){
         $row = mysqli_fetch_assoc($res);
         return $row; //return the data as an associative array;
     }
+}
+
+function getChildCareWaiverSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbChildCareWaiverForm;";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
+
+function getChildCareWaiverSubmissionsFromFamily($familyId) {
+    require_once("dbChildren.php");
+    $children = retrieve_children_by_family_id($familyId);
+    if (!$children){
+        return [];
+    }
+    $childrenIds = array_map(function($child) {
+        return $child->getId();
+    }, $children);
+    $joinedIds = join(",",$childrenIds);
+    $conn = connect();
+    $query = "SELECT * FROM dbChildCareWaiverForm JOIN dbChildren ON dbChildCareWaiverForm.child_id = dbChildren.id WHERE dbChildCareWaiverForm.child_id IN ($joinedIds)";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
 }
 
 ?>

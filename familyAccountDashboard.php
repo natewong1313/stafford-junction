@@ -34,6 +34,10 @@ if($_SESSION['logged_in'] == false){
             echo '<div class="error-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Failed to Enroll! Child already enrolled or inelligible</div>';
         }
         ?>
+        <?php if(isset($_GET['updateSuccess'])){
+            echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Profile Updated!</div>';
+        }
+        ?>
         <main class='dashboard'>
         <?php if (isset($_GET['pcSuccess'])): ?>
             <div class="happy-toast">Password changed successfully!</div>

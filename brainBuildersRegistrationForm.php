@@ -8,6 +8,14 @@ error_reporting(E_ALL);
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
+$success = null;
+
+function data_dump($val){
+    echo "<pre>";
+    var_dump($val);
+    echo "</pre>";
+    die();
+}
 
 if(!isset($_SESSION['_id'])){
     header('Location: login.php');
@@ -112,7 +120,6 @@ try {
         ?>
         
         <div id="formatted_form">
-
             <!-- Form to obtain child autofill information -->
             <form id="childSelectBrainBuilders" method="GET" action="">
                 <?php require_once('domain/Children.php') ?>
@@ -433,7 +440,6 @@ try {
                     value="<?php echo isset($family_altphone1) ? $family_altphone1 : ''; ?>"><br><br><br>
 
                 <h2>Parent 2 Information</h2><hr><br>
-
                 <!--Parent 2 Name-->
                 <label for="parent2_name">Full Name</label><br><br>
                 <input type="text" name="parent2_name" id="parent2_name"
@@ -457,7 +463,7 @@ try {
                 <input type="text" name="parent2_city" id="parent2_city"
                     placeholder="Parent 2 city" 
                     value="<?php echo isset($family_city2) ? $family_city2 : ''; ?>"><br><br>
-
+              
                 <!--State-->
                 <label for="parent2_state">State </label><br><br>
                 <select name="parent2_state" id="parent2_state">
@@ -783,7 +789,7 @@ try {
                 <label for="waiver_parent_name">Parent/Guardian Name *</label><br><br>
                 <input type="text" name="waiver_parent_name" id="waiver_parent_name"  
                     required placeholder="Parent/Guardian Name"><br><br>
-
+              
                 <!--Provider's Name-->
                 <label for="waiver_provider_name">Provider's Name *</label><br><br>
                 <input type="text" name="waiver_provider_name" id="waiver_provider_name"
@@ -814,7 +820,6 @@ try {
                 <button type="submit" id="submit">Submit</button>
                 <!--redirects with 'id' if it exists-->
                 <a class="button cancel" href="fillForm.php<?php echo isset($_GET['id']) ? '?id=' . urlencode($_GET['id']) : ''; ?>" style="margin-top: .5rem">Cancel</a>
-            
             </form>
         </div>
 

@@ -96,6 +96,8 @@
         $permission_array['viewlocation.php'] = 2;
         $permission_array['findfamily.php'] = 2;
         $permission_array['findchildren.php'] = 2;
+        $permission_array['formsearch.php'] = 2;
+        $permission_array['formsearchresult.php'] = 2;
         $permission_array['fillformstaff.php'] = 2;
         $permission_array['familysignupstaff.php'] = 2;
         //pages only admin can view
