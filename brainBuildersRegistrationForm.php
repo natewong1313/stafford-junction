@@ -561,7 +561,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <input type="date" id="waiver-date" name="waiver-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit</button>
-                <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
+
+                <?php
+                    if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                        if (isset($_GET['id'])) {
+                            echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                        } else {
+                            echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                        }
+                    } 
+                ?>
+
+                <?php 
+                if (isset($_GET['id'])) {
+                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+                } else {
+                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+                }
+                ?>
+                <!--<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>-->
             </form>
         </div>
 
