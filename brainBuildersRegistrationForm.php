@@ -278,7 +278,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Alternate Phone-->
                 <label for="parent1-altPhone">Alternate Phone Number</label><br><br>
-                <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555"><br><br>
+                <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
 
             <h3>Parent 2</h3>
             <br>
