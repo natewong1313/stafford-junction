@@ -235,7 +235,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <!--Email-->
                 <label for="parent1-email">Email *</label><br><br>
-                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter your city"><br><br>
+                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email"><br><br>
 
                 <!--Alternate Phone-->
                 <label for="parent1-altPhone" required>Alternate Phone Number</label><br><br>
