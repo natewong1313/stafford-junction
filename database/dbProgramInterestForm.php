@@ -323,6 +323,7 @@ function showAvailabilityCheckbox($data) {
 }
 ?>
 
+<?php
 function getProgramInterestSubmissions() {
     $conn = connect();
     $query = "SELECT 
