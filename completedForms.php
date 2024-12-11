@@ -64,7 +64,7 @@ $programInterestForm = getProgramInterestFormData($userID);
         <!--Print out the school supplies form for each child in the family-->
         <?php if (!empty($school_supplies_forms)): ?>
             <h2 style="margin-left: 20px; display: inline;">School Supplies Forms</h2>
-            <ul>
+            <ul style="margin-left: 40px;"> <!-- Indent all list items -->
                 <?php foreach ($school_supplies_forms as $form): ?>
                     <li>
                         Child Name: <?= htmlspecialchars($form['child_name']) ?>
@@ -77,7 +77,7 @@ $programInterestForm = getProgramInterestFormData($userID);
         <!--Print out the angel gift form for the family-->
         <?php if (!empty($angel_gift_forms)): ?>
             <h2 style="margin-left: 20px; display: inline;">Angel Gift Forms</h2>
-            <ul>
+            <ul style="margin-left: 40px;"> <!-- Indent all list items -->
                 <?php foreach ($angel_gift_forms as $form): ?>
                     <li>
                         Child Name: <?= htmlspecialchars($form['child_name']) ?>
