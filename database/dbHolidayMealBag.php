@@ -18,6 +18,23 @@ function get_data_by_family_id($id){
 
 }
 
+function deleteHolidayMealBagForm($family_id) {
+    $conn = connect();
+    
+    // SQL query to delete the form data based on family_id
+    $query = "DELETE FROM dbHolidayMealBagForm WHERE family_id = '" . $family_id . "';";
+    
+    // Execute the query and check if it was successful
+    if (mysqli_query($conn, $query)) {
+        mysqli_commit($conn);
+        mysqli_close($conn);
+        return true;
+    } else {
+        mysqli_close($conn);
+        return false;
+    }
+}
+
 function getHolidayMealBagSubmissions() {
     $conn = connect();
     $query = "SELECT * FROM dbHolidayMealBagForm INNER JOIN dbFamily ON dbFamily.id = dbHolidayMealBagForm.family_id;";

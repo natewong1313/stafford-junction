@@ -43,6 +43,93 @@ function isBackToSchoolFormComplete($childID) {
     return $complete;
 }
 
+// Function to retrieve completed School Supplies forms by family ID
+function get_school_supplies_form_by_family_id($familyID) {
+    $connection = connect();
+
+    // Query to join children table and retrieve forms based on family ID
+    $query = "
+        SELECT ssf.*
+        FROM dbSchoolSuppliesForm ssf
+        INNER JOIN dbChildren c ON ssf.child_id = c.id
+        WHERE c.family_id = $familyID
+    ";
+
+    $result = mysqli_query($connection, $query);
+    $forms = [];
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $forms[] = $row;
+        }
+    }
+
+    mysqli_close($connection);
+
+    return $forms; // Return an array of forms or an empty array if none found
+}
+
+function getSchoolSuppliesFormById($form_id) {
+    $conn = connect();
+    $query = "SELECT * FROM dbSchoolSuppliesForm WHERE id = $form_id";
+    $result = mysqli_query($conn, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $form_data = mysqli_fetch_assoc($result);
+        mysqli_close($conn);
+        return $form_data;
+    }
+    mysqli_close($conn);
+    return null;
+}
+
+// Check for delete action and process the deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    session_start();
+    
+    // Get the form ID to delete from the POST request
+    $form_id = $_POST['form_id']; // Ensure form_id is passed from the form
+
+    if (deleteSchoolSuppliesForm($form_id)) {
+        // Redirect to the appropriate page after successful deletion
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=deleted&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?status=deleted");
+        }
+        exit;
+    } else {
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=errord&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?error=deleted");
+        }
+        exit;
+    }
+}
+
+// Function to delete a specific school supplies form
+function deleteSchoolSuppliesForm($form_id) {
+    $connection = connect();
+    mysqli_begin_transaction($connection);
+
+    try {
+        // Delete the main form record
+        $deleteForm = "DELETE FROM dbSchoolSuppliesForm WHERE id = $form_id";
+        if (mysqli_query($connection, $deleteForm)) {
+            // Commit the transaction
+            mysqli_commit($connection);
+            return true;
+        } else {
+            throw new Exception("Error deleting form with ID: $form_id");
+        }
+    } catch (Exception $e) {
+        // Rollback if any query fails
+        mysqli_rollback($connection);
+        return false;
+    } finally {
+        mysqli_close($connection);
+    }
+}
 
 function getSchoolSuppliesSubmissions() {
     $conn = connect();

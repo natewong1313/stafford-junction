@@ -1,5 +1,69 @@
 <?php
 
+require_once("dbinfo.php");
+require_once("dbFamily.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    session_start();
+    $family_id = $_GET['id'] ?? $_SESSION['_id'];
+    if (deleteProgramInterestForm($family_id)) {
+        //redirect to fillForm after successful deletion
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=deleted&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?status=deleted");
+        }
+        exit;
+    } else {
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=errord&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?error=deleted");
+        }
+        exit;
+    }
+}
+
+
+function deleteProgramInterestForm($family_id) {
+    $connection = connect();
+    mysqli_begin_transaction($connection);
+
+    try {
+        // Get the form ID for the family
+        $formQuery = "SELECT id FROM dbProgramInterestForm WHERE family_id = $family_id";
+        $formResult = mysqli_query($connection, $formQuery);
+        if (!$formResult || mysqli_num_rows($formResult) <= 0) {
+            throw new Exception("Form not found for family ID: $family_id");
+        }
+        $formRow = mysqli_fetch_assoc($formResult);
+        $form_id = $formRow['id'];
+
+        // Delete from related tables
+        $deleteProgramInterests = "DELETE FROM dbProgramInterestsForm_ProgramInterests WHERE form_id = $form_id";
+        $deleteTopicInterests = "DELETE FROM dbProgramInterestsForm_TopicInterests WHERE form_id = $form_id";
+        $deleteAvailability = "DELETE FROM dbAvailability WHERE form_id = $form_id";
+
+        mysqli_query($connection, $deleteProgramInterests);
+        mysqli_query($connection, $deleteTopicInterests);
+        mysqli_query($connection, $deleteAvailability);
+
+        // Delete the main form record
+        $deleteForm = "DELETE FROM dbProgramInterestForm WHERE id = $form_id";
+        mysqli_query($connection, $deleteForm);
+
+        // Commit the transaction
+        mysqli_commit($connection);
+        return true;
+    } catch (Exception $e) {
+        // Rollback if any query fails
+        mysqli_rollback($connection);
+        return false;
+    } finally {
+        mysqli_close($connection);
+    }
+}
+
 function createProgramInterestForm($form) {
     $connection = connect();
 
@@ -257,6 +321,7 @@ function showAvailabilityCheckbox($data) {
         echo "disabled";
     }
 }
+?>
 
 function getProgramInterestSubmissions() {
     $conn = connect();

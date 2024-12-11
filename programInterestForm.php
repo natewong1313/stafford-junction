@@ -293,7 +293,7 @@ if (!$data) {
 
                 <!-- 9. Number of Adults in Household-->
                 <label for="adult_num">* How Many Adult in Household? / ¿Cuántos adultos hay en el hogar?</label><br><br>
-                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" <?php showProgramInterestData($data['adult_num'] ?? null, null)?>>
+                <input type="number" name="adult_num" id="adult_num" required placeholder="Number of Adults/Número de adultos" <?php showProgramInterestData($data['adult_num'] ?? null, null)?>>
                 <br><br>
 
                 <h2>Programs of Interest / Programas de interés</h2>
@@ -594,18 +594,36 @@ if (!$data) {
                 </div>
                 <br><br>
 
-                <button type="submit" id="submit">Submit</button>
-                
-                <?php 
-                    if (isset($_GET['id'])) {
-                        echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
-                    } else {
-                        echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
-                    }
-                ?>
-                <br><br><br>
-            </form>
-        </div>
+<!-- Submit and Cancel Buttons (displayed only when form is not submitted) -->
+<?php if (!$programData): ?>
+    <button type="submit" id="submit">Submit</button>
+
+    <?php
+        // Cancel button redirects appropriately based on the presence of an ID in the URL
+        if (isset($_GET['id'])) {
+            echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+        } else {
+            echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+        }
+    ?>
+<?php endif; ?>
+
+<!-- Buttons for submitted form -->
+<?php if ($programData): ?>
+    <!-- Delete Button -->
+    <form method="POST" action="database/dbProgramInterestForm.php">
+        <input type="hidden" name="action" value="delete">
+        <button type="submit" name="deleteForm" value="delete">Delete</button>
+    </form>
+
+    <!-- Return to Dashboard Button -->
+        <?php if($accessLevel > 1):?> <!--If staff or admin, return back to index.php-->
+                <a class="button cancel" href="index.php">Return to Dashboard</a>
+            <?php else: ?> <!--If family, return back to family home page-->
+                <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
+        <?php endif ?>    
+<?php endif; ?>
+
         <?php
             // if submission successful, create pop up notification and direct user back to fill form page
             // if fail, notify user on program interest form page
@@ -623,6 +641,6 @@ if (!$data) {
                 }
             }
         ?>
-        
+
     </body>
 </html>
