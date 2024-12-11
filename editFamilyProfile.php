@@ -355,11 +355,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
                 <h3>Household Information</h3>
                 <fieldset>
-                <label for="languages">* Languages Spoken in Household</label>
-                <input type="text" id="languages" name="languages" value="<?php echo htmlspecialchars(implode(', ', $languages)); ?>">
-
-                    <label for="econtact-last-name" >Contact Last Name</label>
-                    <input type="text" id="econtact-last-name" name="econtact-last-name" value="<?php echo htmlspecialchars($econtact_last_name); ?>">
+                    <label for="income">* Estimated Household Income</label>
+                    <select id="income" name="income" required>
+                        <option value="Under $15,0000" <?php echo ($income == 'Under $15,0000') ? 'selected' : ''; ?>>Under 20,000</option>
+                        <option value="$15,000 - $24,999" <?php echo ($income == '$15,000 - $24,999') ? 'selected' : ''; ?>>20,000 - 40,000</option>
+                        <option value="$25,000 - $34,999" <?php echo ($income == '$25,000 - $34,999') ? 'selected' : ''; ?>>40,001 - 60,000</option>
+                        <option value="$35,000 - $49,999" <?php echo ($income == '$35,000 - $49,999') ? 'selected' : ''; ?>>60,001 - 80,000</option>
+                        <option value="$100,000 and above" <?php echo ($income == '$100,000 and above') ? 'selected' : ''; ?>>Over 80,000</option>
+                    </select>
+                    
+                    <label for="languages">* Languages Spoken in Household</label>
+                    <input type="text" id="languages" name="languages" value="<?php echo htmlspecialchars(implode(', ', $languages)); ?>">
 
                     <label for="econtact-phone" >Contact Phone Number</label>
                     <input type="tel" id="econtact-phone" name="econtact-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" value="<?php echo htmlspecialchars($econtact_phone); ?>">
@@ -367,6 +373,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <label for="econtact-name" >Contact Relation to You</label>
 
                 <input type="submit" name="profile-edit-form" value="Update Profile">
+</fieldset>
             </form>
             <a class="button cancel" 
                 href="<?php echo $accessLevel > 1 ? 'index.php' : 'familyAccountDashboard.php'; ?>" 

@@ -237,10 +237,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p><?php echo $family->getEContactRelation() ?></p>
             </fieldset>
 
+            <!--EDIT ALL THIS-->
             <h3>Household Information</h3>
             <fieldset>
                 <label>Income</label>
-                <p><?php echo $family->getIncome() ?></p>
+                <p><?php echo $family->getIncome() ?>
+                <select id="income" name="income" required>
+                        <option value="Under $15,0000" <?php echo ($income == 'Under $15,0000') ? 'selected' : ''; ?>>Under 20,000</option>
+                        <option value="$15,000 - $24,999" <?php echo ($income == '$15,000 - $24,999') ? 'selected' : ''; ?>>20,000 - 40,000</option>
+                        <option value="$25,000 - $34,999" <?php echo ($income == '$25,000 - $34,999') ? 'selected' : ''; ?>>40,001 - 60,000</option>
+                        <option value="$35,000 - $49,999" <?php echo ($income == '$35,000 - $49,999') ? 'selected' : ''; ?>>60,001 - 80,000</option>
+                        <option value="$100,000 and above" <?php echo ($income == '$100,000 and above') ? 'selected' : ''; ?>>Over 80,000</option>
+                    </select></p>
+
                 <!--Household Languages-->
                 <!--Current Assistance-->
                 <!--Add once there are get() for these atttributes-->
