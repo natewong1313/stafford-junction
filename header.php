@@ -143,7 +143,7 @@
                 echo('<div class="dropdown-menu">');
                 echo('<a class="dropdown-item" href="' . $path . 'findFamily.php">Search Family</a>');
                 echo('<a class="dropdown-item" href="' . $path . 'familySignUpStaff.php">Add Family Account</a>');
-                echo('<a class="dropdown-item" href="' . $path . '#">Reports</a>');
+                echo('<a class="dropdown-item" href="' . $path . 'formSearch.php">Reports</a>');
 
                 if($_SESSION['access_level'] > 2){
                     echo('<li class="nav-item dropdown">');
