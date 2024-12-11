@@ -42,7 +42,7 @@ $child = retrieve_child_by_id($_GET['id']);
     </head>
     <body>
         <?php 
-            require_once('header.php');
+            //require_once('header.php');
             require_once('include/output.php');
         ?>
         <h1>Account Page for <?php echo $child->getFirstName() . " " . $child->getLastName() ?></h1>
@@ -75,11 +75,11 @@ $child = retrieve_child_by_id($_GET['id']);
             echo '<p>' . $child->getNotes() . '</p>';
             echo '<label>Enrolled Programs</label>';
 
-            if(isBrainBuildersRegistrationComplete($_GET['id'])){
+            if(isBrainBuildersRegistrationComplete($_GET['id'] ?? $child->getID())){
                 echo "Brain Builders" . "<br>";
             }
 
-            if(isSummerJunctionFormComplete($_GET['id'])){
+            if(isSummerJunctionFormComplete($_GET['id'] ?? $child->getID())){
                 echo "Summer Junction" . "<br>";
             }
 
