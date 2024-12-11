@@ -80,7 +80,7 @@ $children = getChildren($userID);
         </div>
 
         
-        <?php if($_SESSION['access_level'] == 1): ?>
+        <?php if($_SESSION['access_level'] >= 1): ?>
             <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
         <?php endif ?>
         
