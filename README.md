@@ -81,14 +81,14 @@ Below are the steps required to run the project on your local machine for develo
 3. Clone the Stafford Junction Client Management Software repo by running the following command: 'git clone https://github.com/natewong1313/stafford-junction.git'
 4. Start the XAMPP MySQL server and Apache server
 5. Open the PHPMyAdmin console by navigating to [http://localhost/phpmyadmin/](http://localhost/phpmyadmin/)
-6. Create a new database named `odhsmd`. With the database created, navigate to it by clicking on it in the lefthand pane
-7. Import the `odhsmd.sql` file located in `htdocs/stafford-junction/sql` into this new database
+6. Create a new database named `staffordjunctionmd`. With the database created, navigate to it by clicking on it in the lefthand pane
+7. Import the `staffordjunctionmd.sql` file located in `htdocs/stafford-junction/sql` into this new database
 8. Create a new user by navigating to `Privileges -> New -> Add user account`
 9. Enter the following credentials for the new user:
 
-- Name: `odhsmd`
+- Name: `staffordjunctionmd`
 - Hostname: `Local`
-- Password: `odhsmd`
+- Password: `staffordjunctionmd`
 - Leave everything else untouched
 
 10. Navigate to [http://localhost/ODHS-Animal/](http://localhost/stafford-junction/)
@@ -144,6 +144,13 @@ Below is a list of improvements that could be made to the system in subsequent s
   - Additional reports could be added
   - Visual components could be added (graphs)
 - Volunteer management
+- Forms
+  - Finish Brain Builders Review Form
+  - Unenroll from program
+  - Viewing completed forms
+  - Editing completed forms
+  - Finish auto populate for all forms
+  - Make some forms publishable only for a period of time
 
 ## License
 
