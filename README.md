@@ -1,17 +1,12 @@
-
-# Anna was here
-
-# Old Dominion Humane Society (ODHS) Medicine Tracker
+# Stafford Junction Client Management Software
 
 ## Purpose
 
-This project is the result of a semesters' worth of collaboration among UMW students. The goal of the project was to create a web application that the Old Dominion Humane Society organization could utilize to make it easier to manage animals and the medicines/medical treatments/vaccines that these animals recieve at the ODHS. At-a-glance features include a web-based calendar of events, event sign up, volunteer registration & login system, reporting system, basic notification system, animal registration/archiving/report generation, and location and service creation.
-# Josh was here
+The purpose of this document is to outline the system to be used by Stafford Junction. This document shall serve as a reference for the system’s functionality, and outline all features and desired requirements as given by Stafford Junction. This will serve as a guide for Stafford Junction to understand how to navigate and use the software to its maximum capability.
+
 ## Authors
 
-The ODHS Medicine Tracker is based on an old open source project named "Homebase". [Homebase](https://a.link.will.go.here/) was originally developed for the Ronald McDonald Houses in Maine and Rhode Island by Oliver Radwan, Maxwell Palmer, Nolan McNair, Taylor Talmage, and Allen Tucker.
-
-Maria E. Peralta
+The Stafford Junction Client Management Software is based on an old open source project named "Homebase". [Homebase](https://a.link.will.go.here/) was originally developed for the Ronald McDonald Houses in Maine and Rhode Island by Oliver Radwan, Maxwell Palmer, Nolan McNair, Taylor Talmage, and Allen Tucker.
 
 Modifications to the original Homebase code were made by the Fall 2022 semester's group of students. That team consisted of Jeremy Buechler, Rebecca Daniel, Luke Gentry, Christopher Herriott, Ryan Persinger, and Jennifer Wells.
 
@@ -19,20 +14,26 @@ A major overhaul to the existing system took place during the Spring 2023 semest
 
 The Gwyneth's Gifts VMS code was modified in the Fall of 2023, revamping the code into the present ODHS Medicine Tracker code. Many of the existing database tables were reused, and many other tables were added. Some portions of the software's functionality were reused from the Gwyneth's Gifts VMS code. Other functions were created to fill the needs of the ODHS Medicine Tracker. The team that made these modifications and changes consisted of Garrett Moore, Artis Hart, Riley Tugeau, Julia Barnes, Ryan Warren, and Collin Rugless.
 
+The ODHS Medicine Tracker code underwent further updates and refinements to rebase the software into a client management system. The team responsible for these recent changes consisted of Selby Heyman, Ian MacLeod, Maria Peralta, Brandon Rogers, Anna Swann, Josh Williams, and Nathan Wong.
+
 ## User Types
 
-There are two types of users (also referred to as 'roles') within the ODHS.
+There are four types of users (also referred to as 'roles') within Stafford Junction.
 
 - Admins
-- SuperAdmins
+- Staff
+- Family
+- Volunteer
 
-SuperAdmins have the ability to manage users, generate reports, assign users to events, reset user passwords, and modify a user's status.
+Admins have the ability to perform all actions as a staff member, as well as create staff acccounts.
 
-Admins have all of the abilities that SuperAdmins have, but they cannot modify other users information.
+Staff have the ability to find, view, and edit family accounts and children information, as well as fill out forms for families, fill out staff-only forms, generate reports, manually create a family accounts, manually update a family's account information, and archive/unarchive family accounts.
 
-Users of any type can have their status changed by SuperAdmins to Inactive to prevent them from signing up for events. Inactive users will also stop appearing in the list of volunteers available to be assigned. Additionally, the reports page allows staff members to filter out inactive users.
+Families have the ability to enroll in programs, fill out waivers and forms, view and edit their own family account, and add children to their account. 
 
-There is also a root admin account with username 'vmsroot'. The default password for this account is 'vmsroot', but it must be changed upon initial log in. This account has hardcoded SuperAdmin privileges but cannot be assigned to events and does not have a user profile. It is crucial that this account be given a strong password and that the password be easily remembered, as it cannot easily be reset. This account should be used for system administration purposes only.
+Volunteer functionality is not currently in a working state.
+
+There is also a root admin account with username 'vmsroot'. The default password for this account is 'vmsroot', but it must be changed upon initial log in. This account has hardcoded admin privileges but cannot be assigned to events and does not have a user profile. It is crucial that this account be given a strong password and that the password be easily remembered, as it cannot easily be reset. This account should be used for system administration purposes only.
 
 ## Features
 
@@ -41,54 +42,30 @@ Below is an in-depth list of features that were implemented within the system
 - User registration and log in
 - Dashboard
 - User Management
-  - Change own password
-  - View volunteer hours (print-friendly)
+  - Reset password
   - Modify profile
   - Modify user status
-  - Modify user role (AKA access level) (SuperAdmin only)
-  - Reset password
   - User search
-- Appointments and Appointment Management
-  - Calendar with appointment listings
-  - Calendar day view with appointment listings
-  - Appointment search
-  - Appointment details page
-  - Volunteer event sign up
-  - Assign Volunteer to event
-  - Attach event training media (links, pictures, videos)
-  - Attach post-event media (Admin/SuperAdmin only)
-  - View Appointment Roster (print-friendly)
-  - Modify appointment details
-  - Create new appointment
-  - Delete appointment
-  - Complete appointment
+  - Add children
 - Reports (print-friendly)
-  - General Animal Reports
-- Notification system, with notifications generated when
-  - A user signs up for an event (sent to all staff members)
-  - A user is assigned to an event by a staff member (sent to that volunteer)
-  - A new event is created by a staff member (sent to all users)
-  - An appointment is close
-  - An appointment is due today
-  - An appointment is overdue
-- Animal Management
-  - Create Animals
-  - Modify Animals
-  - Delete Animals
-  - Archive Animals
-  - Search Animals in the database
-- Services
-  - Create Service
-  - Modify Service
-  - Delete Service
-- Locations
-  - Create Location
-  - Modify Location
-  - Delete Location
+  - General Event Program Reports
+  - Exportable by CSV
+- Forms
+  - Holiday Meal Bag Form
+  - School Supplies Form
+  - Spring Break Form
+  - Angel Gifts Wish Form
+  - Child Care Waiver Form
+  - Field Trip Waiver Form
+  - Program Interest Form
+  - Brain Builders Student Registration Form
+  - Brain Builders Holiday Party Form
+  - Summer Junction Registration Form
+
 
 ## Design Documentation
 
-Several types of diagrams describing the design of the ODHS Medicine Tracker, including sequence diagrams and use case diagrams, are available. Please contact Dr. Polack for access.
+Several types of diagrams describing the design of the Stafford Junction Client Management Software, including sequence diagrams and use case diagrams, are available. Please contact Dr. Polack for access.
 
 ## "localhost" Installation
 
@@ -101,33 +78,24 @@ Below are the steps required to run the project on your local machine for develo
 - For Ubuntu, the htdocs path is `/opt/lampp/htdocs/`
 - For Windows, the htdocs path is `C:\xampp\htdocs`
 
-3. Clone the ODHS Medicine Tracker repo by running the following command: 'https://github.com/crugless54/ODHS-Animal.git'
+3. Clone the Stafford Junction Client Management Software repo by running the following command: 'git clone https://github.com/natewong1313/stafford-junction.git'
 4. Start the XAMPP MySQL server and Apache server
 5. Open the PHPMyAdmin console by navigating to [http://localhost/phpmyadmin/](http://localhost/phpmyadmin/)
-6. Create a new database named `homebasedb`. With the database created, navigate to it by clicking on it in the lefthand pane
-7. Import the `vms.sql` file located in `htdocs/ODHS-Animal/sql` into this new database
+6. Create a new database named `staffordjunctionmd`. With the database created, navigate to it by clicking on it in the lefthand pane
+7. Import the `staffordjunctionmd.sql` file located in `htdocs/stafford-junction/sql` into this new database
 8. Create a new user by navigating to `Privileges -> New -> Add user account`
 9. Enter the following credentials for the new user:
 
-- Name: `homebasedb`
+- Name: `staffordjunctionmd`
 - Hostname: `Local`
-- Password: `homebasedb`
+- Password: `staffordjunctionmd`
 - Leave everything else untouched
 
-10. Navigate to [http://localhost/ODHS-Animal/](http://localhost/ODHS-Animal/)
+10. Navigate to [http://localhost/ODHS-Animal/](http://localhost/stafford-junction/)
 11. Log into the root user account using the username `vmsroot` with password `vmsroot`
 12. Change the root user password to a strong password
 
 Installation is now complete.
-
-## Reset root user credentials
-
-In the event of being locked out of the root user, the following steps will allow resetting the root user's login credentials:
-
-1. Using the PHPMyAdmin console, delete the `vmsroot` user row from the `dbPersons` table
-2. Clear the SiteGround dynamic cache [using the steps outlined below](#clearing-the-siteground-cache)
-3. Navigate to gwyneth/insertAdmin.php. You should see a message that says `ROOT USER CREATION SUCCESS`
-4. You may now log in with the username and password `vmsroot`
 
 ## Platform
 
@@ -139,7 +107,7 @@ Access to the SiteGround Dashboard requires a SiteGround account with access. Ac
 
 ### Localhost to Siteground
 
-Follow these steps to transfter your localhost version of the ODHS Medicine Tracker code to Siteground. For a video tutorial on how to complete these steps, contact Dr. Polack.
+Follow these steps to transfer your localhost version of the Stafford Junction Client Management Software code to Siteground. For a video tutorial on how to complete these steps, contact Dr. Polack.
 
 1. Create an FTP Account on Siteground, giving you the necessary FTP credentials. (Hostname, Username, Password, Port)
 2. Use FTP File Transfer Software (Filezilla, etc.) to transfer the files from your localhost folders to your siteground folders using the FTP credentials from step 1.
@@ -150,7 +118,7 @@ Follow these steps to transfter your localhost version of the ODHS Medicine Trac
 - Password - Created when user is created. Password is auto generated and can be changed if you like.
 
 4. Access the newly created database by navigating to the PHPMyAdmin tab and selecting the 'Access PHPMyAdmin' button. This will redirect you to the PHPMyAdmin page for the database you just created. Navigate to the new database by selecting it from the database list on the left side of the page.
-5. Select the 'Import' option from the database options at the top of the page. Select the 'Choose File' button and impor the "vms.sql" file from your software files.
+5. Select the 'Import' option from the database options at the top of the page. Select the 'Choose File' button and import the "vms.sql" file from your software files.
 
 - Ensure that you're keeping your .sql file up to date in order to reduce errors in your Siteground code. Keep in mind that Siteground is case-sensitive, and your database names in the Siteground files must be identical to the database names in the database.
 
@@ -162,22 +130,27 @@ There may occasionally be a hiccup if the caching system provided by SiteGround 
 
 ## External Libraries and APIs
 
-The only outside library utilized by the ODHS Medicine Tracker is the jQuery library. The version of jQuery used by the system is stored locally within the repo, within the lib folder. jQuery was used to implement form validation and the hiding/showing of certain page elements.
+The only outside library utilized by the Stafford Junction Client Management Software is the jQuery library. The version of jQuery used by the system is stored locally within the repo, within the lib folder. jQuery was used to implement form validation and the hiding/showing of certain page elements.
 
 ## Potential Improvements
 
 Below is a list of improvements that could be made to the system in subsequent semesters.
 
-- The system could generate emails and send them to users (would require access to an @odhs.com email address)
+- The system could generate emails and send them to users
   - For user email verification
   - For password reset
-  - For nofications/messages received (see below)
-- The notification system could be turned into a full-fledged messaging system
-  - The existing dbMessages table is set up to allow this
+  - For form submission confirmation
 - Reports
   - Additional reports could be added
   - Visual components could be added (graphs)
-- If a better webhosting option was chosen, file upload for pictures and documents would be better than having to use outside resources such as Google Docs or imgur for file upload
+- Volunteer management
+- Forms
+  - Finish Brain Builders Review Form
+  - Unenroll from program
+  - Viewing completed forms
+  - Editing completed forms
+  - Finish auto populate for all forms
+  - Make some forms publishable only for a period of time
 
 ## License
 

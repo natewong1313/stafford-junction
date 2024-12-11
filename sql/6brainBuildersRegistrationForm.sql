@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `dbBrainBuildersRegistrationForm`;
 --
 -- Table structure for table `dbBrainBuildersRegistrationForm`
 --

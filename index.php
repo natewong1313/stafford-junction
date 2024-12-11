@@ -62,6 +62,12 @@
                 <div class="happy-toast">Volunteer registered successfully!</div>
             <?php elseif (isset($_GET['familyRegisterSuccess'])): ?>
                 <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Account Registration Successful!</div>
+            <?php elseif (isset($_GET['updateSuccess'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Family Profile Updated!</div>
+            <?php elseif (isset($_GET['failedAccountCreate'])): ?>
+                <div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">
+                    Unable to create account, account already in system!
+                </div>
             <?php endif ?>
             
             <?php if(isset($staff)): ?>
@@ -85,6 +91,13 @@
                 </div>
                 <?php endif ?>
 
+                <?php if($_SESSION['access_level'] >= 2 || $_SESSION['account_type'] == 'admin'): ?>
+                <div class="dashboard-item" data-link="formSearch.php">
+                    <img src="images/form-dropdown-svgrepo-com.svg">
+                    <span>View Form Submissions</span>
+                </div>
+                <?php endif ?>
+              
                 <?php if($_SESSION['access_level'] >= 2): ?>
                 <div class="dashboard-item" data-link="fillFormStaff.php">
                     <img src="images/form-dropdown-svgrepo-com.svg">

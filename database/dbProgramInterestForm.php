@@ -321,6 +321,51 @@ function showAvailabilityCheckbox($data) {
         echo "disabled";
     }
 }
-
 ?>
 
+function getProgramInterestSubmissions() {
+    $conn = connect();
+    $query = "SELECT 
+        dbProgramInterestForm.*, 
+        GROUP_CONCAT(DISTINCT dbProgramInterests.interest) as program_interests,
+        GROUP_CONCAT(DISTINCT dbTopicInterests.interest) as topic_interests
+    FROM dbProgramInterestForm
+    -- handles program interests
+    LEFT JOIN dbProgramInterestsForm_ProgramInterests ON dbProgramInterestForm.id = dbProgramInterestsForm_ProgramInterests.form_id
+    LEFT JOIN dbProgramInterests ON dbProgramInterestsForm_ProgramInterests.interest_id = dbProgramInterests.id
+    -- handles topic interests
+    LEFT JOIN dbProgramInterestsForm_TopicInterests ON dbProgramInterestForm.id = dbProgramInterestsForm_TopicInterests.form_id
+    LEFT JOIN dbTopicInterests ON dbProgramInterestsForm_TopicInterests.interest_id = dbTopicInterests.id";
+    $result = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
+
+function getProgramInterestSubmissionsFromFamily($familyId) {
+    $conn = connect();
+    $query = "SELECT 
+        dbProgramInterestForm.*, 
+        GROUP_CONCAT(DISTINCT dbProgramInterests.interest) as program_interests,
+        GROUP_CONCAT(DISTINCT dbTopicInterests.interest) as topic_interests
+    FROM dbProgramInterestForm
+    -- handles program interests
+    LEFT JOIN dbProgramInterestsForm_ProgramInterests ON dbProgramInterestForm.id = dbProgramInterestsForm_ProgramInterests.form_id
+    LEFT JOIN dbProgramInterests ON dbProgramInterestsForm_ProgramInterests.interest_id = dbProgramInterests.id
+    -- handles topic interests
+    LEFT JOIN dbProgramInterestsForm_TopicInterests ON dbProgramInterestForm.id = dbProgramInterestsForm_TopicInterests.form_id
+    LEFT JOIN dbTopicInterests ON dbProgramInterestsForm_TopicInterests.interest_id = dbTopicInterests.id
+    WHERE dbProgramInterestForm.family_id = $familyId";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
+?>

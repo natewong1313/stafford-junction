@@ -211,16 +211,28 @@ try {
             <?php endif ?>
         <?php else: ?>
         <button type="submit">Submit</button><br>
-        <?php if($accessLevel > 1):?>
-            <a class="button cancel" href="index.php">Return to Dashboard</a>
-        <?php else: ?>
-            <a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>
-        <?php endif ?>
-        <?php //If the user is an admin or staff, the message should appear at index.php
-            if($successMessage && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($successMessage && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+        <?php 
+            if (isset($_GET['id'])) {
+                echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
+            } else {
+                echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
+            }
+        ?>
+        </div>
+        <?php
+           //if registration successful, create pop up notification and direct user back to login
+           if($_SERVER['REQUEST_METHOD'] == "POST" && $successMessage != ""){
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && $successMessage == "") {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
         <?php endif ?>

@@ -131,5 +131,38 @@ function deleteSchoolSuppliesForm($form_id) {
     }
 }
 
+function getSchoolSuppliesSubmissions() {
+    $conn = connect();
+    $query = "SELECT * FROM dbSchoolSuppliesForm INNER JOIN dbChildren ON dbChildren.id = dbSchoolSuppliesForm.child_id;";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    mysqli_close($conn);
+    return [];
+}
+
+function getSchoolSuppliesSubmissionsFromFamily($familyId) {
+    require_once("dbChildren.php");
+    $children = retrieve_children_by_family_id($familyId);
+    if (!$children){
+        return [];
+    }
+    $childrenIds = array_map(function($child) {
+        return $child->getId();
+    }, $children);
+    $joinedIds = join(",",$childrenIds);
+    $conn = connect();
+    $query = "SELECT * FROM dbSchoolSuppliesForm INNER JOIN dbChildren ON dbSchoolSuppliesForm.child_id = dbChildren.id WHERE dbSchoolSuppliesForm.child_id IN ($joinedIds)";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0){
+        $submissions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_close($conn);
+        return $submissions;
+    }
+    return [];
+}
 ?>
 

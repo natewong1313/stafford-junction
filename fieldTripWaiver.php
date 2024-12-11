@@ -226,7 +226,7 @@ if (!empty($missingFields)) {
     <label for="religious_foods">Foods to Avoid Due to Religious Beliefs / Alimentos a Evitar por Creencias
         Religiosas:</label><br>
     <textarea name="religious_foods" id="religious_foods" rows="3"
-        placeholder="Foods to avoid due to religious beliefs / Alimentos a evitar"></textarea><br><br>
+        placeholder="Foods to avoid due to religious beliefs / Alimentos a evitar" required></textarea><br><br>
 
     <!-- Parent or Guardian Email -->
     <label for="parent_email">Parent or Guardian Email* / Correo Electrónico del Padre o Tutor*</label><br>
@@ -322,12 +322,12 @@ if (!empty($missingFields)) {
             <!-- Medical Insurance Company -->
             <label for="insurance_company">Medical Insurance Company / Compañía de Seguro Médico</label><br>
             <input type="text" name="insurance_company" id="insurance_company"
-                placeholder="Insurance Company / Compañía de Seguros"><br><br>
+                placeholder="Insurance Company / Compañía de Seguros" required><br><br>
 
             <!-- Policy Number -->
             <label for="policy_number">Policy Number / Número de Póliza</label><br>
             <input type="text" name="policy_number" id="policy_number"
-                placeholder="Policy Number / Policy Number"><br><br>
+                placeholder="Policy Number / Policy Number" required><br><br>
         </div>
 
         <!-- Separator Line -->
@@ -437,10 +437,18 @@ if (!empty($missingFields)) {
     </form>
     </div>
     <?php //If the user is an admin or staff, the message should appear at index.php
-            if($success && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
             }
         ?>
     

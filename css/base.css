@@ -663,6 +663,10 @@ main.dashboard > p {
   height: 14rem;
 }
 
+.dashboard-item span {
+  text-align: center;
+}
+
 .dashboard-item:hover {
   background-color: var(--accent-color);
   cursor: pointer;
@@ -1231,4 +1235,41 @@ input[type="checkbox"]:checked {
 #view-family fieldset textarea:focus {
   border-color: #007bff; /* Change border color on focus */
   outline: none; /* Remove default outline */
+}
+
+.formSearch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 16px;
+}
+
+.formSearch >form {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   width: 24rem;
+   max-width: calc(100vw - 2rem);
+   gap: 0.5rem;
+}
+
+.form-search-result-subheader {
+  padding: 1rem;
+}
+
+.form-search-result-subheader > .button {
+  width: fit-content;
+  font-size: 16px;
+}
+
+.form-search-results {
+  padding: 1rem;
+}
+
+.form-search-results-table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 14px;
 }

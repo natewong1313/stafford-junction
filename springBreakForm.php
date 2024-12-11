@@ -126,7 +126,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         require_once('domain/Children.php');
                         foreach ($children as $c){
                             $id = $c->getID();
-                            var_dump($c);
                             // Check if form was already completed for the child
                             if (!isSpringBreakCampFormComplete($id)) {
                                 $name = $c->getFirstName() . " " . $c->getLastName();
@@ -205,12 +204,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     </form>
     </div>
     <?php //If the user is an admin or staff, the message should appear at index.php
-            if($success && $accessLevel > 1){
-                echo '<script>document.location = "index.php?formSubmitSuccess";</script>';
-            }else if($success && $accessLevel == 1){ //If the user is a family, the success message should apprear at family dashboard
-                echo '<script>document.location = "familyAccountDashboard.php?formSubmitSuccess";</script>';
+        if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
             }
-        ?>
+        } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+            if (isset($_GET['id'])) {
+                echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+            } else {
+                echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+            }
+        }
+    ?>
 
     </body>
 </html>

@@ -96,6 +96,8 @@
         $permission_array['viewlocation.php'] = 2;
         $permission_array['findfamily.php'] = 2;
         $permission_array['findchildren.php'] = 2;
+        $permission_array['formsearch.php'] = 2;
+        $permission_array['formsearchresult.php'] = 2;
         $permission_array['fillformstaff.php'] = 2;
         $permission_array['familysignupstaff.php'] = 2;
         //pages only admin can view
@@ -141,7 +143,7 @@
                 echo('<div class="dropdown-menu">');
                 echo('<a class="dropdown-item" href="' . $path . 'findFamily.php">Search Family</a>');
                 echo('<a class="dropdown-item" href="' . $path . 'familySignUpStaff.php">Add Family Account</a>');
-                echo('<a class="dropdown-item" href="' . $path . '#">Reports</a>');
+                echo('<a class="dropdown-item" href="' . $path . 'formSearch.php">Reports</a>');
 
                 if($_SESSION['access_level'] > 2){
                     echo('<li class="nav-item dropdown">');
