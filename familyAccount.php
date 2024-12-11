@@ -297,7 +297,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
                  
                     <label for="race2">Race</label><br><br>
-
                     <select id="race2" name="race2">
                         <option value="" disabled selected>Select Race</option>
                         <option value="Caucasian">Caucasian</option>
@@ -593,7 +592,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Current Assistance -->
                     <fieldset style="border: none;">
-                        <label for="languages" required>Do You Currently Receive Any Assistance? (WIC, SNAP, SSI, SSD, etc.)<label>
+                        <label for="assistance" required>Do You Currently Receive Any Assistance? (WIC, SNAP, SSI, SSD, etc.)<label>
                         <div id="assistance-container" ></div>
                         <button type="button" onclick="addAssistanceForm()">+ Add Assistance</button>
                     </fieldset>
