@@ -102,6 +102,7 @@ function get_angel_gift_forms_by_family_id($familyID) {
 
 ?>
 
+<?php
 function getAngelGiftSubmissions() {
     $conn = connect();
     $query = "SELECT * FROM dbAngelGiftForm INNER JOIN dbChildren ON dbAngelGiftForm.child_id = dbChildren.id;";
