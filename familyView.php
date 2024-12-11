@@ -266,7 +266,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     echo '<tbody class="standout">';
                     foreach ($children as $acct) {
                         $id = $acct->getID();
-                        echo "<tr onclick=\"window.location.href='childAccount.php?id=$id'\" style='cursor: pointer;'>";
+                        echo "<tr onclick=\"window.location.href='";
+                        echo isset($_GET['id']) ? "childAccount.php?id=$id&familyid=" . $_GET['id'] : "childAccount.php?id=$id";
+                        echo "';\" style='cursor: pointer;'>";
                         echo '<td>' . $acct->getFirstName() . ' ' . $acct->getLastName() . '</td>';
                         echo '<td>' . $acct->getBirthdate() . '</td>';
                         echo '<td>' . $acct->getGender() . '</td>';
@@ -287,32 +289,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <!-- Archive Family Buttons -->
         <?php if($_SESSION['access_level'] > 1 && !$family->isArchived()): ?>
         <form method="post">
-            <button type="submit" name="archive" class="button_stlye">Archive Family</button>
+            <button type="submit" name="archive" class="button_style">Archive Family</button>
         </form>
         <?php endif?>
         <?php if($_SESSION['access_level'] > 1 && $family->isArchived()): ?>
         <form method="post">
-            <button type="submit" name="unarchive" class="button_stlye">Unarchive Family</button>
+            <button type="submit" name="unarchive" class="button_style">Unarchive Family</button>
         </form>
         <?php endif?>
 
         <!-- Edit Family Button -->
         <?php if($_SESSION['access_level'] > 1): ?>
-            <a class="button edit" href="editFamilyProfile.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Edit Family</a>
+            <a class="button add_remove" href="editFamilyProfile.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Edit Family</a>
         <?php endif?>
         <?php if($accessLevel > 1): ?> <!--Option for staff to fill a form out for family-->
-            <a class="button edit" href="fillForm.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Fill Form</a>   
+            <a class="button add_remove" href="fillForm.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Fill Form</a>   
         <?php endif?>
         <?php if($accessLevel > 1): ?> <!--Option for staff to fill a form out for family-->
-            <a class="button edit" href="forgotPassword.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Change Password</a>   
+            <a class="button add_remove" href="forgotPassword.php?id=<?php echo $family->getId(); ?>" style="margin-top: .5rem;">Change Password</a>   
         <?php endif?>
 
         <!-- Cancel Buttons -->
         <?php if($_SESSION['access_level'] == 1): ?>
-            <a class="button cancel button_stlye" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
+            <a class="button cancel button_style" href="familyAccountDashboard.php" style="margin-top: 1rem;">Return to Dashboard</a>
         <?php endif ?>
         <?php if($_SESSION['access_level'] > 1): ?>
-            <a class="button cancel button_stlye" href="findFamily.php" style="margin-top: 1rem;">Return to Search</a>
+            <a class="button cancel button_style" href="findFamily.php" style="margin-top: 1rem;">Return to Search</a>
         <?php endif?>   
     </body>
 </html>

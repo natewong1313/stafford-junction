@@ -160,7 +160,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <option value="TX">Texas</option>
                         <option value="UT">Utah</option>
                         <option value="VT">Vermont</option>
-                        <option value="VA" selected>Virginia</option>
+                        <option value="VA">Virginia</option>
                         <option value="WA">Washington</option>
                         <option value="WV">West Virginia</option>
                         <option value="WI">Wisconsin</option>

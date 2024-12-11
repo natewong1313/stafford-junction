@@ -1128,11 +1128,11 @@ img.profile-pic {
   align-items: center;
   margin-bottom: 20px;
   margin-top: 10px;
-  background-color: #7e0d07;
+  background-color: var(--main-color);
 }
 
 .addRemove-btn:hover {
-  background-color: #fcdd2b;
+  background-color: var(--accent-color);
 }
 
 /* 
@@ -1159,7 +1159,7 @@ img.profile-pic {
 }
 
 input[type="checkbox"]:checked {
-  accent-color: #7e0d07;
+  accent-color: var(--main-color);
 }
 
 /* 
@@ -1192,18 +1192,18 @@ input[type="checkbox"]:checked {
 }
 
 #view-family fieldset p {
-  margin-bottom: 10px; /* Space between paragraphs */
-  font-size: 1em; /* Standard font size for paragraphs */
-  color: #383838; /* Slightly darker text color for better readability */
+  margin-bottom: 10px;
+  font-size: 1em;
+  color: #383838; 
 }
 
 #view-family fieldset textarea {
-  width: 100%; /* Make form elements take the full width of the container */
+  width: 100%;
   padding: 10px;
   margin-top: 5px;
-  border: 1px solid #ccc; /* Border for input fields */
-  border-radius: 4px; /* Rounded corners for form elements */
-  box-sizing: border-box; /* Include padding in the width calculation */
+  border: 1px solid #ccc;
+  border-radius: 4px; 
+  box-sizing: border-box; 
 }
 
 #view-family fieldset textarea:focus {
