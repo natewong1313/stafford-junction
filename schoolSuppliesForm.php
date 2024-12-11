@@ -183,38 +183,6 @@ if (isset($_GET['form_id'])) {
             <input type="radio" id="choice_b" name="need_backpack" value="need_backpack" <?php if ($form_data && $form_data['need_backpack'] == 'need_backpack') echo 'checked'; ?> <?php if ($form_data) echo 'disabled'; ?>>
             <label for="choice_b">I need a backpack. / Necesito una mochila.</label><br><br>
 
-            <input type="radio" id="choice_b" name="need_backpack" value="need_backpack">
-            <label for="choice_b">I need a backpack. / Necesito una mochila.</label><br><br>
-            <br><br>
-
-            <button type="submit" id="submit">Submit</button>
-
-            <?php 
-                if (isset($_GET['id'])) {
-                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
-                } else {
-                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
-                }
-            ?>
-
-            <?php 
-                if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
-                    if (isset($_GET['id'])) {
-                        echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
-                    } else {
-                        echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                    }
-                } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
-                    if (isset($_GET['id'])) {
-                        echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
-                    } else {
-                        echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
-                    }  
-                }
-            ?>
-        </form>
-    </div>
-
             <?php if (!$form_data): ?>
                 <button type="submit" id="submit">Submit</button>
                 <?php
