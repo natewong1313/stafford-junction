@@ -1,4 +1,3 @@
-<!--This file is has the front-end and back-end for adding new children to account after the account has already been made-->
 <?php
 
 session_cache_expire(30);
