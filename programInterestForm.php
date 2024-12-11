@@ -293,7 +293,7 @@ if (!$data) {
 
                 <!-- 9. Number of Adults in Household-->
                 <label for="adult_num">* How Many Adult in Household? / ¿Cuántos adultos hay en el hogar?</label><br><br>
-                <input type="number" name="adult_num" id="adult_num" placeholder="Number of Adults/Número de adultos" <?php showProgramInterestData($data['adult_num'] ?? null, null)?>>
+                <input type="number" name="adult_num" id="adult_num" required placeholder="Number of Adults/Número de adultos" <?php showProgramInterestData($data['adult_num'] ?? null, null)?>>
                 <br><br>
 
                 <h2>Programs of Interest / Programas de interés</h2>
@@ -623,6 +623,24 @@ if (!$data) {
                 <a class="button cancel" href="familyAccountDashboard.php">Return to Dashboard</a>
         <?php endif ?>    
 <?php endif; ?>
+
+        <?php
+            // if submission successful, create pop up notification and direct user back to fill form page
+            // if fail, notify user on program interest form page
+            if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && !$success) {
+                if (isset($_GET['id'])) {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail&id=' . $_GET['id'] . '";</script>';
+                } else {
+                    echo '<script>document.location = "fillForm.php?formSubmitFail";</script>';
+                }
+            }
+        ?>
 
     </body>
 </html>

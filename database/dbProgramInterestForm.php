@@ -5,16 +5,25 @@ require_once("dbFamily.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     session_start();
-    $family_id = $_SESSION['_id'];
+    $family_id = $_GET['id'] ?? $_SESSION['_id'];
     if (deleteProgramInterestForm($family_id)) {
-        //redirect to fillForm after successful deletion 
-        $successMessage = "Form deleted successfully!";
-        echo '<script>document.location = "fillForm.php?formDeleteSuccess&id=' . $_GET['id'] . '";</script>';
-        exit; // Ensure the script stops here after redirection
+        //redirect to fillForm after successful deletion
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=deleted&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?status=deleted");
+        }
+        exit;
     } else {
-        $errors[] = "Error deleting the form.";    
+        if (isset($_GET['id'])) {
+            header("Location: fillForm.php?status=errord&id=" . $_GET['id']);
+        } else {
+            header("Location: fillForm.php?error=deleted");
+        }
+        exit;
     }
 }
+
 
 function deleteProgramInterestForm($family_id) {
     $connection = connect();
