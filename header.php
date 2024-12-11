@@ -35,7 +35,6 @@
             </ul>
         </nav>';
         //      <li><a href="register.php">Register</a></li>     was at line 35
-
     } else if ($_SESSION['logged_in']) {
 
         /*         * Set our permission array.
