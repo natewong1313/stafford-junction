@@ -53,11 +53,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         
         <div id="formatted_form">
             
-        <p><b>* Indicates a required field</b></p><hr><br>
+        <p><b>* Indicates a required field</b></p>
+        <br><br><br>
 
         <form id="actualActivityForm" action="actualActivityForm.php" method="post">
-            <h2>General Information</h2>
-            <br><br>
+            <h2>General Information</h2><hr><br>
 
             <!-- 1. Activity -->
             <label for="activity">1. Activity name*</label><br><br>
@@ -97,43 +97,41 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <!--Actual Volunteer/Staff Number-->
             <label for="volstaff_num">8. Actual volunteer/staff number*</label><br><br>
-            <input type="number" name="volstaff_num" id="volstaff_num" placeholder="Actual volunteer/staff number" required><br><br><br>
+            <input type="number" name="volstaff_num" id="volstaff_num" placeholder="Actual volunteer/staff number" required><br>
+            <br><br><br>
 
-            <hr>
-            <h2>Materials/Costs</h2>
-            <br><br>
+            <h2>Materials/Costs</h2><hr><br>
 
             <!--Materials Used--->
             <label for="materials_used">9. Materials used*</label><br><br>
-            <textarea rows="10" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
+            <textarea rows="5" name="materials_used" id="materials_used" placeholder="Materials used" required></textarea><br><br><br>
             
             <!--Meal Information--->
             <label for="meal_info">10. Was there a meal? If so, was it provided or paid?*</label><br><br>
             
             <input type="radio" id="choice_1" name="meal_info" value="meal_provided" required>
-            <label for="choice_1">Meal: Provided</label><br><br>
+            <label for="choice_1">Meal: Provided</label><br>
 
             <input type="radio" id="choice_2" name="meal_info" value="meal_paid" required>
-            <label for="choice_2">Meal: Paid</label><br><br>
+            <label for="choice_2">Meal: Paid</label><br>
 
             <input type="radio" id="choice_3" name="meal_info" value="no_meal" required>
-            <label for="choice_3">No meal</label><br><br><br>
+            <label for="choice_3">No meal</label><br><br>
 
             <!--Activity Costs-->
             <label for="act_costs">11. Activity costs (Please list and seperately provide PA's)*</label><br><br>
-            <textarea rows="10" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea><br><br><br>
+            <textarea rows="5" name="act_costs" id="act_costs" placeholder="Activity costs" required></textarea>
+            <br><br><br>
         
-            <hr>
-            <h2>Educational Benefits</h2>
-            <br><br>
+            
+            <h2>Educational Benefits</h2><hr><br>
 
             <!--Benefits-->
             <label for="act_benefits">12. What actvities took place; what benefits do participants receive from these Activities?*</label><br><br>
-            <textarea rows="10" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea><br><br><br>
+            <textarea rows="5" name="act_benefits" id="act_benefits" placeholder="Activity benefits" required></textarea>
+            <br><br><br>
 
-            <hr>
-            <h2>Attendance</h2>
-            <br><br>
+            <h2>Attendance</h2><hr><br>
 
             <!--Attendance-->
             <label for="attendance">13. Attendance (must already be in AllClients; Waiver and Emergency Contact Information should be on file and in binder)*</label><br>

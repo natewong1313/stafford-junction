@@ -17,485 +17,680 @@ function data_dump($val){
     die();
 }
 
-if(isset($_SESSION['_id'])){
-    require_once("database/dbFamily.php");
-    require_once("database/dbChildren.php");
-    require_once('database/dbBrainBuildersRegistration.php');
-    $loggedIn = true;
-    $accessLevel = $_SESSION['access_level'];
-    $userID = $_SESSION['_id'];
-    $family = retrieve_family_by_id($_GET['id'] ?? $userID);
-    $children = retrieve_children_by_family_id($_GET['id'] ?? $userID);
-    //data_dump($children);
-    $address = $family->getAddress();
-    $city = $family->getCity();
-    $phone = $family->getPhone();
-    $zip = $family->getZip();
-    $email = $family->getEmail();
-    $emergency_contact_name = $family->getEContactFirstName() . " " . $family->getEContactLastName();
-    $econtactRelation = $family->getEContactRelation();
-    $econtactPhone = $family->getEContactPhone();
-    
-    $parent2Name = null;
+if(!isset($_SESSION['_id'])){
+    header('Location: login.php');
+    die();
 }
 
-// include the header .php files
-if($_SERVER['REQUEST_METHOD'] == "POST"){
-    require_once('include/input-validation.php');
-    require_once('database/dbChildren.php');
-    require_once('database/dbBrainBuildersRegistration.php');
-    $args = sanitize($_POST, null);
-    $n = explode(" ", $args['name']);
-    //data_dump($n);
-    //$childToRegister = retrieve_child_by_firstName_lastName_famID($args['child-first-name'], $args['child-last-name'], $_GET['id'] ?? $userID);
-    $childToRegister = retrieve_child_by_firstName_lastName_famID($n[0], $n[1], $_GET['id'] ?? $userID);
-    $success = register($args, $childToRegister['id']);
+$loggedIn = true;
+$accessLevel = $_SESSION['access_level'];
+$userID = $_SESSION['_id'];
+
+require_once('domain/Family.php');
+require_once('database/dbFamily.php');
+
+//get family and children information
+$family = retrieve_family_by_id($_GET['id'] ?? $userID); //$_GET['id'] will have the family id needed to fill form if the staff are trying to fill a form out for that family
+require_once('domain/Family.php');
+require_once('database/dbFamily.php');
+$family_children = getChildren($family->getId());
+
+$family_name1 = $family->getFirstName() . " " . $family->getLastName();
+$family_phone1 = $family->getPhone();
+$family_address1 = $family->getAddress();
+$family_city1 = $family->getCity();
+$family_state1 = $family->getState();
+$family_zip1 = $family->getZip();
+$family_email1 = $family->getEmail();
+$family_altphone1 = $family->getSecondaryPhone();
+
+$family_name2 = $family->getFirstName2() . " " . $family->getLastName2();
+$family_phone2 = $family->getPhone2();
+$family_address2 = $family->getAddress2();
+$family_city2 = $family->getCity2();
+$family_state2 = $family->getState2();
+$family_zip2 = $family->getZip2();
+$family_email2 = $family->getEmail2();
+$family_altphone2 = $family->getSecondaryPhone2();
+
+$family_emergency_name1 = $family->getEContactFirstName() . " " . $family->getEContactLastName();
+$family_emergency_relation1 = $family->getEContactRelation();
+$family_emergency_phone1 = $family->getEContactPhone();
+
+$family_isHispanic1 = $family->isHispanic();
+$family_race1 = $family->getRace();
+
+$family_income = $family->getIncome();
+
+try {
+
+    if($_SERVER['REQUEST_METHOD'] == "POST"){
+        require_once('include/input-validation.php');
+        require_once('database/dbBrainBuildersRegistrationForm.php');
+
+        $args = sanitize($_POST, null);
+
+        $required = array(
+            "child_id", "child_first_name", "child_last_name", "child_gender", "child_school_name", "child_grade", 
+            "child_dob", "child_address", "child_city", "child_state", "child_zip", "child_medical_allergies", "child_food_avoidances",
+            "parent1_name", "parent1_phone", "parent1_address", "parent1_city", "parent1_state", "parent1_zip", "parent1_email", "parent1_altPhone",
+            "emergency_name1", "emergency_relationship1", "emergency_phone1",
+            "authorized_pu", "primary_language", "hispanic_latino_spanish", "race", 
+            "num_unemployed", "num_retired", "num_unemployed_student", "num_employed_fulltime", "num_employed_parttime", "num_employed_student", 
+            "income", "other_programs", "lunch", "transportation", "participation", "parent_initials",
+            "signature", "signature_date", "waiver_child_name", "waiver_dob", "waiver_parent_name", 
+            "waiver_provider_name", "waiver_provider_address", "waiver_phone_and_fax", "waiver_signature", "waiver_date"
+        );
+
+        if (!wereRequiredFieldsSubmitted($args, $required)) {
+            throw new Exception("Error: Not all required fields were submitted");
+        }
+
+        $bbID = createbrainBuildersRegistrationForm($args);
+    
+        if (empty($bbID)) {
+            throw new Exception("Error: Brain Builder's Registration Form not created");
+        }
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+    return null;
 }
+
+
 ?>
 
+
 <html>
-<head>
-    <!-- Include universal styles formatting -->
-    <?php include_once("universal.inc") ?>
-    <title>Stafford Junction | Brain Builders Student Registration Form</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <?php include_once("universal.inc")?>
+        <title>Stafford Junction | Brain Builders Student Registration Form</title>
+        <link rel="stylesheet" href="base.css">
+    </head>
     <body>
-    <h1>Brain Builders Registration Form 2024-2025</h1>
+        <h1>Brain Builders Registration Form 2024-2025</h1>
+        
+        <!-- Display the error message if it exists -->
+        <?php 
+            if (isset($_GET['formSubmitFail'])) {
+                echo '<div class="happy-toast" style="margin-right: 30rem; margin-left: 30rem; text-align: center;">Error Submitting Form</div>';
+            }
+        ?>
+        
         <div id="formatted_form">
-            
-            <p><b>* Indicates a required field</b></p><br>
+            <!-- Form to obtain child autofill information -->
+            <form id="childSelectBrainBuilders" method="GET" action="">
+                <?php require_once('domain/Children.php') ?>
+                <?php require_once('database/dbChildren.php') ?>
 
-            <h2>Student Information</h2><br>
-            <form id="brainBuildersStudentRegistrationForm" action="" method="post">             
-                <!--Child First Name-->
-                <!--
-                <label for="child-first-name">Child First Name *</label><br><br>
-                <input type="text" name="child-first-name" id="child-first-name" required placeholder="Child First Name" required><br><br>
-                -->
-                <!--Child Last Name-->
-                <!--
-                <label for="child-last-name">Child Last Name *</label><br><br>
-                <input type="text" name="child-last-name" id="child-last-name" required placeholder="Child Last Name" required><br><br>
-                -->
+                <label for="childDropdown">*** Select a Child to Register:</label><br><br>
+                <p><b>If your child is not listed, your child is not added to the family account, or is already registered.</b></p><br>
 
-                <!-- Child Name -->
-                <label for="name">Child Name / Nombre del Hijo*</label><br><br>
-                <select name="name" id="name" required>
-                <?php
-                foreach ($children as $c){ //cycle through each child of family account user
-                    $id = $c->getID();
-                    // Check if form was already completed for the child
-                    if (!isBrainBuildersRegistrationComplete($id)) {
-                        $name = $c->getFirstName() . " " . $c->getLastName(); //display name if they don't have a form filled out for them
-                        //$value = $id . "_" . $name;
-                        echo "<option>$name</option>";
-                    }
-                }
+                <!-- Pass the 'id' in the URL and retain it during the form submission -->
+                <input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : htmlspecialchars($userID); ?>">
+
+                <!-- Looping through children to display the ones who have not completed the form -->
+                <?php 
+                $childrenNotRegistered = [];
+                foreach ($family_children as $child): 
+                    require_once('database/dbBrainBuildersRegistrationForm.php');
+                    // Add child to the array if they have not completed the form
+                    if (!isBrainBuildersRegistrationFormComplete($child->getID())):
+                        $childrenNotRegistered[] = $child;
+                    endif;
+                endforeach;
                 ?>
+
+                <!--Child selection for children who have not yet completed a form-->
+                <select id="childDropdown" name="childId">
+                    <option value="" disabled>Select</option>
+                    <?php foreach ($childrenNotRegistered as $child): ?>
+                        <option value="<?php echo $child->getID(); ?>"
+                            <?php echo isset($_GET['childId']) && $_GET['childId'] == $child->getID() ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($child->getFirstName()) . " " . htmlspecialchars($child->getLastName()); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
 
+                <input type="submit" value="Select Child">
+            </form>
 
-                <!--Gender-->
-                <label for="gender">Gender *</label><br><br>
-                    <select id="gender" name="gender" required>
-                        <option value="" disabled selected>Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                <br><br>
+            <br><hr><br>
 
-                <!--School Name-->
-                <label for="school-name">School Name *</label><br><br>
-                <input type="text" name="school-name" id="school-name" required placeholder="School Name" required><br><br>
+            <?php
+            // If child ID is passed via GET, retrieve the child object
+            if (isset($_GET['childId'])) {
+                $selectedChild = retrieve_child_by_id($_GET['childId']);
 
-                <!--Grade-->
-                <label for="grade">Grade *</label><br><br>
-                <input type="text" name="grade" id="grade" required placeholder="Grade/Grado" required><br><br>
+                // If child is found, creeate variables to populate the BB form with their details
+                if ($selectedChild) {
+                    $child_id = $_GET['childId'];
+                    $child_first_name = $selectedChild->getFirstName();
+                    $child_last_name = $selectedChild->getLastName();
+                    $child_gender = $selectedChild->getGender();
+                    $child_school = $selectedChild->getSchool();
+                    $child_grade = $selectedChild->getGrade();
+                    $child_DOB = $selectedChild->getBirthDate();
+                    $child_address = $selectedChild->getAddress();
+                    $child_city = $selectedChild->getCity();
+                    $child_state = $selectedChild->getState();
+                    $child_zip = $selectedChild->getZip();
+                    $child_medical = $selectedChild->getMedicalNotes();
+                }
+            } else {
+                $_POST['childId'] = null;
+                $_POST['child_first_name'] = null;
+                $_POST['child_last_name'] = null;
+            }
+            ?>
 
-                <!--Date of Birth-->
-                <label for="birthdate">Date of Birth *</label><br><br>
-                <input type="date" id="birthdate" name="birthdate" required placeholder="Choose your birthday" max="<?php echo date('Y-m-d'); ?>"><br><br>
+            <div id="childForm" style="display: <?php echo isset($_GET['childId']) ? 'block' : 'none'; ?>;">
+            
+            <form id="brainBuildersStudentRegistrationForm" action="" method="post">             
+            
+                <p><b>* Indicates a required field</b></p><br>
+                <p><b>If any information is incorrect, consider editing your family account or your child's account information before continuing.</b></p>
+                <br><br><br>
+                
+                <h2>Student Information</h2><hr><br>
 
-                <!--Street Address-->
-                <label for0="child-address">Street Address *</label><br><br>
-                <input type="text" id="child-address" name="child-address" required placeholder="Enter your street address"><br><br>
+                <!--Hidden field for child ID-->
+                <input type="hidden" name="child_id" value="<?php echo $child_id; ?>">
 
-                <!--City-->
-                <label for="child-city">City *</label><br><br>
-                <input type="text" id="child-city" name="child-city" required placeholder="Enter your city"><br><br>
+                <!--Child First Name -->
+                <label for="child_first_name">Child First Name *</label><br><br>
+                <input type="text" style="background-color: yellow;color: black" name="child_first_name" id="child_first_name" 
+                    readonly required placeholder="Child's first name" 
+                    value="<?php echo isset($child_first_name) ? htmlspecialchars($child_first_name) : ''; ?>"><br><br>
 
-                <!--State-->
-                <label for="child-state">State *</label><br><br>
-                <select id="child-state" name="child-state" required>
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA" selected>Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
+                <!--Child Last Name -->
+                <label for="child_last_name">Child Last Name *</label><br><br>
+                <input type="text" style="background-color: yellow;color: black" name="child_last_name" id="child_last_name" 
+                    readonly required placeholder="Child's last name"
+                    value="<?php echo isset($child_last_name) ? htmlspecialchars($child_last_name) : ''; ?>"><br><br>
+
+                <!--Gender -->
+                <label for="child_gender">Gender *</label><br><br>
+                <select name="child_gender" id="child_gender" required>
+                    <option value="" disabled <?php echo isset($child_gender) && $child_gender == '' ? 'selected' : ''; ?>>Select Gender</option>
+                    <option value="male" <?php echo isset($child_gender) && $child_gender == 'male' ? 'selected' : ''; ?>>Male</option>
+                    <option value="female" <?php echo isset($child_gender) && $child_gender == 'female' ? 'selected' : ''; ?>>Female</option>
                 </select><br><br>
 
-                <!--Zip-->
-                <label for="child-zip" required>Zip Code *</label><br><br>
-                <input type="text" id="child-zip" name="child-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code"><br><br>
+                <!--School Name -->
+                <label for="child_school_name">School Name *</label><br><br>
+                <input type="text" name="child_school_name" id="child_school_name" 
+                    required placeholder="Child's school name" 
+                    value="<?php echo isset($child_school) ? htmlspecialchars($child_school) : ''; ?>"><br><br>
 
-                <!--Medical issues or allergies-->
-                <label for="child-medical-allergies" required>Medical issues or allergies</label><br><br>
-                <input type="text" id="child-medical-allergies" name="child-medical-allergies" placeholder="Medical issues or allergies"><br><br>
+                <!--Grade -->
+                <label for="child_grade">Grade *</label><br><br>
+                <select name="child_grade" id="child_grade" required>
+                    <option value="" disabled <?php echo isset($child_grade) && $child_grade == '' ? 'selected' : ''; ?>>Select Grade</option>
+                    <option value="Kindergarten" <?php echo isset($child_grade) && $child_grade == 'Kindergarten' ? 'selected' : ''; ?>>Kindergarten</option>
+                    <option value="1" <?php echo isset($child_grade) && $child_grade == '1' ? 'selected' : ''; ?>>1</option>
+                    <option value="2" <?php echo isset($child_grade) && $child_grade == '2' ? 'selected' : ''; ?>>2</option>
+                    <option value="3" <?php echo isset($child_grade) && $child_grade == '3' ? 'selected' : ''; ?>>3</option>
+                    <option value="4" <?php echo isset($child_grade) && $child_grade == '4' ? 'selected' : ''; ?>>4</option>
+                    <option value="5" <?php echo isset($child_grade) && $child_grade == '5' ? 'selected' : ''; ?>>5</option>
+                    <option value="6" <?php echo isset($child_grade) && $child_grade == '6' ? 'selected' : ''; ?>>6</option>
+                    <option value="7" <?php echo isset($child_grade) && $child_grade == '7' ? 'selected' : ''; ?>>7</option>
+                    <option value="8" <?php echo isset($child_grade) && $child_grade == '8' ? 'selected' : ''; ?>>8</option>
+                    <option value="9" <?php echo isset($child_grade) && $child_grade == '9' ? 'selected' : ''; ?>>9</option>
+                    <option value="10" <?php echo isset($child_grade) && $child_grade == '10' ? 'selected' : ''; ?>>10</option>
+                    <option value="11" <?php echo isset($child_grade) && $child_grade == '11' ? 'selected' : ''; ?>>11</option>
+                    <option value="12" <?php echo isset($child_grade) && $child_grade == '12' ? 'selected' : ''; ?>>12</option>
+                    <option value="Graduated" <?php echo isset($child_grade) && $child_grade == 'Graduated' ? 'selected' : ''; ?>>Graduated</option>
+                </select><br><br>
 
-                <!--Foods to avoid due to religious beliefs-->
-                <label for="child-food-avoidances" required>Foods to avoid due to religious beliefs</label><br><br>
-                <input type="text" id="child-food-avoidances" name="child-food-avoidances" placeholder="Foods to avoid due to religious beliefs"><br><br>
+                <!--Date of Birth -->
+                <label for="child_dob">Date of Birth *</label><br><br>
+                <input type="date" name="child_dob" id="child_dob" max="<?php echo date('Y-m-d'); ?>" 
+                    required placeholder="Date"
+                    value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
-            <h2>General Information</h2><br>
+                <!--Street Address -->
+                <label for="child_address">Street Address *</label><br><br>
+                <input type="text" name="child_address" id="child_address"
+                    required placeholder="Child's street address" 
+                    value="<?php echo isset($child_address) ? htmlspecialchars($child_address) : ''; ?>"><br><br>
 
-            <h3>Parent 1</h3>
-            <br>
+                <!--City -->
+                <label for="child_city">City *</label><br><br>
+                <input type="text" name="child_city" id="child_city"
+                    required placeholder="Child's city" 
+                    value="<?php echo isset($child_city) ? htmlspecialchars($child_city) : ''; ?>"><br><br>
+
+                <!--State -->
+                <label for="child_state">State *</label><br><br>
+                <select name="child_state" id="child_state" required>
+                    <option value="" disabled <?php echo isset($child_state) && $child_state == '' ? 'selected' : ''; ?>>Select State</option>
+                    <option value="AL" <?php echo isset($child_state) && $child_state == 'AL' ? 'selected' : ''; ?>>Alabama</option>
+                    <option value="AK" <?php echo isset($child_state) && $child_state == 'AK' ? 'selected' : ''; ?>>Alaska</option>
+                    <option value="AZ" <?php echo isset($child_state) && $child_state == 'AZ' ? 'selected' : ''; ?>>Arizona</option>
+                    <option value="AR" <?php echo isset($child_state) && $child_state == 'AR' ? 'selected' : ''; ?>>Arkansas</option>
+                    <option value="CA" <?php echo isset($child_state) && $child_state == 'CA' ? 'selected' : ''; ?>>California</option>
+                    <option value="CO" <?php echo isset($child_state) && $child_state == 'CO' ? 'selected' : ''; ?>>Colorado</option>
+                    <option value="CT" <?php echo isset($child_state) && $child_state == 'CT' ? 'selected' : ''; ?>>Connecticut</option>
+                    <option value="DE" <?php echo isset($child_state) && $child_state == 'DE' ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo isset($child_state) && $child_state == 'DC' ? 'selected' : ''; ?>>District of Columbia</option>
+                    <option value="FL" <?php echo isset($child_state) && $child_state == 'FL' ? 'selected' : ''; ?>>Florida</option>
+                    <option value="GA" <?php echo isset($child_state) && $child_state == 'GA' ? 'selected' : ''; ?>>Georgia</option>
+                    <option value="HI" <?php echo isset($child_state) && $child_state == 'HI' ? 'selected' : ''; ?>>Hawaii</option>
+                    <option value="ID" <?php echo isset($child_state) && $child_state == 'ID' ? 'selected' : ''; ?>>Idaho</option>
+                    <option value="IL" <?php echo isset($child_state) && $child_state == 'IL' ? 'selected' : ''; ?>>Illinois</option>
+                    <option value="IN" <?php echo isset($child_state) && $child_state == 'IN' ? 'selected' : ''; ?>>Indiana</option>
+                    <option value="IA" <?php echo isset($child_state) && $child_state == 'IA' ? 'selected' : ''; ?>>Iowa</option>
+                    <option value="KS" <?php echo isset($child_state) && $child_state == 'KS' ? 'selected' : ''; ?>>Kansas</option>
+                    <option value="KY" <?php echo isset($child_state) && $child_state == 'KY' ? 'selected' : ''; ?>>Kentucky</option>
+                    <option value="LA" <?php echo isset($child_state) && $child_state == 'LA' ? 'selected' : ''; ?>>Louisiana</option>
+                    <option value="ME" <?php echo isset($child_state) && $child_state == 'ME' ? 'selected' : ''; ?>>Maine</option>
+                    <option value="MD" <?php echo isset($child_state) && $child_state == 'MD' ? 'selected' : ''; ?>>Maryland</option>
+                    <option value="MA" <?php echo isset($child_state) && $child_state == 'MA' ? 'selected' : ''; ?>>Massachusetts</option>
+                    <option value="MI" <?php echo isset($child_state) && $child_state == 'MI' ? 'selected' : ''; ?>>Michigan</option>
+                    <option value="MN" <?php echo isset($child_state) && $child_state == 'MN' ? 'selected' : ''; ?>>Minnesota</option>
+                    <option value="MS" <?php echo isset($child_state) && $child_state == 'MS' ? 'selected' : ''; ?>>Mississippi</option>
+                    <option value="MO" <?php echo isset($child_state) && $child_state == 'MO' ? 'selected' : ''; ?>>Missouri</option>
+                    <option value="MT" <?php echo isset($child_state) && $child_state == 'MT' ? 'selected' : ''; ?>>Montana</option>
+                    <option value="NE" <?php echo isset($child_state) && $child_state == 'NE' ? 'selected' : ''; ?>>Nebraska</option>
+                    <option value="NV" <?php echo isset($child_state) && $child_state == 'NV' ? 'selected' : ''; ?>>Nevada</option>
+                    <option value="NH" <?php echo isset($child_state) && $child_state == 'NH' ? 'selected' : ''; ?>>New Hampshire</option>
+                    <option value="NJ" <?php echo isset($child_state) && $child_state == 'NJ' ? 'selected' : ''; ?>>New Jersey</option>
+                    <option value="NM" <?php echo isset($child_state) && $child_state == 'NM' ? 'selected' : ''; ?>>New Mexico</option>
+                    <option value="NY" <?php echo isset($child_state) && $child_state == 'NY' ? 'selected' : ''; ?>>New York</option>
+                    <option value="NC" <?php echo isset($child_state) && $child_state == 'NC' ? 'selected' : ''; ?>>North Carolina</option>
+                    <option value="ND" <?php echo isset($child_state) && $child_state == 'ND' ? 'selected' : ''; ?>>North Dakota</option>
+                    <option value="OH" <?php echo isset($child_state) && $child_state == 'OH' ? 'selected' : ''; ?>>Ohio</option>
+                    <option value="OK" <?php echo isset($child_state) && $child_state == 'OK' ? 'selected' : ''; ?>>Oklahoma</option>
+                    <option value="OR" <?php echo isset($child_state) && $child_state == 'OR' ? 'selected' : ''; ?>>Oregon</option>
+                    <option value="PA" <?php echo isset($child_state) && $child_state == 'PA' ? 'selected' : ''; ?>>Pennsylvania</option>
+                    <option value="RI" <?php echo isset($child_state) && $child_state == 'RI' ? 'selected' : ''; ?>>Rhode Island</option>
+                    <option value="SC" <?php echo isset($child_state) && $child_state == 'SC' ? 'selected' : ''; ?>>South Carolina</option>
+                    <option value="SD" <?php echo isset($child_state) && $child_state == 'SD' ? 'selected' : ''; ?>>South Dakota</option>
+                    <option value="TN" <?php echo isset($child_state) && $child_state == 'TN' ? 'selected' : ''; ?>>Tennessee</option>
+                    <option value="TX" <?php echo isset($child_state) && $child_state == 'TX' ? 'selected' : ''; ?>>Texas</option>
+                    <option value="UT" <?php echo isset($child_state) && $child_state == 'UT' ? 'selected' : ''; ?>>Utah</option>
+                    <option value="VA" <?php echo isset($child_state) && $child_state == 'VA' ? 'selected' : ''; ?>>Virginia</option>
+                    <option value="VT" <?php echo isset($child_state) && $child_state == 'VT' ? 'selected' : ''; ?>>Vermont</option>
+                    <option value="WA" <?php echo isset($child_state) && $child_state == 'WA' ? 'selected' : ''; ?>>Washington</option>
+                    <option value="WV" <?php echo isset($child_state) && $child_state == 'WV' ? 'selected' : ''; ?>>West Virginia</option>
+                    <option value="WI" <?php echo isset($child_state) && $child_state == 'WI' ? 'selected' : ''; ?>>Wisconsin</option>
+                    <option value="WY" <?php echo isset($child_state) && $child_state == 'WY' ? 'selected' : ''; ?>>Wyoming</option>
+                </select><br><br>
+
+                <!--Zip Code -->
+                <label for="child_zip">Zip Code *</label><br><br>
+                <input type="text" name="child_zip" id="child_zip" pattern="[0-9]{5}" 
+                    required placeholder="Child's 5-digit zip code" 
+                    value="<?php echo isset($child_zip) ? htmlspecialchars($child_zip) : ''; ?>"><br><br>
+
+                <!--Medical issues or allergies -->
+                <label for="child_medical_allergies">Medical issues or allergies * (Type N/A if neccessary)</label><br><br>
+                <input type="text" name="child_medical_allergies" id="child_medical_allergies"
+                    required placeholder="Medical issues or allergies" 
+                    value="<?php echo isset($child_medical) ? htmlspecialchars($child_medical) : ''; ?>"><br><br>
+
+                <!--Foods to avoid due to religious beliefs -->
+                <label for="child_food_avoidances">Foods to avoid due to religious beliefs * (Type N/A if neccessary)</label><br><br>
+                <input type="text" name="child_food_avoidances" id="child_food_avoidances"
+                    required placeholder="Foods to avoid due to religious beliefs">
+                <br><br><br>
+                    
+                <h2>Parent 1 Information</h2><hr><br>
+
                 <!--Parent 1 Name-->
-                <label for="parent1-name">Full Name *</label><br><br>
-                <input type="text" id="parent1-name" name="parent1-name" required placeholder="Parent 1 Full Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>"><br><br>
+                <label for="parent1_name">Full Name *</label><br><br>
+                <input type="text" name="parent1_name" id="parent1_name"
+                    required placeholder="Parent 1 full name"
+                    value="<?php echo isset($family_name1) ? $family_name1 : ''; ?>"><br><br>
 
                 <!--Cell Phone-->
-                <label for="parent1-phone">Primary Phone Number *</label><br><br>
-                <input type="tel" id="parent1-phone" name="parent1-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($phone); ?>"><br><br>
+                <label for="parent1_phone">Primary Phone Number *</label><br><br>
+                <input type="tel" name="parent1_phone" id="parent1_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                    required placeholder="Ex. (000) 000-0000"
+                    value="<?php echo isset($family_phone1) ? $family_phone1 : ''; ?>"><br><br>
 
                 <!--Street Address-->
-                <label for0="parent1-address">Street Address *</label><br><br>
-                <input type="text" id="parent1-address" name="parent1-address" required placeholder="Enter your street address" value="<?php echo htmlspecialchars($address); ?>"><br><br>
+                <label for="parent1_address">Street Address *</label><br><br>
+                <input type="text" name="parent1_address" id="parent1_address"
+                    required placeholder="Parent 1 street address"
+                    value="<?php echo isset($family_address1) ? $family_address1 : ''; ?>"><br><br>
 
                 <!--City-->
-                <label for="parent1-city">City *</label><br><br>
-                <input type="text" id="parent1-city" name="parent1-city" required placeholder="Enter your city" value="<?php echo htmlspecialchars($city); ?>"><br><br>
+                <label for="parent1_city">City *</label><br><br>
+                <input type="text" name="parent1_city" id="parent1_city"
+                    required placeholder="Parent 1 city" 
+                    value="<?php echo isset($family_city1) ? $family_city1 : ''; ?>"><br><br>
 
                 <!--State-->
-                <label for="parent1-state">State *</label><br><br>
-                <select id="parent1-state" name="parent1-state" required>
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA" selected>Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
+                <label for="parent1_state">State *</label><br><br>
+                <select name="parent1_state" id="parent1_state" required>
+                    <option value="" disabled <?php echo isset($family_state1) && $family_state1 == '' ? 'selected' : ''; ?>>Select State</option>
+                    <option value="AL" <?php echo (isset($family_state1) && $family_state1 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
+                    <option value="AK" <?php echo (isset($family_state1) && $family_state1 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
+                    <option value="AZ" <?php echo (isset($family_state1) && $family_state1 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
+                    <option value="AR" <?php echo (isset($family_state1) && $family_state1 == 'AR') ? 'selected' : ''; ?>>Arkansas</option>
+                    <option value="CA" <?php echo (isset($family_state1) && $family_state1 == 'CA') ? 'selected' : ''; ?>>California</option>
+                    <option value="CO" <?php echo (isset($family_state1) && $family_state1 == 'CO') ? 'selected' : ''; ?>>Colorado</option>
+                    <option value="CT" <?php echo (isset($family_state1) && $family_state1 == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
+                    <option value="DE" <?php echo (isset($family_state1) && $family_state1 == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo (isset($family_state2) && $family_state2 == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
+                    <option value="FL" <?php echo (isset($family_state1) && $family_state1 == 'FL') ? 'selected' : ''; ?>>Florida</option>
+                    <option value="GA" <?php echo (isset($family_state1) && $family_state1 == 'GA') ? 'selected' : ''; ?>>Georgia</option>
+                    <option value="HI" <?php echo (isset($family_state1) && $family_state1 == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
+                    <option value="ID" <?php echo (isset($family_state1) && $family_state1 == 'ID') ? 'selected' : ''; ?>>Idaho</option>
+                    <option value="IL" <?php echo (isset($family_state1) && $family_state1 == 'IL') ? 'selected' : ''; ?>>Illinois</option>
+                    <option value="IN" <?php echo (isset($family_state1) && $family_state1 == 'IN') ? 'selected' : ''; ?>>Indiana</option>
+                    <option value="IA" <?php echo (isset($family_state1) && $family_state1 == 'IA') ? 'selected' : ''; ?>>Iowa</option>
+                    <option value="KS" <?php echo (isset($family_state1) && $family_state1 == 'KS') ? 'selected' : ''; ?>>Kansas</option>
+                    <option value="KY" <?php echo (isset($family_state1) && $family_state1 == 'KY') ? 'selected' : ''; ?>>Kentucky</option>
+                    <option value="LA" <?php echo (isset($family_state1) && $family_state1 == 'LA') ? 'selected' : ''; ?>>Louisiana</option>
+                    <option value="ME" <?php echo (isset($family_state1) && $family_state1 == 'ME') ? 'selected' : ''; ?>>Maine</option>
+                    <option value="MD" <?php echo (isset($family_state1) && $family_state1 == 'MD') ? 'selected' : ''; ?>>Maryland</option>
+                    <option value="MA" <?php echo (isset($family_state1) && $family_state1 == 'MA') ? 'selected' : ''; ?>>Massachusetts</option>
+                    <option value="MI" <?php echo (isset($family_state1) && $family_state1 == 'MI') ? 'selected' : ''; ?>>Michigan</option>
+                    <option value="MN" <?php echo (isset($family_state1) && $family_state1 == 'MN') ? 'selected' : ''; ?>>Minnesota</option>
+                    <option value="MS" <?php echo (isset($family_state1) && $family_state1 == 'MS') ? 'selected' : ''; ?>>Mississippi</option>
+                    <option value="MO" <?php echo (isset($family_state1) && $family_state1 == 'MO') ? 'selected' : ''; ?>>Missouri</option>
+                    <option value="MT" <?php echo (isset($family_state1) && $family_state1 == 'MT') ? 'selected' : ''; ?>>Montana</option>
+                    <option value="NE" <?php echo (isset($family_state1) && $family_state1 == 'NE') ? 'selected' : ''; ?>>Nebraska</option>
+                    <option value="NV" <?php echo (isset($family_state1) && $family_state1 == 'NV') ? 'selected' : ''; ?>>Nevada</option>
+                    <option value="NH" <?php echo (isset($family_state1) && $family_state1 == 'NH') ? 'selected' : ''; ?>>New Hampshire</option>
+                    <option value="NJ" <?php echo (isset($family_state1) && $family_state1 == 'NJ') ? 'selected' : ''; ?>>New Jersey</option>
+                    <option value="NM" <?php echo (isset($family_state1) && $family_state1 == 'NM') ? 'selected' : ''; ?>>New Mexico</option>
+                    <option value="NY" <?php echo (isset($family_state1) && $family_state1 == 'NY') ? 'selected' : ''; ?>>New York</option>
+                    <option value="NC" <?php echo (isset($family_state1) && $family_state1 == 'NC') ? 'selected' : ''; ?>>North Carolina</option>
+                    <option value="ND" <?php echo (isset($family_state1) && $family_state1 == 'ND') ? 'selected' : ''; ?>>North Dakota</option>
+                    <option value="OH" <?php echo (isset($family_state1) && $family_state1 == 'OH') ? 'selected' : ''; ?>>Ohio</option>
+                    <option value="OK" <?php echo (isset($family_state1) && $family_state1 == 'OK') ? 'selected' : ''; ?>>Oklahoma</option>
+                    <option value="OR" <?php echo (isset($family_state1) && $family_state1 == 'OR') ? 'selected' : ''; ?>>Oregon</option>
+                    <option value="PA" <?php echo (isset($family_state1) && $family_state1 == 'PA') ? 'selected' : ''; ?>>Pennsylvania</option>
+                    <option value="RI" <?php echo (isset($family_state1) && $family_state1 == 'RI') ? 'selected' : ''; ?>>Rhode Island</option>
+                    <option value="SC" <?php echo (isset($family_state1) && $family_state1 == 'SC') ? 'selected' : ''; ?>>South Carolina</option>
+                    <option value="SD" <?php echo (isset($family_state1) && $family_state1 == 'SD') ? 'selected' : ''; ?>>South Dakota</option>
+                    <option value="TN" <?php echo (isset($family_state1) && $family_state1 == 'TN') ? 'selected' : ''; ?>>Tennessee</option>
+                    <option value="TX" <?php echo (isset($family_state1) && $family_state1 == 'TX') ? 'selected' : ''; ?>>Texas</option>
+                    <option value="UT" <?php echo (isset($family_state1) && $family_state1 == 'UT') ? 'selected' : ''; ?>>Utah</option>
+                    <option value="VT" <?php echo (isset($family_state1) && $family_state1 == 'VT') ? 'selected' : ''; ?>>Vermont</option>
+                    <option value="VA" <?php echo (isset($family_state1) && $family_state1 == 'VA') ? 'selected' : ''; ?>>Virginia</option>
+                    <option value="WA" <?php echo (isset($family_state1) && $family_state1 == 'WA') ? 'selected' : ''; ?>>Washington</option>
+                    <option value="WV" <?php echo (isset($family_state1) && $family_state1 == 'WV') ? 'selected' : ''; ?>>West Virginia</option>
+                    <option value="WI" <?php echo (isset($family_state1) && $family_state1 == 'WI') ? 'selected' : ''; ?>>Wisconsin</option>
+                    <option value="WY" <?php echo (isset($family_state1) && $family_state1 == 'WY') ? 'selected' : ''; ?>>Wyoming</option>
                 </select><br><br>
 
                 <!--Zip-->
-                <label for="parent1-zip">Zip Code *</label><br><br>
-                <input type="text" id="parent1-zip" name="parent1-zip" pattern="[0-9]{5}" title="5-digit zip code" required placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($zip); ?>"><br><br>
+                <label for="parent1_zip">Zip Code *</label><br><br>
+                <input type="text" name="parent1_zip" id="parent1_zip" pattern="[0-9]{5}" title="5-digit zip code" 
+                    required placeholder="5-digit zip code"
+                    value="<?php echo isset($family_zip1) ? $family_zip1 : ''; ?>"><br><br>
 
                 <!--Email-->
-                <label for="parent1-email">Email *</label><br><br>
-                <input type="text" id="parent1-email" name="parent1-email" required placeholder="Enter email" value="<?php echo htmlspecialchars($email); ?>"><br><br>
+                <label for="parent1_email">Email *</label><br><br>
+                <input type="text" name="parent1_email" id="parent1_email"
+                    required placeholder="Parent 1 email"
+                    value="<?php echo isset($family_email1) ? $family_email1 : ''; ?>"><br><br>
 
                 <!--Alternate Phone-->
-                <label for="parent1-altPhone">Alternate Phone Number</label><br><br>
-                <input type="tel" id="parent1-altPhone" name="parent1-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
+                <label for="parent1_altPhone">Alternate Phone Number *</label><br><br>
+                <input type="tel" name="parent1_altPhone" id="parent1_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                    required placeholder="Ex. (000) 000-0000"
+                    value="<?php echo isset($family_altphone1) ? $family_altphone1 : ''; ?>"><br><br><br>
 
-            <h3>Parent 2</h3>
-            <br>
+                <h2>Parent 2 Information</h2><hr><br>
                 <!--Parent 2 Name-->
-                <label for="parent2-name">Full Name</label><br><br>
-                <input type="text" id="parent2-name" name="parent2-name" placeholder="Parent 2 Full Name" value="<?php echo htmlspecialchars($family->getFirstName2() . " " . $family->getLastName2() ?? ""); ?>"><br><br>
+                <label for="parent2_name">Full Name</label><br><br>
+                <input type="text" name="parent2_name" id="parent2_name"
+                    placeholder="Parent 2 full name" 
+                    value="<?php echo isset($family_name2) ? $family_name2 : ''; ?>"><br><br>
 
                 <!--Cell Phone-->
-                <label for="parent2-phone">Primary Phone Number</label><br><br>
-                <input type="tel" id="parent2-phone" name="parent2-phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($family->getPhone2() ?? ""); ?>"><br><br>
+                <label for="parent2_phone">Primary Phone Number</label><br><br>
+                <input type="tel" name="parent2_phone" id="parent2_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                    placeholder="Ex. (000) 000-0000" 
+                    value="<?php echo isset($family_phone2) ? $family_phone2 : ''; ?>"><br><br>
 
                 <!--Street Address-->
-                <label for0="parent2-address">Street Address</label><br><br>
-                <input type="text" id="parent2-address" name="parent2-address" placeholder="Enter your street address" value="<?php echo htmlspecialchars($family->getAddress2() ?? ""); ?>"><br><br>
+                <label for="parent2_address">Street Address</label><br><br>
+                <input type="text" name="parent2_address" id="parent2_address" 
+                    placeholder="Parent 2 street address" 
+                    value="<?php echo isset($family_address2) ? $family_address2 : ''; ?>"><br><br>
 
                 <!--City-->
-                <label for="parent2-city">City</label><br><br>
-                <input type="text" id="parent2-city" name="parent2-city" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getCity2()); ?>"><br><br>
-
+                <label for="parent2_city">City</label><br><br>
+                <input type="text" name="parent2_city" id="parent2_city"
+                    placeholder="Parent 2 city" 
+                    value="<?php echo isset($family_city2) ? $family_city2 : ''; ?>"><br><br>
+              
                 <!--State-->
-                <label for="parent2-state">State</label><br><br>
-                <select id="parent2-state" name="parent2-state">
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA" selected>Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
+                <label for="parent2_state">State </label><br><br>
+                <select name="parent2_state" id="parent2_state">
+                    <option value="" disabled <?php echo isset($family_state2) && $family_state2 == '' ? 'selected' : ''; ?>>Select State</option>
+                    <option value="AL" <?php echo (isset($family_state2) && $family_state2 == 'AL') ? 'selected' : ''; ?>>Alabama</option>
+                    <option value="AK" <?php echo (isset($family_state2) && $family_state2 == 'AK') ? 'selected' : ''; ?>>Alaska</option>
+                    <option value="AZ" <?php echo (isset($family_state2) && $family_state2 == 'AZ') ? 'selected' : ''; ?>>Arizona</option>
+                    <option value="AR" <?php echo (isset($family_state2) && $family_state2 == 'AR') ? 'selected' : ''; ?>>Arkansas</option>
+                    <option value="CA" <?php echo (isset($family_state2) && $family_state2 == 'CA') ? 'selected' : ''; ?>>California</option>
+                    <option value="CO" <?php echo (isset($family_state2) && $family_state2 == 'CO') ? 'selected' : ''; ?>>Colorado</option>
+                    <option value="CT" <?php echo (isset($family_state2) && $family_state2 == 'CT') ? 'selected' : ''; ?>>Connecticut</option>
+                    <option value="DE" <?php echo (isset($family_state2) && $family_state2 == 'DE') ? 'selected' : ''; ?>>Delaware</option>
+                    <option value="DC" <?php echo (isset($family_state2) && $family_state2 == 'DC') ? 'selected' : ''; ?>>District of Columbia</option>
+                    <option value="FL" <?php echo (isset($family_state2) && $family_state2 == 'FL') ? 'selected' : ''; ?>>Florida</option>
+                    <option value="GA" <?php echo (isset($family_state2) && $family_state2 == 'GA') ? 'selected' : ''; ?>>Georgia</option>
+                    <option value="HI" <?php echo (isset($family_state2) && $family_state2 == 'HI') ? 'selected' : ''; ?>>Hawaii</option>
+                    <option value="ID" <?php echo (isset($family_state2) && $family_state2 == 'ID') ? 'selected' : ''; ?>>Idaho</option>
+                    <option value="IL" <?php echo (isset($family_state2) && $family_state2 == 'IL') ? 'selected' : ''; ?>>Illinois</option>
+                    <option value="IN" <?php echo (isset($family_state2) && $family_state2 == 'IN') ? 'selected' : ''; ?>>Indiana</option>
+                    <option value="IA" <?php echo (isset($family_state2) && $family_state2 == 'IA') ? 'selected' : ''; ?>>Iowa</option>
+                    <option value="KS" <?php echo (isset($family_state2) && $family_state2 == 'KS') ? 'selected' : ''; ?>>Kansas</option>
+                    <option value="KY" <?php echo (isset($family_state2) && $family_state2 == 'KY') ? 'selected' : ''; ?>>Kentucky</option>
+                    <option value="LA" <?php echo (isset($family_state2) && $family_state2 == 'LA') ? 'selected' : ''; ?>>Louisiana</option>
+                    <option value="ME" <?php echo (isset($family_state2) && $family_state2 == 'ME') ? 'selected' : ''; ?>>Maine</option>
+                    <option value="MD" <?php echo (isset($family_state2) && $family_state2 == 'MD') ? 'selected' : ''; ?>>Maryland</option>
+                    <option value="MA" <?php echo (isset($family_state2) && $family_state2 == 'MA') ? 'selected' : ''; ?>>Massachusetts</option>
+                    <option value="MI" <?php echo (isset($family_state2) && $family_state2 == 'MI') ? 'selected' : ''; ?>>Michigan</option>
+                    <option value="MN" <?php echo (isset($family_state2) && $family_state2 == 'MN') ? 'selected' : ''; ?>>Minnesota</option>
+                    <option value="MS" <?php echo (isset($family_state2) && $family_state2 == 'MS') ? 'selected' : ''; ?>>Mississippi</option>
+                    <option value="MO" <?php echo (isset($family_state2) && $family_state2 == 'MO') ? 'selected' : ''; ?>>Missouri</option>
+                    <option value="MT" <?php echo (isset($family_state2) && $family_state2 == 'MT') ? 'selected' : ''; ?>>Montana</option>
+                    <option value="NE" <?php echo (isset($family_state2) && $family_state2 == 'NE') ? 'selected' : ''; ?>>Nebraska</option>
+                    <option value="NV" <?php echo (isset($family_state2) && $family_state2 == 'NV') ? 'selected' : ''; ?>>Nevada</option>
+                    <option value="NH" <?php echo (isset($family_state2) && $family_state2 == 'NH') ? 'selected' : ''; ?>>New Hampshire</option>
+                    <option value="NJ" <?php echo (isset($family_state2) && $family_state2 == 'NJ') ? 'selected' : ''; ?>>New Jersey</option>
+                    <option value="NM" <?php echo (isset($family_state2) && $family_state2 == 'NM') ? 'selected' : ''; ?>>New Mexico</option>
+                    <option value="NY" <?php echo (isset($family_state2) && $family_state2 == 'NY') ? 'selected' : ''; ?>>New York</option>
+                    <option value="NC" <?php echo (isset($family_state2) && $family_state2 == 'NC') ? 'selected' : ''; ?>>North Carolina</option>
+                    <option value="ND" <?php echo (isset($family_state2) && $family_state2 == 'ND') ? 'selected' : ''; ?>>North Dakota</option>
+                    <option value="OH" <?php echo (isset($family_state2) && $family_state2 == 'OH') ? 'selected' : ''; ?>>Ohio</option>
+                    <option value="OK" <?php echo (isset($family_state2) && $family_state2 == 'OK') ? 'selected' : ''; ?>>Oklahoma</option>
+                    <option value="OR" <?php echo (isset($family_state2) && $family_state2 == 'OR') ? 'selected' : ''; ?>>Oregon</option>
+                    <option value="PA" <?php echo (isset($family_state2) && $family_state2 == 'PA') ? 'selected' : ''; ?>>Pennsylvania</option>
+                    <option value="RI" <?php echo (isset($family_state2) && $family_state2 == 'RI') ? 'selected' : ''; ?>>Rhode Island</option>
+                    <option value="SC" <?php echo (isset($family_state2) && $family_state2 == 'SC') ? 'selected' : ''; ?>>South Carolina</option>
+                    <option value="SD" <?php echo (isset($family_state2) && $family_state2 == 'SD') ? 'selected' : ''; ?>>South Dakota</option>
+                    <option value="TN" <?php echo (isset($family_state2) && $family_state2 == 'TN') ? 'selected' : ''; ?>>Tennessee</option>
+                    <option value="TX" <?php echo (isset($family_state2) && $family_state2 == 'TX') ? 'selected' : ''; ?>>Texas</option>
+                    <option value="UT" <?php echo (isset($family_state2) && $family_state2 == 'UT') ? 'selected' : ''; ?>>Utah</option>
+                    <option value="VT" <?php echo (isset($family_state2) && $family_state2 == 'VT') ? 'selected' : ''; ?>>Vermont</option>
+                    <option value="VA" <?php echo (isset($family_state2) && $family_state2 == 'VA') ? 'selected' : ''; ?>>Virginia</option>
+                    <option value="WA" <?php echo (isset($family_state2) && $family_state2 == 'WA') ? 'selected' : ''; ?>>Washington</option>
+                    <option value="WV" <?php echo (isset($family_state2) && $family_state2 == 'WV') ? 'selected' : ''; ?>>West Virginia</option>
+                    <option value="WI" <?php echo (isset($family_state2) && $family_state2 == 'WI') ? 'selected' : ''; ?>>Wisconsin</option>
+                    <option value="WY" <?php echo (isset($family_state2) && $family_state2 == 'WY') ? 'selected' : ''; ?>>Wyoming</option>
                 </select><br><br>
 
                 <!--Zip-->
-                <label for="parent2-zip" required>Zip Code</label><br><br>
-                <input type="text" id="parent2-zip" name="parent2-zip" pattern="[0-9]{5}" title="5-digit zip code" placeholder="Enter your 5-digit zip code" value="<?php echo htmlspecialchars($family->getZip2()); ?>"><br><br>
+                <label for="parent2_zip">Zip Code</label><br><br>
+                <input type="text" name="parent2_zip" id="parent2_zip" pattern="[0-9]{5}" title="5-digit zip code" 
+                    placeholder="5-digit zip code" 
+                    value="<?php echo isset($family_zip2) ? $family_zip2 : ''; ?>"><br><br>
 
                 <!--Email-->
-                <label for="parent2-email" required>Email</label><br><br>
-                <input type="text" id="parent2-email" name="parent2-email" placeholder="Enter your city" value="<?php echo htmlspecialchars($family->getEmail2()); ?>"><br><br>
+                <label for="parent2_email">Email</label><br><br>
+                <input type="text" name="parent2_email" id="parent2_email"
+                    placeholder="Enter your email" 
+                    value="<?php echo isset($family_email2) ? $family_email2 : ''; ?>"><br><br>
 
                 <!--Alternate Phone-->
-                <label for="parent2-altPhone" required>Alternate Phone Number</label><br><br>
-                <input type="tel" id="parent2-altPhone" name="parent2-altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
+                <label for="parent2_altPhone">Alternate Phone Number</label><br><br>
+                <input type="tel" name="parent2_altPhone" id="parent2_altPhone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                    placeholder="Ex. (000) 000-0000" 
+                    value="<?php echo isset($family_altphone2) ? $family_altphone2 : ''; ?>"><br><br><br>
 
-            <h2>Emergency Contact and Pick-Up Information</h2><br>
-
-            <h3>Emergency Contact 1</h3><br>
-
-                <!--Name-->
-                <label for="emergency-name1" required>Full Name *</label><br><br>
-                <input type="text" id="emergency-name1" name="emergency-name1" required placeholder="Enter full name" value="<?php echo htmlspecialchars($emergency_contact_name); ?>"><br><br>
-
-                <!--Relationship-->
-                <label for="emergency-relationship1" required>Relationship to Child *</label><br><br>
-                <input type="text" id="emergency-relationship1" name="emergency-relationship1" required placeholder="Enter person's relationship to child"><br><br>
-
-                <!--Phone-->
-                <label for="emergency-phone1" required>Phone *</label><br><br>
-                <input type="tel" id="emergency-phone1" name="emergency-phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555" value="<?php echo htmlspecialchars($econtactPhone); ?>"><br><br>
-
-                <h3>Emergency Contact 2</h3><br>
+                <h2>Emergency Contact 1 Information</h2><hr><br>
 
                 <!--Name-->
-                <label for="emergency-name2" required>Full Name</label><br><br>
-                <input type="text" id="emergency-name2" name="emergency-name2" placeholder="Enter full name"><br><br>
+                <label for="emergency_name1">Full Name *</label><br><br>
+                <input type="text" name="emergency_name1" id="emergency_name1"
+                    required placeholder="Enter full name"
+                    value="<?php echo isset($family_emergency_name1) ? $family_emergency_name1 : ''; ?>"><br><br>
 
                 <!--Relationship-->
-                <label for="emergency-relationship2" required>Relationship to Child</label><br><br>
-                <input type="text" id="emergency-relationship2" name="emergency-relationship2" placeholder="Enter person's relationship to child"><br><br>
+                <label for="emergency_relationship1">Relationship to Child *</label><br><br>
+                <input type="text" name="emergency_relationship1" id="emergency_relationship1"
+                    required placeholder="Enter person's relationship to child"
+                    value="<?php echo isset($family_emergency_relation1) ? $family_emergency_relation1 : ''; ?>"><br><br>
 
                 <!--Phone-->
-                <label for="emergency-phone2" required>Phone</label><br><br>
-                <input type="tel" id="emergency-phone2" name="emergency-phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="Ex. (555) 555-5555"><br><br>
+                <label for="emergency_phone1">Phone *</label><br><br>
+                <input type="tel" name="emergency_phone1" id="emergency_phone1" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                    required placeholder="Ex. (000) 000-0000"
+                    value="<?php echo isset($family_emergency_phone1) ? $family_emergency_phone1 : ''; ?>">
+                <br><br><br>
 
-                <p>------</p><br><br>
+                <h2>Emergency Contact 2 Information</h2><hr><br>
+
+                <!--Name-->
+                <label for="emergency_name2">Full Name</label><br><br>
+                <input type="text" name="emergency_name2" id="emergency_name2"
+                    placeholder="Enter full name" ><br><br>
+
+                <!--Relationship-->
+                <label for="emergency_relationship2">Relationship to Child</label><br><br>
+                <input type="text" name="emergency_relationship2" id="emergency_relationship2"
+                    placeholder="Enter person's relationship to child"><br><br>
+
+                <!--Phone-->
+                <label for="emergency_phone2">Phone</label><br><br>
+                <input type="tel" name="emergency_phone2" id="emergency_phone2" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" 
+                    placeholder="Ex. (000) 000-0000">
+                <br><br><br>
+
+                <h2>Pick-Up Information</h2><hr><br>
 
                 <!--Persons Authorized for Pick-Up-->
-                <label for="authorized-pu" required>Persons authorized to pick up child *</label><br><br>
-                <input type="text" id="authorized-pu" name="authorized-pu" required placeholder="Enter persons names"><br><br>
+                <label for="authorized_pu">Persons authorized to pick up child *</label><br><br>
+                <input type="text" name="authorized_pu" id="authorized_pu"
+                    required placeholder="Enter persons names"><br><br>
                 
                 <!--Persons NOT Authorized for Pick-Up-->
-                <label for="not-authorized-pu" required>Persons <b><u>NOT</u></b> authorized to pick up child</label><br><br>
-                <input type="text" id="not-authorized-pu" name="not-authorized-pu" placeholder="Enter persons names"><br><br>
+                <label for="not_authorized_pu">Persons <b><u>NOT</u></b> authorized to pick up child</label><br><br>
+                <input type="text" name="not_authorized_pu" id="not_authorized_pu"
+                    placeholder="Enter persons names">
+                <br><br><br>
 
-            <h2>Additional Required Information</h2>
-            <p>This information is for Stafford Junction funding purposes only.</p><br>
+                <h2>Other Required Information</h2><hr><br>
+                <p>This information is for Stafford Junction funding purposes only.</p><br>
 
                 <!--Parent's Primary Language-->
-                <label for="primary-language" required>Primary Language *</label><br><br>
-                <input type="text" id="primary-language" name="primary-language" required placeholder="English, Spanish, Farsi, etc."><br><br>
+                <label for="primary_language">Parent 1 Primary Language *</label><br><br>
+                <input type="text" name="primary_language" id="primary_language"
+                    required placeholder="English, Spanish, Farsi, etc."><br><br>
 
                 <!--Hispanic, Latino, or Spanish Origin-->
-                <label for="hispanic-latino-spanish">Hispanic, Latino, or Spanish Origin *</label><br><br>
-                <select id="hispanic-latino-spanish" name="hispanic-latino-spanish" required>
-                    <option value="" disabled selected>Select Yes or No</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-                <br><br>
+                <label for="hispanic_latino_spanish">Parent 1 Hispanic, Latino, or Spanish Origin *</label><br><br>
+                <select name="hispanic_latino_spanish" id="hispanic_latino_spanish" required>
+                    <option value="" disabled <?php echo isset($family_isHispanic1) && $family_isHispanic1 == '' ? 'selected' : ''; ?>>Select Yes or No</option>
+                    <option value="yes" <?php echo isset($family_isHispanic1) && $family_isHispanic1 == '1' ? 'selected' : ''; ?>>Yes</option>
+                    <option value="no" <?php echo isset($family_isHispanic1) && $family_isHispanic1 == '0' ? 'selected' : ''; ?>>No</option>
+                </select><br><br>
 
                 <!--Race-->
-                <label for="race" required>Race *</label><br><br>
-                <select id="race" name="race" required>
-                    <option value="" disabled selected>Select Race</option>
-                    <option value="Caucasian">Caucasian</option>
-                    <option value="Black/African American">Black/African American</option>
-                    <option value="Native Indian/Alaska Native">Native Indian/Alaska Native</option>
-                    <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
-                    <option value="Asian">Asian</option>
-                    <option value="Multiracial">Multiracial</option>
-                    <option value="Other">Other</option>
+                <label for="race">Race *</label><br><br>
+                <select name="race" id="race" required>
+                    <option value="" disabled <?php echo isset($family_race1) && $family_race1 == '' ? 'selected' : ''; ?>>Select Race</option>
+                    <option value="Caucasian" <?php echo isset($family_race1) && $family_race1 == 'Caucasian' ? 'selected' : ''; ?>>Caucasian</option>
+                    <option value="Black/African American" <?php echo isset($family_race1) && $family_race1 == 'Black/African American' ? 'selected' : ''; ?>>Black/African American</option>
+                    <option value="Native Indian/Alaska Native" <?php echo isset($family_race1) && $family_race1 == 'Native Indian/Alaska Native' ? 'selected' : ''; ?>>Native Indian/Alaska Native</option>
+                    <option value="Native Hawaiian/Pacific Islander" <?php echo isset($family_race1) && $family_race1 == 'Native Hawaiian/Pacific Islander' ? 'selected' : ''; ?>>Native Hawaiian/Pacific Islander</option>
+                    <option value="Asian" <?php echo isset($family_race1) && $family_race1 == 'Asian' ? 'selected' : ''; ?>>Asian</option>
+                    <option value="Multiracial" <?php echo isset($family_race1) && $family_race1 == 'Multiracial' ? 'selected' : ''; ?>>Multiracial</option>
+                    <option value="Other" <?php echo isset($family_race1) && $family_race1 == 'Other' ? 'selected' : ''; ?>>Other</option>
                 </select><br><br>
 
                 <!--Num Unemployed in Household-->
-                <label for="num-unemployed" required>Number of Unemployed in Household *</label><br><br>
-                <input type="number" id="num-unemployed" name="num-unemployed" required placeholder="Enter number of unemployed"><br><br>
+                <label for="num_unemployed">Number of Unemployed in Household *</label><br><br>
+                <input type="number" name="num_unemployed" id="num_unemployed"
+                    required placeholder="Enter number of unemployed"><br><br>
 
                 <!--Num Retired in Household-->
-                <label for="num-retired" required>Number of Retired in Household *</label><br><br>
-                <input type="number" id="num-retired" name="num-retired" required placeholder="Enter number of retired"><br><br>
+                <label for="num_retired">Number of Retired in Household *</label><br><br>
+                <input type="number" name="num_retired" id="num_retired"
+                    required placeholder="Enter number of retired"><br><br>
 
                 <!--Num Unemployed Student in Household-->
-                <label for="num-unemployed-student" required>Number of Unemployed Students in Household *</label><br><br>
-                <input type="number" id="num-unemployed-student" name="num-unemployed-student" required placeholder="Enter number of unemployed students"><br><br>
+                <label for="num_unemployed_student">Number of Unemployed Students in Household *</label><br><br>
+                <input type="number" name="num_unemployed_student" id="num_unemployed_student"
+                    required placeholder="Enter number of unemployed students"><br><br>
 
                 <!--Num Employed Full-Time in Household-->
-                <label for="num-employed-fulltime" required>Number of Full-Time Employed in Household *</label><br><br>
-                <input type="number" id="num-employed-fulltime" name="num-employed-fulltime" required placeholder="Enter number of full-time employed"><br><br>
+                <label for="num_employed_fulltime">Number of Full-Time Employed in Household *</label><br><br>
+                <input type="number" name="num_employed_fulltime" id="num_employed_fulltime"
+                    required placeholder="Enter number of full-time employed"><br><br>
 
                 <!--Num Employed Part-Time in Household-->
-                <label for="num-employed-parttime" required>Number of Part-Time Employed in Household *</label><br><br>
-                <input type="number" id="num-employed-parttime" name="num-employed-parttime" required placeholder="Enter number of part-time employed"><br><br>
+                <label for="num_employed_parttime">Number of Part-Time Employed in Household *</label><br><br>
+                <input type="number" name="num_employed_parttime" id="num_employed_parttime"
+                    required placeholder="Enter number of part-time employed"><br><br>
 
                 <!--Num Employed Student in Household-->
-                <label for="num-employed-student" required>Number of Employed Students in Household *</label><br><br>
-                <input type="number" id="num-employed-student" name="num-employed-student" required placeholder="Enter number of employed students"><br><br>
-
+                <label for="num_employed_student">Number of Employed Students in Household *</label><br><br>
+                <input type="number" name="num_employed_student"  id="num_employed_student"
+                    required placeholder="Enter number of employed students"><br><br>
 
                 <!--Estimated Household Income-->
                 <label for="income">Estimated Household Income *</label><br><br>
-                <select id="income" name="income" required>
-                    <option value="" disabled selected>Select Estimated Income</option>
-                    <option value="Under 20,000">Under 20,000</option>
-                    <option value="20,000-40,000n">20,000-40,000</option>
-                    <option value="40,001-60,000">40,001-60,000</option>
-                    <option value="60,001-80,000">60,001-80,000</option>
-                    <option value="Over 80,000">Over 80,000</option>
+                <select name="income" id="income" required>
+                    <option value="" disabled <?php echo isset($family_income) && $family_income == '' ? 'selected' : ''; ?>>Select Estimated Income</option>
+                    <option value="Under 20,000" <?php echo isset($family_income) && $family_income == 'Under $15,0000' ? 'selected' : ''; ?>>Under 20,000</option>
+                    <option value="20,000-40,000n" <?php echo isset($family_income) && $family_income == '$15,000 - $24,999' ? 'selected' : ''; ?>>20,000-40,000</option>
+                    <option value="40,001-60,000" <?php echo isset($family_income) && $family_income == '$25,000 - $34,999' ? 'selected' : ''; ?>>40,001-60,000</option>
+                    <option value="60,001-80,000" <?php echo isset($family_income) && $family_income == '$35,000 - $49,999' ? 'selected' : ''; ?>>60,001-80,000</option>
+                    <option value="Over 80,000" <?php echo isset($family_income) && $family_income == '$100,000 and above' ? 'selected' : ''; ?>>Over 80,000</option>
                 </select><br><br>
 
                 <!--Other Programs-->
-                <label for="other-programs" required>Other Programs *</label><br><br>
-                <input type="text" id="other-programs" name="other-programs" required placeholder="(WIC, SNAP, SSI, SSD, etc.)"><br><br>
+                <label for="other_programs">Other Programs? *</label><br><br>
+                <input type="text" name="other_programs" id="other_programs"
+                    required placeholder="(WIC, SNAP, SSI, SSD, etc.)"><br><br>
 
                 <!--Free/Reduced Lunch-->
                 <label for="lunch">Does the enrolling child receive free or reduced lunch? *</label><br><br>
-                <select id="lunch" name="lunch" required>
+                <select name="lunch" id="lunch" required>
                     <option value="" disabled selected>Select</option>
                     <option value="free">Free</option>
                     <option value="reduced">Reduced</option>
                     <option value="neither">Neither</option>
                 </select>
-                <br><br>
-
-            <h2>Transportion</h2><br>
-                <p>Stafford Junction provides transportation home after the Brain Builders program. Please check one of the following:</p><br>
                 
-                <div class="radio-group">
-                    <input type="radio" id="needs-transportation" name="needs-transportation" value="needs-transportation"><label for="phone-type-cellphone">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label>
-                    <input type="radio" id="transports-themselves" name="needs-transportation" value="transports-themselves"><label for="phone-type-home">I will make alternate arrangements for my child to be transported home.</label>
-                </div>
+                <br><br><br>
 
-            <br><br>
+                <h2>Transportation</h2><hr><br>
+                
+                <!--Transportation-->
+                <label for="transportation">Stafford Junction provides transportation home after the Brain Builders program. Please check one of the following: *</p><br>
+                
+                <input type="radio" name="transportation" id="choice_1" value="needs_transportation" required>
+                <label for="choice_1">My child has permission to be transported by Stafford Junction staff/volunteers in Stafford Junction vehicles.</label><br><br>
 
-            <h2>Code of Conduct</h2><br>
+                <input type="radio" name="transportation" id="choice_2" value="transports_themselves" required>
+                <label for="choice_2">I will make alternate arrangements for my child to be transported home.</label>
+                <br><br><br>
+
+                <h2>Code of Conduct</h2><hr><br>
+
                 <p>Stafford Junction practices four core values: Caring, Honesty, Respect, and Responsibility. We are not a daycare
                 service. The program is staffed by volunteers whose sole responsibility is to provide stimulating activities to youth,
                 preventing summer learning loss. Misbehavior by students will not be tolerated.</p><br>
@@ -504,22 +699,26 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 (3) dismissal from the program.</p><br>
 
                 <p>Exceptions: If a student commits a serious infraction, the Youth Program Manager has the option to immediately
-                dismiss the child from the program.</p><br><br>
+                dismiss the child from the program.</p>
+                <br><br><br>
 
-            <h2>Photograph and Video Waiver</h2><br>
+                <h2>Photograph and Video Waiver</h2><hr><br>
+
                 <p>I acknowledge that Stafford Junction may utilize photographs or videos of participants that may be taken during
                 involvement in Stafford Junction activities. This includes internal and external use, including but not limited to
                 Stafford Junction’s website, Facebook, and publications. I consent to such uses and hereby waive all rights of
                 compensation. If I do not wish the image of my child to be included in those mentioned above, it is my responsibility to
-                inform them to exclude themselves from photographs or videos taken during such activities.</p><br><br>
+                inform them to exclude themselves from photographs or videos taken during such activities.</p>
+                <br><br><br>
 
-            <h2>Other Activities & Programs</h2><br>
+                <h2>Other Activities & Programs</h2><hr><br>
+
                 <p>Stafford Junction offers additional free activities besides Brain Builders, including on-site options and field trips to places
                 like the YMCA, fishing spots, and community events. Limited space is available. Please indicate interest by checking the
                 appropriate box and initialing below. We'll inform you of the activity details and provide early sign-up opportunities.</p><br>
 
-                <label for="participation">I would like my child to participate:</label><br><br>
-                <select id="participation" name="participation" required>
+                <label for="participation">I would like my child to participate: *</label><br><br>
+                <select name="participation" id="participation" required>
                     <option value="" disabled selected>Select Yes or No</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
@@ -527,23 +726,31 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <br><br>
 
                 <!--Parent Initials-->
-                <label for="parent-initials">Parent Initials *</label><br><br>
-                <input type="text" name="parent-initials" id="parent-initials" required placeholder="Parent Initials" required><br><br>
+                <label for="parent_initials">Parent Initials *</label><br><br>
+                <input type="text" name="parent_initials" id="parent_initials" 
+                    required placeholder="Parent Initials">
+                <br><br><br>
 
-            <h2>Acknowledgment and Consent</h2><br>
+                <h2>Acknowledgment and Consent</h2><hr><br>
+
                 <p>By signing below, I acknowledge, understand, accept, and agree to all policies and waivers stated and outlined in this
                 Brain Builders Enrollment Form for the current school year.</p><br>
                 <p>By electronically signing, you agree that your e-signature holds the same legal validity and effect as a handwritten signature.</p><br>
 
                 <!--Parent/Guardian Electronic Signature-->
                 <label for="signature">Parent/Guardian Signature *</label><br><br>
-                <input type="text" name="signature" id="signature" required placeholder="Parent/Guardian Signature" required><br><br>
+                <input type="text" name="signature" id="signature" 
+                    required placeholder="Parent/Guardian Signature"><br><br>
 
                 <!--Date-->
-                <label for="signature-date">Date *</label><br><br>
-                <input type="date" id="signature-date" name="signature-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
+                <label for="signature_date">Date *</label><br><br>
+                <input type="date"name="signature_date" id="signature_date"
+                    required placeholder="Date" max="<?php echo date('Y-m-d'); ?>" 
+                    value="<?php echo date('Y-m-d'); ?>">
+                <br><br><br>
 
-            <h2>PERMISSION FOR MUTUAL RELEASE OF INFORMATION</h2><br>
+                <h2>PERMISSION FOR MUTUAL RELEASE OF INFORMATION</h2><hr><br>
+
                 <p>
                     Stafford County Public Schools – Department of Student Services<br>
                     31 Stafford Avenue, Stafford, Virginia 22554<br>
@@ -567,60 +774,89 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 </p>
 
                 <!--Child's Full Name-->
-                <label for="waiver-child-name">Child's Full Name *</label><br><br>
-                <input type="text" name="waiver-child-name" id="waiver-child-name" required placeholder="Child's Full Name" required><br><br>
+                <label for="waiver_child_name">Child's Full Name *</label><br><br>
+                <input type="text" style="background-color: yellow;color: black" name="waiver_child_name" id="waiver_child_name" 
+                    required readonly placeholder="Child's Full Name" 
+                    value="<?php echo isset($child_first_name) && isset($child_last_name) ? htmlspecialchars($child_first_name . ' ' . $child_last_name) : ''; ?>"><br><br>
 
                 <!--Child's Date of Birth-->
-                <label for="waiver-dob">Child's Date of Birth *</label><br><br>
-                <input type="date" id="waiver-dob" name="waiver-dob" required placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>"><br><br>
+                <label for="waiver_dob">Child's Date of Birth *</label><br><br>
+                <input type="date" name="waiver_dob" id="waiver_dob"
+                    required placeholder="Child's Date of Birth" max="<?php echo date('Y-m-d'); ?>"
+                    value="<?php echo isset($child_DOB) ? htmlspecialchars($child_DOB) : ''; ?>"><br><br>
 
                 <!--Parent/Guardian Name-->
-                <label for="waiver-parent-name">Parent/Guardian Name *</label><br><br>
-                <input type="text" name="waiver-parent-name" id="waiver-parent-name" required placeholder="Parent/Guardian Name" value="<?php echo htmlspecialchars($family->getFirstName() . " " . $family->getLastName()); ?>" required><br><br>
-
+                <label for="waiver_parent_name">Parent/Guardian Name *</label><br><br>
+                <input type="text" name="waiver_parent_name" id="waiver_parent_name"  
+                    required placeholder="Parent/Guardian Name"><br><br>
+              
                 <!--Provider's Name-->
-                <label for="waiver-provider-name">Provider's Name *</label><br><br>
-                <input type="text" name="waiver-provider-name" id="waiver-provider-name" required placeholder="Provider's Name" required><br><br>
+                <label for="waiver_provider_name">Provider's Name *</label><br><br>
+                <input type="text" name="waiver_provider_name" id="waiver_provider_name"
+                    required placeholder="Provider's Name"><br><br>
 
                 <!--Address-->
-                <label for="waiver-provider-address">Provider's Address *</label><br><br>
-                <input type="text" name="waiver-provider-address" id="waiver-provider-address" required placeholder="Provider's Address" required><br><br>
+                <label for="waiver_provider_address">Provider's Address *</label><br><br>
+                <input type="text" name="waiver_provider_address" id="waiver_provider_address"
+                    required placeholder="Provider's Address"><br><br>
 
                 <!--Phone & Fax-->
-                <label for="waiver-phone-and-fax">Provider's Phone & Fax *</label><br><br>
-                <input type="text" name="waiver-phone-and-fax" id="waiver-phone-and-fax" required placeholder="Provider's Phone & Fax" required><br><br>
+                <label for="waiver_phone_and_fax">Provider's Phone & Fax *</label><br><br>
+                <input type="tel" name="waiver_phone_and_fax" id="waiver_phone_and_fax" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                    required placeholder="Ex. (000) 000-0000"><br><br>
 
                 <!--Signature-->
-                <label for="waiver-signature">Parent / Legal Guardian / Surrogate/ Eligible Student Signature *</label><br>
-                <p>By electronically signing, you agree that your e-signature holds the same legal validity and effect as a handwritten signature.</p><br><br>
-                <input type="text" name="waiver-signature" id="waiver-signature" required placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature" required><br><br>
+                <label for="waiver_signature">Parent / Legal Guardian / Surrogate/ Eligible Student Signature *</label><br>
+                <p>By electronically signing, you agree that your e-signature holds the same legal validity and effect as a handwritten signature.</p><br>
+                <input type="text" name="waiver_signature" id="waiver_signature" 
+                    required placeholder="Parent / Legal Guardian / Surrogate/ Eligible Student Signature"><br><br>
 
                 <!--Date-->
-                <label for="waiver-date" required>Date *</label><br><br>
-                <input type="date" id="waiver-date" name="waiver-date" required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"><br><br>
+                <label for="waiver_date">Date *</label><br><br>
+                <input type="date" name="waiver_date" id="waiver_date" 
+                    required placeholder="Date" max="<?php echo date('Y-m-d'); ?>"
+                    value="<?php echo date('Y-m-d'); ?>"><br><br>
 
                 <button type="submit" id="submit">Submit</button>
-
-                <?php
-                    if($_SERVER['REQUEST_METHOD'] == "POST" && $success){
-                        if (isset($_GET['id'])) {
-                            echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . $_GET['id'] . '";</script>';
-                        } else {
-                            echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
-                        }
-                    } 
-                ?>
-
-                <?php 
-                if (isset($_GET['id'])) {
-                    echo '<a class="button cancel" href="fillForm.php?id=' . $_GET['id'] . '" style="margin-top: .5rem">Cancel</a>';
-                } else {
-                    echo '<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>';
-                }
-                ?>
-                <!--<a class="button cancel" href="fillForm.php" style="margin-top: .5rem">Cancel</a>-->
+                <!--redirects with 'id' if it exists-->
+                <a class="button cancel" href="fillForm.php<?php echo isset($_GET['id']) ? '?id=' . urlencode($_GET['id']) : ''; ?>" style="margin-top: .5rem">Cancel</a>
             </form>
         </div>
+
+        </div>
+
+        <?php
+            // if successful, create pop up notification and direct user back to fill form page
+            // if failed, notify user on fill form page
+            if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($bbID)) {
+                $id = isset($_GET['id']) ? $_GET['id'] : '';
+
+                if ($id) {
+                    // If 'id' exists in the URL, include it in the redirect (for staff accounts)
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess&id=' . urlencode($id) . '";</script>';
+                } else {
+                    // If 'id' doesn't exist, just redirect without it (For family accounts)
+                    echo '<script>document.location = "fillForm.php?formSubmitSuccess";</script>';
+                }
+            } else if ($_SERVER['REQUEST_METHOD'] == "POST" && empty($bbID)) {
+                echo '<script>document.location = "brainBuildersRegistrationForm.php?formSubmitFail";</script>';
+            }
+        ?>
+
+        <script>
+            // This JavaScript snippet ensures that the form is hidden initially if no 'childId' is passed via the URL
+            document.addEventListener("DOMContentLoaded", function() {
+                var childId = new URLSearchParams(window.location.search).get('childId');
+                var childForm = document.getElementById('childForm');
+                
+                // Show or hide the form based on the presence of 'childId' in the URL
+                if (childId) {
+                    childForm.style.display = 'block';
+                } else {
+                    childForm.style.display = 'none';
+                }
+            });
+        </script>
 
     </body>
 </html>
