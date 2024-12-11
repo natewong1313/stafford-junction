@@ -68,8 +68,8 @@ $programInterestForm = getProgramInterestFormData($userID);
                 <?php foreach ($school_supplies_forms as $form): ?>
                     <li>
                         Child Name: <?= htmlspecialchars($form['child_name']) ?>
-                        <a href="schoolSuppliesForm.php" class="inline-button">View</a><br>
-                    </li>
+                        <a href="schoolSuppliesForm.php?form_id=<?=$form['id'] ?>" class="inline-button">View</a>
+                   </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
