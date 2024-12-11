@@ -1,4 +1,3 @@
-<!--This file shows the complete account information of a child account -->
 <?php
 
 session_cache_expire(30);
